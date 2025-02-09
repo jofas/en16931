@@ -2,7 +2,8 @@
 
 public class Class1
 {
-    public static bool test() {
+    public static bool test()
+    {
         return true;
     }
 }
