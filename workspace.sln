@@ -8,9 +8,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{A5AA0B48-C003-4FEF-B253-EC985279E9E0}"
 EndProject
 Global
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -44,5 +41,11 @@ Global
 		{A5AA0B48-C003-4FEF-B253-EC985279E9E0}.Release|x64.Build.0 = Release|Any CPU
 		{A5AA0B48-C003-4FEF-B253-EC985279E9E0}.Release|x86.ActiveCfg = Release|Any CPU
 		{A5AA0B48-C003-4FEF-B253-EC985279E9E0}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6E727CA3-DE01-4432-A1A8-64EBFF66E46F}
 	EndGlobalSection
 EndGlobal
