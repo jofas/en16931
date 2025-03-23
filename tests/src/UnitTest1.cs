@@ -17,9 +17,7 @@ public class UnitTest1
     [InlineData("resources" +
         "/invoices/technical-cases")]
     public void givenPathOfValidXRechnung_validationShouldSucceed(string testDirectory)
-    {
-        string currentDirectory = Directory.GetCurrentDirectory();
-        DirectoryInfo parent = Directory.GetParent(currentDirectory);
+    {       
         string[] standardTests = Directory.GetFiles(testDirectory);
 
 
