@@ -7,7 +7,7 @@ public class Class1
         return false;
     }
 
-    public static void validateXRechnungFromFile(String filepath)
+    public static void validateXRechnungFromFile(string filepath)
     {
         throw new NotImplementedException();
     }
