@@ -5,9 +5,9 @@ namespace tests;
 public class XRechnungValidation
 {
     [Theory]
-    [InlineData("resources/invoices/standard")]
-    [InlineData("resources/invoices/extension")]
-    [InlineData("resources/invoices/technical-cases")]
+    [InlineData("resources/xrechnung-testsuite/standard")]
+    [InlineData("resources/xrechnung-testsuite/extension")]
+    [InlineData("resources/xrechnung-testsuite/technical-cases")]
     public void ValidateXRechnungTestsuite(string testDirectory)
     {
         string[] standardTests = Directory.GetFiles(testDirectory);
