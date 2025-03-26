@@ -20,7 +20,6 @@ public class UnitTest1
     {       
         string[] standardTests = Directory.GetFiles(testDirectory);
 
-
         foreach (string standardTest in standardTests)
         {
             Class1.validateXRechnungFromFile(standardTest);

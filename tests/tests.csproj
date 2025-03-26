@@ -22,11 +22,9 @@
     <ProjectReference Include="..\en16931\en16931.csproj" />
   </ItemGroup>
 
-	<ItemGroup>
-		<None Update="resources\**\*.*">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-
-
+  <ItemGroup>
+    <None Update="resources\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
