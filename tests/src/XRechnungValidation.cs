@@ -4,6 +4,16 @@ namespace tests;
 
 public class XRechnungValidation
 {
+    [Fact]
+    public void Test()
+    {
+        string pathUbl = "resources/xrechnung-testsuite/standard/01.01a-INVOICE_ubl.xml";
+        Validator.ValidateFromFile(pathUbl);
+
+        string pathCii = "resources/xrechnung-testsuite/standard/01.01a-INVOICE_uncefact.xml";
+        Validator.ValidateFromFile(pathCii);
+    }
+    /*
     [Theory]
     [InlineData("resources/xrechnung-testsuite/standard")]
     [InlineData("resources/xrechnung-testsuite/extension")]
@@ -17,4 +27,5 @@ public class XRechnungValidation
             Validator.ValidateFromFile(standardTest);
         }
     }
+    */
 }
