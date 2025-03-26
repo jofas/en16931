@@ -4,6 +4,11 @@ public class Class1
 {
     public static bool test()
     {
-        return true;
+        return false;
+    }
+
+    public static void ValidateFromFile(string filepath)
+    {
+        throw new NotImplementedException();
     }
 }
