@@ -1,6 +1,7 @@
 ﻿namespace dev.fassbender.en16931;
 
 using System;
+using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 
@@ -35,15 +36,17 @@ public class Validator
         Schema? schema = Schema.UblInvoice;
 
         // UBL Invoice XRechnung Extension
-        if (identifier == null) {
+        if (identifier == null)
+        {
             identifier = root.SelectSingleNode(
                 "/invoice:Invoice/cbc:CustomizationID[ . = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0']",
                 ublNamespaceManager
             );
-         }
+        }
 
         // UBL CreditNote XRechnung CIUS
-        if (identifier == null) {
+        if (identifier == null)
+        {
             identifier = root.SelectSingleNode(
                 "/creditnote:CreditNote[ cbc:CustomizationID/text() = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0']",
                 ublNamespaceManager
@@ -52,7 +55,8 @@ public class Validator
         }
 
         // CII XRechnung CIUS
-        if (identifier == null) {
+        if (identifier == null)
+        {
             identifier = root.SelectSingleNode(
                 "/rsm:CrossIndustryInvoice[rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID/text() = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0']",
                 ciiNamespaceManager
@@ -61,7 +65,8 @@ public class Validator
         }
 
         // CII XRechnung Extension
-        if (identifier == null) {
+        if (identifier == null)
+        {
             identifier = root.SelectSingleNode(
                 "/rsm:CrossIndustryInvoice[rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID/text() = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0']",
                 ciiNamespaceManager
@@ -69,13 +74,17 @@ public class Validator
             schema = Schema.CiiCrossIndustryInvoice;
         }
 
-        if (identifier == null) {
+        if (identifier == null)
+        {
             throw new Exception("unable to find identifier");
         }
 
         schema = schema!;
 
-        string schemaFilePath = schema switch {
+        doc.Schemas.XmlResolver = new XmlUrlResolver();
+
+        string schemaFilePath = schema switch
+        {
             Schema.UblInvoice => "resources/ubl/2.1/maindoc/UBL-Invoice-2.1.xsd",
             Schema.UblCreditNote => "resources/ubl/2.1/maindoc/UBL-CreditNote-2.1.xsd",
             Schema.CiiCrossIndustryInvoice => "resources/cii/d16b/CrossIndustryInvoice_100pD16B.xsd",
@@ -83,19 +92,20 @@ public class Validator
 
         doc.Schemas.Add(null, schemaFilePath);
 
-        // TODO: fix schema compilation (probably relative imports)
-        //   https://learn.microsoft.com/en-us/dotnet/fundamentals/runtime-libraries/system-xml-schema-xmlschemaset#security-considerations
+        FileStream w3XmlSigSchemaFile = File.OpenRead("resources/w3/xmldsig-core-schema.xsd");
 
-        /*
-        doc.Schemas.XmlResolver = new XmlResolver();
-        //XmlSchemaValidationFlags.ProcessSchemaLocation;
+        XmlReaderSettings w3XmlSigSchemaReaderSettings = new XmlReaderSettings();
+        w3XmlSigSchemaReaderSettings.DtdProcessing = DtdProcessing.Ignore;
 
-        foreach (XmlSchema s in doc.Schemas.Schemas()) {
-            foreach (var include in s.Includes) {
-                Console.WriteLine((include as XmlSchemaImport).SchemaLocation);
-            }
-        }
-        */
+        XmlReader w3XmlSigSchemaReader = XmlReader.Create(
+            w3XmlSigSchemaFile,
+            w3XmlSigSchemaReaderSettings
+        );
+
+        doc.Schemas.Add(
+            "http://www.w3.org/2000/09/xmldsig#",
+            w3XmlSigSchemaReader
+        );
 
         doc.Schemas.Compile();
 
@@ -122,7 +132,8 @@ public class Validator
     }
 }
 
-enum Schema {
+enum Schema
+{
     UblInvoice,
     UblCreditNote,
     CiiCrossIndustryInvoice,

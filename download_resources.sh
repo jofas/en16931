@@ -18,7 +18,7 @@ mkdir -p $ubldir/maindoc/
 cp $tempdir/ubl/xsd/maindoc/UBL-CreditNote-2.1.xsd $ubldir/maindoc/
 cp $tempdir/ubl/xsd/maindoc/UBL-Invoice-2.1.xsd $ubldir/maindoc/
 
-cp -r $tempdir/ubl/xsd/common/ $ubldir/common/
+cp -r $tempdir/ubl/xsd/common $ubldir
 
 # MAYBEDO: extract xml/ examples for testing
 
@@ -85,3 +85,18 @@ for s in ${syntax[@]}; do
 done
 
 echo "Extraction done"
+
+echo "Downloading W3 schemas"
+
+mkdir -p $tempdir/w3
+
+wget -P $tempdir/w3 https://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd
+
+echo "Download done"
+
+echo "Extracting W3 schemas"
+
+cp -r $tempdir/w3 $resourcedir
+
+echo "Extraction done"
+
