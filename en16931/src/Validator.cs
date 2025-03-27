@@ -109,26 +109,12 @@ public class Validator
 
         doc.Schemas.Compile();
 
-        ValidationEventHandler eventHandler = new ValidationEventHandler(ValidationEventHandler);
-        doc.Validate(eventHandler);
+        doc.Validate(null);
 
         Console.WriteLine("validated schema");
 
         // TODO: Saxon-HE: validate against en16931 schematron
         // TODO: Saxon-HE: validate against xrechnung schematron
-    }
-
-    static void ValidationEventHandler(object sender, ValidationEventArgs e)
-    {
-        switch (e.Severity)
-        {
-            case XmlSeverityType.Error:
-                Console.WriteLine("Error: {0}", e.Message);
-                break;
-            case XmlSeverityType.Warning:
-                Console.WriteLine("Warning {0}", e.Message);
-                break;
-        }
     }
 }
 

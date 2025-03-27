@@ -2,17 +2,54 @@
 
 namespace tests;
 
+using Xunit;
+
+using System;
+using System.IO;
+using System.Xml.Schema;
+
 public class XRechnungValidation
 {
     [Fact]
-    public void Test()
+    public void TestCorrectUbl()
     {
-        string pathUbl = "resources/xrechnung-testsuite/standard/01.01a-INVOICE_ubl.xml";
-        Validator.ValidateFromFile(pathUbl);
-
-        string pathCii = "resources/xrechnung-testsuite/standard/01.01a-INVOICE_uncefact.xml";
-        Validator.ValidateFromFile(pathCii);
+        string path = "resources/xrechnung-testsuite/standard/01.01a-INVOICE_ubl.xml";
+        Validator.ValidateFromFile(path);
     }
+
+    [Fact]
+    public void TestCorrectCii()
+    {
+        string path = "resources/xrechnung-testsuite/standard/01.01a-INVOICE_uncefact.xml";
+        Validator.ValidateFromFile(path);
+    }
+
+    [Theory]
+    [InlineData("resources/schemas/ubl/invoice/failure")]
+    public void TestIncorrectUbl(string testsLocation)
+    {
+        string[] testFiles = Directory.GetFiles(testsLocation);
+
+        foreach (string test in testFiles) {
+            Assert.Throws<XmlSchemaValidationException>(() => {
+                Validator.ValidateFromFile(test);
+            });
+        }
+    }
+
+    [Theory]
+    [InlineData("resources/schemas/cii/cross-industry-invoice/failure")]
+    public void TestIncorrectCii(string testsLocation)
+    {
+        string[] testFiles = Directory.GetFiles(testsLocation);
+
+        foreach (string test in testFiles) {
+            Assert.Throws<XmlSchemaValidationException>(() => {
+                Validator.ValidateFromFile(test);
+            });
+        }
+    }
+
     /*
     [Theory]
     [InlineData("resources/xrechnung-testsuite/standard")]
