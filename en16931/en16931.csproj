@@ -15,4 +15,9 @@
     <PackageReference Include="Saxon-HE" Version="10.9.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="resources\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
