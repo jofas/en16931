@@ -5,6 +5,8 @@ using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 
+using System.Xml.Xsl;
+
 public class Validator
 {
     public static void ValidateFromFile(string filepath)
@@ -111,8 +113,28 @@ public class Validator
 
         doc.Validate(null);
 
-        Console.WriteLine("validated schema");
+        string en16931XsltPath = schema switch
+        {
+            Schema.UblInvoice or Schema.UblCreditNote => "resources/en16931/ubl/EN16931-UBL-validation.xslt",
+            Schema.CiiCrossIndustryInvoice => "resources/en16931/cii/EN16931-CII-validation.xslt",
+        };
 
+
+        XsltSettings settings = new XsltSettings(true, true);
+        XslCompiledTransform xslt = new XslCompiledTransform();
+        xslt.Load(en16931XsltPath, settings, new XmlUrlResolver());
+
+        MemoryStream buf = new MemoryStream();
+        XmlWriter output = new XmlTextWriter(buf, null);
+
+        xslt.Transform(doc, output);
+
+        Console.WriteLine("made it so far");
+        Console.WriteLine(buf);
+        /*
+        Processor processor = new Processor(false);
+        XsltExecutable en16931Xslt = processor.NewXsltCompiler().LoadExecutablePackage(new Uri(en16931XsltPath));
+        */
         // TODO: Saxon-HE: validate against en16931 schematron
         // TODO: Saxon-HE: validate against xrechnung schematron
     }
