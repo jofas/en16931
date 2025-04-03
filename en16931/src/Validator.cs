@@ -1,11 +1,13 @@
 ﻿namespace dev.fassbender.en16931;
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 
-using System.Xml.Xsl;
+using net.sf.saxon.s9api;
+using net.liberty_development.SaxonHE12s9apiExtensions;
 
 public class Validator
 {
@@ -13,7 +15,7 @@ public class Validator
     {
         XmlDocument doc = new XmlDocument();
         doc.Load(filepath);
-        XmlNode root = doc.DocumentElement;
+        XmlNode root = doc.DocumentElement!;
 
         XmlNamespaceManager ublNamespaceManager = new XmlNamespaceManager(doc.NameTable);
 
@@ -81,15 +83,14 @@ public class Validator
             throw new Exception("unable to find identifier");
         }
 
-        schema = schema!;
-
         doc.Schemas.XmlResolver = new XmlUrlResolver();
 
-        string schemaFilePath = schema switch
+        string schemaFilePath = schema! switch
         {
             Schema.UblInvoice => "resources/ubl/2.1/maindoc/UBL-Invoice-2.1.xsd",
             Schema.UblCreditNote => "resources/ubl/2.1/maindoc/UBL-CreditNote-2.1.xsd",
             Schema.CiiCrossIndustryInvoice => "resources/cii/d16b/CrossIndustryInvoice_100pD16B.xsd",
+            _ => throw new UnreachableException(),
         };
 
         doc.Schemas.Add(null, schemaFilePath);
@@ -117,26 +118,37 @@ public class Validator
         {
             Schema.UblInvoice or Schema.UblCreditNote => "resources/en16931/ubl/EN16931-UBL-validation.xslt",
             Schema.CiiCrossIndustryInvoice => "resources/en16931/cii/EN16931-CII-validation.xslt",
+            _ => throw new UnreachableException(),
         };
 
-
-        XsltSettings settings = new XsltSettings(true, true);
-        XslCompiledTransform xslt = new XslCompiledTransform();
-        xslt.Load(en16931XsltPath, settings, new XmlUrlResolver());
-
-        MemoryStream buf = new MemoryStream();
-        XmlWriter output = new XmlTextWriter(buf, null);
-
-        xslt.Transform(doc, output);
-
-        Console.WriteLine("made it so far");
-        Console.WriteLine(buf);
-        /*
         Processor processor = new Processor(false);
-        XsltExecutable en16931Xslt = processor.NewXsltCompiler().LoadExecutablePackage(new Uri(en16931XsltPath));
-        */
-        // TODO: Saxon-HE: validate against en16931 schematron
-        // TODO: Saxon-HE: validate against xrechnung schematron
+
+        XdmNode node = processor.newDocumentBuilder().Build(new FileInfo(filepath));
+
+        XsltTransformer en16931Transformer = processor.newXsltCompiler().Compile(
+           new FileInfo(en16931XsltPath)
+        ).load();
+
+        en16931Transformer.setDestination(processor.NewSerializer(Console.Out));
+        en16931Transformer.setInitialContextNode(node);
+        en16931Transformer.transform();
+
+        string xRechnungXsltPath = schema switch
+        {
+            Schema.UblInvoice or Schema.UblCreditNote => "resources/xrechnung/ubl/XRechnung-UBL-validation.xsl",
+            Schema.CiiCrossIndustryInvoice => "resources/xrechnung/cii/XRechnung-CII-validation.xsl",
+            _ => throw new UnreachableException(),
+        };
+
+        XsltTransformer xRechnungTransformer = processor.newXsltCompiler().Compile(
+           new FileInfo(xRechnungXsltPath)
+        ).load();
+
+        xRechnungTransformer.setDestination(processor.NewSerializer(Console.Out));
+        xRechnungTransformer.setInitialContextNode(node);
+        xRechnungTransformer.transform();
+
+        // TODO: what do we do with the reports???
     }
 }
 

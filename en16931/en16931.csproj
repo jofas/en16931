@@ -12,7 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Saxon-HE" Version="10.9.0" />
+    <PackageReference Include="IKVM.Maven.Sdk" Version="1.9.0" />
+    <PackageReference Include="SaxonHE12s9apiExtensions" Version="12.5.9.9" />
   </ItemGroup>
 
   <ItemGroup>

@@ -30,8 +30,10 @@ public class XRechnungValidation
     {
         string[] testFiles = Directory.GetFiles(testsLocation);
 
-        foreach (string test in testFiles) {
-            Assert.Throws<XmlSchemaValidationException>(() => {
+        foreach (string test in testFiles)
+        {
+            Assert.Throws<XmlSchemaValidationException>(() =>
+            {
                 Validator.ValidateFromFile(test);
             });
         }
@@ -43,8 +45,10 @@ public class XRechnungValidation
     {
         string[] testFiles = Directory.GetFiles(testsLocation);
 
-        foreach (string test in testFiles) {
-            Assert.Throws<XmlSchemaValidationException>(() => {
+        foreach (string test in testFiles)
+        {
+            Assert.Throws<XmlSchemaValidationException>(() =>
+            {
                 Validator.ValidateFromFile(test);
             });
         }
