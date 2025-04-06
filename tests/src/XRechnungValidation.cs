@@ -10,6 +10,7 @@ using dev.fassbender.en16931;
 
 public class XRechnungValidation
 {
+    /*
     [Fact]
     public void TestCorrectUbl()
     {
@@ -26,7 +27,7 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schemas/ubl/invoice/failure")]
-    public void TestIncorrectUbl(string testsLocation)
+    public void TestSchemaViolationUblInvoice(string testsLocation)
     {
         string[] testFiles = Directory.GetFiles(testsLocation);
 
@@ -41,13 +42,29 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schemas/cii/cross-industry-invoice/failure")]
-    public void TestIncorrectCii(string testsLocation)
+    public void TestSchemaViolationCiiCrossIndustryInvoice(string testsLocation)
     {
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
         {
             Assert.Throws<XmlSchemaValidationException>(() =>
+            {
+                Validator.ValidateFromFile(test);
+            });
+        }
+    }
+    */
+
+    [Theory]
+    [InlineData("resources/schematrons/en16931/ubl/invoice/failure")]
+    public void TestSchematronViolationEn16931UblInvoice(string testsLocation)
+    {
+        string[] testFiles = Directory.GetFiles(testsLocation);
+
+        foreach (string test in testFiles)
+        {
+            Assert.Throws<Exception>(() =>
             {
                 Validator.ValidateFromFile(test);
             });

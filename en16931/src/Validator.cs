@@ -125,14 +125,35 @@ public class Validator
 
         XdmNode node = processor.newDocumentBuilder().Build(new FileInfo(filepath));
 
+        XdmDestination en16931Destination = new XdmDestination();
+
         XsltTransformer en16931Transformer = processor.newXsltCompiler().Compile(
            new FileInfo(en16931XsltPath)
         ).load();
 
-        en16931Transformer.setDestination(processor.NewSerializer(Console.Out));
+        en16931Transformer.setDestination(en16931Destination);
         en16931Transformer.setInitialContextNode(node);
         en16931Transformer.transform();
 
+        XdmNode en16931Result = en16931Destination.getXdmNode().children().iterator().next() as XdmNode;
+
+        Console.WriteLine("YO!");
+        Console.WriteLine($"pah: {en16931Result.getNodeName()}");
+
+        var q = processor.newXPathCompiler();
+        // TODO: get from root element
+        //q.declareNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
+
+        XdmValue en16931FailedAsserts = q.evaluate("/svrl:schematron-output/svrl:failed-assert[@flag='fatal']", en16931Result);
+
+        if(en16931FailedAsserts.size() > 0) {
+            // TODO: proper exception management
+            throw new Exception("schematron validation failed");
+        }
+
+        // TODO: XRechnung UBL Invoice
+        // TODO: XRechnung CII CrossIndustryInvoice
+        /*
         string xRechnungXsltPath = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => "resources/xrechnung/ubl/XRechnung-UBL-validation.xsl",
@@ -147,8 +168,10 @@ public class Validator
         xRechnungTransformer.setDestination(processor.NewSerializer(Console.Out));
         xRechnungTransformer.setInitialContextNode(node);
         xRechnungTransformer.transform();
+        */
 
-        // TODO: what do we do with the reports???
+        // TODO: throw exception if report indicates that document is invalid
+        // <failed-assert flag="fatal>...</flag>
     }
 }
 
