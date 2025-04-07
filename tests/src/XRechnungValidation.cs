@@ -64,7 +64,22 @@ public class XRechnungValidation
 
         foreach (string test in testFiles)
         {
-            Assert.Throws<Exception>(() =>
+            Assert.Throws<En16931SchematronException>(() =>
+            {
+                Validator.ValidateFromFile(test);
+            });
+        }
+    }
+
+    [Theory]
+    [InlineData("resources/schematrons/en16931/cii/cross-industry-invoice/failure")]
+    public void TestSchematronViolationEn16931CiiCrossIndustryInvoice(string testsLocation)
+    {
+        string[] testFiles = Directory.GetFiles(testsLocation);
+
+        foreach (string test in testFiles)
+        {
+            Assert.Throws<En16931SchematronException>(() =>
             {
                 Validator.ValidateFromFile(test);
             });

@@ -123,6 +123,9 @@ public class Validator
 
         Processor processor = new Processor(false);
 
+        var xPath = processor.newXPathCompiler();
+        xPath.declareNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
+
         XdmNode node = processor.newDocumentBuilder().Build(new FileInfo(filepath));
 
         XdmDestination en16931Destination = new XdmDestination();
@@ -137,23 +140,15 @@ public class Validator
 
         XdmNode en16931Result = en16931Destination.getXdmNode().children().iterator().next() as XdmNode;
 
-        Console.WriteLine("YO!");
-        Console.WriteLine($"pah: {en16931Result.getNodeName()}");
-
-        var q = processor.newXPathCompiler();
-        // TODO: get from root element
-        //q.declareNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
-
-        XdmValue en16931FailedAsserts = q.evaluate("/svrl:schematron-output/svrl:failed-assert[@flag='fatal']", en16931Result);
+        XdmValue en16931FailedAsserts = xPath.evaluate(
+            "/svrl:schematron-output/svrl:failed-assert[@flag='fatal']",
+            en16931Result
+        );
 
         if(en16931FailedAsserts.size() > 0) {
-            // TODO: proper exception management
-            throw new Exception("schematron validation failed");
+            throw new En16931SchematronException();
         }
 
-        // TODO: XRechnung UBL Invoice
-        // TODO: XRechnung CII CrossIndustryInvoice
-        /*
         string xRechnungXsltPath = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => "resources/xrechnung/ubl/XRechnung-UBL-validation.xsl",
@@ -168,10 +163,17 @@ public class Validator
         xRechnungTransformer.setDestination(processor.NewSerializer(Console.Out));
         xRechnungTransformer.setInitialContextNode(node);
         xRechnungTransformer.transform();
-        */
 
-        // TODO: throw exception if report indicates that document is invalid
-        // <failed-assert flag="fatal>...</flag>
+        XdmNode xRechnungResult = en16931Destination.getXdmNode().children().iterator().next() as XdmNode;
+
+        XdmValue xRechnungFailedAsserts = xPath.evaluate(
+            "/svrl:schematron-output/svrl:failed-assert[@flag='fatal']",
+            en16931Result
+        );
+
+        if(xRechnungFailedAsserts.size() > 0) {
+            throw new XRechnungSchematronException();
+        }
     }
 }
 
@@ -181,3 +183,9 @@ enum Schema
     UblCreditNote,
     CiiCrossIndustryInvoice,
 }
+
+public class SchematronException : Exception {}
+
+public class En16931SchematronException : SchematronException {}
+
+public class XRechnungSchematronException : SchematronException {}
