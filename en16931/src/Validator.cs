@@ -124,21 +124,21 @@ public class Validator
 
         XdmNode node = processor.newDocumentBuilder().Build(new FileInfo(filepath));
 
-        XdmDestination en16931Destination = new XdmDestination();
-
         XsltTransformer en16931Transformer = processor.newXsltCompiler().Compile(
            new FileInfo(en16931XsltPath)
         ).load();
+
+        XdmDestination en16931Destination = new XdmDestination();
 
         en16931Transformer.setDestination(en16931Destination);
         en16931Transformer.setInitialContextNode(node);
         en16931Transformer.transform();
 
-        XdmNode en16931Result = en16931Destination.getXdmNode().children().iterator().next() as XdmNode;
+        XdmNode? en16931Result = en16931Destination.getXdmNode().children().iterator().next()! as XdmNode;
 
         XdmValue en16931FailedAsserts = xPath.evaluate(
             "/svrl:schematron-output/svrl:failed-assert[@flag='fatal']",
-            en16931Result
+            en16931Result!
         );
 
         if(en16931FailedAsserts.size() > 0) {
@@ -156,24 +156,26 @@ public class Validator
            new FileInfo(xRechnungXsltPath)
         ).load();
 
-        xRechnungTransformer.setDestination(processor.NewSerializer(Console.Out));
+        XdmDestination xRechnungDestination = new XdmDestination();
+
+        xRechnungTransformer.setDestination(xRechnungDestination);
         xRechnungTransformer.setInitialContextNode(node);
         xRechnungTransformer.transform();
 
-        XdmNode xRechnungResult = en16931Destination.getXdmNode().children().iterator().next() as XdmNode;
+        XdmNode? xRechnungResult = xRechnungDestination.getXdmNode().children().iterator().next() as XdmNode;
 
         // TODO: failing XRechnung tests
-        //       UBL Invoice CIUS
-        //       CII CrossIndustryInvoice CIUS
         //       UBL Invoice Extension
         //       CII CrossIndustryInvoice Extension
         //
         // TODO: do I need to care about extension rules during schematron
         //       validation when invoice follows CIUS?
+        //
+        // TODO: suppress Saxon XSLT warnings to console
 
         XdmValue xRechnungFailedAsserts = xPath.evaluate(
             "/svrl:schematron-output/svrl:failed-assert[@flag='fatal']",
-            en16931Result
+            xRechnungResult!
         );
 
         if(xRechnungFailedAsserts.size() > 0) {
