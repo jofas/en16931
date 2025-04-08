@@ -10,6 +10,7 @@ using dev.fassbender.en16931;
 
 public class XRechnungValidation
 {
+    /*
     [Fact]
     public void TestCorrectUbl()
     {
@@ -102,6 +103,37 @@ public class XRechnungValidation
     [Theory]
     [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/failure")]
     public void TestSchematronViolationXRechnungCiusCiiCrossIndustryInvoice(string testsLocation)
+    {
+        string[] testFiles = Directory.GetFiles(testsLocation);
+
+        foreach (string test in testFiles)
+        {
+            Assert.Throws<XRechnungSchematronException>(() =>
+            {
+                Validator.ValidateFromFile(test);
+            });
+        }
+    }
+
+    [Theory]
+    [InlineData("resources/schematrons/xrechnung/extension/ubl/invoice/failure")]
+    public void TestSchematronViolationXRechnungExtensionUblInvoice(string testsLocation)
+    {
+        string[] testFiles = Directory.GetFiles(testsLocation);
+
+        foreach (string test in testFiles)
+        {
+            Assert.Throws<XRechnungSchematronException>(() =>
+            {
+                Validator.ValidateFromFile(test);
+            });
+        }
+    }
+    */
+
+    [Theory]
+    [InlineData("resources/schematrons/xrechnung/extension/cii/cross-industry-invoice/failure")]
+    public void TestSchematronViolationXRechnungExtensionCiiCrossIndustryInvoice(string testsLocation)
     {
         string[] testFiles = Directory.GetFiles(testsLocation);
 

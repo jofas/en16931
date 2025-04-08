@@ -141,7 +141,36 @@ public class Validator
             en16931Result!
         );
 
+        // TODO: Extensions can extend code listings, making the BR-CL-* rules
+        //   of the EN16931 Schematron fail early for code listings that are
+        //   valid according to the extension.
+        //
+        //   How do we solve this problem?
+        //
+        //   * If we validate against an extension, we could ignore all BR-CL-*
+        //     rules.
+        //     This would be a rather terrible (and probably non-conformant),
+        //     as we ignore every code linsting rule from the EN16931
+        //     Schematron, not just the rules for code listings that are
+        //     extended by the extension.
+        //
+        //   * Hard-code code listing extensions per extension.
+        //     That'd require careful inspection upon updates to the extension,
+        //     something I'd like to avoid.
+        //
+        //   * I don't see a way to tell from the XSLT source of the schematrons
+        //     alone, when an EN16931 rule is overridden by an extension rule.
+        //
+        //   * I think the best we can do is add another resource to the bundle
+        //     where we hard-code the EN16931 code listing rules that are
+        //     overridden by an extension. That way it is at least capsuled and
+        //     we can make "update the overridden rules resource" a step in our
+        //     resource update workflow.
+        //
         if(en16931FailedAsserts.size() > 0) {
+            Console.WriteLine(en16931Result);
+            Console.WriteLine(filepath);
+            Console.WriteLine(schema);
             throw new En16931SchematronException();
         }
 
