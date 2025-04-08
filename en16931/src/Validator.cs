@@ -19,8 +19,6 @@ public class Validator
 
         XmlNamespaceManager ublNamespaceManager = new XmlNamespaceManager(doc.NameTable);
 
-        ublNamespaceManager.AddNamespace("ubl", "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2");
-        ublNamespaceManager.AddNamespace("cac", "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2");
         ublNamespaceManager.AddNamespace("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");
         ublNamespaceManager.AddNamespace("invoice", "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2");
         ublNamespaceManager.AddNamespace("creditnote", "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2");
@@ -29,8 +27,6 @@ public class Validator
 
         ciiNamespaceManager.AddNamespace("rsm", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100");
         ciiNamespaceManager.AddNamespace("ram", "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100");
-        ciiNamespaceManager.AddNamespace("qdt", "urn:un:unece:uncefact:data:standard:QualifiedDataType:100");
-        ciiNamespaceManager.AddNamespace("udt", "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100");
 
         // UBL Invoice CIUS
         XmlNode? identifier = root.SelectSingleNode(
@@ -165,6 +161,15 @@ public class Validator
         xRechnungTransformer.transform();
 
         XdmNode xRechnungResult = en16931Destination.getXdmNode().children().iterator().next() as XdmNode;
+
+        // TODO: failing XRechnung tests
+        //       UBL Invoice CIUS
+        //       CII CrossIndustryInvoice CIUS
+        //       UBL Invoice Extension
+        //       CII CrossIndustryInvoice Extension
+        //
+        // TODO: do I need to care about extension rules during schematron
+        //       validation when invoice follows CIUS?
 
         XdmValue xRechnungFailedAsserts = xPath.evaluate(
             "/svrl:schematron-output/svrl:failed-assert[@flag='fatal']",
