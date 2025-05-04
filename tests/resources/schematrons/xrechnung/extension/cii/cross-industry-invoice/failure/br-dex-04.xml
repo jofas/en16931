@@ -42,7 +42,8 @@
       </ram:AssociatedDocumentLineDocument>
       <ram:SpecifiedTradeProduct>
         <!-- DiGA-VE-ID: -->
-        <ram:GlobalID schemeID="XR01">12345678</ram:GlobalID>
+        <!-- Should fail BR-DEX-04 -->
+        <ram:GlobalID schemeID="INVALID">12345678</ram:GlobalID>
         <!-- Freischaltcode: -->
         <ram:BuyerAssignedID>ABCDEFGHIJKLMNOP</ram:BuyerAssignedID>
         <!-- DiGA-Name: -->

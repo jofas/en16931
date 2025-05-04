@@ -10,7 +10,6 @@ using dev.fassbender.en16931;
 
 public class XRechnungValidation
 {
-    /*
     [Fact]
     public void TestCorrectUbl()
     {
@@ -129,7 +128,6 @@ public class XRechnungValidation
             });
         }
     }
-    */
 
     [Theory]
     [InlineData("resources/schematrons/xrechnung/extension/cii/cross-industry-invoice/failure")]
@@ -146,7 +144,6 @@ public class XRechnungValidation
         }
     }
 
-    /*
     [Theory]
     [InlineData("resources/xrechnung-testsuite/standard")]
     [InlineData("resources/xrechnung-testsuite/extension")]
@@ -160,5 +157,4 @@ public class XRechnungValidation
             Validator.ValidateFromFile(standardTest);
         }
     }
-    */
 }

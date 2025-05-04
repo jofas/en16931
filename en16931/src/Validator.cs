@@ -34,6 +34,7 @@ public class Validator
             ublNamespaceManager
         );
         Schema? schema = Schema.UblInvoice;
+        bool extension = false;
 
         // UBL Invoice XRechnung Extension
         if (identifier == null)
@@ -42,6 +43,8 @@ public class Validator
                 "/invoice:Invoice/cbc:CustomizationID[ . = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0']",
                 ublNamespaceManager
             );
+            schema = Schema.UblInvoice;
+            extension = true;
         }
 
         // UBL CreditNote XRechnung CIUS
@@ -52,6 +55,7 @@ public class Validator
                 ublNamespaceManager
             );
             schema = Schema.UblCreditNote;
+            extension = false;
         }
 
         // CII XRechnung CIUS
@@ -62,6 +66,7 @@ public class Validator
                 ciiNamespaceManager
             );
             schema = Schema.CiiCrossIndustryInvoice;
+            extension = false;
         }
 
         // CII XRechnung Extension
@@ -72,6 +77,7 @@ public class Validator
                 ciiNamespaceManager
             );
             schema = Schema.CiiCrossIndustryInvoice;
+            extension = true;
         }
 
         if (identifier == null)
@@ -118,6 +124,7 @@ public class Validator
         };
 
         Processor processor = new Processor(false);
+        processor.getUnderlyingConfiguration().setStandardErrorOutput(new java.io.PrintStream(new NullOutputStream()));
 
         var xPath = processor.newXPathCompiler();
         xPath.declareNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
@@ -136,41 +143,36 @@ public class Validator
 
         XdmNode? en16931Result = en16931Destination.getXdmNode().children().iterator().next()! as XdmNode;
 
+        string en16931FailedAssertsQuery = "/svrl:schematron-output/svrl:failed-assert[@flag='fatal']";
+
+        if (extension)
+        {
+            // Extensions can extend code listings and otherwise add elements
+            // or override rules of the EN16931 specification.
+            // These overridden rules of the EN16931 Schematron can fail early,
+            // even when the invoice is valid according to the extension.
+            // Here we remove these failed asserts from the query and continue
+            // executing the rules that override the code listings.
+            //
+            // The XRechnung Extension overrides the following rules:
+            //
+            // * BR-CL-10 => BR-DEX-04
+            // * BR-CL-11 => BR-DEX-05
+            // * BR-CL-21 => BR-DEX-06
+            // * BR-CL-25 => BR-DEX-07
+            // * BR-CL-26 => BR-DEX-08
+            // * BR-CO-16 => BR-DEX-09
+            //
+            en16931FailedAssertsQuery = $"{en16931FailedAssertsQuery}[not(contains(' BR-CL-10 BR-CL-11 BR-CL-21 BR-CL-25 BR-CL-26 BR-CO-16 ', concat(' ', normalize-space(@id), ' ')))]";
+        }
+
         XdmValue en16931FailedAsserts = xPath.evaluate(
-            "/svrl:schematron-output/svrl:failed-assert[@flag='fatal']",
+            en16931FailedAssertsQuery,
             en16931Result!
         );
 
-        // TODO: Extensions can extend code listings, making the BR-CL-* rules
-        //   of the EN16931 Schematron fail early for code listings that are
-        //   valid according to the extension.
-        //
-        //   How do we solve this problem?
-        //
-        //   * If we validate against an extension, we could ignore all BR-CL-*
-        //     rules.
-        //     This would be a rather terrible (and probably non-conformant),
-        //     as we ignore every code linsting rule from the EN16931
-        //     Schematron, not just the rules for code listings that are
-        //     extended by the extension.
-        //
-        //   * Hard-code code listing extensions per extension.
-        //     That'd require careful inspection upon updates to the extension,
-        //     something I'd like to avoid.
-        //
-        //   * I don't see a way to tell from the XSLT source of the schematrons
-        //     alone, when an EN16931 rule is overridden by an extension rule.
-        //
-        //   * I think the best we can do is add another resource to the bundle
-        //     where we hard-code the EN16931 code listing rules that are
-        //     overridden by an extension. That way it is at least capsuled and
-        //     we can make "update the overridden rules resource" a step in our
-        //     resource update workflow.
-        //
-        if(en16931FailedAsserts.size() > 0) {
-            Console.WriteLine(en16931Result);
-            Console.WriteLine(filepath);
-            Console.WriteLine(schema);
+        if (en16931FailedAsserts.size() > 0)
+        {
             throw new En16931SchematronException();
         }
 
@@ -193,21 +195,13 @@ public class Validator
 
         XdmNode? xRechnungResult = xRechnungDestination.getXdmNode().children().iterator().next() as XdmNode;
 
-        // TODO: failing XRechnung tests
-        //       UBL Invoice Extension
-        //       CII CrossIndustryInvoice Extension
-        //
-        // TODO: do I need to care about extension rules during schematron
-        //       validation when invoice follows CIUS?
-        //
-        // TODO: suppress Saxon XSLT warnings to console
-
         XdmValue xRechnungFailedAsserts = xPath.evaluate(
             "/svrl:schematron-output/svrl:failed-assert[@flag='fatal']",
             xRechnungResult!
         );
 
-        if(xRechnungFailedAsserts.size() > 0) {
+        if (xRechnungFailedAsserts.size() > 0)
+        {
             throw new XRechnungSchematronException();
         }
     }
@@ -220,8 +214,13 @@ enum Schema
     CiiCrossIndustryInvoice,
 }
 
-public class SchematronException : Exception {}
+public class SchematronException : Exception { }
 
-public class En16931SchematronException : SchematronException {}
+public class En16931SchematronException : SchematronException { }
 
-public class XRechnungSchematronException : SchematronException {}
+public class XRechnungSchematronException : SchematronException { }
+
+class NullOutputStream : java.io.OutputStream
+{
+    public override void write(int b) { }
+}
