@@ -102,3 +102,67 @@ public class Invoice
     // BT-20
     public Text? PaymentTerms { get; init; }
 }
+
+public class InvoiceNote { }
+
+public class ProcessControl { }
+
+public class PrecedingInvoiceReference { }
+
+public class Seller { }
+
+public class Buyer { }
+
+public class Payee { }
+
+public class SellerTaxRepresentativeParty { }
+
+public class DeliveryInformation { }
+
+public class PaymentInstructions { }
+
+public class DocumentLevelAllowances { }
+
+public class DocumentLevelCharges { }
+
+public class DocumentTotals { }
+
+public class VatBreakdown { }
+
+public class AdditionalSupportingDocuments { }
+
+public class InvoiceLine { }
+
+public class SellerPostalAddress { }
+
+public class SellerContact { }
+
+public class BuyerPostalAddress { }
+
+public class BuyerContact { }
+
+public class SellerTaxRepresentativePostalAddress { }
+
+public class InvoicingPeriod { }
+
+public class DeliverToAddress { }
+
+public class CreditTransfer { }
+
+public class PaymentCardInformation { }
+
+public class DirectDebit { }
+
+public class InvoiceLinePeriod { }
+
+public class InvoiceLineAllowances { }
+
+public class InvoiceLineCharges { }
+
+public class PriceDetails { }
+
+public class LineVatInformation { }
+
+public class ItemInformation { }
+
+public class ItemAttributes { }
