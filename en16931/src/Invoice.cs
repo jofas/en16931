@@ -101,6 +101,76 @@ public class Invoice
 
     // BT-20
     public Text? PaymentTerms { get; init; }
+
+    // BG-1
+    public required InvoiceNote[] Notes { get; init; }
+
+    // BG-2
+    public required ProcessControl ProcessControl { get; init; }
+
+    // BG-3
+    public required PrecedingInvoiceReference[] PrecedingInvoiceReferences { get; init; }
+
+    // BG-4
+    public required Seller Seller { get; init; }
+
+    // BG-7
+    public required Buyer Buyer { get; init; }
+
+    // BG-10
+    public Payee? Payee { get; init; }
+
+    // BG-11
+    public SellerTaxRepresentativeParty? SellerTaxRepresentativeParty { get; init; }
+
+    // BG-13
+    public DeliveryInformation? DeliveryInformation { get; init; }
+
+    // BG-16
+    public required PaymentInstructions PaymentInstructions { get; init; }
+
+    // BG-20
+    public required DocumentLevelAllowance[] DocumentLevelAllowances { get; init; }
+
+    // BG-21
+    public required DocumentLevelCharge[] DocumentLevelCharges { get; init; }
+
+    // BG-22
+    public required DocumentTotals DocumentTotals { get; init; }
+
+    // BG-23
+    public required VatBreakdown[] VatBreakdowns
+    {
+        get;
+        init
+        {
+            if (value.Length == 0)
+            {
+                throw new InvalidOperationException("Array can't be empty");
+            }
+
+            field = value;
+        }
+    }
+
+    // BG-24
+    public required AdditionalSupportingDocument[] AdditionalSupportingDocuments { get; init; }
+
+
+    // BG-25
+    public required InvoiceLine[] InvoiceLines
+    {
+        get;
+        init
+        {
+            if (value.Length == 0)
+            {
+                throw new InvalidOperationException("Array can't be empty");
+            }
+
+            field = value;
+        }
+    }
 }
 
 public class InvoiceNote { }
@@ -121,15 +191,15 @@ public class DeliveryInformation { }
 
 public class PaymentInstructions { }
 
-public class DocumentLevelAllowances { }
+public class DocumentLevelAllowance { }
 
-public class DocumentLevelCharges { }
+public class DocumentLevelCharge { }
 
 public class DocumentTotals { }
 
 public class VatBreakdown { }
 
-public class AdditionalSupportingDocuments { }
+public class AdditionalSupportingDocument { }
 
 public class InvoiceLine { }
 
@@ -155,9 +225,9 @@ public class DirectDebit { }
 
 public class InvoiceLinePeriod { }
 
-public class InvoiceLineAllowances { }
+public class InvoiceLineAllowance { }
 
-public class InvoiceLineCharges { }
+public class InvoiceLineCharge { }
 
 public class PriceDetails { }
 
@@ -165,4 +235,4 @@ public class LineVatInformation { }
 
 public class ItemInformation { }
 
-public class ItemAttributes { }
+public class ItemAttribute { }
