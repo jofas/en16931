@@ -199,7 +199,21 @@ public class DocumentTotals { }
 
 public class VatBreakdown { }
 
-public class AdditionalSupportingDocument { }
+public class AdditionalSupportingDocument
+{
+    // BT-122
+    public required DocumentReference Reference { get; init; }
+
+    // BT-123
+    public Text? Description { get; init; }
+
+    // BT-124
+    public Text? Location { get; init; }
+
+    // BT-125
+    // TODO: non-case sensitive unique per invoice
+    public BinaryObject? AttachedDocument { get; init; }
+}
 
 public class InvoiceLine { }
 
