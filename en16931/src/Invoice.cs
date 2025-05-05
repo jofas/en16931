@@ -16,11 +16,13 @@ public class BinaryObject
 {
     public required byte[] Content { get; init; }
     public required string MimeCode { get; init; }
+    public required string Filename { get; init; }
 
-    public BinaryObject(byte[] content, string mimeCode)
+    public BinaryObject(byte[] content, string mimeCode, string filename)
     {
         Content = content;
         MimeCode = mimeCode;
+        Filename = filename;
     }
 }
 
@@ -211,7 +213,7 @@ public class AdditionalSupportingDocument
     public Text? Location { get; init; }
 
     // BT-125
-    // TODO: non-case sensitive unique per invoice
+    // TODO: Filename non-case sensitive unique per invoice
     public BinaryObject? AttachedDocument { get; init; }
 }
 
