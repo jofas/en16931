@@ -156,6 +156,7 @@ public class Invoice
     }
 
     // BG-24
+    // TODO: AttachedDocument?.Filename non-case sensitive unique per invoice
     public required AdditionalSupportingDocument[] AdditionalSupportingDocuments { get; init; }
 
 
@@ -213,7 +214,6 @@ public class AdditionalSupportingDocument
     public Text? Location { get; init; }
 
     // BT-125
-    // TODO: Filename non-case sensitive unique per invoice
     public BinaryObject? AttachedDocument { get; init; }
 }
 
