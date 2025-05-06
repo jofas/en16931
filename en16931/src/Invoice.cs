@@ -184,17 +184,80 @@ public class PrecedingInvoiceReference { }
 
 public class Seller { }
 
-public class Buyer { }
+public class Buyer
+{
+    // BT-44
+    public required Text Name { get; init; }
+
+    // BT-45
+    public Text? TradingName { get; init; }
+
+    // BT-46
+    public Identifier? Identifier { get; init; }
+
+    // BT-47
+    public Identifier? LegalRegistrationIdentifier { get; init; }
+
+    // BT-48
+    public Identifier? VatIdentifier { get; init; }
+
+    // BT-49
+    public Identifier? ElectronicAddress { get; init; }
+
+    // BG-8
+    public required BuyerPostalAddress PostalAddress { get; init; }
+
+    // BG-9
+    public BuyerContact? Contact { get; init; }
+}
 
 public class Payee { }
 
 public class SellerTaxRepresentativeParty { }
 
-public class DeliveryInformation { }
+public class DeliveryInformation
+{
+    // BT-70
+    public Text? PartyName { get; init; }
+
+    // BT-71
+    public Identifier? LocationIdentifier { get; init; }
+
+    // BT-72
+    public Date? ActualDeliveryDate { get; init; }
+
+    // BG-14
+    public InvoicingPeriod? InvoicingPeriod { get; init; }
+
+    // BG-15
+    public DeliverToAddress? DeliverToAddress { get; init; }
+}
 
 public class PaymentInstructions { }
 
-public class DocumentLevelAllowance { }
+public class DocumentLevelAllowance
+{
+    // BT-92
+    public required Amount Amount { get; init; }
+
+    // BT-93
+    public Amount? BaseAmount { get; init; }
+
+    // BT-94
+    public Percentage? Percentage { get; init; }
+
+    // BT-95
+    public required Code VatCategory { get; init; }
+
+    // BT-96
+    public Percentage? VatRate { get; init; }
+
+    // BT-97
+    public Text? Reason { get; init; }
+
+    // BT-98
+    public Code? ReasonCode { get; init; }
+}
 
 public class DocumentLevelCharge { }
 
@@ -223,21 +286,95 @@ public class SellerPostalAddress { }
 
 public class SellerContact { }
 
-public class BuyerPostalAddress { }
+public class BuyerPostalAddress
+{
+    // BT-50
+    public required Text AddressLine1 { get; init; }
 
-public class BuyerContact { }
+    // BT-51
+    public Text? AddressLine2 { get; init; }
+
+    // BT-163
+    public Text? AddressLine3 { get; init; }
+
+    // BT-52
+    public required Text City { get; init; }
+
+    // BT-53
+    public required Text PostCode { get; init; }
+
+    // BT-54
+    public Text? Subdivision { get; init; }
+
+    // BT-55
+    public required Code Country { get; init; }
+}
+
+public class BuyerContact
+{
+    // BT-56
+    public Text? ContactPoint { get; init; }
+
+    // BT-57
+    public Text? PhoneNumber { get; init; }
+
+    // BT-58
+    public Text? EmailAddress { get; init; }
+}
 
 public class SellerTaxRepresentativePostalAddress { }
 
 public class InvoicingPeriod { }
 
-public class DeliverToAddress { }
+public class DeliverToAddress
+{
+    // BT-75
+    public required Text AddressLine1 { get; init; }
 
-public class CreditTransfer { }
+    // BT-76
+    public Text? AddressLine2 { get; init; }
+
+    // BT-165
+    public Text? AddressLine3 { get; init; }
+
+    // BT-77
+    public required Text City { get; init; }
+
+    // BT-78
+    public required Text PostCode { get; init; }
+
+    // BT-79
+    public Text? Subdivision { get; init; }
+
+    // BT-80
+    public required Code Country { get; init; }
+}
+
+public class CreditTransfer
+{
+    // BT-84
+    public required Identifier Account { get; init; }
+
+    // BT-85
+    public Text? AccountName { get; init; }
+
+    // BT-86
+    public Identifier? ServiceProvider { get; init; }
+}
 
 public class PaymentCardInformation { }
 
-public class DirectDebit { }
+public class DirectDebit
+{
+    // BT-89
+    public required Identifier MandateReference { get; init; }
+
+    // BT-90
+    public required Identifier BankAssignedCreditor { get; init; }
+
+    // BT-91
+    public required Identifier DebitedAccount { get; init; }
+}
 
 public class InvoiceLinePeriod { }
 
