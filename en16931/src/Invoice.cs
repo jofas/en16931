@@ -176,7 +176,14 @@ public class Invoice
     }
 }
 
-public class InvoiceNote { }
+public class InvoiceNote
+{
+    // BT-21
+    public Code? Subject { get; init; }
+
+    // BT-22
+    public required Text Note { get; init; }
+}
 
 public class ProcessControl { }
 
@@ -420,7 +427,14 @@ public class BuyerContact
 
 public class SellerTaxRepresentativePostalAddress { }
 
-public class InvoicingPeriod { }
+public class InvoicingPeriod
+{
+    // BT-73
+    public Date? Start { get; init; }
+
+    // BT-74
+    public Date? End { get; init; }
+}
 
 public class DeliverToAddress
 {
@@ -472,16 +486,89 @@ public class DirectDebit
     public required Identifier DebitedAccount { get; init; }
 }
 
-public class InvoiceLinePeriod { }
+public class InvoiceLinePeriod
+{
+    // BT-134
+    public Date? Start { get; init; }
 
-public class InvoiceLineAllowance { }
+    // BT-135
+    public Date? End { get; init; }
+}
 
-public class InvoiceLineCharge { }
+public class InvoiceLineAllowance
+{
+    // BT-136
+    public required Amount Amount { get; init; }
+
+    // BT-137
+    public Amount? BaseAmount { get; init; }
+
+    // BT-138
+    public Percentage? Percentage { get; init; }
+
+    // BT-139
+    public Text? Reason { get; init; }
+
+    // BT-140
+    public Code? ReasonCode { get; init; }
+}
+
+public class InvoiceLineCharge
+{
+    // BT-141
+    public required Amount Amount { get; init; }
+
+    // BT-142
+    public Amount? BaseAmount { get; init; }
+
+    // BT-143
+    public Percentage? Percentage { get; init; }
+
+    // BT-144
+    public Text? Reason { get; init; }
+
+    // BT-145
+    public Code? ReasonCode { get; init; }
+}
 
 public class PriceDetails { }
 
 public class LineVatInformation { }
 
-public class ItemInformation { }
+public class ItemInformation
+{
+    // BT-153
+    public required Text Name { get; init; }
 
-public class ItemAttribute { }
+    // BT-154
+    public Text? Description { get; init; }
+
+    // BT-155
+    public Identifier? Seller { get; init; }
+
+    // BT-156
+    public Identifier? Buyer { get; init; }
+
+    // BT-157
+    public Identifier? StandardIdentifier { get; init; }
+
+    // BT-158
+    // UNTDID 7143
+    public required Identifier[] ClassificationIdentifiers { get; init; }
+
+    // BT-159
+    // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2 representation
+    public Code? CountryOfOrigin { get; init; }
+
+    // BG-32
+    public required ItemAttribute[] Attributes { get; init; }
+}
+
+public class ItemAttribute
+{
+    // BT-160
+    public required Text Name { get; init; }
+
+    // BT-161
+    public required Text Value { get; init; }
+}
