@@ -259,9 +259,62 @@ public class DocumentLevelAllowance
     public Code? ReasonCode { get; init; }
 }
 
-public class DocumentLevelCharge { }
+public class DocumentLevelCharge
+{
+    // BT-99
+    public required Amount Amount { get; init; }
 
-public class DocumentTotals { }
+    // BT-100
+    public Amount? BaseAmount { get; init; }
+
+    // BT-101
+    public Percentage? Percentage { get; init; }
+
+    // BT-102
+    public required Code VatCategory { get; init; }
+
+    // BT-103
+    public Percentage? VatRate { get; init; }
+
+    // BT-104
+    public Text? Reason { get; init; }
+
+    // BT-105
+    public Code? ReasonCode { get; init; }
+}
+
+public class DocumentTotals
+{
+    // BT-106
+    public required Amount SumInvoiceLinesNet { get; init; }
+
+    // BT-107
+    public Amount? SumAllowances { get; init; }
+
+    // BT-108
+    public Amount? SumCharges { get; init; }
+
+    // BT-109
+    public required Amount NetAmount { get; init; }
+
+    // BT-110
+    public Amount? Vat { get; init; }
+
+    // BT-111
+    public Amount? VatInAccountingCurrency { get; init; }
+
+    // BT-112
+    public required Amount GrossAmount { get; init; }
+
+    // BT-113
+    public Amount? Paid { get; init; }
+
+    // BT-114
+    public Amount? Rounding { get; init; }
+
+    // BT-115
+    public Amount ToPay { get; init; }
+}
 
 public class VatBreakdown { }
 
@@ -280,7 +333,50 @@ public class AdditionalSupportingDocument
     public BinaryObject? AttachedDocument { get; init; }
 }
 
-public class InvoiceLine { }
+public class InvoiceLine
+{
+    // BT-126
+    public required Identifier Identifier { get; init; }
+
+    // BT-127
+    public Text? Note { get; init; }
+
+    // BT-128
+    public Identifier? ObjectIdentifier { get; init; }
+
+    // BT-129
+    public required Quantity Quantity { get; init; }
+
+    // BT-130
+    public required Code UnitOfMeasure { get; init; }
+
+    // BT-131
+    public required Amount NetAmount { get; init; }
+
+    // BT-132
+    public DocumentReference? PurchaseOrderLineReference { get; init; }
+
+    // BT-133
+    public Text? BuyerAccountingReference { get; init; }
+
+    // BG-26
+    public InvoiceLinePeriod? Period { get; init; }
+
+    // BG-27
+    public required InvoiceLineAllowance[] Allowances { get; init; }
+
+    // BG-28
+    public required InvoiceLineCharge[] Charges { get; init; }
+
+    // BG-29
+    public required PriceDetails PriceDetails { get; init; }
+
+    // BG-30
+    public required LineVatInformation VatInformation { get; init; }
+
+    // BG-31
+    public required ItemInformation ItemInformation { get; init; }
+}
 
 public class SellerPostalAddress { }
 
