@@ -194,38 +194,46 @@ public class ProcessControl
     public required Identifier Specification { get; init; }
 }
 
-public class PrecedingInvoiceReference { }
+public class PrecedingInvoiceReference
+{
+    // BT-25
+    public required DocumentReference PrecedingInvoice { get; init; }
+
+    // BT-26
+    public Date? IssueDate { get; init; }
+}
 
 public class Seller
 {
     // BT-27
-
+    public required Text Name { get; init; }
 
     // BT-28
-
+    public Text? TradingName { get; init; }
 
     // BT-29
-
+    public required Identifier[] Identifiers { get; init; }
 
     // BT-30
-
+    public Identifier? LegalRegistration { get; init; }
 
     // BT-31
-
+    public Identifier? VatIdentifier { get; init; }
 
     // BT-32
-
+    public Identifier? TaxRegistrationIdentifier { get; init; }
 
     // BT-33
-
+    public Text? AdditionalLegalInformation { get; init; }
 
     // BT-34
-
+    public required Identifier ElectronicAddress { get; init; }
 
     // BG-5
-
+    public required SellerPostalAddress PostalAddress { get; init; }
 
     // BG-6
+    public required SellerContact Contact { get; init; }
 
 }
 
@@ -268,7 +276,17 @@ public class Payee
     public Identifier? LegalRegistration { get; init; }
 }
 
-public class SellerTaxRepresentativeParty { }
+public class SellerTaxRepresentativeParty
+{
+    // BT-62
+    public required Text Name { get; init; }
+
+    // BT-63
+    public required Identifier VatIdentifier { get; init; }
+
+    // BG-12
+    public required SellerTaxRepresentativePostalAddress PostalAddress { get; init; }
+}
 
 public class DeliveryInformation
 {
@@ -391,7 +409,28 @@ public class DocumentTotals
     public Amount ToPay { get; init; }
 }
 
-public class VatBreakdown { }
+public class VatBreakdown
+{
+    // BT-116
+    public required Amount TaxableAmount { get; init; }
+
+    // BT-117
+    public required Amount TaxAmount { get; init; }
+
+    // BT-118
+    // UNTDID 5305
+    public required Code Category { get; init; }
+
+    // BT-119
+    public required Percentage CategoryRate { get; init; }
+
+    // BT-120
+    public Text? ExemptionReason { get; init; }
+
+    // BT-121
+    // VATEX Vat exemption reason code list
+    public Code? ExemptionReasonCode { get; init; }
+}
 
 public class AdditionalSupportingDocument
 {
@@ -453,14 +492,47 @@ public class InvoiceLine
     public required ItemInformation ItemInformation { get; init; }
 }
 
-public class SellerPostalAddress { }
+public class SellerPostalAddress
+{
+    // BT-35
+    public Text? AddressLine1 { get; init; }
 
-public class SellerContact { }
+    // BT-36
+    public Text? AddressLine2 { get; init; }
+
+    // BT-162
+    public Text? AddressLine3 { get; init; }
+
+    // BT-37
+    public required Text City { get; init; }
+
+    // BT-38
+    public required Text PostCode { get; init; }
+
+    // BT-39
+    public Text? Subdivision { get; init; }
+
+    // BT-40
+    // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
+    public required Code Country { get; init; }
+}
+
+public class SellerContact
+{
+    // BT-41
+    public required Text ContactPoint { get; init; }
+
+    // BT-42
+    public required Text PhoneNumber { get; init; }
+
+    // BT-43
+    public required Text EmailAddress { get; init; }
+}
 
 public class BuyerPostalAddress
 {
     // BT-50
-    public required Text AddressLine1 { get; init; }
+    public Text? AddressLine1 { get; init; }
 
     // BT-51
     public Text? AddressLine2 { get; init; }
@@ -478,6 +550,7 @@ public class BuyerPostalAddress
     public Text? Subdivision { get; init; }
 
     // BT-55
+    // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code Country { get; init; }
 }
 
@@ -493,7 +566,30 @@ public class BuyerContact
     public Text? EmailAddress { get; init; }
 }
 
-public class SellerTaxRepresentativePostalAddress { }
+public class SellerTaxRepresentativePostalAddress
+{
+    // BT-64
+    public Text? AddressLine1 { get; init; }
+
+    // BT-65
+    public Text? AddressLine2 { get; init; }
+
+    // BT-164
+    public Text? AddressLine3 { get; init; }
+
+    // BT-66
+    public required Text City { get; init; }
+
+    // BT-67
+    public required Text PostCode { get; init; }
+
+    // BT-68
+    public Text? Subdivision { get; init; }
+
+    // BT-69
+    // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
+    public required Code Country { get; init; }
+}
 
 public class InvoicingPeriod
 {
