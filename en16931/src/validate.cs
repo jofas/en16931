@@ -1,6 +1,4 @@
-﻿namespace dev.fassbender.en16931;
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
@@ -8,6 +6,8 @@ using System.Xml.Schema;
 
 using net.sf.saxon.s9api;
 using net.liberty_development.SaxonHE12s9apiExtensions;
+
+namespace Dev.Fassbender.En16931;
 
 public class Validator
 {
