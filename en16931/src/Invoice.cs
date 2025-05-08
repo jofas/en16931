@@ -185,11 +185,49 @@ public class InvoiceNote
     public required Text Note { get; init; }
 }
 
-public class ProcessControl { }
+public class ProcessControl
+{
+    // BT-23
+    public required Text BusinessProcessType { get; init; }
+
+    // BT-24
+    public required Identifier Specification { get; init; }
+}
 
 public class PrecedingInvoiceReference { }
 
-public class Seller { }
+public class Seller
+{
+    // BT-27
+
+
+    // BT-28
+
+
+    // BT-29
+
+
+    // BT-30
+
+
+    // BT-31
+
+
+    // BT-32
+
+
+    // BT-33
+
+
+    // BT-34
+
+
+    // BG-5
+
+
+    // BG-6
+
+}
 
 public class Buyer
 {
@@ -218,7 +256,17 @@ public class Buyer
     public BuyerContact? Contact { get; init; }
 }
 
-public class Payee { }
+public class Payee
+{
+    // BT-59
+    public required Text Name { get; init; }
+
+    // BT-60
+    public Identifier? Identifier { get; init; }
+
+    // BT-61
+    public Identifier? LegalRegistration { get; init; }
+}
 
 public class SellerTaxRepresentativeParty { }
 
@@ -240,7 +288,27 @@ public class DeliveryInformation
     public DeliverToAddress? DeliverToAddress { get; init; }
 }
 
-public class PaymentInstructions { }
+public class PaymentInstructions
+{
+    // BT-81
+    // UNTDID-4461
+    public required Code PaymentMeansType { get; init; }
+
+    // BT-82
+    public Text? PaymentMeans { get; init; }
+
+    // BT-83
+    public Text? RemittanceInformation { get; init; }
+
+    // BG-17
+    public required CreditTransfer[] CreditTransfers { get; init; }
+
+    // BG-18
+    public PaymentCardInformation? PaymentCardInformation { get; init; }
+
+    // BG-19
+    public DirectDebit? DirectDebit { get; init; }
+}
 
 public class DocumentLevelAllowance
 {
@@ -472,7 +540,14 @@ public class CreditTransfer
     public Identifier? ServiceProvider { get; init; }
 }
 
-public class PaymentCardInformation { }
+public class PaymentCardInformation
+{
+    // BT-87
+    public required Text PrimaryAccountNumber { get; init; }
+
+    // BT-88
+    public Text? CardHolderName { get; init; }
+}
 
 public class DirectDebit
 {
@@ -531,9 +606,34 @@ public class InvoiceLineCharge
     public Code? ReasonCode { get; init; }
 }
 
-public class PriceDetails { }
+public class PriceDetails
+{
+    // BT-146
+    public required UnitPriceAmount Net { get; init; }
 
-public class LineVatInformation { }
+    // BT-147
+    public UnitPriceAmount? Discount { get; init; }
+
+    // BT-148
+    public UnitPriceAmount? Gross { get; init; }
+
+    // BT-149
+    public Quantity? BaseQuantity { get; init; }
+
+    // BT-150
+    // UN/ECE Rec No 20,21
+    public Code? BaseQuantityUnitOfMeasure { get; init; }
+}
+
+public class LineVatInformation
+{
+    // BT-151
+    // UNTDID 5305
+    public required Code Category { get; init; }
+
+    // BT-152
+    public Percentage? Rate { get; init; }
+}
 
 public class ItemInformation
 {
