@@ -1,12 +1,12 @@
-﻿namespace tests;
-
-using System;
+﻿using System;
 using System.IO;
 using System.Xml.Schema;
 
 using Xunit;
 
-using dev.fassbender.en16931;
+using Dev.Fassbender.En16931;
+
+namespace Tests;
 
 public class XRechnungValidation
 {
