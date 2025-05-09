@@ -1,6 +1,6 @@
-namespace dev.fassbender.en16931;
-
 using System;
+
+namespace Dev.Fassbender.En16931.Model;
 
 using Amount = decimal;
 // TODO: how to represent code lists?
@@ -12,35 +12,21 @@ using Quantity = decimal;
 using Text = string;
 using UnitPriceAmount = decimal;
 
-public class BinaryObject
+public record BinaryObject
 {
     public required byte[] Content { get; init; }
     public required string MimeCode { get; init; }
     public required string Filename { get; init; }
-
-    public BinaryObject(byte[] content, string mimeCode, string filename)
-    {
-        Content = content;
-        MimeCode = mimeCode;
-        Filename = filename;
-    }
 }
 
-public class Identifier
+public record Identifier
 {
     public required string Content { get; init; }
     public string? SchemeIdentifier { get; init; }
     public string? SchemeVersionIdentifier { get; init; }
-
-    public Identifier(string content, string? schemeIdentifier, string? schemeVersionIdentifier)
-    {
-        Content = content;
-        SchemeIdentifier = SchemeIdentifier;
-        SchemeVersionIdentifier = schemeVersionIdentifier;
-    }
 }
 
-public class Invoice
+public record Invoice
 {
     // BT-1
     public required Identifier Number { get; init; }
@@ -176,7 +162,7 @@ public class Invoice
     }
 }
 
-public class InvoiceNote
+public record InvoiceNote
 {
     // BT-21
     public Code? Subject { get; init; }
@@ -185,7 +171,7 @@ public class InvoiceNote
     public required Text Note { get; init; }
 }
 
-public class ProcessControl
+public record ProcessControl
 {
     // BT-23
     public required Text BusinessProcessType { get; init; }
@@ -194,7 +180,7 @@ public class ProcessControl
     public required Identifier Specification { get; init; }
 }
 
-public class PrecedingInvoiceReference
+public record PrecedingInvoiceReference
 {
     // BT-25
     public required DocumentReference PrecedingInvoice { get; init; }
@@ -203,7 +189,7 @@ public class PrecedingInvoiceReference
     public Date? IssueDate { get; init; }
 }
 
-public class Seller
+public record Seller
 {
     // BT-27
     public required Text Name { get; init; }
@@ -237,7 +223,7 @@ public class Seller
 
 }
 
-public class Buyer
+public record Buyer
 {
     // BT-44
     public required Text Name { get; init; }
@@ -264,7 +250,7 @@ public class Buyer
     public BuyerContact? Contact { get; init; }
 }
 
-public class Payee
+public record Payee
 {
     // BT-59
     public required Text Name { get; init; }
@@ -276,7 +262,7 @@ public class Payee
     public Identifier? LegalRegistration { get; init; }
 }
 
-public class SellerTaxRepresentativeParty
+public record SellerTaxRepresentativeParty
 {
     // BT-62
     public required Text Name { get; init; }
@@ -288,7 +274,7 @@ public class SellerTaxRepresentativeParty
     public required SellerTaxRepresentativePostalAddress PostalAddress { get; init; }
 }
 
-public class DeliveryInformation
+public record DeliveryInformation
 {
     // BT-70
     public Text? PartyName { get; init; }
@@ -306,7 +292,7 @@ public class DeliveryInformation
     public DeliverToAddress? DeliverToAddress { get; init; }
 }
 
-public class PaymentInstructions
+public record PaymentInstructions
 {
     // BT-81
     // UNTDID-4461
@@ -328,7 +314,7 @@ public class PaymentInstructions
     public DirectDebit? DirectDebit { get; init; }
 }
 
-public class DocumentLevelAllowance
+public record DocumentLevelAllowance
 {
     // BT-92
     public required Amount Amount { get; init; }
@@ -352,7 +338,7 @@ public class DocumentLevelAllowance
     public Code? ReasonCode { get; init; }
 }
 
-public class DocumentLevelCharge
+public record DocumentLevelCharge
 {
     // BT-99
     public required Amount Amount { get; init; }
@@ -376,7 +362,7 @@ public class DocumentLevelCharge
     public Code? ReasonCode { get; init; }
 }
 
-public class DocumentTotals
+public record DocumentTotals
 {
     // BT-106
     public required Amount SumInvoiceLinesNet { get; init; }
@@ -409,7 +395,7 @@ public class DocumentTotals
     public Amount ToPay { get; init; }
 }
 
-public class VatBreakdown
+public record VatBreakdown
 {
     // BT-116
     public required Amount TaxableAmount { get; init; }
@@ -432,7 +418,7 @@ public class VatBreakdown
     public Code? ExemptionReasonCode { get; init; }
 }
 
-public class AdditionalSupportingDocument
+public record AdditionalSupportingDocument
 {
     // BT-122
     public required DocumentReference Reference { get; init; }
@@ -447,7 +433,7 @@ public class AdditionalSupportingDocument
     public BinaryObject? AttachedDocument { get; init; }
 }
 
-public class InvoiceLine
+public record InvoiceLine
 {
     // BT-126
     public required Identifier Identifier { get; init; }
@@ -492,7 +478,7 @@ public class InvoiceLine
     public required ItemInformation ItemInformation { get; init; }
 }
 
-public class SellerPostalAddress
+public record SellerPostalAddress
 {
     // BT-35
     public Text? AddressLine1 { get; init; }
@@ -517,7 +503,7 @@ public class SellerPostalAddress
     public required Code Country { get; init; }
 }
 
-public class SellerContact
+public record SellerContact
 {
     // BT-41
     public required Text ContactPoint { get; init; }
@@ -529,7 +515,7 @@ public class SellerContact
     public required Text EmailAddress { get; init; }
 }
 
-public class BuyerPostalAddress
+public record BuyerPostalAddress
 {
     // BT-50
     public Text? AddressLine1 { get; init; }
@@ -554,7 +540,7 @@ public class BuyerPostalAddress
     public required Code Country { get; init; }
 }
 
-public class BuyerContact
+public record BuyerContact
 {
     // BT-56
     public Text? ContactPoint { get; init; }
@@ -566,7 +552,7 @@ public class BuyerContact
     public Text? EmailAddress { get; init; }
 }
 
-public class SellerTaxRepresentativePostalAddress
+public record SellerTaxRepresentativePostalAddress
 {
     // BT-64
     public Text? AddressLine1 { get; init; }
@@ -591,7 +577,7 @@ public class SellerTaxRepresentativePostalAddress
     public required Code Country { get; init; }
 }
 
-public class InvoicingPeriod
+public record InvoicingPeriod
 {
     // BT-73
     public Date? Start { get; init; }
@@ -600,7 +586,7 @@ public class InvoicingPeriod
     public Date? End { get; init; }
 }
 
-public class DeliverToAddress
+public record DeliverToAddress
 {
     // BT-75
     public required Text AddressLine1 { get; init; }
@@ -624,7 +610,7 @@ public class DeliverToAddress
     public required Code Country { get; init; }
 }
 
-public class CreditTransfer
+public record CreditTransfer
 {
     // BT-84
     public required Identifier Account { get; init; }
@@ -636,7 +622,7 @@ public class CreditTransfer
     public Identifier? ServiceProvider { get; init; }
 }
 
-public class PaymentCardInformation
+public record PaymentCardInformation
 {
     // BT-87
     public required Text PrimaryAccountNumber { get; init; }
@@ -645,7 +631,7 @@ public class PaymentCardInformation
     public Text? CardHolderName { get; init; }
 }
 
-public class DirectDebit
+public record DirectDebit
 {
     // BT-89
     public required Identifier MandateReference { get; init; }
@@ -657,7 +643,7 @@ public class DirectDebit
     public required Identifier DebitedAccount { get; init; }
 }
 
-public class InvoiceLinePeriod
+public record InvoiceLinePeriod
 {
     // BT-134
     public Date? Start { get; init; }
@@ -666,7 +652,7 @@ public class InvoiceLinePeriod
     public Date? End { get; init; }
 }
 
-public class InvoiceLineAllowance
+public record InvoiceLineAllowance
 {
     // BT-136
     public required Amount Amount { get; init; }
@@ -684,7 +670,7 @@ public class InvoiceLineAllowance
     public Code? ReasonCode { get; init; }
 }
 
-public class InvoiceLineCharge
+public record InvoiceLineCharge
 {
     // BT-141
     public required Amount Amount { get; init; }
@@ -702,7 +688,7 @@ public class InvoiceLineCharge
     public Code? ReasonCode { get; init; }
 }
 
-public class PriceDetails
+public record PriceDetails
 {
     // BT-146
     public required UnitPriceAmount Net { get; init; }
@@ -721,7 +707,7 @@ public class PriceDetails
     public Code? BaseQuantityUnitOfMeasure { get; init; }
 }
 
-public class LineVatInformation
+public record LineVatInformation
 {
     // BT-151
     // UNTDID 5305
@@ -731,7 +717,7 @@ public class LineVatInformation
     public Percentage? Rate { get; init; }
 }
 
-public class ItemInformation
+public record ItemInformation
 {
     // BT-153
     public required Text Name { get; init; }
@@ -760,7 +746,7 @@ public class ItemInformation
     public required ItemAttribute[] Attributes { get; init; }
 }
 
-public class ItemAttribute
+public record ItemAttribute
 {
     // BT-160
     public required Text Name { get; init; }
