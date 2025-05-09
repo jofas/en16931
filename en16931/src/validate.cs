@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
-
-using net.sf.saxon.s9api;
 using net.liberty_development.SaxonHE12s9apiExtensions;
+using net.sf.saxon.s9api;
 
 namespace Dev.Fassbender.En16931;
 

@@ -1,10 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Xml.Schema;
-
-using Xunit;
-
 using Dev.Fassbender.En16931;
+using Xunit;
 
 namespace Tests;
 
