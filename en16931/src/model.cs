@@ -20,7 +20,7 @@ public record Text(string Inner);
 
 public record UnitPriceAmount(decimal Inner);
 
-[XmlRoot(Namespace="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2")]
+[XmlRoot(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2")]
 public record BinaryObject
 {
     public required byte[] Content { get; init; }
@@ -38,32 +38,39 @@ public record Identifier
 public record Invoice
 {
     // BT-1
+    // cbc:ID
     public required Identifier Number { get; init; }
 
     // BT-2
+    // cbc:IssueDate
     public required Date IssueDate { get; init; }
 
     // BT-3
     // UNTDID 1001
+    // cbc:InvoiceTypeCode
     public required Code TypeCode { get; init; }
 
     // BT-5
     // ISO 4217 - Codes for the representation of currencies and funds - Alpha-3 representation
+    // cbc:DocumentCurrencyCode
     public required Code CurrencyCode { get; init; }
 
     // BT-6
     // ISO 4217 - Codes for the representation of currencies and funds - Alpha-3 representation
+    // cbc:TaxCurrencyCode
     public Code? VatAccountingCurrencyCode { get; init; }
 
-    // TODO: BT-7 and BT-8 are mutually exclusive
     // BT-7
+    // cbc:TaxPointDate
     public Date? VatPointDate { get; init; }
 
     // BT-8
     // UNTDID 2005
+    // cac:InvoicePeriod/cbc:DescriptionCode
     public Code? VatPointDateCode { get; init; }
 
     // BT-9
+    // cbc:DueDate
     public Date? PaymentDueDate { get; init; }
 
     // BT-10
@@ -136,39 +143,19 @@ public record Invoice
     public required DocumentTotals DocumentTotals { get; init; }
 
     // BG-23
-    public required VatBreakdown[] VatBreakdowns
-    {
-        get;
-        init
-        {
-            if (value.Length == 0)
-            {
-                throw new InvalidOperationException("Array can't be empty");
-            }
-
-            field = value;
-        }
-    }
+    //
+    // non-empty
+    public required VatBreakdown[] VatBreakdowns { get; init; }
 
     // BG-24
-    // TODO: AttachedDocument?.Filename non-case sensitive unique per invoice
     public required AdditionalSupportingDocument[] AdditionalSupportingDocuments { get; init; }
 
-
     // BG-25
-    public required InvoiceLine[] InvoiceLines
-    {
-        get;
-        init
-        {
-            if (value.Length == 0)
-            {
-                throw new InvalidOperationException("Array can't be empty");
-            }
-
-            field = value;
-        }
-    }
+    //
+    // non-empty
+    //
+    // cac:InvoiceLine || cac:CreditNoteLine
+    public required InvoiceLine[] InvoiceLines { get; init; }
 }
 
 public record InvoiceNote
@@ -186,6 +173,7 @@ public record ProcessControl
     public required Text BusinessProcessType { get; init; }
 
     // BT-24
+    // cbc:CustomizationID
     public required Identifier Specification { get; init; }
 }
 
@@ -201,6 +189,7 @@ public record PrecedingInvoiceReference
 public record Seller
 {
     // BT-27
+    // cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName
     public required Text Name { get; init; }
 
     // BT-28
@@ -225,6 +214,7 @@ public record Seller
     public required Identifier ElectronicAddress { get; init; }
 
     // BG-5
+    // cac:AccountSupplierParty/cac:Party/cac:PostalAddress
     public required SellerPostalAddress PostalAddress { get; init; }
 
     // BG-6
@@ -235,6 +225,7 @@ public record Seller
 public record Buyer
 {
     // BT-44
+    // cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName
     public required Text Name { get; init; }
 
     // BT-45
@@ -253,6 +244,7 @@ public record Buyer
     public Identifier? ElectronicAddress { get; init; }
 
     // BG-8
+    // cac:AccountingCustomerParty/cac:Party/cac:PostalAddress
     public required BuyerPostalAddress PostalAddress { get; init; }
 
     // BG-9
@@ -317,9 +309,11 @@ public record PaymentInstructions
     public required CreditTransfer[] CreditTransfers { get; init; }
 
     // BG-18
+    // cac:PaymentMeans/cac:CardAccount
     public PaymentCardInformation? PaymentCardInformation { get; init; }
 
     // BG-19
+    // cac:PaymentMeans/cac:PaymentMandate
     public DirectDebit? DirectDebit { get; init; }
 }
 
