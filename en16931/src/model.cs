@@ -1,17 +1,26 @@
 using System;
+using System.Xml.Serialization;
 
 namespace Dev.Fassbender.En16931.Model;
 
-using Amount = decimal;
-// TODO: how to represent code lists?
-using Code = string;
-using Date = System.DateTime;
-using DocumentReference = string;
-using Percentage = decimal;
-using Quantity = decimal;
-using Text = string;
-using UnitPriceAmount = decimal;
+public record Amount(decimal Inner);
 
+// TODO: how to represent code lists?
+public record Code(string Inner);
+
+public record Date(System.DateTime Inner);
+
+public record DocumentReference(string Inner);
+
+public record Percentage(decimal Inner);
+
+public record Quantity(decimal Inner);
+
+public record Text(string Inner);
+
+public record UnitPriceAmount(decimal Inner);
+
+[XmlRoot(Namespace="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2")]
 public record BinaryObject
 {
     public required byte[] Content { get; init; }
@@ -392,7 +401,7 @@ public record DocumentTotals
     public Amount? Rounding { get; init; }
 
     // BT-115
-    public Amount ToPay { get; init; }
+    public required Amount ToPay { get; init; }
 }
 
 public record VatBreakdown
