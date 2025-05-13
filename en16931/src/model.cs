@@ -94,9 +94,11 @@ public record Invoice
     public DocumentReference? SalesOrderReference { get; init; }
 
     // BT-15
+    // cac:ReceiptDocumentReference/cbc:ID
     public DocumentReference? ReceivingAdviceReference { get; init; }
 
     // BT-16
+    // cac:DespatchDocumentReference/cbc:ID
     public DocumentReference? DispatchAdviceReference { get; init; }
 
     // BT-17
@@ -121,19 +123,15 @@ public record Invoice
     public required PrecedingInvoiceReference[] PrecedingInvoiceReferences { get; init; }
 
     // BG-4
-    // cac:AccountingSupplierParty
     public required Seller Seller { get; init; }
 
     // BG-7
-    // cac:AccountingCustomerParty
     public required Buyer Buyer { get; init; }
 
     // BG-10
-    // cac:PayeeParty
     public Payee? Payee { get; init; }
 
     // BG-11
-    // cac:TaxRepresentativeParty
     public SellerTaxRepresentativeParty? SellerTaxRepresentativeParty { get; init; }
 
     // BG-13
@@ -162,14 +160,13 @@ public record Invoice
     // BG-25
     //
     // non-empty
-    //
-    // cac:InvoiceLine || cac:CreditNoteLine
     public required InvoiceLine[] InvoiceLines { get; init; }
 }
 
 public record InvoiceNote
 {
     // BT-21
+    // cbc:Note (#Subject#) from inner text
     public Code? Subject { get; init; }
 
     // BT-22
@@ -180,6 +177,7 @@ public record InvoiceNote
 public record ProcessControl
 {
     // BT-23
+    // cbc:ProfileID
     public required Text BusinessProcessType { get; init; }
 
     // BT-24
@@ -190,9 +188,11 @@ public record ProcessControl
 public record PrecedingInvoiceReference
 {
     // BT-25
+    // cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID
     public required DocumentReference PrecedingInvoice { get; init; }
 
     // BT-26
+    // cac:BillingReference/cac:InvoiceDocumentReference/cbc:IssueDate
     public Date? IssueDate { get; init; }
 }
 
@@ -221,10 +221,10 @@ public record Seller
     public Text? AdditionalLegalInformation { get; init; }
 
     // BT-34
+    // cac:AccountingSupplierParty/cac:Party/cbc:EndpointID
     public required Identifier ElectronicAddress { get; init; }
 
     // BG-5
-    // cac:AccountSupplierParty/cac:Party/cac:PostalAddress
     public required SellerPostalAddress PostalAddress { get; init; }
 
     // BG-6
@@ -254,7 +254,6 @@ public record Buyer
     public Identifier? ElectronicAddress { get; init; }
 
     // BG-8
-    // cac:AccountingCustomerParty/cac:Party/cac:PostalAddress
     public required BuyerPostalAddress PostalAddress { get; init; }
 
     // BG-9
@@ -264,9 +263,11 @@ public record Buyer
 public record Payee
 {
     // BT-59
+    // cac:PayeeParty/cac:PartyName/cbc:Name
     public required Text Name { get; init; }
 
     // BT-60
+    // cac:PayeeParty/cac:PartyIdentification/cbc:ID
     public Identifier? Identifier { get; init; }
 
     // BT-61
@@ -276,9 +277,11 @@ public record Payee
 public record SellerTaxRepresentativeParty
 {
     // BT-62
+    // cac:TaxRepresentativeParty/cac:PartyName/cbc:Name
     public required Text Name { get; init; }
 
     // BT-63
+    // cac:TaxRepresentativeParty/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:CompanyID
     public required Identifier VatIdentifier { get; init; }
 
     // BG-12
@@ -292,6 +295,7 @@ public record DeliveryInformation
     public Text? PartyName { get; init; }
 
     // BT-71
+    // cac:Delivery/cac:DeliveryLocation/cbc:ID
     public Identifier? LocationIdentifier { get; init; }
 
     // BT-72
@@ -299,11 +303,9 @@ public record DeliveryInformation
     public Date? ActualDeliveryDate { get; init; }
 
     // BG-14
-    // cac:InvoicePeriod
     public InvoicingPeriod? InvoicingPeriod { get; init; }
 
     // BG-15
-    // cac:Delivery/cac:DeliveryLocation/cac:Address
     public DeliverToAddress? DeliverToAddress { get; init; }
 }
 
@@ -438,18 +440,23 @@ public record VatBreakdown
 public record AdditionalSupportingDocument
 {
     // BT-122
+    // cac:AdditionalDocumentReference/cbc:ID
     public required DocumentReference Reference { get; init; }
 
     // BT-123
+    // cac:AdditionalDocumentReference/cbc:DocumentDescription
     public Text? Description { get; init; }
 
     // BT-124
+    // cac:AdditionalDocumentReference/cac:Attachment/cac:ExternalReference/cbc:URI
     public Text? Location { get; init; }
 
     // BT-125
+    // cac:AdditionalDocumentReference/cac:Attachment/cbc:EmbeddedDocumentBinaryObject
     public BinaryObject? AttachedDocument { get; init; }
 }
 
+// cac:InvoiceLine || cac:CreditNoteLine
 public record InvoiceLine
 {
     // BT-126
@@ -498,109 +505,126 @@ public record InvoiceLine
 public record SellerPostalAddress
 {
     // BT-35
-    // cac:AccountSupplierParty/cac:Party/cac:PostalAddress/StreetName
+    // cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:StreetName
     public Text? AddressLine1 { get; init; }
 
     // BT-36
-    // cac:AccountSupplierParty/cac:Party/cac:PostalAddress/AdditionalStreetName
+    // cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName
     public Text? AddressLine2 { get; init; }
 
     // BT-162
-    // cac:AccountSupplierParty/cac:Party/cac:PostalAddress/cac:AddressLine/cbc:Line
+    // cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:AddressLine/cbc:Line
     public Text? AddressLine3 { get; init; }
 
     // BT-37
-    // cac:AccountSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName
+    // cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName
     public required Text City { get; init; }
 
     // BT-38
-    // cac:AccountSupplierParty/cac:Party/cac:PostalAddress/cbc:PostalZone
+    // cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:PostalZone
     public required Text PostCode { get; init; }
 
     // BT-39
-    // cac:AccountSupplierParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity
+    // cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity
     public Text? Subdivision { get; init; }
 
     // BT-40
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
-    // cac:AccountSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode
+    // cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode
     public required Code Country { get; init; }
 }
 
 public record SellerContact
 {
     // BT-41
-    // cac:AccountSupplierParty/cac:Party/cac:Contact/cbc:Name
+    // cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name
     public required Text ContactPoint { get; init; }
 
     // BT-42
-    // cac:AccountSupplierParty/cac:Party/cac:Contact/cbc:Telephone
+    // cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telephone
     public required Text PhoneNumber { get; init; }
 
     // BT-43
-    // cac:AccountSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail
+    // cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail
     public required Text EmailAddress { get; init; }
 }
 
 public record BuyerPostalAddress
 {
     // BT-50
+    // cac:AccountCustomerParty/cac:Party/cac:PostalAddress/cbc:StreetName
     public Text? AddressLine1 { get; init; }
 
     // BT-51
+    // cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName
     public Text? AddressLine2 { get; init; }
 
     // BT-163
+    // cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:AddressLine/cbc:Line
     public Text? AddressLine3 { get; init; }
 
     // BT-52
+    // cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName
     public required Text City { get; init; }
 
     // BT-53
+    // cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:PostalZone
     public required Text PostCode { get; init; }
 
     // BT-54
+    // cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity
     public Text? Subdivision { get; init; }
 
     // BT-55
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
+    // cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode
     public required Code Country { get; init; }
 }
 
 public record BuyerContact
 {
     // BT-56
+    // cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name
     public Text? ContactPoint { get; init; }
 
     // BT-57
+    // cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Telephone
     public Text? PhoneNumber { get; init; }
 
     // BT-58
+    // cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail
     public Text? EmailAddress { get; init; }
 }
 
 public record SellerTaxRepresentativePostalAddress
 {
     // BT-64
+    // cac:TaxRepresentativeParty/cac:PostalAddress/cbc:StreetName
     public Text? AddressLine1 { get; init; }
 
     // BT-65
+    // cac:TaxRepresentativeParty/cac:PostalAddress/cbc:AdditionalStreetName
     public Text? AddressLine2 { get; init; }
 
     // BT-164
+    // cac:TaxRepresentativeParty/cac:PostalAddress/cac:AddressLine/cbc:Line
     public Text? AddressLine3 { get; init; }
 
     // BT-66
+    // cac:TaxRepresentativeParty/cac:PostalAddress/cbc:CityName
     public required Text City { get; init; }
 
     // BT-67
+    // cac:TaxRepresentativeParty/cac:PostalAddress/cbc:PostalZone
     public required Text PostCode { get; init; }
 
     // BT-68
+    // cac:TaxRepresentativeParty/cac:PostalAddress/cbc:CountrySubentity
     public Text? Subdivision { get; init; }
 
     // BT-69
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
+    // cac:TaxRepresentativeParty/cac:PostalAddress/cac:Country/cbc:IdentificationCode
     public required Code Country { get; init; }
 }
 
@@ -618,24 +642,32 @@ public record InvoicingPeriod
 public record DeliverToAddress
 {
     // BT-75
+    // cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:StreetName
     public required Text AddressLine1 { get; init; }
 
     // BT-76
+    // cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:AdditionalStreetName
     public Text? AddressLine2 { get; init; }
 
     // BT-165
+    // cac:Delivery/cac:DeliveryLocation/cac:Address/cac:AddressLine/cbc:Line
     public Text? AddressLine3 { get; init; }
 
     // BT-77
+    // cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName
     public required Text City { get; init; }
 
     // BT-78
+    // cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:PostalZone
     public required Text PostCode { get; init; }
 
     // BT-79
+    // cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CountrySubentity
     public Text? Subdivision { get; init; }
 
     // BT-80
+    // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
+    // cac:Delivery/cac:DeliveryLocation/cac:Address/cac:Country/cbc:IdentificationCode
     public required Code Country { get; init; }
 }
 
