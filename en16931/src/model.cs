@@ -336,48 +336,62 @@ public record PaymentInstructions
 public record DocumentLevelAllowance
 {
     // BT-92
+    // cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:Amount
     public required Amount Amount { get; init; }
 
     // BT-93
+    // cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:BaseAmount
     public Amount? BaseAmount { get; init; }
 
     // BT-94
+    // cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:MultiplierFactorNumeric
     public Percentage? Percentage { get; init; }
 
     // BT-95
+    // cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID
     public required Code VatCategory { get; init; }
 
     // BT-96
+    // cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent
     public Percentage? VatRate { get; init; }
 
     // BT-97
+    // cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:AllowanceChargeReason
     public Text? Reason { get; init; }
 
     // BT-98
+    // cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:AllowanceChargeReasonCode
     public Code? ReasonCode { get; init; }
 }
 
 public record DocumentLevelCharge
 {
     // BT-99
+    // cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:Amount
     public required Amount Amount { get; init; }
 
     // BT-100
+    // cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:BaseAmount
     public Amount? BaseAmount { get; init; }
 
     // BT-101
+    // cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:MultiplierFactorNumeric
     public Percentage? Percentage { get; init; }
 
     // BT-102
+    // cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID
     public required Code VatCategory { get; init; }
 
     // BT-103
+    // cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent
     public Percentage? VatRate { get; init; }
 
     // BT-104
+    // cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:AllowanceChargeReason
     public Text? Reason { get; init; }
 
     // BT-105
+    // cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:AllowanceChargeReasonCode
     public Code? ReasonCode { get; init; }
 }
 
@@ -716,36 +730,46 @@ public record InvoiceLinePeriod
 public record InvoiceLineAllowance
 {
     // BT-136
+    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:Amount
     public required Amount Amount { get; init; }
 
     // BT-137
+    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:BaseAmount
     public Amount? BaseAmount { get; init; }
 
     // BT-138
+    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:MultiplierFactorNumeric
     public Percentage? Percentage { get; init; }
 
     // BT-139
+    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:AllowanceChargeReason
     public Text? Reason { get; init; }
 
     // BT-140
+    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:AllowanceChargeReasonCode
     public Code? ReasonCode { get; init; }
 }
 
 public record InvoiceLineCharge
 {
     // BT-141
+    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:Amount
     public required Amount Amount { get; init; }
 
     // BT-142
+    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:BaseAmount
     public Amount? BaseAmount { get; init; }
 
     // BT-143
+    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:MultiplierFactorNumeric
     public Percentage? Percentage { get; init; }
 
     // BT-144
+    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:AllowanceChargeReason
     public Text? Reason { get; init; }
 
     // BT-145
+    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:AllowanceChargeReasonCode
     public Code? ReasonCode { get; init; }
 }
 
