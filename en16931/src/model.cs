@@ -398,33 +398,43 @@ public record DocumentLevelCharge
 public record DocumentTotals
 {
     // BT-106
+    // cac:LegalMonetaryTotal/cbc:LineExtensionAmount
     public required Amount SumInvoiceLinesNet { get; init; }
 
     // BT-107
+    // cac:LegalMonetaryTotal/cbc:AllowanceTotalAmount
     public Amount? SumAllowances { get; init; }
 
     // BT-108
+    // cac:LegalMonetaryTotal/cbc:ChargeTotalAmount
     public Amount? SumCharges { get; init; }
 
     // BT-109
+    // cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount
     public required Amount NetAmount { get; init; }
 
     // BT-110
+    // cac:TaxTotal/cbc:TaxAmount[@currencyID=cbc:DocumentCurrencyCode]
     public Amount? Vat { get; init; }
 
     // BT-111
+    // cac:TaxTotal/cbc:TaxAmount[@currencyID=cbc:TaxCurrencyCode]
     public Amount? VatInAccountingCurrency { get; init; }
 
     // BT-112
+    // cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount
     public required Amount GrossAmount { get; init; }
 
     // BT-113
+    // cac:LegalMonetaryTotal/cbc:PrepaidAmount
     public Amount? Paid { get; init; }
 
     // BT-114
+    // cac:LegalMonetaryTotal/cbc:PayableRoundingAmount
     public Amount? Rounding { get; init; }
 
     // BT-115
+    // cac:LegalMonetaryTotal/cbc:PayableAmount
     public required Amount ToPay { get; init; }
 }
 
