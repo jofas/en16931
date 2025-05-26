@@ -441,23 +441,29 @@ public record DocumentTotals
 public record VatBreakdown
 {
     // BT-116
+    // cac:TaxTotal/cac:TaxSubtotal/cbc:TaxableAmount
     public required Amount TaxableAmount { get; init; }
 
     // BT-117
+    // cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount
     public required Amount TaxAmount { get; init; }
 
     // BT-118
     // UNTDID 5305
+    // cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID
     public required Code Category { get; init; }
 
     // BT-119
+    // cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent
     public required Percentage CategoryRate { get; init; }
 
     // BT-120
+    // cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:TaxExemptionReason
     public Text? ExemptionReason { get; init; }
 
     // BT-121
     // VATEX Vat exemption reason code list
+    // cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:TaxExemptionReasonCode
     public Code? ExemptionReasonCode { get; init; }
 }
 
