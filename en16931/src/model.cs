@@ -486,31 +486,38 @@ public record AdditionalSupportingDocument
     public BinaryObject? AttachedDocument { get; init; }
 }
 
-// cac:InvoiceLine || cac:CreditNoteLine
 public record InvoiceLine
 {
     // BT-126
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cbc:ID
     public required Identifier Identifier { get; init; }
 
     // BT-127
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cbc:Note
     public Text? Note { get; init; }
 
     // BT-128
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:DocumentReference[cbc:DocumentTypeCode='130']/cbc:ID
     public Identifier? ObjectIdentifier { get; init; }
 
     // BT-129
+    // (cac:InvoiceLine|cac:CreditNoteLine)/(cbc:InvoicedQuantity|cbc:CreditedQuantity)
     public required Quantity Quantity { get; init; }
 
     // BT-130
+    // (cac:InvoiceLine|cac:CreditNoteLine)/(cbc:InvoicedQuantity@unitCode|cbc:CreditedQuantity@unitCode)
     public required Code UnitOfMeasure { get; init; }
 
     // BT-131
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cbc:LineExtensionAmount
     public required Amount NetAmount { get; init; }
 
     // BT-132
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:OrderLineReference/cbc:LineID
     public DocumentReference? PurchaseOrderLineReference { get; init; }
 
     // BT-133
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cbc:AccountingCost
     public Text? BuyerAccountingReference { get; init; }
 
     // BG-26
@@ -737,74 +744,81 @@ public record DirectDebit
 public record InvoiceLinePeriod
 {
     // BT-134
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:InvoicePeriod/cbc:StartDate
     public Date? Start { get; init; }
 
     // BT-135
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:InvoicePeriod/cbc:StartDate
     public Date? End { get; init; }
 }
 
 public record InvoiceLineAllowance
 {
     // BT-136
-    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:Amount
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:Amount
     public required Amount Amount { get; init; }
 
     // BT-137
-    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:BaseAmount
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:BaseAmount
     public Amount? BaseAmount { get; init; }
 
     // BT-138
-    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:MultiplierFactorNumeric
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:MultiplierFactorNumeric
     public Percentage? Percentage { get; init; }
 
     // BT-139
-    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:AllowanceChargeReason
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:AllowanceChargeReason
     public Text? Reason { get; init; }
 
     // BT-140
-    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:AllowanceChargeReasonCode
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:AllowanceChargeReasonCode
     public Code? ReasonCode { get; init; }
 }
 
 public record InvoiceLineCharge
 {
     // BT-141
-    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:Amount
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:Amount
     public required Amount Amount { get; init; }
 
     // BT-142
-    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:BaseAmount
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:BaseAmount
     public Amount? BaseAmount { get; init; }
 
     // BT-143
-    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:MultiplierFactorNumeric
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:MultiplierFactorNumeric
     public Percentage? Percentage { get; init; }
 
     // BT-144
-    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:AllowanceChargeReason
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:AllowanceChargeReason
     public Text? Reason { get; init; }
 
     // BT-145
-    // cac:InvoiceLine/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:AllowanceChargeReasonCode
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:AllowanceChargeReasonCode
     public Code? ReasonCode { get; init; }
 }
 
 public record PriceDetails
 {
     // BT-146
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Price/cbc:PriceAmount
     public required UnitPriceAmount Net { get; init; }
 
     // BT-147
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Price/cac:AllowanceCharge/cbc:Amount
     public UnitPriceAmount? Discount { get; init; }
 
     // BT-148
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Price/cac:AllowanceCharge/cbc:BaseAmount
     public UnitPriceAmount? Gross { get; init; }
 
     // BT-149
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Price/cbc:BaseQuantity
     public Quantity? BaseQuantity { get; init; }
 
     // BT-150
     // UN/ECE Rec No 20,21
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Price/cbc:BaseQuantity@unitCode
     public Code? BaseQuantityUnitOfMeasure { get; init; }
 }
 
@@ -812,35 +826,44 @@ public record LineVatInformation
 {
     // BT-151
     // UNTDID 5305
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID))='VAT')]/cbc:ID
     public required Code Category { get; init; }
 
     // BT-152
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID))='VAT')]/cbc:Percent
     public Percentage? Rate { get; init; }
 }
 
 public record ItemInformation
 {
     // BT-153
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Item/cbc:Name
     public required Text Name { get; init; }
 
     // BT-154
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Item/cbc:Description
     public Text? Description { get; init; }
 
     // BT-155
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Item/cac:SellersItemIdentification/cbc:ID
     public Identifier? Seller { get; init; }
 
     // BT-156
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Item/cac:BuyersItemIdentification/cbc:ID
     public Identifier? Buyer { get; init; }
 
     // BT-157
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Item/cac:StandardItemIdentification/cbc:ID
     public Identifier? StandardIdentifier { get; init; }
 
     // BT-158
     // UNTDID 7143
+    // (cac:InvoicLine|cac:CreditNoteLine)/cac:Item/cac:CommoditiyClassification/cbc:ItemClassificationCode
     public required Identifier[] ClassificationIdentifiers { get; init; }
 
     // BT-159
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2 representation
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Item/cac:OriginCountry/cbc:IdentificationCode
     public Code? CountryOfOrigin { get; init; }
 
     // BG-32
@@ -850,8 +873,10 @@ public record ItemInformation
 public record ItemAttribute
 {
     // BT-160
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Item/cac:AdditionalItemProperty/cbc:Name
     public required Text Name { get; init; }
 
     // BT-161
+    // (cac:InvoiceLine|cac:CreditNoteLine)/cac:Item/cac:AdditionalItemProperty/cbc:Value
     public required Text Value { get; init; }
 }
