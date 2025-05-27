@@ -79,6 +79,7 @@ public record Invoice
 
     // BT-11
     // cac:ProjectReference/cbc:ID
+    // CreditNote: cac:AdditionalDocumentReference[cbc:DocumentTypeCode='50']/cbc:ID
     public DocumentReference? ProjectReference { get; init; }
 
     // BT-12
@@ -102,15 +103,19 @@ public record Invoice
     public DocumentReference? DispatchAdviceReference { get; init; }
 
     // BT-17
+    // cac:OriginatorDocumentReference/cbc:ID
     public DocumentReference? TenderOrLotReference { get; init; }
 
     // BT-18
+    // cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID
     public Identifier? InvoicedObjectIdentifier { get; init; }
 
     // BT-19
+    // cbc:AccountingCost
     public Text? BuyerAccountingReference { get; init; }
 
     // BT-20
+    // cac:PaymentTerms/cbc:Note
     public Text? PaymentTerms { get; init; }
 
     // BG-1
@@ -203,21 +208,27 @@ public record Seller
     public required Text Name { get; init; }
 
     // BT-28
+    // cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name
     public Text? TradingName { get; init; }
 
     // BT-29
+    // cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[(normalize-space(upper-case(@schmeID)) != 'SEPA')]/cbc:ID
     public required Identifier[] Identifiers { get; init; }
 
     // BT-30
+    // cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID
     public Identifier? LegalRegistration { get; init; }
 
     // BT-31
+    // cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:CompanyID
     public Identifier? VatIdentifier { get; init; }
 
     // BT-32
+    // cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) != 'VAT')]/cbc:CompanyID
     public Identifier? TaxRegistrationIdentifier { get; init; }
 
     // BT-33
+    // cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyLegalForm
     public Text? AdditionalLegalInformation { get; init; }
 
     // BT-34
@@ -239,18 +250,23 @@ public record Buyer
     public required Text Name { get; init; }
 
     // BT-45
+    // cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name
     public Text? TradingName { get; init; }
 
     // BT-46
+    // cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID
     public Identifier? Identifier { get; init; }
 
     // BT-47
+    // cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID
     public Identifier? LegalRegistrationIdentifier { get; init; }
 
     // BT-48
+    // cac:AccountingCustomerParty/cac:Party/TaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:CompanyID
     public Identifier? VatIdentifier { get; init; }
 
     // BT-49
+    // cac:AccountingCustomerParty/cac:Party/cbc:EndpointID
     public Identifier? ElectronicAddress { get; init; }
 
     // BG-8
@@ -271,6 +287,7 @@ public record Payee
     public Identifier? Identifier { get; init; }
 
     // BT-61
+    // cac:PayeeParty/cac:PartyLegalEntity/cbc:CompanyID
     public Identifier? LegalRegistration { get; init; }
 }
 
@@ -313,23 +330,24 @@ public record PaymentInstructions
 {
     // BT-81
     // UNTDID-4461
+    // cac:PaymentMeans/cbc:PaymentMeansCode
     public required Code PaymentMeansType { get; init; }
 
     // BT-82
+    // cac:PaymentMeans/cbc:PaymentMeansCode[@name]
     public Text? PaymentMeans { get; init; }
 
     // BT-83
+    // cac:PaymentMeans/cbc:PaymentID
     public Text? RemittanceInformation { get; init; }
 
     // BG-17
     public required CreditTransfer[] CreditTransfers { get; init; }
 
     // BG-18
-    // cac:PaymentMeans/cac:CardAccount
     public PaymentCardInformation? PaymentCardInformation { get; init; }
 
     // BG-19
-    // cac:PaymentMeans/cac:PaymentMandate
     public DirectDebit? DirectDebit { get; init; }
 }
 
@@ -470,7 +488,7 @@ public record VatBreakdown
 public record AdditionalSupportingDocument
 {
     // BT-122
-    // cac:AdditionalDocumentReference/cbc:ID
+    // cac:AdditionalDocumentReference[cbc:DocumentTypeCode != '130']/cbc:ID
     public required DocumentReference Reference { get; init; }
 
     // BT-123
@@ -711,33 +729,41 @@ public record DeliverToAddress
 public record CreditTransfer
 {
     // BT-84
+    // cac:PaymentMeans/cac:PayeeFinancialAccount/cbc:ID
     public required Identifier Account { get; init; }
 
     // BT-85
+    // cac:PaymentMeans/cac:PayeeFinancialAccount/cbc:Name
     public Text? AccountName { get; init; }
 
     // BT-86
+    // cac:PaymentMeans/cac:PayeeFinancialAccount/cac:FinancialInstitutionBranch/cbc:ID
     public Identifier? ServiceProvider { get; init; }
 }
 
 public record PaymentCardInformation
 {
     // BT-87
+    // cac:PaymentMeans/cac:CardAccount/cbc:PrimaryAccountNumberID
     public required Text PrimaryAccountNumber { get; init; }
 
     // BT-88
+    // cac:PaymentMeans/cac:CardAccount/cbc:HolderName
     public Text? CardHolderName { get; init; }
 }
 
 public record DirectDebit
 {
     // BT-89
+    // cac:PaymentMeans/cac:PaymentMandate/cbc:ID
     public required Identifier MandateReference { get; init; }
 
     // BT-90
+    // cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[(normalize-space(upper-case(@schmeID)) = 'SEPA']/cbc:ID
     public required Identifier BankAssignedCreditor { get; init; }
 
     // BT-91
+    // cac:PaymentMeans/cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID
     public required Identifier DebitedAccount { get; init; }
 }
 
