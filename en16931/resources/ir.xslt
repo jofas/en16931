@@ -112,11 +112,30 @@
     </xsl:element>
     <xsl:element name="process-control">
       <xsl:attribute name="id">bg-2</xsl:attribute>
-      <!-- TODO: continue here -->
+      <xsl:element name="business-process-type">
+        <xsl:attribute name="id">bt-23</xsl:attribute>
+        <xsl:value-of select="cbc:ProfileID"/>
+      </xsl:element>
+      <xsl:element name="specification-identifier">
+        <xsl:attribute name="id">bt-24</xsl:attribute>
+        <xsl:value-of select="cbc:CustomizationID"/>
+      </xsl:element>
     </xsl:element>
     <xsl:element name="preceding-invoice-references">
       <xsl:attribute name="id">bg-3</xsl:attribute>
-      <!-- list -->
+      <xsl:for-each select="cac:BillingReference">
+        <xsl:element name="preceding-invoice-reference">
+          <xsl:attribute name="id">bg-3</xsl:attribute>
+          <xsl:element name="preceding-invoice-reference">
+            <xsl:attribute name="id">bt-25</xsl:attribute>
+            <xsl:value-of select="./cac:InvoiceDocumentReference/cbc:ID"/>
+          </xsl:element>
+          <xsl:element name="preceding-invoice-issue-date">
+            <xsl:attribute name="id">bt-26</xsl:attribute>
+            <xsl:value-of select="./cac:InvoiceDocumentReference/cbc:IssueDate"/>
+          </xsl:element>
+        </xsl:element>
+      </xsl:for-each>
     </xsl:element>
     <xsl:element name="seller">
       <xsl:attribute name="id">bg-4</xsl:attribute>
