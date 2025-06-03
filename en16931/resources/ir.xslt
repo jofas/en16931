@@ -10,6 +10,7 @@
       <xsl:element name="invoice-number">
         <xsl:attribute name="id">bt-1</xsl:attribute>
         <xsl:value-of select="cbc:ID"/>
+        <!-- TODO: Identifier -->
       </xsl:element>
       <xsl:element name="invoice-issue-date">
         <xsl:attribute name="id">bt-2</xsl:attribute>
@@ -97,6 +98,7 @@
         <xsl:element name="invoiced-object-identifier">
           <xsl:attribute name="id">bt-18</xsl:attribute>
           <xsl:value-of select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID"/>
+          <!-- TODO: Identifier -->
         </xsl:element>
       </xsl:if>
       <xsl:if test="exists(cbc:AccountingCost)">
@@ -148,6 +150,7 @@
         <xsl:element name="specification-identifier">
           <xsl:attribute name="id">bt-24</xsl:attribute>
           <xsl:value-of select="cbc:CustomizationID"/>
+          <!-- TODO: Identifier -->
         </xsl:element>
       </xsl:element>
       <xsl:if test="cac:BillingReference">
@@ -172,6 +175,96 @@
       </xsl:if>
       <xsl:element name="seller">
         <xsl:attribute name="id">bg-4</xsl:attribute>
+        <xsl:element name="seller-name">
+          <xsl:attribute name="id">bt-27</xsl:attribute>
+          <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName"/>
+        </xsl:element>
+        <xsl:if test="cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name">
+          <xsl:element name="seller-trading-name">
+            <xsl:attribute name="id">bt-28</xsl:attribute>
+            <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[(normalize-space(upper-case(@schmeID)) != 'SEPA')])">
+          <xsl:element name="seller-identifiers">
+            <xsl:attribute name="id">bt-29</xsl:attribute>
+            <xsl:for-each select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[(normalize-space(upper-case(@schmeID)) != 'SEPA')]">
+              <xsl:element name="seller-identifier">
+                <xsl:attribute name="id">bt-29</xsl:attribute>
+                <xsl:element name="content">
+                  <xsl:value-of select="./cbc:ID"/>
+                </xsl:element>
+                <xsl:if test="exists(./cbc:ID[@schemeID])">
+                  <xsl:element name="scheme-identifier">
+                    <xsl:value-of select="./cbc:ID/@schemeID"/>
+                  </xsl:element>
+                </xsl:if>
+              </xsl:element>
+            </xsl:for-each>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID)">
+          <xsl:element name="seller-legal-registration-identifier">
+            <xsl:attribute name="id">bt-30</xsl:attribute>
+            <xsl:element name="content">
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID"/>
+            </xsl:element>
+            <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID[@schemeID])">
+              <xsl:element name="scheme-identifier">
+                <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID]"/>
+              </xsl:element>
+            </xsl:if>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:CompanyID)">
+          <xsl:element name="seller-vat-identifier">
+            <xsl:attribute name="id">bt-31</xsl:attribute>
+            <xsl:element name="content">
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:CompanyID"/>
+            </xsl:element>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) != 'VAT')]/cbc:CompanyID)">
+          <xsl:element name="seller-tax-registration-identifier">
+            <xsl:attribute name="id">bt-32</xsl:attribute>
+            <xsl:element name="content">
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) != 'VAT')]/cbc:CompanyID"/>
+            </xsl:element>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyLegalForm)">
+          <xsl:element name="seller-additional-legal-information">
+            <xsl:attribute name="id">bt-33</xsl:attribute>
+            <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyLegalForm"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:element name="seller-electronic-address">
+          <xsl:attribute name="id">bt-34</xsl:attribute>
+          <xsl:element name="content">
+            <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID"/>
+          </xsl:element>
+          <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cbc:EndpointID[@schemeID])">
+            <xsl:element name="scheme-identifier">
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID/@schemeID]"/>
+            </xsl:element>
+          </xsl:if>
+        </xsl:element>
+        <!-- TODO:
+        * seller-postal-address bg-5
+          - seller-address-line-1 bt-35
+          - seller-address-line-2 bt-36
+          - seller-address-line-3 bt-162
+          - seller-city bt-37
+          - seller-post-code bt-38
+          - seller-country-subdivision bt-39
+          - seller-country-code bt-40
+        -->
+        <!-- TODO:
+        * seller-contact bg-6
+          - seller-contact-point bt-41
+          - seller-contact-telephone-number bt-42
+          - seller-contact-email-address bt-43
+        -->
       </xsl:element>
       <xsl:element name="buyer">
         <xsl:attribute name="id">bg-7</xsl:attribute>
