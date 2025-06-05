@@ -565,6 +565,51 @@
         </xsl:element>
         <xsl:element name="invoice-lines">
           <xsl:attribute name="id">bg-25</xsl:attribute>
+          <!--
+            * invoice-line-identifier bt-126 1
+            * invoice-line-note bt-127 ?
+            * invoice-line-object-identifier bt-128 ? (schemeID)
+            * invoiced-quantity bt-129 1
+            * invoiced-quantity-unit-of-measure-code bt-130 1
+            * invoice-line-net-amount bt-131 1
+            * referenced-purchase-order-line-reference bt-132 ?
+            * invoice-line-buyer-accounting-reference bt-133 ?
+            * invoice-line-period bg-26 ?
+              - invoice-line-period-start-date bt-134 ?
+              - invoice-line-period-end-date bt-135 ?
+            * invoice-line-allowances bg-27 *
+              - invoice-line-allowance-amount bt-136 1
+              - invoice-line-allowance-base-amount bt-137 ?
+              - invoice-line-allowance-percentage bt-138 ?
+              - invoice-line-allowance-reason bt-139 ?
+              - invoice-line-allowance-reason-code bt-140 ?
+            * invoice-line-charges bg-28 *
+              - invoice-line-charge-amount bt-141 1
+              - invoice-line-charge-base-amount bt-142 ?
+              - invoice-line-charge-percentage bt-143 ?
+              - invoice-line-charge-reason bt-144 ?
+              - invoice-line-charge-reason-code bt-145 ?
+            * price-details bg-29 1
+              - item-net-price bt-146 1
+              - item-price-discount bt-147 ?
+              - item-gross-price bt-148 ?
+              - item-price-base-quantity bt-149 ?
+              - item-price-base-quantity-unit-of-measure bt-150 ?
+            * line-vat-information bg-30 1
+              - invoiced-item-vat-category-code bt-151 1
+              - invoiced-item-vat-rate bt-152 ?
+            * item-information bg-31 1
+              - item-name bt-153 1
+              - item-description bt-154 ?
+              - item-sellers-identifier bt-155 ?
+              - item-buyers-identifier bt-156 ?
+              - item-standard-identifier bt-157 ? (schemeID)
+              - item-classification-identifier bt-158 * (schemeID)
+              - item-country-of-origin bt-159 ?
+              - item-attributes bg-32 *
+                + item-attribute-name bt-160 1
+                + item-attribute-value bt-161 1
+          -->
           <!-- list -->
         </xsl:element>
       </xsl:if>
