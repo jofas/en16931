@@ -498,25 +498,69 @@
       <xsl:if test="false()">
         <xsl:element name="document-level-allowances">
           <xsl:attribute name="id">bg-20</xsl:attribute>
+          <!--
+            * document-level-allowance-amount bt-92 1
+            * document-level-allowance-base-amount bt-93 ?
+            * document-level-allowance-percentage bt-94 ?
+            * document-level-allowance-vat-category-code bt-95 1
+            * document-level-allowance-vat-rate bt-96 ?
+            * document-level-allowance-reason bt-97 ?
+            * document-level-allowance-reason-code bt-98 ?
+          -->
           <!-- list -->
         </xsl:element>
       </xsl:if>
       <xsl:if test="false()">
         <xsl:element name="document-level-charges">
           <xsl:attribute name="id">bg-21</xsl:attribute>
+          <!--
+            * document-level-charge-amount bt-99 1
+            * document-level-charge-base-amount bt-100 ?
+            * document-level-charge-percentage bt-101 ?
+            * document-level-charge-vat-category-code bt-102 1
+            * document-level-charge-vat-rate bt-103 ?
+            * document-level-charge-reason bt-104 ?
+            * document-level-charge-reason-code bt-105 ?
+          -->
           <!-- list -->
         </xsl:element>
       </xsl:if>
       <xsl:element name="document-totals">
         <xsl:attribute name="id">bg-22</xsl:attribute>
+        <!--
+          * sum-of-invoice-line-net-amount bt-106 1
+          * sum-of-allowances-on-document-level bt-107 ?
+          * sum-of-charges-on-document-level bt-108 ?
+          * invoice-total-amount-without-vat bt-109 1
+          * invoice-total-vat-amount bt-110 ?
+          * invoice-total-vat-amount-in-accounting-currency bt-111 ?
+          * invoice-total-amount-with-vat bt-112 1
+          * paid-amount bt-113 ?
+          * rounding-amount bt-114 ?
+          * amount-due-for-payment bt-115 1
+        -->
       </xsl:element>
       <xsl:element name="vat-breakdown">
         <xsl:attribute name="id">bg-23</xsl:attribute>
+        <!--
+          * vat-category-taxable-amount bt-116 1
+          * vat-category-tax-amount bt-117 1
+          * vat-category-code bt-118 1
+          * vat-category-rate bt-119 1
+          * vat-exemption-reason-text bt-120 ?
+          * vat-exemption-reason-code bt-121 ?
+        -->
         <!-- list -->
       </xsl:element>
       <xsl:if test="false()">
         <xsl:element name="additional-supporting-documents">
           <xsl:attribute name="id">bg-24</xsl:attribute>
+          <!--
+            * supporting-document-reference bt-122 1
+            * supporting-document-description bt-123 ?
+            * external-document-location bt-124 ?
+            * attached-document bt-125 ? (binary object)
+          -->
           <!-- list -->
         </xsl:element>
         <xsl:element name="invoice-lines">
