@@ -431,20 +431,69 @@
       <xsl:if test="false()">
         <xsl:element name="payee">
           <xsl:attribute name="id">bg-10</xsl:attribute>
+          <!--
+            * payee-name bt-59 1
+            * payee-identifier bt-60 ? (schemeID)
+            * payee-legal-registration-identifier bt-61 ? (schemeID)
+          -->
         </xsl:element>
       </xsl:if>
       <xsl:if test="false()">
         <xsl:element name="seller-tax-representative-party">
           <xsl:attribute name="id">bg-11</xsl:attribute>
+          <!--
+            * seller-tax-representative-name bt-62 1
+            * seller-tax-representative-vat-identifier bt-63 1
+            * seller-tax-representative-postal-address bg-12 1
+              - tax-representative-address-line-1 bt-64 ?
+              - tax-representative-address-line-2 bt-65 ?
+              - tax-representative-address-line-3 bt-164 ?
+              - tax-representative-city bt-66 ?
+              - tax-representative-post-code bt-67 ?
+              - tax-representative-country-subdivision bt-68 ?
+              - tax-representative-country-code bt-69 1
+          -->
         </xsl:element>
       </xsl:if>
       <xsl:if test="false()">
         <xsl:element name="delivery-information">
           <xsl:attribute name="id">bg-13</xsl:attribute>
+          <!--
+            * deliver-to-party-name bt-70 ?
+            * deliver-to-location-identifier bt-71 ? (schemeID)
+            * actual-delivery-date bt-72 ?
+            * invoicing-period bg-14 ?
+              - invoicing-period-start-date bt-73 ?
+              - invoicing-period-end-date bt-74 ?
+            * deliver-to-address bg-15 ?
+              - deliver-to-address-line-1 bt-75 ?
+              - deliver-to-address-line-2 bt-76 ?
+              - deliver-to-address-line-3 bt-165 ?
+              - deliver-to-city bt-77 1
+              - deliver-to-post-code bt-78 1
+              - deliver-to-country-subdivision bt-79 ?
+              - deliver-to-country-code bt-80 1
+          -->
         </xsl:element>
       </xsl:if>
       <xsl:element name="payment-instructions">
         <xsl:attribute name="id">bg-16</xsl:attribute>
+        <!--
+          * payment-means-type-code bt-81 1
+          * payment-means-text bt-82 ?
+          * remittance-information bt-83 ?
+          * credit-transfer bg-17 *
+            - payment-account-identifier bt-84 1
+            - payment-account-name bt-85 ?
+            - payment-service-provider-identifier bt-86 ?
+          * payment-card-information bg-18 ?
+            - payment-card-primary-account-number bt-87 1
+            - payment-card-holder-name bt-88 ?
+          * direct-debit bg-19 ?
+            - mandate-reference-identifier bt-89 1
+            - bank-assigned-creditor-identifier bt-90 1
+            - debited-account-identifier bt-91 1
+        -->
       </xsl:element>
       <xsl:if test="false()">
         <xsl:element name="document-level-allowances">
