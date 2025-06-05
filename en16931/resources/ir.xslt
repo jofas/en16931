@@ -255,25 +255,178 @@
             </xsl:element>
           </xsl:if>
         </xsl:element>
-        <!-- TODO:
-        * seller-postal-address bg-5
-          - seller-address-line-1 bt-35
-          - seller-address-line-2 bt-36
-          - seller-address-line-3 bt-162
-          - seller-city bt-37
-          - seller-post-code bt-38
-          - seller-country-subdivision bt-39
-          - seller-country-code bt-40
-        -->
-        <!-- TODO:
-        * seller-contact bg-6
-          - seller-contact-point bt-41
-          - seller-contact-telephone-number bt-42
-          - seller-contact-email-address bt-43
-        -->
+        <xsl:element name="seller-postal-address">
+          <xsl:attribute name="id">bg-5</xsl:attribute>
+          <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:StreetName)">
+            <xsl:element name="seller-address-line-1">
+              <xsl:attribute name="id">bt-35</xsl:attribute>
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:StreetName"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName)">
+            <xsl:element name="seller-address-line-2">
+              <xsl:attribute name="id">bt-36</xsl:attribute>
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:AddressLine/cbc:Line)">
+            <xsl:element name="seller-address-line-3">
+              <xsl:attribute name="id">bt-162</xsl:attribute>
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:AddressLine/cbc:Line"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:element name="seller-city">
+            <xsl:attribute name="id">bt-37</xsl:attribute>
+            <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName"/>
+          </xsl:element>
+          <xsl:element name="seller-post-code">
+            <xsl:attribute name="id">bt-38</xsl:attribute>
+            <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:PostalZone"/>
+          </xsl:element>
+          <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity)">
+            <xsl:element name="seller-address-line-3">
+              <xsl:attribute name="id">bt-39</xsl:attribute>
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:element name="seller-post-code">
+            <xsl:attribute name="id">bt-40</xsl:attribute>
+            <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"/>
+          </xsl:element>
+        </xsl:element>
+        <xsl:element name="seller-contact">
+          <xsl:attribute name="id">bg-6</xsl:attribute>
+          <xsl:element name="seller-contact-point">
+            <xsl:attribute name="id">bt-41</xsl:attribute>
+            <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name"/>
+          </xsl:element>
+          <xsl:element name="seller-contact-telephone-number">
+            <xsl:attribute name="id">bt-42</xsl:attribute>
+            <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telephone"/>
+          </xsl:element>
+          <xsl:element name="seller-contact-email-address">
+            <xsl:attribute name="id">bt-43</xsl:attribute>
+            <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail"/>
+          </xsl:element>
+        </xsl:element>
       </xsl:element>
       <xsl:element name="buyer">
         <xsl:attribute name="id">bg-7</xsl:attribute>
+        <xsl:element name="buyer-name">
+          <xsl:attribute name="id">bt-44</xsl:attribute>
+          <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName"/>
+        </xsl:element>
+        <xsl:if test="cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name">
+          <xsl:element name="buyer-trading-name">
+            <xsl:attribute name="id">bt-45</xsl:attribute>
+            <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID)">
+          <xsl:element name="buyer-identifier">
+            <xsl:attribute name="id">bt-46</xsl:attribute>
+            <xsl:element name="content">
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID"/>
+            </xsl:element>
+            <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification)/cbc:ID[@schemeID])">
+              <xsl:element name="scheme-identifier">
+                <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID@schemeID"/>
+              </xsl:element>
+            </xsl:if>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID)">
+          <xsl:element name="buyer-legal-registration-identifier">
+            <xsl:attribute name="id">bt-47</xsl:attribute>
+            <xsl:element name="content">
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID"/>
+            </xsl:element>
+            <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID[@schemeID])">
+              <xsl:element name="scheme-identifier">
+                <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID]"/>
+              </xsl:element>
+            </xsl:if>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:CompanyID)">
+          <xsl:element name="buyer-vat-identifier">
+            <xsl:attribute name="id">bt-48</xsl:attribute>
+            <xsl:element name="content">
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:CompanyID"/>
+            </xsl:element>
+          </xsl:element>
+        </xsl:if>
+        <xsl:element name="buyer-electronic-address">
+          <xsl:attribute name="id">bt-49</xsl:attribute>
+          <xsl:element name="content">
+            <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID"/>
+          </xsl:element>
+          <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cbc:EndpointID[@schemeID])">
+            <xsl:element name="scheme-identifier">
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID/@schemeID]"/>
+            </xsl:element>
+          </xsl:if>
+        </xsl:element>
+        <xsl:element name="buyer-postal-address">
+          <xsl:attribute name="id">bg-8</xsl:attribute>
+          <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:StreetName)">
+            <xsl:element name="buyer-address-line-1">
+              <xsl:attribute name="id">bt-50</xsl:attribute>
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:StreetName"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName)">
+            <xsl:element name="buyer-address-line-2">
+              <xsl:attribute name="id">bt-51</xsl:attribute>
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:AddressLine/cbc:Line)">
+            <xsl:element name="buyer-address-line-3">
+              <xsl:attribute name="id">bt-163</xsl:attribute>
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:AddressLine/cbc:Line"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:element name="buyer-city">
+            <xsl:attribute name="id">bt-52</xsl:attribute>
+            <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName"/>
+          </xsl:element>
+          <xsl:element name="buyer-post-code">
+            <xsl:attribute name="id">bt-53</xsl:attribute>
+            <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:PostalZone"/>
+          </xsl:element>
+          <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity)">
+            <xsl:element name="buyer-address-line-3">
+              <xsl:attribute name="id">bt-54</xsl:attribute>
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:element name="buyer-post-code">
+            <xsl:attribute name="id">bt-55</xsl:attribute>
+            <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"/>
+          </xsl:element>
+        </xsl:element>
+        <xsl:element name="buyer-contact">
+          <xsl:attribute name="id">bg-9</xsl:attribute>
+          <xsl:if select="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name)">
+            <xsl:element name="buyer-contact-point">
+              <xsl:attribute name="id">bt-56</xsl:attribute>
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if select="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Telephone)">
+            <xsl:element name="buyer-contact-telephone-number">
+              <xsl:attribute name="id">bt-57</xsl:attribute>
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Telephone"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if select="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
+            <xsl:element name="buyer-contact-email-address">
+              <xsl:attribute name="id">bt-58</xsl:attribute>
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail"/>
+            </xsl:element>
+          </xsl:if>
+        </xsl:element>
       </xsl:element>
       <xsl:if test="false()">
         <xsl:element name="payee">
