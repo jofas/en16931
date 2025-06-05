@@ -9,8 +9,9 @@
     <xsl:element name="invoice">
       <xsl:element name="invoice-number">
         <xsl:attribute name="id">bt-1</xsl:attribute>
-        <xsl:value-of select="cbc:ID"/>
-        <!-- TODO: Identifier -->
+        <xsl:element name="content">
+          <xsl:value-of select="cbc:ID"/>
+        </xsl:element>
       </xsl:element>
       <xsl:element name="invoice-issue-date">
         <xsl:attribute name="id">bt-2</xsl:attribute>
@@ -97,8 +98,12 @@
       <xsl:if test="exists(cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID)">
         <xsl:element name="invoiced-object-identifier">
           <xsl:attribute name="id">bt-18</xsl:attribute>
-          <xsl:value-of select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID"/>
-          <!-- TODO: Identifier -->
+          <xsl:element name="content">
+            <xsl:value-of select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID"/>
+          </xsl:element>
+          <xsl:element name="scheme-identifier">
+            <xsl:value-of select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID/@schemeID"/>
+          </xsl:element>
         </xsl:element>
       </xsl:if>
       <xsl:if test="exists(cbc:AccountingCost)">
@@ -149,8 +154,9 @@
         </xsl:element>
         <xsl:element name="specification-identifier">
           <xsl:attribute name="id">bt-24</xsl:attribute>
-          <xsl:value-of select="cbc:CustomizationID"/>
-          <!-- TODO: Identifier -->
+          <xsl:element name="content">
+            <xsl:value-of select="cbc:CustomizationID"/>
+          </xsl:element>
         </xsl:element>
       </xsl:element>
       <xsl:if test="cac:BillingReference">
