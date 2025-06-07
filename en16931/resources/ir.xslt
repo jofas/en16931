@@ -101,9 +101,11 @@
           <xsl:element name="content">
             <xsl:value-of select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID"/>
           </xsl:element>
-          <xsl:element name="scheme-identifier">
-            <xsl:value-of select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID/@schemeID"/>
-          </xsl:element>
+          <xsl:if test="exists(cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID[@schemeID])">
+            <xsl:element name="scheme-identifier">
+              <xsl:value-of select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID/@schemeID"/>
+            </xsl:element>
+          </xsl:if>
         </xsl:element>
       </xsl:if>
       <xsl:if test="exists(cbc:AccountingCost)">
@@ -428,14 +430,39 @@
           </xsl:if>
         </xsl:element>
       </xsl:element>
-      <xsl:if test="false()">
+      <xsl:if test="exists(cac:PayeeParty/cac:PartyName/cbc:Name)">
         <xsl:element name="payee">
           <xsl:attribute name="id">bg-10</xsl:attribute>
-          <!--
-            * payee-name bt-59 1
-            * payee-identifier bt-60 ? (schemeID)
-            * payee-legal-registration-identifier bt-61 ? (schemeID)
-          -->
+          <xsl:element name="payee-name">
+            <xsl:attribute name="id">bt-59</xsl:attribute>
+            <xsl:value-of select="cac:PayeeParty/cac:PartyName/cbc:Name"/>
+          </xsl:element>
+          <xsl:if test="exists(cac:PayeeParty/cac:PartyIdentification/cbc:ID)">
+            <xsl:element name="payee-identifier">
+              <xsl:attribute name="id">bt-60</xsl:attribute>
+              <xsl:element name="content">
+                <xsl:value-of select="cac:PayeeParty/cac:PartyIdentification/cbc:ID"/>
+              </xsl:element>
+              <xsl:if test="exists(cac:PayeeParty/cac:PartyIdentification/cbc:ID[@schemeID])">
+                <xsl:element name="scheme-identifier">
+                  <xsl:value-of select="cac:PayeeParty/cac:PartyIdentification/cbc:ID/@schemeID"/>
+                </xsl:element>
+              </xsl:if>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="exists(cac:PayeeParty/cac:PartyIdentification/cbc:CompanyID)">
+            <xsl:element name="payee-legal-registration-identifier">
+              <xsl:attribute name="id">bt-61</xsl:attribute>
+              <xsl:element name="content">
+                <xsl:value-of select="cac:PayeeParty/cac:PartyIdentification/cbc:CompanyID"/>
+              </xsl:element>
+              <xsl:if test="exists(cac:PayeeParty/cac:PartyIdentification/cbc:CompanyID[@schemeID])">
+                <xsl:element name="scheme-identifier">
+                  <xsl:value-of select="cac:PayeeParty/cac:PartyIdentification/cbc:CompanyID/@schemeID"/>
+                </xsl:element>
+              </xsl:if>
+            </xsl:element>
+          </xsl:if>
         </xsl:element>
       </xsl:if>
       <xsl:if test="false()">
