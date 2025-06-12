@@ -465,21 +465,60 @@
           </xsl:if>
         </xsl:element>
       </xsl:if>
-      <xsl:if test="false()">
+      <xsl:if test="exists(cac:TaxRepresentativeParty/cac:PartyName/cbc:Name)">
         <xsl:element name="seller-tax-representative-party">
           <xsl:attribute name="id">bg-11</xsl:attribute>
-          <!--
-            * seller-tax-representative-name bt-62 1
-            * seller-tax-representative-vat-identifier bt-63 1
-            * seller-tax-representative-postal-address bg-12 1
-              - tax-representative-address-line-1 bt-64 ?
-              - tax-representative-address-line-2 bt-65 ?
-              - tax-representative-address-line-3 bt-164 ?
-              - tax-representative-city bt-66 ?
-              - tax-representative-post-code bt-67 ?
-              - tax-representative-country-subdivision bt-68 ?
-              - tax-representative-country-code bt-69 1
-          -->
+          <xsl:element name="seller-tax-representative-name">
+            <xsl:attribute name="id">bt-62</xsl:attribute>
+            <xsl:value-of select="cac:TaxRepresentativeParty/cac:PartyName/cbc:Name"/>
+          </xsl:element>
+          <xsl:element name="seller-tax-representative-vat-identifier">
+            <xsl:attribute name="id">bt-63</xsl:attribute>
+            <xsl:value-of select="cac:TaxRepresentativeParty/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:CompanyID"/>
+          </xsl:element>
+          <xsl:element name="seller-tax-representative-postal-address">
+            <xsl:attribute name="id">bg-12</xsl:attribute>
+            <xsl:if test="exists(cac:TaxRepresentativeParty/cac:PostalAddress/cbc:StreetName)">
+              <xsl:element name="tax-representative-address-line-1">
+                <xsl:attribute name="id">bt-64</xsl:attribute>
+                <xsl:value-of select="cac:TaxRepresentativeParty/cac:PostalAddress/cbc:StreetName"/>
+              </xsl:element>
+            </xsl:if>
+            <xsl:if test="exists(cac:TaxRepresentativeParty/cac:PostalAddress/cbc:AdditionalStreetName)">
+              <xsl:element name="tax-representative-address-line-2">
+                <xsl:attribute name="id">bt-65</xsl:attribute>
+                <xsl:value-of select="cac:TaxRepresentativeParty/cac:PostalAddress/cbc:AdditionalStreetName"/>
+              </xsl:element>
+            </xsl:if>
+            <xsl:if test="exists(cac:TaxRepresentativeParty/cac:PostalAddress/cac:AddressLine/cbc:Line)">
+              <xsl:element name="tax-representative-address-line-3">
+                <xsl:attribute name="id">bt-164</xsl:attribute>
+                <xsl:value-of select="cac:TaxRepresentativeParty/cac:PostalAddress/cac:AddressLine/cbc:Line"/>
+              </xsl:element>
+            </xsl:if>
+            <xsl:if test="exists(cac:TaxRepresentativeParty/cac:PostalAddress/cbc:CityName)">
+              <xsl:element name="tax-representative-city">
+                <xsl:attribute name="id">bt-66</xsl:attribute>
+                <xsl:value-of select="cac:TaxRepresentativeParty/cac:PostalAddress/cbc:CityName"/>
+              </xsl:element>
+            </xsl:if>
+            <xsl:if test="exists(cac:TaxRepresentativeParty/cac:PostalAddress/cbc:PostalZone)">
+              <xsl:element name="tax-representative-post-code">
+                <xsl:attribute name="id">bt-67</xsl:attribute>
+                <xsl:value-of select="cac:TaxRepresentativeParty/cac:PostalAddress/cbc:PostalZone"/>
+              </xsl:element>
+            </xsl:if>
+            <xsl:if test="exists(cac:TaxRepresentativeParty/cac:PostalAddress/cbc:CountrySubentity)">
+              <xsl:element name="tax-representative-address-line-3">
+                <xsl:attribute name="id">bt-68</xsl:attribute>
+                <xsl:value-of select="cac:TaxRepresentativeParty/cac:PostalAddress/cbc:CountrySubentity"/>
+              </xsl:element>
+            </xsl:if>
+            <xsl:element name="tax-representative-post-code">
+              <xsl:attribute name="id">bt-69</xsl:attribute>
+              <xsl:value-of select="cac:TaxRepresentativeParty/cac:PostalAddress/cac:Country/cbc:IdentificationCode"/>
+            </xsl:element>
+          </xsl:element>
         </xsl:element>
       </xsl:if>
       <xsl:if test="false()">
