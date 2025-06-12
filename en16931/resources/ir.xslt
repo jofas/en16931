@@ -521,25 +521,92 @@
           </xsl:element>
         </xsl:element>
       </xsl:if>
-      <xsl:if test="false()">
+      <xsl:if test="exists(cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name, cac:Delivery/cac:DeliveryLocation/cbc:ID, cac:Delivery/cbc:ActualDeliveryDate, cac:InvoicePeriod/cbc:StartDate, cac:InvoicePeriod/cbc:EndDate, cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName)">
         <xsl:element name="delivery-information">
           <xsl:attribute name="id">bg-13</xsl:attribute>
-          <!--
-            * deliver-to-party-name bt-70 ?
-            * deliver-to-location-identifier bt-71 ? (schemeID)
-            * actual-delivery-date bt-72 ?
-            * invoicing-period bg-14 ?
-              - invoicing-period-start-date bt-73 ?
-              - invoicing-period-end-date bt-74 ?
-            * deliver-to-address bg-15 ?
-              - deliver-to-address-line-1 bt-75 ?
-              - deliver-to-address-line-2 bt-76 ?
-              - deliver-to-address-line-3 bt-165 ?
-              - deliver-to-city bt-77 1
-              - deliver-to-post-code bt-78 1
-              - deliver-to-country-subdivision bt-79 ?
-              - deliver-to-country-code bt-80 1
-          -->
+          <xsl:if test="exists(cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name)">
+            <xsl:element name="deliver-to-party-name">
+              <xsl:attribute name="id">bt-70</xsl:attribute>
+              <xsl:value-of select="cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="exists(cac:Delivery/cac:DeliveryLocation/cbc:ID)">
+            <xsl:element name="deliver-to-location-identifier">
+              <xsl:attribute name="id">bt-71</xsl:attribute>
+              <xsl:element name="content">
+                <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cbc:ID"/>
+              </xsl:element>
+              <xsl:if test="exists(cac:Delivery/cac:DeliveryLocation/cbc:ID[@schemeID])">
+                <xsl:element name="scheme-identifier">
+                  <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cbc:ID/@schemeID"/>
+                </xsl:element>
+              </xsl:if>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="exists(cac:Delivery/cbc:ActualDeliveryDate)">
+            <xsl:element name="actual-delivery-date">
+              <xsl:attribute name="id">bt-72</xsl:attribute>
+              <xsl:value-of select="cac:Delivery/cbc:ActualDeliveryDate"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="exists(cac:InvoicePeriod/cbc:StartDate, cac:InvoicePeriod/cbc:EndDate)">
+            <xsl:element name="invoicing-period">
+              <xsl:attribute name="id">bg-14</xsl:attribute>
+              <xsl:if test="exists(cac:InvoicePeriod/cbc:StartDate)">
+                <xsl:element name="invoicing-period-start-date">
+                  <xsl:attribute name="id">bt-73</xsl:attribute>
+                  <xsl:value-of select="cac:InvoicePeriod/cbc:StartDate"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(cac:InvoicePeriod/cbc:EndDate)">
+                <xsl:element name="invoicing-period-end-date">
+                  <xsl:attribute name="id">bt-74</xsl:attribute>
+                  <xsl:value-of select="cac:InvoicePeriod/cbc:EndDate"/>
+                </xsl:element>
+              </xsl:if>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName)">
+            <xsl:element name="deliver-to-address">
+              <xsl:attribute name="id">bg-15</xsl:attribute>
+              <xsl:if test="exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:StreetName)">
+                <xsl:element name="deliver-to-address-line-1">
+                  <xsl:attribute name="id">bt-75</xsl:attribute>
+                  <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:StreetName"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:AdditionalStreetName)">
+                <xsl:element name="deliver-to-address-line-2">
+                  <xsl:attribute name="id">bt-76</xsl:attribute>
+                  <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:AdditionalStreetName"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cac:AddressLine/cbc:Line)">
+                <xsl:element name="deliver-to-address-line-3">
+                  <xsl:attribute name="id">bt-165</xsl:attribute>
+                  <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cac:AddressLine/cbc:Line"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:element name="deliver-to-city">
+                <xsl:attribute name="id">bt-77</xsl:attribute>
+                <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName"/>
+              </xsl:element>
+              <xsl:element name="deliver-to-post-code">
+                <xsl:attribute name="id">bt-78</xsl:attribute>
+                <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:PostalZone"/>
+              </xsl:element>
+              <xsl:if test="exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CountrySubentity)">
+                <xsl:element name="deliver-to-address-line-3">
+                  <xsl:attribute name="id">bt-79</xsl:attribute>
+                  <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CountrySubentity"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:element name="deliver-to-post-code">
+                <xsl:attribute name="id">bt-80</xsl:attribute>
+                <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cac:Country/cbc:IdentificationCode"/>
+              </xsl:element>
+            </xsl:element>
+          </xsl:if>
         </xsl:element>
       </xsl:if>
       <xsl:element name="payment-instructions">
