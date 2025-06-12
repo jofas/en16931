@@ -616,22 +616,85 @@
       </xsl:if>
       <xsl:element name="payment-instructions">
         <xsl:attribute name="id">bg-16</xsl:attribute>
-        <!--
-          * payment-means-type-code bt-81 1
-          * payment-means-text bt-82 ?
-          * remittance-information bt-83 ?
-          * credit-transfer bg-17 *
-            - payment-account-identifier bt-84 1
-            - payment-account-name bt-85 ?
-            - payment-service-provider-identifier bt-86 ?
-          * payment-card-information bg-18 ?
-            - payment-card-primary-account-number bt-87 1
-            - payment-card-holder-name bt-88 ?
-          * direct-debit bg-19 ?
-            - mandate-reference-identifier bt-89 1
-            - bank-assigned-creditor-identifier bt-90 1
-            - debited-account-identifier bt-91 1
-        -->
+        <xsl:element name="payment-means-type-code">
+          <xsl:attribute name="id">bt-81</xsl:attribute>
+          <xsl:value-of select="cac:PaymentMeans/cbc:PaymentMeansCode"/>
+        </xsl:element>
+        <xsl:if test="exists(cac:PaymentMeans/cbc:PaymentMeansCode[@name]">
+          <xsl:element name="payment-means-text">
+            <xsl:attribute name="id">bt-82</xsl:attribute>
+            <xsl:value-of select="cac:PaymentMeans/cbc:PaymentMeansCode/@name"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:PaymentMeans/cbc:PaymentID">
+          <xsl:element name="remittance-information">
+            <xsl:attribute name="id">bt-83</xsl:attribute>
+            <xsl:value-of select="cac:PaymentMeans/cbc:PaymentID"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:PaymentMeans/cac:PayeeFinancialAccount)">
+          <xsl:element name="credit-transfers">
+            <xsl:attribute name="id">bg-17</xsl:attribute>
+            <!-- Note that UBL does not actually support multiple bg-17 instances -->
+            <xsl:for-each select="cac:PaymentMeans/cac:PayeeFinancialAccount">
+              <xsl:element name="credit-transfer">
+                <xsl:attribute name="id">bg-17</xsl:attribute>
+                <xsl:element name="payment-account-identifier">
+                  <xsl:attribute name="id">bt-84</xsl:attribute>
+                  <xsl:element name="content">
+                    <xsl:value-of select="./cbc:ID"/>
+                  </xsl:element>
+                </xsl:element>
+                <xsl:if test="exists(./cbc:Name)">
+                  <xsl:element name="payment-account-name">
+                    <xsl:attribute name="id">bt-85</xsl:attribute>
+                    <xsl:value-of select="./cbc:Name"/>
+                  </xsl:element>
+                </xsl:if>
+                <xsl:if test="exists(./cac:FinancialInstitutionBranch/cbc:ID)">
+                  <xsl:element name="payment-service-provider-identifier">
+                    <xsl:attribute name="id">bt-86</xsl:attribute>
+                    <xsl:element name="content">
+                      <xsl:value-of select="./cac:FinancialInstitutionBranch/cbc:ID"/>
+                    </xsl:element>
+                  </xsl:element>
+                </xsl:if>
+              </xsl:element>
+            </xsl:for-each>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:PaymentMeans/cac:CardAccount/cbc:PrimaryAccountNumberID)">
+          <xsl:element name="payment-card-information">
+            <xsl:attribute name="id">bg-18</xsl:attribute>
+            <xsl:element name="payment-card-primary-account-number">
+              <xsl:attribute name="id">bt-87</xsl:attribute>
+              <xsl:value-of select="cac:PaymentMeans/cac:CardAccount/cbc:PrimaryAccountNumberID"/>
+            </xsl:element>
+            <xsl:if test="exists(cac:PaymentMeans/cac:CardAccount/cbc:HolderName)">
+              <xsl:element name="payment-card-holder-name">
+                <xsl:attribute name="id">bt-88</xsl:attribute>
+                <xsl:value-of select="cac:PaymentMeans/cac:CardAccount/cbc:HolderName"/>
+              </xsl:element>
+            </xsl:if>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:PaymentMeans/cac:PaymentMandate/cbc:ID)">
+          <xsl:element name="direct-debit">
+            <xsl:attribute name="id">bg-19</xsl:attribute>
+            <xsl:element name="mandate-reference-identifier">
+              <xsl:attribute name="id">bt-89</xsl:attribute>
+              <xsl:value-of select="cac:PaymentMeans/cac:PaymentMandate/cbc:ID"/>
+            </xsl:element>
+            <xsl:element name="bank-assigned-creditor-identifier">
+              <xsl:attribute name="id">bt-90</xsl:attribute>
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[(normalize-space(upper-case(@schmeID)) = 'SEPA']/cbc:ID"/>
+            </xsl:element>
+            <xsl:element name="debited-account-identifier">
+              <xsl:attribute name="id">bt-91</xsl:attribute>
+              <xsl:value-of select="cac:PaymentMeans/cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID"/>
+            </xsl:element>
+          </xsl:element>
+        </xsl:if>
       </xsl:element>
       <xsl:if test="false()">
         <xsl:element name="document-level-allowances">
