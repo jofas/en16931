@@ -219,7 +219,7 @@
             </xsl:element>
             <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID[@schemeID])">
               <xsl:element name="scheme-identifier">
-                <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID]"/>
+                <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID"/>
               </xsl:element>
             </xsl:if>
           </xsl:element>
@@ -253,7 +253,7 @@
           </xsl:element>
           <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cbc:EndpointID[@schemeID])">
             <xsl:element name="scheme-identifier">
-              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID/@schemeID]"/>
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID/@schemeID"/>
             </xsl:element>
           </xsl:if>
         </xsl:element>
@@ -330,9 +330,9 @@
             <xsl:element name="content">
               <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID"/>
             </xsl:element>
-            <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification)/cbc:ID[@schemeID])">
+            <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID])">
               <xsl:element name="scheme-identifier">
-                <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID@schemeID"/>
+                <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID"/>
               </xsl:element>
             </xsl:if>
           </xsl:element>
@@ -345,7 +345,7 @@
             </xsl:element>
             <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID[@schemeID])">
               <xsl:element name="scheme-identifier">
-                <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID]"/>
+                <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID"/>
               </xsl:element>
             </xsl:if>
           </xsl:element>
@@ -365,7 +365,7 @@
           </xsl:element>
           <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cbc:EndpointID[@schemeID])">
             <xsl:element name="scheme-identifier">
-              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID/@schemeID]"/>
+              <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID/@schemeID"/>
             </xsl:element>
           </xsl:if>
         </xsl:element>
@@ -410,19 +410,19 @@
         </xsl:element>
         <xsl:element name="buyer-contact">
           <xsl:attribute name="id">bg-9</xsl:attribute>
-          <xsl:if select="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name)">
+          <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name)">
             <xsl:element name="buyer-contact-point">
               <xsl:attribute name="id">bt-56</xsl:attribute>
               <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name"/>
             </xsl:element>
           </xsl:if>
-          <xsl:if select="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Telephone)">
+          <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Telephone)">
             <xsl:element name="buyer-contact-telephone-number">
               <xsl:attribute name="id">bt-57</xsl:attribute>
               <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Telephone"/>
             </xsl:element>
           </xsl:if>
-          <xsl:if select="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
+          <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
             <xsl:element name="buyer-contact-email-address">
               <xsl:attribute name="id">bt-58</xsl:attribute>
               <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail"/>
@@ -521,7 +521,12 @@
           </xsl:element>
         </xsl:element>
       </xsl:if>
-      <xsl:if test="exists(cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name, cac:Delivery/cac:DeliveryLocation/cbc:ID, cac:Delivery/cbc:ActualDeliveryDate, cac:InvoicePeriod/cbc:StartDate, cac:InvoicePeriod/cbc:EndDate, cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName)">
+      <xsl:if test="exists(cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name)
+            or exists(cac:Delivery/cac:DeliveryLocation/cbc:ID)
+            or exists(cac:Delivery/cbc:ActualDeliveryDate)
+            or exists(cac:InvoicePeriod/cbc:StartDate)
+            or exists(cac:InvoicePeriod/cbc:EndDate)
+            or exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName)">
         <xsl:element name="delivery-information">
           <xsl:attribute name="id">bg-13</xsl:attribute>
           <xsl:if test="exists(cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name)">
@@ -549,7 +554,7 @@
               <xsl:value-of select="cac:Delivery/cbc:ActualDeliveryDate"/>
             </xsl:element>
           </xsl:if>
-          <xsl:if test="exists(cac:InvoicePeriod/cbc:StartDate, cac:InvoicePeriod/cbc:EndDate)">
+          <xsl:if test="exists(cac:InvoicePeriod/cbc:StartDate) or exists(cac:InvoicePeriod/cbc:EndDate)">
             <xsl:element name="invoicing-period">
               <xsl:attribute name="id">bg-14</xsl:attribute>
               <xsl:if test="exists(cac:InvoicePeriod/cbc:StartDate)">
