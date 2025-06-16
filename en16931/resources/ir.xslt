@@ -925,15 +925,61 @@
         </xsl:element>
         <xsl:element name="invoice-lines">
           <xsl:attribute name="id">bg-25</xsl:attribute>
+          <xsl:for-each select="cac:InvoiceLine">
+            <xsl:element name="invoice-line">
+              <xsl:attribute name="id">bg-25</xsl:attribute>
+              <xsl:element name="invoice-line-identifier">
+                <xsl:attribute name="id">bt-126</xsl:attribute>
+                <xsl:element name="content">
+                  <xsl:value-of select="./cbc:ID"/>
+                </xsl:element>
+              </xsl:element>
+              <xsl:if test="exists(./cbc:Note)">
+                <xsl:element name="invoice-line-note">
+                  <xsl:attribute name="id">bt-127</xsl:attribute>
+                  <xsl:value-of select="./cbc:Note"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(./cac:DocumentReference[cbc:DocumentTypeCode='130']/cbc:ID)">
+                <xsl:element name="invoice-line-object-identifier">
+                  <xsl:attribute name="id">bt-128</xsl:attribute>
+                  <xsl:element name="content">
+                    <xsl:value-of select="./cac:DocumentReference[cbc:DocumentTypeCode='130']/cbc:ID"/>
+                  </xsl:element>
+                  <xsl:if test="exists(./cac:DocumentReference[cbc:DocumentTypeCode='130']/cbc:ID[@schemeID])">
+                    <xsl:element name="scheme-identifier">
+                      <xsl:value-of select="./cac:DocumentReference[cbc:DocumentTypeCode='130']/cbc:ID/@schemeID"/>
+                    </xsl:element>
+                  </xsl:if>
+                </xsl:element>
+              </xsl:if>
+              <xsl:element name="invoiced-quantity">
+                <xsl:attribute name="id">bt-129</xsl:attribute>
+                <xsl:value-of select="./cbc:InvoicedQuantity"/>
+              </xsl:element>
+              <xsl:element name="invoiced-quantity-unit-of-measure-code">
+                <xsl:attribute name="id">bt-130</xsl:attribute>
+                <xsl:value-of select="./cbc:InvoicedQuantity/@unitCode"/>
+              </xsl:element>
+              <xsl:element name="invoice-line-net-amount">
+                <xsl:attribute name="id">bt-131</xsl:attribute>
+                <xsl:value-of select="./cbc:LineExtensionAmount"/>
+              </xsl:element>
+              <xsl:if test="exists(./cac:OrderLineReference/cbc:LineID)">
+                <xsl:element name="referenced-purchase-order-line-reference">
+                  <xsl:attribute name="id">bt-132</xsl:attribute>
+                  <xsl:value-of select="./cac:OrderLineReference/cbc:LineID"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(./cbc:AccountingCost)">
+                <xsl:element name="invoice-line-buyer-accounting-reference">
+                  <xsl:attribute name="id">bt-133</xsl:attribute>
+                  <xsl:value-of select="./cbc:AccountingCost"/>
+                </xsl:element>
+              </xsl:if>
+            </xsl:element>
+          </xsl:for-each>
           <!--
-            * invoice-line-identifier bt-126 1
-            * invoice-line-note bt-127 ?
-            * invoice-line-object-identifier bt-128 ? (schemeID)
-            * invoiced-quantity bt-129 1
-            * invoiced-quantity-unit-of-measure-code bt-130 1
-            * invoice-line-net-amount bt-131 1
-            * referenced-purchase-order-line-reference bt-132 ?
-            * invoice-line-buyer-accounting-reference bt-133 ?
             * invoice-line-period bg-26 ?
               - invoice-line-period-start-date bt-134 ?
               - invoice-line-period-end-date bt-135 ?
