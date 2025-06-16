@@ -706,13 +706,13 @@
                 <xsl:attribute name="id">bt-92</xsl:attribute>
                 <xsl:value-of select="./cbc:Amount"/>
               </xsl:element>
-              <xsl:if test="exits(./cbc:BaseAmount)">
+              <xsl:if test="exists(./cbc:BaseAmount)">
                 <xsl:element name="document-level-allowance-base-amount">
                   <xsl:attribute name="id">bt-93</xsl:attribute>
                   <xsl:value-of select="./cbc:BaseAmount"/>
                 </xsl:element>
               </xsl:if>
-              <xsl:if test="exits(./cbc:MultiplierFactorNumeric)">
+              <xsl:if test="exists(./cbc:MultiplierFactorNumeric)">
                 <xsl:element name="document-level-allowance-percentage">
                   <xsl:attribute name="id">bt-94</xsl:attribute>
                   <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
@@ -722,19 +722,19 @@
                 <xsl:attribute name="id">bt-95</xsl:attribute>
                 <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID"/>
               </xsl:element>
-              <xsl:if test="exits(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent)">
+              <xsl:if test="exists(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent)">
                 <xsl:element name="document-level-allowance-vat-rate">
                   <xsl:attribute name="id">bt-96</xsl:attribute>
                   <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent"/>
                 </xsl:element>
               </xsl:if>
-              <xsl:if test="exits(./cbc:AllowanceChargeReason)">
+              <xsl:if test="exists(./cbc:AllowanceChargeReason)">
                 <xsl:element name="document-level-allowance-reason">
                   <xsl:attribute name="id">bt-97</xsl:attribute>
                   <xsl:value-of select="./cbc:AllowanceChargeReason"/>
                 </xsl:element>
               </xsl:if>
-              <xsl:if test="exits(./cbc:AllowanceChargeReasonCode)">
+              <xsl:if test="exists(./cbc:AllowanceChargeReasonCode)">
                 <xsl:element name="document-level-allowance-reason-code">
                   <xsl:attribute name="id">bt-98</xsl:attribute>
                   <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
@@ -754,13 +754,13 @@
                 <xsl:attribute name="id">bt-99</xsl:attribute>
                 <xsl:value-of select="./cbc:Amount"/>
               </xsl:element>
-              <xsl:if test="exits(./cbc:BaseAmount)">
+              <xsl:if test="exists(./cbc:BaseAmount)">
                 <xsl:element name="document-level-charge-base-amount">
                   <xsl:attribute name="id">bt-100</xsl:attribute>
                   <xsl:value-of select="./cbc:BaseAmount"/>
                 </xsl:element>
               </xsl:if>
-              <xsl:if test="exits(./cbc:MultiplierFactorNumeric)">
+              <xsl:if test="exists(./cbc:MultiplierFactorNumeric)">
                 <xsl:element name="document-level-charge-percentage">
                   <xsl:attribute name="id">bt-101</xsl:attribute>
                   <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
@@ -770,19 +770,19 @@
                 <xsl:attribute name="id">bt-102</xsl:attribute>
                 <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID"/>
               </xsl:element>
-              <xsl:if test="exits(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent)">
+              <xsl:if test="exists(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent)">
                 <xsl:element name="document-level-charge-vat-rate">
                   <xsl:attribute name="id">bt-103</xsl:attribute>
                   <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent"/>
                 </xsl:element>
               </xsl:if>
-              <xsl:if test="exits(./cbc:AllowanceChargeReason)">
+              <xsl:if test="exists(./cbc:AllowanceChargeReason)">
                 <xsl:element name="document-level-charge-reason">
                   <xsl:attribute name="id">bt-104</xsl:attribute>
                   <xsl:value-of select="./cbc:AllowanceChargeReason"/>
                 </xsl:element>
               </xsl:if>
-              <xsl:if test="exits(./cbc:AllowanceChargeReasonCode)">
+              <xsl:if test="exists(./cbc:AllowanceChargeReasonCode)">
                 <xsl:element name="document-level-charge-reason-code">
                   <xsl:attribute name="id">bt-105</xsl:attribute>
                   <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
@@ -883,16 +883,45 @@
           </xsl:element>
         </xsl:for-each>
       </xsl:element>
-      <xsl:if test="false()">
+      <!-- UBL CreditNote DocumentType can't be 90 either -->
+      <xsl:if test="exists(cac:AdditionalDocumentReference[cbc:DocumentTypeCode != '130']/cbc:ID)">
         <xsl:element name="additional-supporting-documents">
           <xsl:attribute name="id">bg-24</xsl:attribute>
-          <!--
-            * supporting-document-reference bt-122 1
-            * supporting-document-description bt-123 ?
-            * external-document-location bt-124 ?
-            * attached-document bt-125 ? (binary object)
-          -->
-          <!-- list -->
+          <xsl:for-each select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode != '130']">
+            <xsl:element name="additional-supporting-document">
+              <xsl:attribute name="id">bg-24</xsl:attribute>
+              <xsl:element name="supporting-document-reference">
+                <xsl:attribute name="id">bt-122</xsl:attribute>
+                <xsl:value-of select="./cbc:ID"/>
+              </xsl:element>
+              <xsl:if test="exists(./cbc:DocumentDescription)">
+                <xsl:element name="supporting-document-description">
+                  <xsl:attribute name="id">bt-123</xsl:attribute>
+                  <xsl:value-of select="./cbc:DocumentDescription"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(./cac:Attachment/cac:ExternalReference/cbc:URI)">
+                <xsl:element name="external-document-location">
+                  <xsl:attribute name="id">bt-124</xsl:attribute>
+                  <xsl:value-of select="./cac:Attachment/cac:ExternalReference/cbc:URI"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(./cac:Attachment/cbc:EmbeddedDocumentBinaryObject)">
+                <xsl:element name="attached-document">
+                  <xsl:attribute name="id">bt-125</xsl:attribute>
+                  <xsl:element name="content">
+                    <xsl:value-of select="./cac:Attachment/cbc:EmbeddedDocumentBinaryObject"/>
+                  </xsl:element>
+                  <xsl:element name="mime-code">
+                    <xsl:value-of select="./cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@mimeCode"/>
+                  </xsl:element>
+                  <xsl:element name="filename">
+                    <xsl:value-of select="./cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@filename"/>
+                  </xsl:element>
+                </xsl:element>
+              </xsl:if>
+            </xsl:element>
+          </xsl:for-each>
         </xsl:element>
         <xsl:element name="invoice-lines">
           <xsl:attribute name="id">bg-25</xsl:attribute>
