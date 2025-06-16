@@ -1103,10 +1103,20 @@
               </xsl:element>
             </xsl:element>
           </xsl:for-each>
+          <xsl:element name="line-vat-information">
+            <xsl:attribute name="id">bg-30</xsl:attribute>
+            <xsl:element name="invoiced-item-vat-category-code">
+              <xsl:attribute name="id">bt-151</xsl:attribute>
+              <xsl:value-of select="./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:ID"/>
+            </xsl:element>
+            <xsl:if test="exists(./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:Percent)">
+              <xsl:element name="invoiced-item-vat-rate">
+                <xsl:attribute name="id">bt-152</xsl:attribute>
+                <xsl:value-of select="./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:Percent"/>
+              </xsl:element>
+            </xsl:if>
+          </xsl:element>
           <!--
-            * line-vat-information bg-30 1
-              - invoiced-item-vat-category-code bt-151 1
-              - invoiced-item-vat-rate bt-152 ?
             * item-information bg-31 1
               - item-name bt-153 1
               - item-description bt-154 ?
