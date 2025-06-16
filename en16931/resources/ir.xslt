@@ -977,6 +977,23 @@
                   <xsl:value-of select="./cbc:AccountingCost"/>
                 </xsl:element>
               </xsl:if>
+              <xsl:if test="exists(./cac:InvoicePeriod/cbc:StartDate) or exists(./cac:InvoicePeriod/cbc:EndDate)">
+                <xsl:element name="invoice-line-period">
+                  <xsl:attribute name="id">bg-26</xsl:attribute>
+                  <xsl:if test="exists(./cac:InvoicePeriod/cbc:StartDate)">
+                    <xsl:element name="invoice-line-period-start-date">
+                      <xsl:attribute name="id">bt-134</xsl:attribute>
+                      <xsl:value-of select="./cac:InvoicePeriod/cbc:StartDate"/>
+                    </xsl:element>
+                  </xsl:if>
+                  <xsl:if test="exists(./cac:InvoicePeriod/cbc:EndDate)">
+                    <xsl:element name="invoice-line-period-end-date">
+                      <xsl:attribute name="id">bt-135</xsl:attribute>
+                      <xsl:value-of select="./cac:InvoicePeriod/cbc:EndDate"/>
+                    </xsl:element>
+                  </xsl:if>
+                </xsl:element>
+              </xsl:if>
             </xsl:element>
           </xsl:for-each>
           <!--
