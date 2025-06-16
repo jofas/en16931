@@ -1070,15 +1070,40 @@
                   </xsl:for-each>
                 </xsl:element>
               </xsl:if>
+              <xsl:element name="price-details">
+                <xsl:attribute name="id">bg-29</xsl:attribute>
+                <xsl:element name="item-net-price">
+                  <xsl:attribute name="id">bt-146</xsl:attribute>
+                  <xsl:value-of select="./cac:Price/cbc:PriceAmount"/>
+                </xsl:element>
+                <xsl:if test="exists(./cac:Price/cac:AllowanceCharge/cbc:Amount)">
+                  <xsl:element name="item-price-discount">
+                    <xsl:attribute name="id">bt-147</xsl:attribute>
+                    <xsl:value-of select="./cac:Price/cac:AllowanceCharge/cbc:Amount"/>
+                  </xsl:element>
+                </xsl:if>
+                <xsl:if test="exists(./cac:Price/cac:AllowanceCharge/cbc:BaseAmount)">
+                  <xsl:element name="item-gross-price">
+                    <xsl:attribute name="id">bt-148</xsl:attribute>
+                    <xsl:value-of select="./cac:Price/cac:AllowanceCharge/cbc:BaseAmount"/>
+                  </xsl:element>
+                </xsl:if>
+                <xsl:if test="exists(./cac:Price/cbc:BaseQuantity)">
+                  <xsl:element name="item-price-base-quantity">
+                    <xsl:attribute name="id">bt-149</xsl:attribute>
+                    <xsl:value-of select="./cac:Price/cbc:BaseQuantity"/>
+                  </xsl:element>
+                </xsl:if>
+                <xsl:if test="exists(./cac:Price/cbc:BaseQuantity[@unitCode])">
+                  <xsl:element name="item-price-base-quantity-unit-of-measure">
+                    <xsl:attribute name="id">bt-150</xsl:attribute>
+                    <xsl:value-of select="./cac:Price/cbc:BaseQuantity/@unitCode"/>
+                  </xsl:element>
+                </xsl:if>
+              </xsl:element>
             </xsl:element>
           </xsl:for-each>
           <!--
-            * price-details bg-29 1
-              - item-net-price bt-146 1
-              - item-price-discount bt-147 ?
-              - item-gross-price bt-148 ?
-              - item-price-base-quantity bt-149 ?
-              - item-price-base-quantity-unit-of-measure bt-150 ?
             * line-vat-information bg-30 1
               - invoiced-item-vat-category-code bt-151 1
               - invoiced-item-vat-rate bt-152 ?
