@@ -794,18 +794,58 @@
       </xsl:if>
       <xsl:element name="document-totals">
         <xsl:attribute name="id">bg-22</xsl:attribute>
-        <!--
-          * sum-of-invoice-line-net-amount bt-106 1
-          * sum-of-allowances-on-document-level bt-107 ?
-          * sum-of-charges-on-document-level bt-108 ?
-          * invoice-total-amount-without-vat bt-109 1
-          * invoice-total-vat-amount bt-110 ?
-          * invoice-total-vat-amount-in-accounting-currency bt-111 ?
-          * invoice-total-amount-with-vat bt-112 1
-          * paid-amount bt-113 ?
-          * rounding-amount bt-114 ?
-          * amount-due-for-payment bt-115 1
-        -->
+        <xsl:element name="sum-of-invoice-line-net-amount">
+          <xsl:attribute name="id">bt-106</xsl:attribute>
+          <xsl:value-of select="cac:LegalMonetaryTotal/cbc:LineExtensionAmount"/>
+        </xsl:element>
+        <xsl:if test="exists(cac:LegalMonetaryTotal/cbc:AllowanceTotalAmount)">
+          <xsl:element name="sum-of-allowances-on-document-level">
+            <xsl:attribute name="id">bt-107</xsl:attribute>
+            <xsl:value-of select="cac:LegalMonetaryTotal/cbc:AllowanceTotalAmount"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:LegalMonetaryTotal/cbc:ChargeTotalAmount)">
+          <xsl:element name="sum-of-charges-on-document-level">
+            <xsl:attribute name="id">bt-108</xsl:attribute>
+            <xsl:value-of select="cac:LegalMonetaryTotal/cbc:ChargeTotalAmount"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:element name="invoice-total-amount-without-vat">
+          <xsl:attribute name="id">bt-109</xsl:attribute>
+          <xsl:value-of select="cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"/>
+        </xsl:element>
+        <xsl:if test="exists(cac:TaxTotal/cbc:TaxAmount[@currencyID=cbc:DocumentCurrencyCode])">
+          <xsl:element name="invoice-total-vat-amount">
+            <xsl:attribute name="id">bt-110</xsl:attribute>
+            <xsl:value-of select="cac:TaxTotal/cbc:TaxAmount[@currencyID=cbc:DocumentCurrencyCode]"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:TaxTotal/cbc:TaxAmount[@currencyID=cbc:TaxCurrencyCode])">
+          <xsl:element name="invoice-total-vat-amount-in-accounting-currency">
+            <xsl:attribute name="id">bt-111</xsl:attribute>
+            <xsl:value-of select="cac:TaxTotal/cbc:TaxAmount[@currencyID=cbc:TaxCurrencyCode]"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:element name="invoice-total-amount-with-vat">
+          <xsl:attribute name="id">bt-112</xsl:attribute>
+          <xsl:value-of select="cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount"/>
+        </xsl:element>
+        <xsl:if test="exists(cac:LegalMonetaryTotal/cbc:PrepaidAmount)">
+          <xsl:element name="paid-amount">
+            <xsl:attribute name="id">bt-113</xsl:attribute>
+            <xsl:value-of select="cac:LegalMonetaryTotal/cbc:PrepaidAmount"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:if test="exists(cac:LegalMonetaryTotal/cbc:PayableRoundingAmount)">
+          <xsl:element name="rounding-amount">
+            <xsl:attribute name="id">bt-114</xsl:attribute>
+            <xsl:value-of select="cac:LegalMonetaryTotal/cbc:PayableRoundingAmount"/>
+          </xsl:element>
+        </xsl:if>
+        <xsl:element name="amount-due-for-payment">
+          <xsl:attribute name="id">bt-115</xsl:attribute>
+          <xsl:value-of select="cac:LegalMonetaryTotal/cbc:PayableAmount"/>
+        </xsl:element>
       </xsl:element>
       <xsl:element name="vat-breakdown">
         <xsl:attribute name="id">bg-23</xsl:attribute>
