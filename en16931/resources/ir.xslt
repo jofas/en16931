@@ -696,34 +696,100 @@
           </xsl:element>
         </xsl:if>
       </xsl:element>
-      <xsl:if test="false()">
+      <xsl:if test="exists(cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:Amount)">
         <xsl:element name="document-level-allowances">
           <xsl:attribute name="id">bg-20</xsl:attribute>
-          <!--
-            * document-level-allowance-amount bt-92 1
-            * document-level-allowance-base-amount bt-93 ?
-            * document-level-allowance-percentage bt-94 ?
-            * document-level-allowance-vat-category-code bt-95 1
-            * document-level-allowance-vat-rate bt-96 ?
-            * document-level-allowance-reason bt-97 ?
-            * document-level-allowance-reason-code bt-98 ?
-          -->
-          <!-- list -->
+          <xsl:for-each select="cac:AllowanceCharge[cbc:ChargeIndicator = false()]">
+            <xsl:element name="document-level-allowance">
+              <xsl:attribute name="id">bg-20</xsl:attribute>
+              <xsl:element name="document-level-allowance-amount">
+                <xsl:attribute name="id">bt-92</xsl:attribute>
+                <xsl:value-of select="./cbc:Amount"/>
+              </xsl:element>
+              <xsl:if test="exits(./cbc:BaseAmount)">
+                <xsl:element name="document-level-allowance-base-amount">
+                  <xsl:attribute name="id">bt-93</xsl:attribute>
+                  <xsl:value-of select="./cbc:BaseAmount"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exits(./cbc:MultiplierFactorNumeric)">
+                <xsl:element name="document-level-allowance-percentage">
+                  <xsl:attribute name="id">bt-94</xsl:attribute>
+                  <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:element name="document-level-allowance-vat-category-code">
+                <xsl:attribute name="id">bt-95</xsl:attribute>
+                <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID"/>
+              </xsl:element>
+              <xsl:if test="exits(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent)">
+                <xsl:element name="document-level-allowance-vat-rate">
+                  <xsl:attribute name="id">bt-96</xsl:attribute>
+                  <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exits(./cbc:AllowanceChargeReason)">
+                <xsl:element name="document-level-allowance-reason">
+                  <xsl:attribute name="id">bt-97</xsl:attribute>
+                  <xsl:value-of select="./cbc:AllowanceChargeReason"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exits(./cbc:AllowanceChargeReasonCode)">
+                <xsl:element name="document-level-allowance-reason-code">
+                  <xsl:attribute name="id">bt-98</xsl:attribute>
+                  <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
+                </xsl:element>
+              </xsl:if>
+            </xsl:element>
+          </xsl:for-each>
         </xsl:element>
       </xsl:if>
-      <xsl:if test="false()">
+      <xsl:if test="exists(cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:Amount)">
         <xsl:element name="document-level-charges">
           <xsl:attribute name="id">bg-21</xsl:attribute>
-          <!--
-            * document-level-charge-amount bt-99 1
-            * document-level-charge-base-amount bt-100 ?
-            * document-level-charge-percentage bt-101 ?
-            * document-level-charge-vat-category-code bt-102 1
-            * document-level-charge-vat-rate bt-103 ?
-            * document-level-charge-reason bt-104 ?
-            * document-level-charge-reason-code bt-105 ?
-          -->
-          <!-- list -->
+          <xsl:for-each select="cac:AllowanceCharge[cbc:ChargeIndicator = false()]">
+            <xsl:element name="document-level-charge">
+              <xsl:attribute name="id">bg-20</xsl:attribute>
+              <xsl:element name="document-level-charge-amount">
+                <xsl:attribute name="id">bt-99</xsl:attribute>
+                <xsl:value-of select="./cbc:Amount"/>
+              </xsl:element>
+              <xsl:if test="exits(./cbc:BaseAmount)">
+                <xsl:element name="document-level-charge-base-amount">
+                  <xsl:attribute name="id">bt-100</xsl:attribute>
+                  <xsl:value-of select="./cbc:BaseAmount"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exits(./cbc:MultiplierFactorNumeric)">
+                <xsl:element name="document-level-charge-percentage">
+                  <xsl:attribute name="id">bt-101</xsl:attribute>
+                  <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:element name="document-level-charge-vat-category-code">
+                <xsl:attribute name="id">bt-102</xsl:attribute>
+                <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID"/>
+              </xsl:element>
+              <xsl:if test="exits(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent)">
+                <xsl:element name="document-level-charge-vat-rate">
+                  <xsl:attribute name="id">bt-103</xsl:attribute>
+                  <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exits(./cbc:AllowanceChargeReason)">
+                <xsl:element name="document-level-charge-reason">
+                  <xsl:attribute name="id">bt-104</xsl:attribute>
+                  <xsl:value-of select="./cbc:AllowanceChargeReason"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exits(./cbc:AllowanceChargeReasonCode)">
+                <xsl:element name="document-level-charge-reason-code">
+                  <xsl:attribute name="id">bt-105</xsl:attribute>
+                  <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
+                </xsl:element>
+              </xsl:if>
+            </xsl:element>
+          </xsl:for-each>
         </xsl:element>
       </xsl:if>
       <xsl:element name="document-totals">
