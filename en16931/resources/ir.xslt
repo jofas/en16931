@@ -994,24 +994,85 @@
                   </xsl:if>
                 </xsl:element>
               </xsl:if>
+              <xsl:if test="exists(./cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:Amount)">
+                <xsl:element name="invoice-line-allowances">
+                  <xsl:attribute name="id">bg-27</xsl:attribute>
+                  <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = false()]">
+                    <xsl:element name="invoice-line-allowance">
+                      <xsl:attribute name="id">bg-27</xsl:attribute>
+                      <xsl:element name="invoice-line-allowance-amount">
+                        <xsl:attribute name="id">bt-136</xsl:attribute>
+                        <xsl:value-of select="./cbc:Amount"/>
+                      </xsl:element>
+                      <xsl:if test="exists(./cbc:BaseAmount)">
+                        <xsl:element name="invoice-line-allowance-base-amount">
+                          <xsl:attribute name="id">bt-137</xsl:attribute>
+                          <xsl:value-of select="./cbc:BaseAmount"/>
+                        </xsl:element>
+                      </xsl:if>
+                      <xsl:if test="exists(./cbc:MultiplierFactorNumeric)">
+                        <xsl:element name="invoice-line-allowance-percentage">
+                          <xsl:attribute name="id">bt-138</xsl:attribute>
+                          <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
+                        </xsl:element>
+                      </xsl:if>
+                      <xsl:if test="exists(./cbc:AllowanceChargeReason)">
+                        <xsl:element name="invoice-line-allowance-reason">
+                          <xsl:attribute name="id">bt-139</xsl:attribute>
+                          <xsl:value-of select="./cbc:AllowanceChargeReason"/>
+                        </xsl:element>
+                      </xsl:if>
+                      <xsl:if test="exists(./cbc:AllowanceChargeReasonCode)">
+                        <xsl:element name="invoice-line-allowance-reason-code">
+                          <xsl:attribute name="id">bt-140</xsl:attribute>
+                          <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
+                        </xsl:element>
+                      </xsl:if>
+                    </xsl:element>
+                  </xsl:for-each>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(./cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:Amount)">
+                <xsl:element name="invoice-line-charges">
+                  <xsl:attribute name="id">bg-28</xsl:attribute>
+                  <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = true()]">
+                    <xsl:element name="invoice-line-charge">
+                      <xsl:attribute name="id">bg-28</xsl:attribute>
+                      <xsl:element name="invoice-line-charge-amount">
+                        <xsl:attribute name="id">bt-141</xsl:attribute>
+                        <xsl:value-of select="./cbc:Amount"/>
+                      </xsl:element>
+                      <xsl:if test="exists(./cbc:BaseAmount)">
+                        <xsl:element name="invoice-line-charge-base-amount">
+                          <xsl:attribute name="id">bt-142</xsl:attribute>
+                          <xsl:value-of select="./cbc:BaseAmount"/>
+                        </xsl:element>
+                      </xsl:if>
+                      <xsl:if test="exists(./cbc:MultiplierFactorNumeric)">
+                        <xsl:element name="invoice-line-charge-percentage">
+                          <xsl:attribute name="id">bt-143</xsl:attribute>
+                          <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
+                        </xsl:element>
+                      </xsl:if>
+                      <xsl:if test="exists(./cbc:AllowanceChargeReason)">
+                        <xsl:element name="invoice-line-charge-reason">
+                          <xsl:attribute name="id">bt-144</xsl:attribute>
+                          <xsl:value-of select="./cbc:AllowanceChargeReason"/>
+                        </xsl:element>
+                      </xsl:if>
+                      <xsl:if test="exists(./cbc:AllowanceChargeReasonCode)">
+                        <xsl:element name="invoice-line-charge-reason-code">
+                          <xsl:attribute name="id">bt-145</xsl:attribute>
+                          <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
+                        </xsl:element>
+                      </xsl:if>
+                    </xsl:element>
+                  </xsl:for-each>
+                </xsl:element>
+              </xsl:if>
             </xsl:element>
           </xsl:for-each>
           <!--
-            * invoice-line-period bg-26 ?
-              - invoice-line-period-start-date bt-134 ?
-              - invoice-line-period-end-date bt-135 ?
-            * invoice-line-allowances bg-27 *
-              - invoice-line-allowance-amount bt-136 1
-              - invoice-line-allowance-base-amount bt-137 ?
-              - invoice-line-allowance-percentage bt-138 ?
-              - invoice-line-allowance-reason bt-139 ?
-              - invoice-line-allowance-reason-code bt-140 ?
-            * invoice-line-charges bg-28 *
-              - invoice-line-charge-amount bt-141 1
-              - invoice-line-charge-base-amount bt-142 ?
-              - invoice-line-charge-percentage bt-143 ?
-              - invoice-line-charge-reason bt-144 ?
-              - invoice-line-charge-reason-code bt-145 ?
             * price-details bg-29 1
               - item-net-price bt-146 1
               - item-price-discount bt-147 ?
