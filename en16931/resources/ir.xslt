@@ -849,15 +849,39 @@
       </xsl:element>
       <xsl:element name="vat-breakdown">
         <xsl:attribute name="id">bg-23</xsl:attribute>
-        <!--
-          * vat-category-taxable-amount bt-116 1
-          * vat-category-tax-amount bt-117 1
-          * vat-category-code bt-118 1
-          * vat-category-rate bt-119 1
-          * vat-exemption-reason-text bt-120 ?
-          * vat-exemption-reason-code bt-121 ?
-        -->
-        <!-- list -->
+        <xsl:for-each select="cac:TaxTotal/cac:TaxSubtotal">
+          <xsl:element name="vat-breakdown">
+            <xsl:attribute name="id">bg-23</xsl:attribute>
+            <xsl:element name="vat-category-taxable-amount">
+              <xsl:attribute name="id">bt-116</xsl:attribute>
+              <xsl:value-of select="./cbc:TaxableAmount"/>
+            </xsl:element>
+            <xsl:element name="vat-category-tax-amount">
+              <xsl:attribute name="id">bt-117</xsl:attribute>
+              <xsl:value-of select="./cbc:TaxAmount"/>
+            </xsl:element>
+            <xsl:element name="vat-category-code">
+              <xsl:attribute name="id">bt-118</xsl:attribute>
+              <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID"/>
+            </xsl:element>
+            <xsl:element name="vat-category-rate">
+              <xsl:attribute name="id">bt-119</xsl:attribute>
+              <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent"/>
+            </xsl:element>
+            <xsl:if test="exists(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:TaxExemptionReason)">
+              <xsl:element name="vat-exemption-reason-text">
+                <xsl:attribute name="id">bt-120</xsl:attribute>
+                <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:TaxExemptionReason"/>
+              </xsl:element>
+            </xsl:if>
+            <xsl:if test="exists(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:TaxExemptionReasonCode)">
+              <xsl:element name="vat-exemption-reason-code">
+                <xsl:attribute name="id">bt-121</xsl:attribute>
+                <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:TaxExemptionReasonCode"/>
+              </xsl:element>
+            </xsl:if>
+          </xsl:element>
+        </xsl:for-each>
       </xsl:element>
       <xsl:if test="false()">
         <xsl:element name="additional-supporting-documents">
