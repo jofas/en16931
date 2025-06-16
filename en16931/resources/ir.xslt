@@ -620,13 +620,13 @@
           <xsl:attribute name="id">bt-81</xsl:attribute>
           <xsl:value-of select="cac:PaymentMeans/cbc:PaymentMeansCode"/>
         </xsl:element>
-        <xsl:if test="exists(cac:PaymentMeans/cbc:PaymentMeansCode[@name]">
+        <xsl:if test="exists(cac:PaymentMeans/cbc:PaymentMeansCode[@name])">
           <xsl:element name="payment-means-text">
             <xsl:attribute name="id">bt-82</xsl:attribute>
             <xsl:value-of select="cac:PaymentMeans/cbc:PaymentMeansCode/@name"/>
           </xsl:element>
         </xsl:if>
-        <xsl:if test="exists(cac:PaymentMeans/cbc:PaymentID">
+        <xsl:if test="exists(cac:PaymentMeans/cbc:PaymentID)">
           <xsl:element name="remittance-information">
             <xsl:attribute name="id">bt-83</xsl:attribute>
             <xsl:value-of select="cac:PaymentMeans/cbc:PaymentID"/>
@@ -687,7 +687,7 @@
             </xsl:element>
             <xsl:element name="bank-assigned-creditor-identifier">
               <xsl:attribute name="id">bt-90</xsl:attribute>
-              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[(normalize-space(upper-case(@schmeID)) = 'SEPA']/cbc:ID"/>
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[normalize-space(upper-case(@schemeID)) = 'SEPA']/cbc:ID"/>
             </xsl:element>
             <xsl:element name="debited-account-identifier">
               <xsl:attribute name="id">bt-91</xsl:attribute>
