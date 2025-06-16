@@ -1116,20 +1116,91 @@
               </xsl:element>
             </xsl:if>
           </xsl:element>
-          <!--
-            * item-information bg-31 1
-              - item-name bt-153 1
-              - item-description bt-154 ?
-              - item-sellers-identifier bt-155 ?
-              - item-buyers-identifier bt-156 ?
-              - item-standard-identifier bt-157 ? (schemeID)
-              - item-classification-identifier bt-158 * (schemeID)
-              - item-country-of-origin bt-159 ?
-              - item-attributes bg-32 *
-                + item-attribute-name bt-160 1
-                + item-attribute-value bt-161 1
-          -->
-          <!-- list -->
+          <xsl:element name="item-information">
+            <xsl:attribute name="id">bg-31</xsl:attribute>
+            <xsl:element name="item-name">
+              <xsl:attribute name="id">bt-153</xsl:attribute>
+              <xsl:value-of select="./cac:Item/cbc:Name"/>
+              <xsl:if test="exists(./cac:Item/cbc:Description)">
+                <xsl:element name="item-description">
+                  <xsl:attribute name="id">bt-154</xsl:attribute>
+                  <xsl:value-of select="./cac:Item/cbc:Description"/>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(./cac:Item/cac:SellersItemIdentification/cbc:ID)">
+                <xsl:element name="item-sellers-identifier">
+                  <xsl:attribute name="id">bt-155</xsl:attribute>
+                  <xsl:element name="content">
+                    <xsl:value-of select="./cac:Item/cac:SellersItemIdentification/cbc:ID"/>
+                  </xsl:element>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(./cac:Item/cac:BuyersItemIdentification/cbc:ID)">
+                <xsl:element name="item-buyers-identifier">
+                  <xsl:attribute name="id">bt-156</xsl:attribute>
+                  <xsl:element name="content">
+                    <xsl:value-of select="./cac:Item/cac:BuyersItemIdentification/cbc:ID"/>
+                  </xsl:element>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(./cac:Item/cac:StandardItemIdentification/cbc:ID)">
+                <xsl:element name="item-standard-identifier">
+                  <xsl:attribute name="id">bt-157</xsl:attribute>
+                  <xsl:element name="content">
+                    <xsl:value-of select="./cac:Item/cac:StandardItemIdentification/cbc:ID"/>
+                  </xsl:element>
+                  <xsl:element name="scheme-identifier">
+                    <xsl:value-of select="./cac:Item/cac:StandardItemIdentification/cbc:ID/@schemeID"/>
+                  </xsl:element>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(./cac:Item/cac:CommoditiyClassification/cbc:ItemClassificationCode)">
+                <xsl:element name="item-classification-identifiers">
+                  <xsl:attribute name="id">bt-158</xsl:attribute>
+                  <xsl:for-each select="./cac:Item/cac:CommoditiyClassification">
+                    <xsl:element name="item-classification-identifier">
+                      <xsl:attribute name="id">bt-158</xsl:attribute>
+                      <xsl:element name="content">
+                        <xsl:value-of select="./cbc:ItemClassificationCode"/>
+                      </xsl:element>
+                      <xsl:element name="scheme-identifier">
+                        <xsl:value-of select="./cbc:ItemClassificationCode/@listID"/>
+                      </xsl:element>
+                      <xsl:if test="exists(./cbc:ItemClassificationCode[@listVersionID])">
+                        <xsl:element name="scheme-version-identifier">
+                          <xsl:value-of select="./cbc:ItemClassificationCode/@listVersionID"/>
+                        </xsl:element>
+                      </xsl:if>
+                    </xsl:element>
+                  </xsl:for-each>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="exists(./cacItem/cac:OriginCountry/cbc:IdentificationCode)">
+                <xsl:element name="item-country-of-origin">
+                  <xsl:attribute name="id">bt-159</xsl:attribute>
+                  <xsl:value-of select="./cac:Item/cac:OriginCountry/cbc:IdentificationCode"/>
+                </xsl:element>
+              </xsl:if>
+            </xsl:element>
+            <xsl:if test="exists(./cac:Item/cac:AdditionalItemProperty/cbc:Name)">
+              <xsl:element name="item-attributes">
+                <xsl:attribute name="id">bg-32</xsl:attribute>
+                <xsl:for-each select="./cac:Item/cac:AdditionalItemProperty">
+                  <xsl:element name="item-attribute">
+                    <xsl:attribute name="id">bg-32</xsl:attribute>
+                    <xsl:element name="item-attribute-name">
+                      <xsl:attribute name="id">bt-160</xsl:attribute>
+                      <xsl:value-of select="./cbc:Name"/>
+                    </xsl:element>
+                    <xsl:element name="item-attribute-value">
+                      <xsl:attribute name="id">bt-161</xsl:attribute>
+                      <xsl:value-of select="./cbc:Value"/>
+                    </xsl:element>
+                  </xsl:element>
+                </xsl:for-each>
+              </xsl:element>
+            </xsl:if>
+          </xsl:element>
         </xsl:element>
       </xsl:if>
     </xsl:element>
