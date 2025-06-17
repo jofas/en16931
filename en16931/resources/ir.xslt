@@ -3,10 +3,11 @@
     xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
     xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    exclude-result-prefixes="ubl cac cbc xsl"
     version="1.0">
   <xsl:output method="xml" indent="yes"/>
   <xsl:template match="ubl:Invoice">
-    <xsl:element name="invoice">
+    <invoice xmlns="urn:todo">
       <xsl:element name="invoice-number">
         <xsl:attribute name="id">bt-1</xsl:attribute>
         <xsl:element name="content">
@@ -1203,6 +1204,6 @@
           </xsl:element>
         </xsl:element>
       </xsl:if>
-    </xsl:element>
+    </invoice>
   </xsl:template>
 </xsl:stylesheet>
