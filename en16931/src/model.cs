@@ -1,26 +1,42 @@
 using System;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Dev.Fassbender.En16931.Model;
 
-public record Amount(decimal Inner);
+public record NewType<T> : IXmlSerializable {
+    public required T Inner;
 
-// TODO: how to represent code lists?
-public record Code(string Inner);
+    public void ReadXml(XmlReader reader) {
+        Inner = (T)reader.ReadElementContentAs(typeof(T), null);
+    }
 
-public record Date(System.DateTime Inner);
+    public void WriteXml(XmlWriter writer) {
+        throw new NotImplementedException();
+    }
 
-public record DocumentReference(string Inner);
+    public XmlSchema? GetSchema() {
+        return null;
+    }
+}
 
-public record Percentage(decimal Inner);
+public record Amount : NewType<decimal> {}
 
-public record Quantity(decimal Inner);
+public record Code : NewType<string> {}
 
-public record Text(string Inner);
+public record Date : NewType<DateTime> {}
 
-public record UnitPriceAmount(decimal Inner);
+public record DocumentReference : NewType<string> {}
 
-[XmlRoot(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2")]
+public record Percentage : NewType<decimal> {}
+
+public record Quantity : NewType<decimal> {}
+
+public record Text : NewType<string> {}
+
+public record UnitPriceAmount : NewType<decimal> {}
+
 public record BinaryObject
 {
     public required byte[] Content { get; init; }
@@ -30,98 +46,107 @@ public record BinaryObject
 
 public record Identifier
 {
+    [XmlElement(ElementName = "content")]
     public required string Content { get; init; }
+
+    [XmlElement(ElementName = "scheme-identifier")]
     public string? SchemeIdentifier { get; init; }
+
+    [XmlElement(ElementName = "scheme-version-identifier")]
     public string? SchemeVersionIdentifier { get; init; }
 }
 
+[XmlRoot(ElementName = "invoice", Namespace = "urn:todo")]
 public record Invoice
 {
     // BT-1
-    // cbc:ID
-    public required Identifier Number { get; init; }
+    [XmlElement(ElementName = "invoice-number")]
+    public required Identifier InvoiceNumber { get; init; }
 
     // BT-2
-    // cbc:IssueDate
-    public required Date IssueDate { get; init; }
+    [XmlElement(ElementName = "invoice-issue-date")]
+    public required Date InvoiceIssueDate { get; init; }
 
     // BT-3
     // UNTDID 1001
-    // cbc:InvoiceTypeCode
-    public required Code TypeCode { get; init; }
+    [XmlElement(ElementName = "invoice-type-code")]
+    public required Code InvoiceTypeCode { get; init; }
 
     // BT-5
     // ISO 4217 - Codes for the representation of currencies and funds - Alpha-3 representation
-    // cbc:DocumentCurrencyCode
-    public required Code CurrencyCode { get; init; }
+    [XmlElement(ElementName = "invoice-currency-code")]
+    public required Code InvoiceCurrencyCode { get; init; }
 
     // BT-6
     // ISO 4217 - Codes for the representation of currencies and funds - Alpha-3 representation
-    // cbc:TaxCurrencyCode
+    [XmlElement(ElementName = "vat-accounting-currency-code")]
     public Code? VatAccountingCurrencyCode { get; init; }
 
     // BT-7
-    // cbc:TaxPointDate
-    public Date? VatPointDate { get; init; }
+    [XmlElement(ElementName = "value-added-tax-point-date")]
+    public Date? ValueAddedTaxPointDate { get; init; }
 
     // BT-8
     // UNTDID 2005
-    // cac:InvoicePeriod/cbc:DescriptionCode
-    public Code? VatPointDateCode { get; init; }
+    [XmlElement(ElementName = "value-added-tax-point-date-code")]
+    public Code? ValueAddedTaxPointDateCode { get; init; }
 
     // BT-9
-    // cbc:DueDate
+    [XmlElement(ElementName = "payment-due-date")]
     public Date? PaymentDueDate { get; init; }
 
     // BT-10
-    // cbc:BuyerReference
+    [XmlElement(ElementName = "buyer-reference")]
     public required Text BuyerReference { get; init; }
 
     // BT-11
-    // cac:ProjectReference/cbc:ID
     // CreditNote: cac:AdditionalDocumentReference[cbc:DocumentTypeCode='50']/cbc:ID
+    [XmlElement(ElementName = "project-reference")]
     public DocumentReference? ProjectReference { get; init; }
 
     // BT-12
-    // cac:ContractDocumentReference/cbc:ID
+    [XmlElement(ElementName = "contract-reference")]
     public DocumentReference? ContractReference { get; init; }
 
     // BT-13
-    // cac:OrderReference/cbc:ID
+    [XmlElement(ElementName = "purchase-order-reference")]
     public DocumentReference? PurchaseOrderReference { get; init; }
 
     // BT-14
-    // cac:OrderReference/cbc:SalesOrderID
+    [XmlElement(ElementName = "sales-order-reference")]
     public DocumentReference? SalesOrderReference { get; init; }
 
     // BT-15
-    // cac:ReceiptDocumentReference/cbc:ID
+    [XmlElement(ElementName = "receiving-advice-reference")]
     public DocumentReference? ReceivingAdviceReference { get; init; }
 
     // BT-16
-    // cac:DespatchDocumentReference/cbc:ID
-    public DocumentReference? DispatchAdviceReference { get; init; }
+    [XmlElement(ElementName = "despatch-advice-reference")]
+    public DocumentReference? DespatchAdviceReference { get; init; }
 
     // BT-17
-    // cac:OriginatorDocumentReference/cbc:ID
+    [XmlElement(ElementName = "tender-or-lot-reference")]
     public DocumentReference? TenderOrLotReference { get; init; }
 
     // BT-18
-    // cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID
+    [XmlElement(ElementName = "invoiced-object-identifier")]
     public Identifier? InvoicedObjectIdentifier { get; init; }
 
     // BT-19
-    // cbc:AccountingCost
+    [XmlElement(ElementName = "buyer-accounting-reference")]
     public Text? BuyerAccountingReference { get; init; }
 
     // BT-20
-    // cac:PaymentTerms/cbc:Note
+    [XmlElement(ElementName = "payment-terms")]
     public Text? PaymentTerms { get; init; }
 
     // BG-1
-    public required InvoiceNote[] Notes { get; init; }
+    [XmlArray(ElementName = "invoice-notes")]
+    [XmlArrayItem(ElementName = "invoice-note")]
+    public required InvoiceNote[] InvoiceNotes { get; init; }
 
     // BG-2
+    [XmlElement(ElementName = "process-control")]
     public required ProcessControl ProcessControl { get; init; }
 
     // BG-3
@@ -171,23 +196,23 @@ public record Invoice
 public record InvoiceNote
 {
     // BT-21
-    // cbc:Note (#Subject#) from inner text
-    public Code? Subject { get; init; }
+    [XmlElement(ElementName = "invoice-note-subject-code")]
+    public Code? InvoiceNoteSubjectCode { get; init; }
 
     // BT-22
-    // cbc:Note
+    [XmlElement(ElementName = "invoice-note")]
     public required Text Note { get; init; }
 }
 
 public record ProcessControl
 {
     // BT-23
-    // cbc:ProfileID
+    [XmlElement(ElementName = "business-process-type")]
     public required Text BusinessProcessType { get; init; }
 
     // BT-24
-    // cbc:CustomizationID
-    public required Identifier Specification { get; init; }
+    [XmlElement(ElementName = "specification-identifier")]
+    public required Identifier SpecificationIdentifier { get; init; }
 }
 
 public record PrecedingInvoiceReference

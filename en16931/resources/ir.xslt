@@ -8,160 +8,133 @@
   <xsl:output method="xml" indent="yes"/>
   <xsl:template match="ubl:Invoice">
     <invoice xmlns="urn:todo">
-      <xsl:element name="invoice-number">
-        <xsl:attribute name="id">bt-1</xsl:attribute>
-        <xsl:element name="content">
+      <invoice-number id="bt-1">
+        <content>
           <xsl:value-of select="cbc:ID"/>
-        </xsl:element>
-      </xsl:element>
-      <xsl:element name="invoice-issue-date">
-        <xsl:attribute name="id">bt-2</xsl:attribute>
+        </content>
+      </invoice-number>
+      <invoice-issue-date id="bt-2">
         <xsl:value-of select="cbc:IssueDate"/>
-      </xsl:element>
-      <xsl:element name="invoice-type-code">
-        <xsl:attribute name="id">bt-3</xsl:attribute>
+      </invoice-issue-date>
+      <invoice-type-code id="bt-3">
         <xsl:value-of select="cbc:InvoiceTypeCode"/>
-      </xsl:element>
-      <xsl:element name="invoice-currency-code">
-        <xsl:attribute name="id">bt-5</xsl:attribute>
+      </invoice-type-code>
+      <invoice-currency-code id="bt-5">
         <xsl:value-of select="cbc:DocumentCurrencyCode"/>
-      </xsl:element>
+      </invoice-currency-code>
       <xsl:if test="exists(cbc:TaxCurrencyCode)">
-        <xsl:element name="vat-accounting-currency-code">
-          <xsl:attribute name="id">bt-6</xsl:attribute>
+        <vat-accounting-currency-code id="bt-6">
           <xsl:value-of select="cbc:TaxCurrencyCode"/>
-        </xsl:element>
+        </vat-accounting-currency-code>
       </xsl:if>
       <xsl:if test="exists(cbc:TaxPointDate)">
-        <xsl:element name="value-added-tax-point-date">
-          <xsl:attribute name="id">bt-7</xsl:attribute>
+        <value-added-tax-point-date id="bt-7">
           <xsl:value-of select="cbc:TaxPointDate"/>
-        </xsl:element>
+        </value-added-tax-point-date>
       </xsl:if>
       <xsl:if test="exists(cac:InvoicePeriod/cbc:DescriptionCode)">
-        <xsl:element name="value-added-tax-point-date-code">
-          <xsl:attribute name="id">bt-8</xsl:attribute>
+        <value-added-tax-point-date-code id="bt-8">
           <xsl:value-of select="cac:InvoicePeriod/cbc:DescriptionCode"/>
-        </xsl:element>
+        </value-added-tax-point-date-code>
       </xsl:if>
       <xsl:if test="exists(cbc:DueDate)">
-        <xsl:element name="payment-due-date">
-          <xsl:attribute name="id">bt-9</xsl:attribute>
+        <payment-due-date id="bt-9">
           <xsl:value-of select="cbc:DueDate"/>
-        </xsl:element>
+        </payment-due-date>
       </xsl:if>
-      <xsl:element name="buyer-reference">
-        <xsl:attribute name="id">bt-10</xsl:attribute>
+      <buyer-reference id="bt-10">
         <xsl:value-of select="cbc:BuyerReference"/>
-      </xsl:element>
+      </buyer-reference>
       <xsl:if test="exists(cac:ProjectReference/cbc:ID)">
-        <xsl:element name="project-reference">
-          <xsl:attribute name="id">bt-11</xsl:attribute>
+        <project-reference id="bt-11">
           <xsl:value-of select="cac:ProjectReference/cbc:ID"/>
-        </xsl:element>
+        </project-reference>
       </xsl:if>
       <xsl:if test="exists(cac:ContractDocumentReference/cbc:ID)">
-        <xsl:element name="contract-reference">
-          <xsl:attribute name="id">bt-12</xsl:attribute>
+        <contract-reference id="bt-12">
           <xsl:value-of select="cac:ContractDocumentReference/cbc:ID"/>
-        </xsl:element>
+        </contract-reference>
       </xsl:if>
       <xsl:if test="exists(cac:OrderReference/cbc:ID)">
-        <xsl:element name="purchase-order-reference">
-          <xsl:attribute name="id">bt-13</xsl:attribute>
+        <purchase-order-reference id="bt-13">
           <xsl:value-of select="cac:OrderReference/cbc:ID"/>
-        </xsl:element>
+        </purchase-order-reference>
       </xsl:if>
       <xsl:if test="exists(cac:OrderReference/cbc:SalesOrderID)">
-        <xsl:element name="sales-order-reference">
-          <xsl:attribute name="id">bt-14</xsl:attribute>
+        <sales-order-reference id="bt-14">
           <xsl:value-of select="cac:OrderReference/cbc:SalesOrderID"/>
-        </xsl:element>
+        </sales-order-reference>
       </xsl:if>
       <xsl:if test="exists(cac:ReceiptDocumentReference/cbc:ID)">
-        <xsl:element name="receiving-advice-reference">
-          <xsl:attribute name="id">bt-15</xsl:attribute>
+        <receiving-advice-reference id="bt-15">
           <xsl:value-of select="cac:ReceiptDocumentReference/cbc:ID"/>
-        </xsl:element>
+        </receiving-advice-reference>
       </xsl:if>
       <xsl:if test="exists(cac:DespatchDocumentReference/cbc:ID)">
-        <xsl:element name="despatch-advice-reference">
-          <xsl:attribute name="id">bt-16</xsl:attribute>
+        <despatch-advice-reference id="bt-16">
           <xsl:value-of select="cac:DespatchDocumentReference/cbc:ID"/>
-        </xsl:element>
+        </despatch-advice-reference>
       </xsl:if>
       <xsl:if test="exists(cac:OriginatorDocumentReference/cbc:ID)">
-        <xsl:element name="tender-or-lot-reference">
-          <xsl:attribute name="id">bt-17</xsl:attribute>
+        <tender-or-lot-reference id="bt-17">
           <xsl:value-of select="cac:OriginatorDocumentReference/cbc:ID"/>
-        </xsl:element>
+        </tender-or-lot-reference>
       </xsl:if>
       <xsl:if test="exists(cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID)">
-        <xsl:element name="invoiced-object-identifier">
-          <xsl:attribute name="id">bt-18</xsl:attribute>
-          <xsl:element name="content">
+        <invoiced-object-identifier id="bt-18">
+          <content>
             <xsl:value-of select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID"/>
-          </xsl:element>
+          </content>
           <xsl:if test="exists(cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID[@schemeID])">
-            <xsl:element name="scheme-identifier">
+            <scheme-identifier>
               <xsl:value-of select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID/@schemeID"/>
-            </xsl:element>
+            </scheme-identifier>
           </xsl:if>
-        </xsl:element>
+        </invoiced-object-identifier>
       </xsl:if>
       <xsl:if test="exists(cbc:AccountingCost)">
-        <xsl:element name="buyer-accounting-reference">
-          <xsl:attribute name="id">bt-19</xsl:attribute>
+        <buyer-accounting-reference id="bt-19">
           <xsl:value-of select="cbc:AccountingCost"/>
-        </xsl:element>
+        </buyer-accounting-reference>
       </xsl:if>
       <xsl:if test="exists(cac:PaymentTerms/cbc:Note)">
-        <xsl:element name="payment-terms">
-          <xsl:attribute name="id">bt-20</xsl:attribute>
+        <payment-terms id="bt-20">
           <xsl:value-of select="cac:PaymentTerms/cbc:Note"/>
-        </xsl:element>
+        </payment-terms>
       </xsl:if>
       <xsl:if test="exists(cbc:Note)">
-        <xsl:element name="invoice-notes">
-          <xsl:attribute name="id">bg-1</xsl:attribute>
+        <invoice-notes id="bg-1">
           <xsl:for-each select="cbc:Note">
-            <xsl:element name="invoice-note">
-              <xsl:attribute name="id">bg-1</xsl:attribute>
+            <invoice-note id="bg-1">
               <xsl:choose>
                 <xsl:when test="contains(., '#') and string-length(substring-before(substring-after(., '#'), '#')) = 3">
-                  <xsl:element name="invoice-note-subject-code">
-                    <xsl:attribute name="id">bt-21</xsl:attribute>
+                  <invoice-note-subject-code id="bt-21">
                     <xsl:value-of select="substring-before(substring-after(., '#'), '#')"/>
-                  </xsl:element>
-                  <xsl:element name="invoice-note">
-                    <xsl:attribute name="id">bt-22</xsl:attribute>
+                  </invoice-note-subject-code>
+                  <invoice-note id="bt-22">
                     <xsl:value-of select="substring-after(substring-after(., '#'), '#')"/>
-                  </xsl:element>
+                  </invoice-note>
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsl:element name="invoice-note">
-                    <xsl:attribute name="id">bt-21</xsl:attribute>
+                  <invoice-note id="bt-22">
                     <xsl:value-of select="."/>
-                  </xsl:element>
+                  </invoice-note>
                 </xsl:otherwise>
               </xsl:choose>
-            </xsl:element>
+            </invoice-note>
           </xsl:for-each>
-        </xsl:element>
+        </invoice-notes>
       </xsl:if>
-      <xsl:element name="process-control">
-        <xsl:attribute name="id">bg-2</xsl:attribute>
-        <xsl:element name="business-process-type">
-          <xsl:attribute name="id">bt-23</xsl:attribute>
+      <process-control id="bg-2">
+        <business-process-type id="bt-23">
           <xsl:value-of select="cbc:ProfileID"/>
-        </xsl:element>
-        <xsl:element name="specification-identifier">
-          <xsl:attribute name="id">bt-24</xsl:attribute>
-          <xsl:element name="content">
+        </business-process-type>
+        <specification-identifier id="bt-24">
+          <content>
             <xsl:value-of select="cbc:CustomizationID"/>
-          </xsl:element>
-        </xsl:element>
-      </xsl:element>
+          </content>
+        </specification-identifier>
+      </process-control>
       <xsl:if test="cac:BillingReference">
         <xsl:element name="preceding-invoice-references">
           <xsl:attribute name="id">bg-3</xsl:attribute>
