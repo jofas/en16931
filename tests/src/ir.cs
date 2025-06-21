@@ -30,11 +30,11 @@ public class IR {
 
         XmlSerializer invoiceSerializer = new XmlSerializer(typeof(Invoice));
 
-        Console.WriteLine(irDestination.getXdmNode());
+        // Console.WriteLine(irDestination.getXdmNode());
 
         Invoice invoice = (Invoice)invoiceSerializer.Deserialize(
             new StringReader(irDestination.getXdmNode().ToString())
-        );
+        )!;
 
         Console.WriteLine(invoice);
     }

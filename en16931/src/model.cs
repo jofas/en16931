@@ -9,7 +9,11 @@ public record NewType<T> : IXmlSerializable {
     public required T Inner;
 
     public void ReadXml(XmlReader reader) {
-        Inner = (T)reader.ReadElementContentAs(typeof(T), null);
+        Inner = (T)reader.ReadElementContentAs(
+          typeof(T),
+          // TODO: private static?
+          new XmlNamespaceManager(new NameTable())
+        );
     }
 
     public void WriteXml(XmlWriter writer) {
@@ -681,71 +685,91 @@ public record DocumentLevelCharge
 public record DocumentTotals
 {
     // BT-106
-    public required Amount SumInvoiceLinesNet { get; init; }
+    [XmlElement(ElementName = "sum-of-invoice-line-net-amount")]
+    public required Amount SumOfInvoiceLineNetAmount { get; init; }
 
     // BT-107
-    public Amount? SumAllowances { get; init; }
+    [XmlElement(ElementName = "sum-of-allowances-on-document-level")]
+    public Amount? SumOfAllowancesOnDocumentLevel { get; init; }
 
     // BT-108
-    public Amount? SumCharges { get; init; }
+    [XmlElement(ElementName = "sum-of-charges-on-document-level")]
+    public Amount? SumOfChargesOnDocumentLevel { get; init; }
 
     // BT-109
-    public required Amount NetAmount { get; init; }
+    [XmlElement(ElementName = "invoice-total-amount-without-vat")]
+    public required Amount InvoiceTotalAmountWithoutVat { get; init; }
 
     // BT-110
-    public Amount? Vat { get; init; }
+    [XmlElement(ElementName = "invoice-total-vat-amount")]
+    public Amount? InvoiceTotalVatAmount { get; init; }
 
     // BT-111
-    public Amount? VatInAccountingCurrency { get; init; }
+    [XmlElement(ElementName = "invoice-total-vat-amount-in-accounting-currency")]
+    public Amount? InvoiceTotalVatAmountInAccountingCurrency { get; init; }
 
     // BT-112
-    public required Amount GrossAmount { get; init; }
+    [XmlElement(ElementName = "invoice-total-amount-with-vat")]
+    public required Amount InvoiceTotalAmountWithVat { get; init; }
 
     // BT-113
-    public Amount? Paid { get; init; }
+    [XmlElement(ElementName = "paid-amount")]
+    public Amount? PaidAmount { get; init; }
 
     // BT-114
-    public Amount? Rounding { get; init; }
+    [XmlElement(ElementName = "rounding-amount")]
+    public Amount? RoundingAmount { get; init; }
 
     // BT-115
-    public required Amount ToPay { get; init; }
+    [XmlElement(ElementName = "amount-due-for-payment")]
+    public required Amount AmountDueForPayment { get; init; }
 }
 
 public record VatBreakdown
 {
     // BT-116
-    public required Amount TaxableAmount { get; init; }
+    [XmlElement(ElementName = "vat-category-taxable-amount")]
+    public required Amount VatCategoryTaxableAmount { get; init; }
 
     // BT-117
-    public required Amount TaxAmount { get; init; }
+    [XmlElement(ElementName = "vat-category-tax-amount")]
+    public required Amount VatCategoryTaxAmount { get; init; }
 
     // BT-118
     // UNTDID 5305
-    public required Code Category { get; init; }
+    [XmlElement(ElementName = "vat-category-code")]
+    public required Code VatCategoryCode { get; init; }
 
     // BT-119
-    public required Percentage CategoryRate { get; init; }
+    [XmlElement(ElementName = "vat-category-rate")]
+    public required Percentage VatCategoryRate { get; init; }
 
     // BT-120
-    public Text? ExemptionReason { get; init; }
+    [XmlElement(ElementName = "vat-exemption-reason")]
+    public Text? VatExemptionReasonText { get; init; }
 
     // BT-121
     // VATEX Vat exemption reason code list
-    public Code? ExemptionReasonCode { get; init; }
+    [XmlElement(ElementName = "vat-exemption-reason-code")]
+    public Code? VatExemptionReasonCode { get; init; }
 }
 
 public record AdditionalSupportingDocument
 {
     // BT-122
-    public required DocumentReference Reference { get; init; }
+    [XmlElement(ElementName = "supporting-document-reference")]
+    public required DocumentReference SupportingDocumentReference { get; init; }
 
     // BT-123
-    public Text? Description { get; init; }
+    [XmlElement(ElementName = "supporting-document-description")]
+    public Text? SupportingDocumentDescription { get; init; }
 
     // BT-124
-    public Text? Location { get; init; }
+    [XmlElement(ElementName = "external-document-location")]
+    public Text? ExternalDocumentLocation { get; init; }
 
     // BT-125
+    [XmlElement(ElementName = "attached-document")]
     public BinaryObject? AttachedDocument { get; init; }
 }
 
