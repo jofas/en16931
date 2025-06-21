@@ -430,9 +430,9 @@
                 <xsl:value-of select="cac:TaxRepresentativeParty/cac:PostalAddress/cbc:CountrySubentity"/>
               </tax-representative-country-subdivision>
             </xsl:if>
-            <tax-representative-post-code id="bt-69">
+            <tax-representative-country-code id="bt-69">
               <xsl:value-of select="cac:TaxRepresentativeParty/cac:PostalAddress/cac:Country/cbc:IdentificationCode"/>
-            </tax-representative-post-code>
+            </tax-representative-country-code>
           </seller-tax-representative-postal-address>
         </seller-tax-representative-party>
       </xsl:if>

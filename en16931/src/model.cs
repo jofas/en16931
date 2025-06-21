@@ -421,113 +421,261 @@ public record BuyerContact
 public record Payee
 {
     // BT-59
-    public required Text Name { get; init; }
+    [XmlElement(ElementName = "payee-name")]
+    public required Text PayeeName { get; init; }
 
     // BT-60
-    public Identifier? Identifier { get; init; }
+    [XmlElement(ElementName = "payee-identifier")]
+    public Identifier? PayeeIdentifier { get; init; }
 
     // BT-61
-    public Identifier? LegalRegistration { get; init; }
+    [XmlElement(ElementName = "payee-legal-registration-identifier")]
+    public Identifier? PayeeLegalRegistrationIdentifier { get; init; }
 }
 
 public record SellerTaxRepresentativeParty
 {
     // BT-62
-    public required Text Name { get; init; }
+    [XmlElement(ElementName = "seller-tax-representative-name")]
+    public required Text SellerTaxRepresentativeName { get; init; }
 
     // BT-63
-    public required Identifier VatIdentifier { get; init; }
+    [XmlElement(ElementName = "seller-tax-representative-vat-identifier")]
+    public required Identifier SellerTaxRepresentativeVatIdentifier { get; init; }
 
     // BG-12
-    public required SellerTaxRepresentativePostalAddress PostalAddress { get; init; }
+    [XmlElement(ElementName = "seller-tax-representative-postal-address")]
+    public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress { get; init; }
+}
+
+public record SellerTaxRepresentativePostalAddress
+{
+    // BT-64
+    [XmlElement(ElementName = "tax-representative-address-line-1")]
+    public Text? TaxRepresentativeAddressLine1 { get; init; }
+
+    // BT-65
+    [XmlElement(ElementName = "tax-representative-address-line-2")]
+    public Text? TaxRepresentativeAddressLine2 { get; init; }
+
+    // BT-164
+    [XmlElement(ElementName = "tax-representative-address-line-3")]
+    public Text? TaxRepresentativeAddressLine3 { get; init; }
+
+    // BT-66
+    [XmlElement(ElementName = "tax-representative-city")]
+    public required Text TaxRepresentativeCity { get; init; }
+
+    // BT-67
+    [XmlElement(ElementName = "tax-representative-post-code")]
+    public required Text TaxRepresentativePostCode { get; init; }
+
+    // BT-68
+    [XmlElement(ElementName = "tax-representative-country-subdivision")]
+    public Text? TaxRepresentativeCountrySubdivision { get; init; }
+
+    // BT-69
+    // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
+    [XmlElement(ElementName = "tax-representative-country-code")]
+    public required Code TaxRepresentativeCountryCode { get; init; }
 }
 
 public record DeliveryInformation
 {
     // BT-70
-    public Text? PartyName { get; init; }
+    [XmlElement(ElementName = "deliver-to-party-name")]
+    public Text? DeliverToPartyName { get; init; }
 
     // BT-71
-    public Identifier? LocationIdentifier { get; init; }
+    [XmlElement(ElementName = "deliver-to-location-identifier")]
+    public Identifier? DeliverToLocationIdentifier { get; init; }
 
     // BT-72
+    [XmlElement(ElementName = "actual-delivery-date")]
     public Date? ActualDeliveryDate { get; init; }
 
     // BG-14
+    [XmlElement(ElementName = "invoicing-period")]
     public InvoicingPeriod? InvoicingPeriod { get; init; }
 
     // BG-15
+    [XmlElement(ElementName = "deliver-to-address")]
     public DeliverToAddress? DeliverToAddress { get; init; }
+}
+
+public record InvoicingPeriod
+{
+    // BT-73
+    [XmlElement(ElementName = "invoicing-period-start-date")]
+    public Date? InvoicingPeriodStartDate { get; init; }
+
+    // BT-74
+    [XmlElement(ElementName = "invoicing-period-end-date")]
+    public Date? InvoicingPeriodEndDate { get; init; }
+}
+
+public record DeliverToAddress
+{
+    // BT-75
+    [XmlElement(ElementName = "deliver-to-address-line-1")]
+    public required Text DeliverToAddressLine1 { get; init; }
+
+    // BT-76
+    [XmlElement(ElementName = "deliver-to-address-line-2")]
+    public Text? DeliverToAddressLine2 { get; init; }
+
+    // BT-165
+    [XmlElement(ElementName = "deliver-to-address-line-3")]
+    public Text? DeliverToAddressLine3 { get; init; }
+
+    // BT-77
+    [XmlElement(ElementName = "deliver-to-city")]
+    public required Text DeliverToCity { get; init; }
+
+    // BT-78
+    [XmlElement(ElementName = "deliver-to-post-code")]
+    public required Text DeliverToPostCode { get; init; }
+
+    // BT-79
+    [XmlElement(ElementName = "deliver-to-country-subdivision")]
+    public Text? DeliverToCountrySubdivision { get; init; }
+
+    // BT-80
+    // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
+    [XmlElement(ElementName = "deliver-to-country-code")]
+    public required Code DeliverToCountryCode { get; init; }
 }
 
 public record PaymentInstructions
 {
     // BT-81
     // UNTDID-4461
-    public required Code PaymentMeansType { get; init; }
+    [XmlElement(ElementName = "payment-means-type-code")]
+    public required Code PaymentMeansTypeCode { get; init; }
 
     // BT-82
-    public Text? PaymentMeans { get; init; }
+    [XmlElement(ElementName = "payment-means-text")]
+    public Text? PaymentMeansText { get; init; }
 
     // BT-83
+    [XmlElement(ElementName = "remittance-information")]
     public Text? RemittanceInformation { get; init; }
 
     // BG-17
+    [XmlArray(ElementName = "credit-transfers")]
+    [XmlArrayItem(ElementName = "credit-transfer")]
     public required CreditTransfer[] CreditTransfers { get; init; }
 
     // BG-18
+    [XmlElement(ElementName = "payment-card-information")]
     public PaymentCardInformation? PaymentCardInformation { get; init; }
 
     // BG-19
+    [XmlElement(ElementName = "direct-debit")]
     public DirectDebit? DirectDebit { get; init; }
+}
+
+public record CreditTransfer
+{
+    // BT-84
+    [XmlElement(ElementName = "payment-account-identifier")]
+    public required Identifier PaymentAccountIdentifier { get; init; }
+
+    // BT-85
+    [XmlElement(ElementName = "payment-account-name")]
+    public Text? PaymentAccountName { get; init; }
+
+    // BT-86
+    [XmlElement(ElementName = "payment-service-provider-identifier")]
+    public Identifier? PaymentServiceProviderIdentifier { get; init; }
+}
+
+public record PaymentCardInformation
+{
+    // BT-87
+    [XmlElement(ElementName = "payment-card-primary-account-number")]
+    public required Text PaymentCardPrimaryAccountNumber { get; init; }
+
+    // BT-88
+    [XmlElement(ElementName = "payment-card-holder-name")]
+    public Text? PaymentCardHolderName { get; init; }
+}
+
+public record DirectDebit
+{
+    // BT-89
+    [XmlElement(ElementName = "mandate-reference-identifier")]
+    public required Identifier MandateReferenceIdentifier { get; init; }
+
+    // BT-90
+    [XmlElement(ElementName = "bank-assigned-creditor-identifier")]
+    public required Identifier BankAssignedCreditorIdentifier { get; init; }
+
+    // BT-91
+    [XmlElement(ElementName = "debited-account-identifier")]
+    public required Identifier DebitedAccountIdentifier { get; init; }
 }
 
 public record DocumentLevelAllowance
 {
     // BT-92
-    public required Amount Amount { get; init; }
+    [XmlElement(ElementName = "document-level-allowance-amount")]
+    public required Amount DocumentLevelAllowanceAmount { get; init; }
 
     // BT-93
-    public Amount? BaseAmount { get; init; }
+    [XmlElement(ElementName = "document-level-allowance-base-amount")]
+    public Amount? DocumentLevelAllowanceBaseAmount { get; init; }
 
     // BT-94
-    public Percentage? Percentage { get; init; }
+    [XmlElement(ElementName = "document-level-allowance-percentage")]
+    public Percentage? DocumentLevelAllowancePercentage { get; init; }
 
     // BT-95
-    public required Code VatCategory { get; init; }
+    [XmlElement(ElementName = "document-level-allowance-vat-category-code")]
+    public required Code DocumentLevelAllowanceVatCategoryCode { get; init; }
 
     // BT-96
-    public Percentage? VatRate { get; init; }
+    [XmlElement(ElementName = "document-level-allowance-vat-rate")]
+    public Percentage? DocumentLevelAllowanceVatRate { get; init; }
 
     // BT-97
-    public Text? Reason { get; init; }
+    [XmlElement(ElementName = "document-level-allowance-reason")]
+    public Text? DocumentLevelAllowanceReason { get; init; }
 
     // BT-98
-    public Code? ReasonCode { get; init; }
+    [XmlElement(ElementName = "document-level-allowance-reason-code")]
+    public Code? DocumentLevelAllowanceReasonCode { get; init; }
 }
 
 public record DocumentLevelCharge
 {
     // BT-99
-    public required Amount Amount { get; init; }
+    [XmlElement(ElementName = "document-level-charge-amount")]
+    public required Amount DocumentLevelChargeAmount { get; init; }
 
     // BT-100
-    public Amount? BaseAmount { get; init; }
+    [XmlElement(ElementName = "document-level-charge-base-amount")]
+    public Amount? DocumentLevelChargeBaseAmount { get; init; }
 
     // BT-101
-    public Percentage? Percentage { get; init; }
+    [XmlElement(ElementName = "document-level-charge-percentage")]
+    public Percentage? DocumentLevelChargePercentage { get; init; }
 
     // BT-102
-    public required Code VatCategory { get; init; }
+    [XmlElement(ElementName = "document-level-charge-vat-category-code")]
+    public required Code DocumentLevelChargeVatCategoryCode { get; init; }
 
     // BT-103
-    public Percentage? VatRate { get; init; }
+    [XmlElement(ElementName = "document-level-charge-vat-rate")]
+    public Percentage? DocumentLevelChargeVatRate { get; init; }
 
     // BT-104
-    public Text? Reason { get; init; }
+    [XmlElement(ElementName = "document-level-charge-reason")]
+    public Text? DocumentLevelChargeReason { get; init; }
 
     // BT-105
-    public Code? ReasonCode { get; init; }
+    [XmlElement(ElementName = "document-level-charge-reason-code")]
+    public Code? DocumentLevelChargeReasonCode { get; init; }
 }
 
 public record DocumentTotals
@@ -644,98 +792,6 @@ public record InvoiceLine
 
     // BG-31
     public required ItemInformation ItemInformation { get; init; }
-}
-
-public record SellerTaxRepresentativePostalAddress
-{
-    // BT-64
-    public Text? AddressLine1 { get; init; }
-
-    // BT-65
-    public Text? AddressLine2 { get; init; }
-
-    // BT-164
-    public Text? AddressLine3 { get; init; }
-
-    // BT-66
-    public required Text City { get; init; }
-
-    // BT-67
-    public required Text PostCode { get; init; }
-
-    // BT-68
-    public Text? Subdivision { get; init; }
-
-    // BT-69
-    // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
-    public required Code Country { get; init; }
-}
-
-public record InvoicingPeriod
-{
-    // BT-73
-    public Date? Start { get; init; }
-
-    // BT-74
-    public Date? End { get; init; }
-}
-
-public record DeliverToAddress
-{
-    // BT-75
-    public required Text AddressLine1 { get; init; }
-
-    // BT-76
-    public Text? AddressLine2 { get; init; }
-
-    // BT-165
-    public Text? AddressLine3 { get; init; }
-
-    // BT-77
-    public required Text City { get; init; }
-
-    // BT-78
-    public required Text PostCode { get; init; }
-
-    // BT-79
-    public Text? Subdivision { get; init; }
-
-    // BT-80
-    // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
-    public required Code Country { get; init; }
-}
-
-public record CreditTransfer
-{
-    // BT-84
-    public required Identifier Account { get; init; }
-
-    // BT-85
-    public Text? AccountName { get; init; }
-
-    // BT-86
-    public Identifier? ServiceProvider { get; init; }
-}
-
-public record PaymentCardInformation
-{
-    // BT-87
-    public required Text PrimaryAccountNumber { get; init; }
-
-    // BT-88
-    public Text? CardHolderName { get; init; }
-}
-
-public record DirectDebit
-{
-    // BT-89
-    public required Identifier MandateReference { get; init; }
-
-    // BT-90
-    public required Identifier BankAssignedCreditor { get; init; }
-
-    // BT-91
-    public required Identifier DebitedAccount { get; init; }
 }
 
 public record InvoiceLinePeriod
