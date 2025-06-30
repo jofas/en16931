@@ -776,156 +776,203 @@ public record AdditionalSupportingDocument
 public record InvoiceLine
 {
     // BT-126
-    public required Identifier Identifier { get; init; }
+    [XmlElement(ElementName = "invoice-line-identifier")]
+    public required Identifier InvoiceLineIdentifier { get; init; }
 
     // BT-127
-    public Text? Note { get; init; }
+    [XmlElement(ElementName = "invoice-line-note")]
+    public Text? InvoiceLineNote { get; init; }
 
     // BT-128
-    public Identifier? ObjectIdentifier { get; init; }
+    [XmlElement(ElementName = "invoice-line-object-identifier")]
+    public Identifier? InvoiceLineObjectIdentifier { get; init; }
 
     // BT-129
-    public required Quantity Quantity { get; init; }
+    [XmlElement(ElementName = "invoiced-quantity")]
+    public required Quantity InvoicedQuantity { get; init; }
 
     // BT-130
-    public required Code UnitOfMeasure { get; init; }
+    [XmlElement(ElementName = "invoiced-quantity-unit-of-measure")]
+    public required Code InvoicedQuantityUnitOfMeasure { get; init; }
 
     // BT-131
-    public required Amount NetAmount { get; init; }
+    [XmlElement(ElementName = "invoice-line-net-amount")]
+    public required Amount InvoiceLineNetAmount { get; init; }
 
     // BT-132
-    public DocumentReference? PurchaseOrderLineReference { get; init; }
+    [XmlElement(ElementName = "referenced-purchase-order-line-reference")]
+    public DocumentReference? ReferencedPurchaseOrderLineReference { get; init; }
 
     // BT-133
-    public Text? BuyerAccountingReference { get; init; }
+    [XmlElement(ElementName = "invoice-line-buyer-accounting-reference")]
+    public Text? InvoiceLineBuyerAccountingReference { get; init; }
 
     // BG-26
-    public InvoiceLinePeriod? Period { get; init; }
+    [XmlElement(ElementName = "invoice-line-period")]
+    public InvoiceLinePeriod? InvoiceLinePeriod { get; init; }
 
     // BG-27
-    public required InvoiceLineAllowance[] Allowances { get; init; }
+    [XmlArray(ElementName = "invoice-line-allowances")]
+    [XmlArrayItem(ElementName = "invoice-line-allowance")]
+    public required InvoiceLineAllowance[] InvoiceLineAllowances { get; init; }
 
     // BG-28
-    public required InvoiceLineCharge[] Charges { get; init; }
+    [XmlArray(ElementName = "invoice-line-charges")]
+    [XmlArrayItem(ElementName = "invoice-line-charge")]
+    public required InvoiceLineCharge[] InvoiceLineCharges { get; init; }
 
     // BG-29
+    [XmlElement(ElementName = "price-details")]
     public required PriceDetails PriceDetails { get; init; }
 
     // BG-30
-    public required LineVatInformation VatInformation { get; init; }
+    [XmlElement(ElementName = "line-vat-information")]
+    public required LineVatInformation LineVatInformation { get; init; }
 
     // BG-31
+    [XmlElement(ElementName = "item-information")]
     public required ItemInformation ItemInformation { get; init; }
 }
 
 public record InvoiceLinePeriod
 {
     // BT-134
-    public Date? Start { get; init; }
+    [XmlElement(ElementName = "invoice-line-period-start-date")]
+    public Date? InvoiceLinePeriodStartDate { get; init; }
 
     // BT-135
-    public Date? End { get; init; }
+    [XmlElement(ElementName = "invoice-line-period-end-date")]
+    public Date? InvoiceLinePeriodEndDate { get; init; }
 }
 
 public record InvoiceLineAllowance
 {
     // BT-136
-    public required Amount Amount { get; init; }
+    [XmlElement(ElementName = "invoice-line-allowance-amount")]
+    public required Amount InvoiceLineAllowanceAmount { get; init; }
 
     // BT-137
-    public Amount? BaseAmount { get; init; }
+    [XmlElement(ElementName = "invoice-line-allowance-base-amount")]
+    public Amount? InvoiceLineAllowanceBaseAmount { get; init; }
 
     // BT-138
-    public Percentage? Percentage { get; init; }
+    [XmlElement(ElementName = "invoice-line-allowance-percentage")]
+    public Percentage? InvoiceLineAllowancePercentage { get; init; }
 
     // BT-139
-    public Text? Reason { get; init; }
+    [XmlElement(ElementName = "invoice-line-allowance-reason")]
+    public Text? InvoiceLineAllowanceReason { get; init; }
 
     // BT-140
-    public Code? ReasonCode { get; init; }
+    [XmlElement(ElementName = "invoice-line-allowance-reason-code")]
+    public Code? InvoiceLineAllowanceReasonCode { get; init; }
 }
 
 public record InvoiceLineCharge
 {
     // BT-141
-    public required Amount Amount { get; init; }
+    [XmlElement(ElementName = "invoice-line-charge-amount")]
+    public required Amount InvoiceLineChargeAmount { get; init; }
 
     // BT-142
-    public Amount? BaseAmount { get; init; }
+    [XmlElement(ElementName = "invoice-line-charge-base-amount")]
+    public Amount? InvoiceLineChargeBaseAmount { get; init; }
 
     // BT-143
-    public Percentage? Percentage { get; init; }
+    [XmlElement(ElementName = "invoice-line-charge-percentage")]
+    public Percentage? InvoiceLineChargePercentage { get; init; }
 
     // BT-144
-    public Text? Reason { get; init; }
+    [XmlElement(ElementName = "invoice-line-charge-reason")]
+    public Text? InvoiceLineChargeReason { get; init; }
 
     // BT-145
-    public Code? ReasonCode { get; init; }
+    [XmlElement(ElementName = "invoice-line-charge-reason-code")]
+    public Code? InvoiceLineChargeReasonCode { get; init; }
 }
 
 public record PriceDetails
 {
     // BT-146
-    public required UnitPriceAmount Net { get; init; }
+    [XmlElement(ElementName = "item-net-price")]
+    public required UnitPriceAmount ItemNetPrice { get; init; }
 
     // BT-147
-    public UnitPriceAmount? Discount { get; init; }
+    [XmlElement(ElementName = "item-price-discount")]
+    public UnitPriceAmount? ItemPriceDiscount { get; init; }
 
     // BT-148
-    public UnitPriceAmount? Gross { get; init; }
+    [XmlElement(ElementName = "item-gross-price")]
+    public UnitPriceAmount? ItemGrossPrice { get; init; }
 
     // BT-149
-    public Quantity? BaseQuantity { get; init; }
+    [XmlElement(ElementName = "item-price-base-quantity")]
+    public Quantity? ItemPriceBaseQuantity { get; init; }
 
     // BT-150
     // UN/ECE Rec No 20,21
-    public Code? BaseQuantityUnitOfMeasure { get; init; }
+    [XmlElement(ElementName = "item-price-base-quantity-unit-of-measure")]
+    public Code? ItemPriceBaseQuantityUnitOfMeasure { get; init; }
 }
 
 public record LineVatInformation
 {
     // BT-151
     // UNTDID 5305
-    public required Code Category { get; init; }
+    [XmlElement(ElementName = "invoiced-item-vat-category-code")]
+    public required Code InvoicedItemVatCategoryCode { get; init; }
 
     // BT-152
-    public Percentage? Rate { get; init; }
+    [XmlElement(ElementName = "invoiced-item-vat-rate")]
+    public Percentage? InvoicedItemVatRate { get; init; }
 }
 
 public record ItemInformation
 {
     // BT-153
-    public required Text Name { get; init; }
+    [XmlElement(ElementName = "item-name")]
+    public required Text ItemName { get; init; }
 
     // BT-154
-    public Text? Description { get; init; }
+    [XmlElement(ElementName = "item-description")]
+    public Text? ItemDescription { get; init; }
 
     // BT-155
-    public Identifier? Seller { get; init; }
+    [XmlElement(ElementName = "item-sellers-identifier")]
+    public Identifier? ItemSellersIdentifier { get; init; }
 
     // BT-156
-    public Identifier? Buyer { get; init; }
+    [XmlElement(ElementName = "item-buyers-identifier")]
+    public Identifier? ItemBuyersIdentifier { get; init; }
 
     // BT-157
-    public Identifier? StandardIdentifier { get; init; }
+    [XmlElement(ElementName = "item-standard-identifier")]
+    public Identifier? ItemStandardIdentifier { get; init; }
 
     // BT-158
     // UNTDID 7143
-    public required Identifier[] ClassificationIdentifiers { get; init; }
+    [XmlArray(ElementName = "item-classification-identifiers")]
+    [XmlArrayItem(ElementName = "item-classification-identifier")]
+    public required Identifier[] ItemClassificationIdentifiers { get; init; }
 
     // BT-159
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2 representation
-    public Code? CountryOfOrigin { get; init; }
+    [XmlElement(ElementName = "item-country-of-origin")]
+    public Code? ItemCountryOfOrigin { get; init; }
 
     // BG-32
-    public required ItemAttribute[] Attributes { get; init; }
+    [XmlArray(ElementName = "item-attributes")]
+    [XmlArrayItem(ElementName = "item-attribute")]
+    public required ItemAttribute[] ItemAttributes { get; init; }
 }
 
 public record ItemAttribute
 {
     // BT-160
-    public required Text Name { get; init; }
+    [XmlElement(ElementName = "item-attribute-name")]
+    public required Text ItemAttributeName { get; init; }
 
     // BT-161
-    public required Text Value { get; init; }
+    [XmlElement(ElementName = "item-attribute-value")]
+    public required Text ItemAttributeValue { get; init; }
 }
