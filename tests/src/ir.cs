@@ -4,16 +4,18 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Dev.Fassbender.En16931;
 using Dev.Fassbender.En16931.Model;
-using Xunit;
 using net.liberty_development.SaxonHE12s9apiExtensions;
 using net.sf.saxon.s9api;
+using Xunit;
 
 namespace Tests;
 
-public class IR {
+public class IR
+{
     [Theory]
     [InlineData("resources/schematrons/xrechnung/cius/ubl/invoice/success/1.xml")]
-    public void UblInvoice1(string invoiceLocation) {
+    public void UblInvoice1(string invoiceLocation)
+    {
         Processor processor = new Processor(false);
 
         XsltTransformer irTransformer = processor.newXsltCompiler().Compile(
@@ -30,12 +32,89 @@ public class IR {
 
         XmlSerializer invoiceSerializer = new XmlSerializer(typeof(Invoice));
 
-        // Console.WriteLine(irDestination.getXdmNode());
-
         Invoice invoice = (Invoice)invoiceSerializer.Deserialize(
             new StringReader(irDestination.getXdmNode().ToString())
         )!;
 
-        Console.WriteLine(invoice);
+        Invoice expected = new Invoice
+        {
+            InvoiceNumber = new Identifier("1234567"),
+            InvoiceIssueDate = new Date(new DateTime(2018, 4, 13)),
+            InvoiceTypeCode = new Code("380"),
+            InvoiceCurrencyCode = new Code("EUR"),
+            BuyerReference = new Text("90000000-03083-72"),
+            InvoiceNotes = [
+                new InvoiceNote {
+                    InvoiceNoteSubjectCode = new Code("AAC"),
+                    Note = new Text("Invoice Note Description"),
+                },
+                new InvoiceNote {
+                    InvoiceNoteSubjectCode = new Code("AAC"),
+                    Note = new Text("Invoice Note Description 2"),
+                },
+            ],
+            ProcessControl = new ProcessControl
+            {
+                BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
+                SpecificationIdentifier = new Identifier("urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"),
+            },
+            PrecedingInvoiceReferences = [
+                new PrecedingInvoiceReference {
+                    Reference = new DocumentReference("PIR1234567890"),
+                    PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 2, 4)),
+                },
+                new PrecedingInvoiceReference {
+                    Reference = new DocumentReference("PIR0987654321"),
+                    PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 3, 5)),
+                }
+            ],
+            Seller = new Seller
+            {
+                SellerName = new Text("[Seller name]"),
+                SellerIdentifiers = [],
+                SellerElectronicAddress = new Identifier("tim.tester@test.com"),
+                SellerPostalAddress = new SellerPostalAddress
+                {
+                    SellerCity = new Text("[Seller city]"),
+                    SellerPostCode = new Text("12345"),
+                    SellerCountryCode = new Code("DE"),
+                },
+                SellerContact = new SellerContact
+                {
+                    SellerContactPoint = new Text("Tim Tester"),
+                    SellerContactTelephoneNumber = new Text("012 3456789"),
+                    SellerContactEmailAddress = new Text("tim.tester@test.com"),
+                },
+            },
+            Buyer = new Buyer
+            {
+                BuyerName = new Text("[Buyer Name]"),
+                BuyerPostalAddress = new BuyerPostalAddress
+                {
+                    BuyerCity = new Text("[Buyer city]"),
+                    BuyerPostCode = new Text("98765"),
+                    BuyerCountryCode = new Code("DE"),
+                },
+            },
+            PaymentInstructions = new PaymentInstructions
+            {
+                PaymentMeansTypeCode = new Code("58"),
+                CreditTransfers = [],
+            },
+            DocumentLevelAllowances = [],
+            DocumentLevelCharges = [],
+            DocumentTotals = new DocumentTotals
+            {
+                SumOfInvoiceLineNetAmount = new Amount(10781.25m),
+                InvoiceTotalAmountWithoutVat = new Amount(10781.25m),
+                InvoiceTotalAmountWithVat = new Amount(12829.69m),
+                AmountDueForPayment = new Amount(12829.69m),
+            },
+            VatBreakdown = [],
+            AdditionalSupportingDocuments = [],
+            InvoiceLines = [],
+        };
+
+        Assert.Equal(expected, invoice);
     }
 }

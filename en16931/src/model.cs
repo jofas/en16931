@@ -1,54 +1,237 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Dev.Fassbender.En16931.Model;
 
-public record NewType<T> : IXmlSerializable {
-    public required T Inner;
+class EmptyGlobalNamespaceManager
+{
+    internal static XmlNamespaceManager Instance = new XmlNamespaceManager(new NameTable());
+}
 
-    public void ReadXml(XmlReader reader) {
-        Inner = (T)reader.ReadElementContentAs(
-          typeof(T),
-          // TODO: private static?
-          new XmlNamespaceManager(new NameTable())
+public record struct Amount : IXmlSerializable
+{
+    private decimal _inner;
+
+    public Amount(decimal inner) => _inner = inner;
+
+    public void ReadXml(XmlReader reader)
+    {
+        _inner = (decimal)reader.ReadElementContentAs(
+          typeof(decimal),
+          EmptyGlobalNamespaceManager.Instance
         );
     }
 
-    public void WriteXml(XmlWriter writer) {
+    public void WriteXml(XmlWriter writer)
+    {
         throw new NotImplementedException();
     }
 
-    public XmlSchema? GetSchema() {
+    public XmlSchema? GetSchema()
+    {
         return null;
     }
 }
 
-public record Amount : NewType<decimal> {}
-
-public record Code : NewType<string> {}
-
-public record Date : NewType<DateTime> {}
-
-public record DocumentReference : NewType<string> {}
-
-public record Percentage : NewType<decimal> {}
-
-public record Quantity : NewType<decimal> {}
-
-public record Text : NewType<string> {}
-
-public record UnitPriceAmount : NewType<decimal> {}
-
-public record BinaryObject
+public record struct Code : IXmlSerializable
 {
-    public required byte[] Content { get; init; }
-    public required string MimeCode { get; init; }
-    public required string Filename { get; init; }
+    private string _inner;
+
+    public Code(string inner) => _inner = inner;
+
+    public void ReadXml(XmlReader reader)
+    {
+        _inner = (string)reader.ReadElementContentAs(
+          typeof(string),
+          EmptyGlobalNamespaceManager.Instance
+        );
+    }
+
+    public void WriteXml(XmlWriter writer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public XmlSchema? GetSchema()
+    {
+        return null;
+    }
 }
 
-public record Identifier
+public record struct Date : IXmlSerializable
+{
+    private DateTime _inner;
+
+    public Date(DateTime inner) => _inner = inner;
+
+    public void ReadXml(XmlReader reader)
+    {
+        _inner = (DateTime)reader.ReadElementContentAs(
+          typeof(DateTime),
+          EmptyGlobalNamespaceManager.Instance
+        );
+    }
+
+    public void WriteXml(XmlWriter writer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public XmlSchema? GetSchema()
+    {
+        return null;
+    }
+}
+
+public record struct DocumentReference : IXmlSerializable
+{
+    private string _inner;
+
+    public DocumentReference(string inner) => _inner = inner;
+
+    public void ReadXml(XmlReader reader)
+    {
+        _inner = (string)reader.ReadElementContentAs(
+          typeof(string),
+          EmptyGlobalNamespaceManager.Instance
+        );
+    }
+
+    public void WriteXml(XmlWriter writer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public XmlSchema? GetSchema()
+    {
+        return null;
+    }
+}
+
+public record struct Percentage : IXmlSerializable
+{
+    private decimal _inner;
+
+    public Percentage(decimal inner) => _inner = inner;
+
+    public void ReadXml(XmlReader reader)
+    {
+        _inner = (decimal)reader.ReadElementContentAs(
+          typeof(decimal),
+          EmptyGlobalNamespaceManager.Instance
+        );
+    }
+
+    public void WriteXml(XmlWriter writer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public XmlSchema? GetSchema()
+    {
+        return null;
+    }
+}
+
+public record struct Quantity : IXmlSerializable
+{
+    private decimal _inner;
+
+    public Quantity(decimal inner) => _inner = inner;
+
+    public void ReadXml(XmlReader reader)
+    {
+        _inner = (decimal)reader.ReadElementContentAs(
+          typeof(decimal),
+          EmptyGlobalNamespaceManager.Instance
+        );
+    }
+
+    public void WriteXml(XmlWriter writer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public XmlSchema? GetSchema()
+    {
+        return null;
+    }
+}
+
+public record struct Text : IXmlSerializable
+{
+    private string _inner;
+
+    public Text(string inner) => _inner = inner;
+
+    public void ReadXml(XmlReader reader)
+    {
+        _inner = (string)reader.ReadElementContentAs(
+          typeof(string),
+          EmptyGlobalNamespaceManager.Instance
+        );
+    }
+
+    public void WriteXml(XmlWriter writer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public XmlSchema? GetSchema()
+    {
+        return null;
+    }
+}
+
+public record struct UnitPriceAmount : IXmlSerializable
+{
+    private decimal _inner;
+
+    public UnitPriceAmount(decimal inner) => _inner = inner;
+
+    public void ReadXml(XmlReader reader)
+    {
+        _inner = (decimal)reader.ReadElementContentAs(
+          typeof(decimal),
+          EmptyGlobalNamespaceManager.Instance
+        );
+    }
+
+    public void WriteXml(XmlWriter writer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public XmlSchema? GetSchema()
+    {
+        return null;
+    }
+}
+
+public record struct BinaryObject
+{
+    [XmlElement(ElementName = "content")]
+    public required byte[] Content { get; init; }
+
+    [XmlElement(ElementName = "mime-code")]
+    public required string MimeCode { get; init; }
+
+    [XmlElement(ElementName = "filename")]
+    public required string Filename { get; init; }
+
+    [SetsRequiredMembers]
+    public BinaryObject(byte[] content, string mimeCode, string filename)
+    {
+        Content = content;
+        MimeCode = mimeCode;
+        Filename = filename;
+    }
+}
+
+public record struct Identifier
 {
     [XmlElement(ElementName = "content")]
     public required string Content { get; init; }
@@ -58,6 +241,24 @@ public record Identifier
 
     [XmlElement(ElementName = "scheme-version-identifier")]
     public string? SchemeVersionIdentifier { get; init; }
+
+    public Identifier() { }
+
+    [SetsRequiredMembers]
+    public Identifier(string content) => Content = content;
+
+    [SetsRequiredMembers]
+    public Identifier(string content, string schemeIdentifier) : this(content)
+    {
+        SchemeIdentifier = schemeIdentifier;
+    }
+
+    [SetsRequiredMembers]
+    public Identifier(string content, string schemeIdentifier, string schemeVersionIdentifier) : this(content)
+    {
+        SchemeIdentifier = schemeIdentifier;
+        SchemeVersionIdentifier = schemeVersionIdentifier;
+    }
 }
 
 [XmlRoot(ElementName = "invoice", Namespace = "urn:todo")]
@@ -289,7 +490,7 @@ public record Seller
 
     // BG-6
     [XmlElement(ElementName = "seller-contact")]
-    public required SellerContact Contact { get; init; }
+    public required SellerContact SellerContact { get; init; }
 
 }
 
