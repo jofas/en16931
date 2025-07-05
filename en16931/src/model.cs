@@ -6,11 +6,6 @@ using System.Xml.Serialization;
 
 namespace Dev.Fassbender.En16931.Model;
 
-class EmptyGlobalNamespaceManager
-{
-    internal static XmlNamespaceManager Instance = new XmlNamespaceManager(new NameTable());
-}
-
 public record struct Amount : IXmlSerializable
 {
     private decimal _inner;
@@ -19,10 +14,7 @@ public record struct Amount : IXmlSerializable
 
     public void ReadXml(XmlReader reader)
     {
-        _inner = (decimal)reader.ReadElementContentAs(
-          typeof(decimal),
-          EmptyGlobalNamespaceManager.Instance
-        );
+        _inner = reader.ReadElementContentAsDecimal();
     }
 
     public void WriteXml(XmlWriter writer)
@@ -44,10 +36,7 @@ public record struct Code : IXmlSerializable
 
     public void ReadXml(XmlReader reader)
     {
-        _inner = (string)reader.ReadElementContentAs(
-          typeof(string),
-          EmptyGlobalNamespaceManager.Instance
-        );
+        _inner = reader.ReadElementContentAsString();
     }
 
     public void WriteXml(XmlWriter writer)
@@ -69,10 +58,7 @@ public record struct Date : IXmlSerializable
 
     public void ReadXml(XmlReader reader)
     {
-        _inner = (DateTime)reader.ReadElementContentAs(
-          typeof(DateTime),
-          EmptyGlobalNamespaceManager.Instance
-        );
+        _inner = reader.ReadElementContentAsDateTime();
     }
 
     public void WriteXml(XmlWriter writer)
@@ -94,10 +80,7 @@ public record struct DocumentReference : IXmlSerializable
 
     public void ReadXml(XmlReader reader)
     {
-        _inner = (string)reader.ReadElementContentAs(
-          typeof(string),
-          EmptyGlobalNamespaceManager.Instance
-        );
+        _inner = reader.ReadElementContentAsString();
     }
 
     public void WriteXml(XmlWriter writer)
@@ -119,10 +102,7 @@ public record struct Percentage : IXmlSerializable
 
     public void ReadXml(XmlReader reader)
     {
-        _inner = (decimal)reader.ReadElementContentAs(
-          typeof(decimal),
-          EmptyGlobalNamespaceManager.Instance
-        );
+        _inner = reader.ReadElementContentAsDecimal();
     }
 
     public void WriteXml(XmlWriter writer)
@@ -144,10 +124,7 @@ public record struct Quantity : IXmlSerializable
 
     public void ReadXml(XmlReader reader)
     {
-        _inner = (decimal)reader.ReadElementContentAs(
-          typeof(decimal),
-          EmptyGlobalNamespaceManager.Instance
-        );
+        _inner = reader.ReadElementContentAsDecimal();
     }
 
     public void WriteXml(XmlWriter writer)
@@ -169,10 +146,7 @@ public record struct Text : IXmlSerializable
 
     public void ReadXml(XmlReader reader)
     {
-        _inner = (string)reader.ReadElementContentAs(
-          typeof(string),
-          EmptyGlobalNamespaceManager.Instance
-        );
+        _inner = reader.ReadElementContentAsString();
     }
 
     public void WriteXml(XmlWriter writer)
@@ -194,10 +168,7 @@ public record struct UnitPriceAmount : IXmlSerializable
 
     public void ReadXml(XmlReader reader)
     {
-        _inner = (decimal)reader.ReadElementContentAs(
-          typeof(decimal),
-          EmptyGlobalNamespaceManager.Instance
-        );
+        _inner = reader.ReadElementContentAsDecimal();
     }
 
     public void WriteXml(XmlWriter writer)
