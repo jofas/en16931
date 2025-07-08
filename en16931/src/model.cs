@@ -1,5 +1,9 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -9,6 +13,8 @@ namespace Dev.Fassbender.En16931.Model;
 public record struct Amount : IXmlSerializable
 {
     private decimal _inner;
+
+    public decimal Inner { get => _inner; }
 
     public Amount(decimal inner) => _inner = inner;
 
@@ -32,6 +38,8 @@ public record struct Code : IXmlSerializable
 {
     private string _inner;
 
+    public string Inner { get => _inner; }
+
     public Code(string inner) => _inner = inner;
 
     public void ReadXml(XmlReader reader)
@@ -53,6 +61,8 @@ public record struct Code : IXmlSerializable
 public record struct Date : IXmlSerializable
 {
     private DateTime _inner;
+
+    public DateTime Inner { get => _inner; }
 
     public Date(DateTime inner) => _inner = inner;
 
@@ -76,6 +86,8 @@ public record struct DocumentReference : IXmlSerializable
 {
     private string _inner;
 
+    public string Inner { get => _inner; }
+
     public DocumentReference(string inner) => _inner = inner;
 
     public void ReadXml(XmlReader reader)
@@ -97,6 +109,8 @@ public record struct DocumentReference : IXmlSerializable
 public record struct Percentage : IXmlSerializable
 {
     private decimal _inner;
+
+    public decimal Inner { get => _inner; }
 
     public Percentage(decimal inner) => _inner = inner;
 
@@ -120,6 +134,8 @@ public record struct Quantity : IXmlSerializable
 {
     private decimal _inner;
 
+    public decimal Inner { get => _inner; }
+
     public Quantity(decimal inner) => _inner = inner;
 
     public void ReadXml(XmlReader reader)
@@ -142,6 +158,8 @@ public record struct Text : IXmlSerializable
 {
     private string _inner;
 
+    public string Inner { get => _inner; }
+
     public Text(string inner) => _inner = inner;
 
     public void ReadXml(XmlReader reader)
@@ -163,6 +181,8 @@ public record struct Text : IXmlSerializable
 public record struct UnitPriceAmount : IXmlSerializable
 {
     private decimal _inner;
+
+    public decimal Inner { get => _inner; }
 
     public UnitPriceAmount(decimal inner) => _inner = inner;
 
@@ -230,6 +250,56 @@ public record struct Identifier
         SchemeIdentifier = schemeIdentifier;
         SchemeVersionIdentifier = schemeVersionIdentifier;
     }
+}
+
+public struct Array<T> : IEnumerable<T>, IEquatable<Array<T>>
+{
+    private ImmutableArray<T>.Builder? __inner;
+    private ImmutableArray<T>.Builder _inner => __inner ??= ImmutableArray.CreateBuilder<T>();
+
+    public ImmutableArray<T> Inner { get => _inner.ToImmutableArray(); }
+
+    public Array(List<T> inner)
+    {
+        _inner.AddRange(inner);
+    }
+
+    #region XML parsing
+
+    public IEnumerator<T> GetEnumerator() => _inner.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => _inner.GetEnumerator();
+
+    public void Add(T item)
+    {
+        _inner.Add(item);
+    }
+
+    #endregion
+
+    #region value-equality
+
+    public override bool Equals(object? o) => o is Array<T> other && this.Equals(other);
+
+    public bool Equals(Array<T> other)
+    {
+        return Inner.SequenceEqual(other.Inner);
+    }
+
+    public override int GetHashCode() => Inner.GetHashCode();
+
+    public static bool operator ==(Array<T> lhs, Array<T> rhs)
+    {
+        return lhs.Equals(rhs);
+    }
+
+    public static bool operator !=(Array<T> lhs, Array<T> rhs)
+    {
+        return !lhs.Equals(rhs);
+    }
+
+    #endregion
+
 }
 
 [XmlRoot(ElementName = "invoice", Namespace = "urn:todo")]
@@ -433,7 +503,7 @@ public record Seller
     // BT-29
     [XmlArray(ElementName = "seller-identifiers")]
     [XmlArrayItem(ElementName = "seller-identifier")]
-    public required Identifier[] SellerIdentifiers { get; init; }
+    public required Array<Identifier> SellerIdentifiers { get; init; }
 
     // BT-30
     [XmlElement(ElementName = "seller-legal-registration-identifier")]
@@ -441,11 +511,11 @@ public record Seller
 
     // BT-31
     [XmlElement(ElementName = "seller-vat-identifier")]
-    public Identifier? SellerTaxRegistrationIdentifier { get; init; }
+    public Identifier? SellerVatIdentifier { get; init; }
 
     // BT-32
     [XmlElement(ElementName = "seller-tax-registration-identifier")]
-    public Identifier? SelerTaxRegistrationIdentifier { get; init; }
+    public Identifier? SellerTaxRegistrationIdentifier { get; init; }
 
     // BT-33
     [XmlElement(ElementName = "seller-additional-legal-information")]
@@ -477,7 +547,7 @@ public record SellerPostalAddress
 
     // BT-162
     [XmlElement(ElementName = "seller-address-line-3")]
-    public Text? AddressLine3 { get; init; }
+    public Text? SellerAddressLine3 { get; init; }
 
     // BT-37
     [XmlElement(ElementName = "seller-city")]

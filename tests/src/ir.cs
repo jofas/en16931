@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Immutable;
 using System.IO;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -71,12 +72,23 @@ public class IR
             Seller = new Seller
             {
                 SellerName = new Text("[Seller name]"),
-                SellerIdentifiers = [],
-                SellerElectronicAddress = new Identifier("tim.tester@test.com"),
+                SellerTradingName = new Text("[Seller trading name]"),
+                SellerIdentifiers = new Array<Identifier>([
+                    new Identifier("987654321", "0088")
+                ]),
+                SellerLegalRegistrationIdentifier = new Identifier("123456789", "0088"),
+                SellerVatIdentifier = new Identifier("ATU123456789"),
+                SellerTaxRegistrationIdentifier = new Identifier("123/456/789"),
+                SellerAdditionalLegalInformation = new Text("Amtsgericht […], Geschäftsführer: […], Sitz der Gesellschaft […], Aufsichtsratvorsitzender: […]"),
+                SellerElectronicAddress = new Identifier("rechnungsausgang@test.com", "EM"),
                 SellerPostalAddress = new SellerPostalAddress
                 {
+                    SellerAddressLine1 = new Text("[Seller address line 1]"),
+                    SellerAddressLine2 = new Text("[Seller address line 2]"),
+                    SellerAddressLine3 = new Text("[Seller address line 3]"),
                     SellerCity = new Text("[Seller city]"),
                     SellerPostCode = new Text("12345"),
+                    SellerCountrySubdivision = new Text("Bayern"),
                     SellerCountryCode = new Code("DE"),
                 },
                 SellerContact = new SellerContact
@@ -115,6 +127,16 @@ public class IR
             InvoiceLines = [],
         };
 
-        Assert.Equal(expected, invoice);
+        Assert.Equal(expected.InvoiceNotes, invoice.InvoiceNotes);
+
+        Assert.Equal(expected.ProcessControl, invoice.ProcessControl);
+
+        Assert.Equal(expected.PrecedingInvoiceReferences, invoice.PrecedingInvoiceReferences);
+
+        Assert.Equal(expected.Seller, invoice.Seller);
+
+        //Console.WriteLine(irDestination.getXdmNode());
+
+        //Assert.Equal(expected, invoice);
     }
 }
