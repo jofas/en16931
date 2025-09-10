@@ -204,6 +204,7 @@ public record struct UnitPriceAmount : IXmlSerializable
 
 public record struct BinaryObject
 {
+    // TODO: value-equality semantics for byte[]
     [XmlElement(ElementName = "content")]
     public required byte[] Content { get; init; }
 
@@ -388,7 +389,7 @@ public record Invoice
     // BG-1
     [XmlArray(ElementName = "invoice-notes")]
     [XmlArrayItem(ElementName = "invoice-note")]
-    public required InvoiceNote[] InvoiceNotes { get; init; }
+    public required Array<InvoiceNote> InvoiceNotes { get; init; }
 
     // BG-2
     [XmlElement(ElementName = "process-control")]
@@ -397,7 +398,7 @@ public record Invoice
     // BG-3
     [XmlArray(ElementName = "preceding-invoice-references")]
     [XmlArrayItem(ElementName = "preceding-invoice-reference")]
-    public required PrecedingInvoiceReference[] PrecedingInvoiceReferences { get; init; }
+    public required Array<PrecedingInvoiceReference> PrecedingInvoiceReferences { get; init; }
 
     // BG-4
     [XmlElement(ElementName = "seller")]
@@ -426,12 +427,12 @@ public record Invoice
     // BG-20
     [XmlArray(ElementName = "document-level-allowances")]
     [XmlArrayItem(ElementName = "document-level-allowance")]
-    public required DocumentLevelAllowance[] DocumentLevelAllowances { get; init; }
+    public required Array<DocumentLevelAllowance> DocumentLevelAllowances { get; init; }
 
     // BG-21
     [XmlArray(ElementName = "document-level-charges")]
     [XmlArrayItem(ElementName = "document-level-charge")]
-    public required DocumentLevelCharge[] DocumentLevelCharges { get; init; }
+    public required Array<DocumentLevelCharge> DocumentLevelCharges { get; init; }
 
     // BG-22
     [XmlElement(ElementName = "document-totals")]
@@ -442,19 +443,19 @@ public record Invoice
     // non-empty
     [XmlArray(ElementName = "vat-breakdown")]
     [XmlArrayItem(ElementName = "vat-breakdown")]
-    public required VatBreakdown[] VatBreakdown { get; init; }
+    public required Array<VatBreakdown> VatBreakdown { get; init; }
 
     // BG-24
     [XmlArray(ElementName = "additional-supporting-documents")]
     [XmlArrayItem(ElementName = "additional-supporting-document")]
-    public required AdditionalSupportingDocument[] AdditionalSupportingDocuments { get; init; }
+    public required Array<AdditionalSupportingDocument> AdditionalSupportingDocuments { get; init; }
 
     // BG-25
     //
     // non-empty
     [XmlArray(ElementName = "invoice-lines")]
     [XmlArrayItem(ElementName = "invoice-line")]
-    public required InvoiceLine[] InvoiceLines { get; init; }
+    public required Array<InvoiceLine> InvoiceLines { get; init; }
 }
 
 public record InvoiceNote
@@ -810,7 +811,7 @@ public record PaymentInstructions
     // BG-17
     [XmlArray(ElementName = "credit-transfers")]
     [XmlArrayItem(ElementName = "credit-transfer")]
-    public required CreditTransfer[] CreditTransfers { get; init; }
+    public required Array<CreditTransfer> CreditTransfers { get; init; }
 
     // BG-18
     [XmlElement(ElementName = "payment-card-information")]
@@ -1056,12 +1057,12 @@ public record InvoiceLine
     // BG-27
     [XmlArray(ElementName = "invoice-line-allowances")]
     [XmlArrayItem(ElementName = "invoice-line-allowance")]
-    public required InvoiceLineAllowance[] InvoiceLineAllowances { get; init; }
+    public required Array<InvoiceLineAllowance> InvoiceLineAllowances { get; init; }
 
     // BG-28
     [XmlArray(ElementName = "invoice-line-charges")]
     [XmlArrayItem(ElementName = "invoice-line-charge")]
-    public required InvoiceLineCharge[] InvoiceLineCharges { get; init; }
+    public required Array<InvoiceLineCharge> InvoiceLineCharges { get; init; }
 
     // BG-29
     [XmlElement(ElementName = "price-details")]
@@ -1195,7 +1196,7 @@ public record ItemInformation
     // UNTDID 7143
     [XmlArray(ElementName = "item-classification-identifiers")]
     [XmlArrayItem(ElementName = "item-classification-identifier")]
-    public required Identifier[] ItemClassificationIdentifiers { get; init; }
+    public required Array<Identifier> ItemClassificationIdentifiers { get; init; }
 
     // BT-159
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2 representation
@@ -1205,7 +1206,7 @@ public record ItemInformation
     // BG-32
     [XmlArray(ElementName = "item-attributes")]
     [XmlArrayItem(ElementName = "item-attribute")]
-    public required ItemAttribute[] ItemAttributes { get; init; }
+    public required Array<ItemAttribute> ItemAttributes { get; init; }
 }
 
 public record ItemAttribute

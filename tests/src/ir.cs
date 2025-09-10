@@ -100,12 +100,26 @@ public class IR
             },
             Buyer = new Buyer
             {
-                BuyerName = new Text("[Buyer Name]"),
+                BuyerName = new Text("[Buyer name]"),
+                BuyerTradingName = new Text("[Buyer trading name]"),
+                BuyerIdentifier = new Identifier("138"),
+                BuyerLegalRegistrationIdentifier = new Identifier("90000000-03083-72", "0204"),
+                BuyerVatIdentifier = new Identifier("DE12345ABC"),
+                BuyerElectronicAddress = new Identifier("rechnungseingang@test.de", "EM"),
                 BuyerPostalAddress = new BuyerPostalAddress
                 {
+                    BuyerAddressLine1 = new Text("[Buyer address line 1]"),
+                    BuyerAddressLine2 = new Text("[Buyer address line 2]"),
+                    BuyerAddressLine3 = new Text("[Buyer address line 3]"),
                     BuyerCity = new Text("[Buyer city]"),
                     BuyerPostCode = new Text("98765"),
+                    BuyerCountrySubdivision = new Text("Bayern"),
                     BuyerCountryCode = new Code("DE"),
+                },
+                BuyerContact = new BuyerContact
+                {
+                    ContactPoint = new Text("Tina Tester"),
+                    PhoneNumber = new Text("0800 123456"),
                 },
             },
             PaymentInstructions = new PaymentInstructions
@@ -128,13 +142,11 @@ public class IR
         };
 
         Assert.Equal(expected.InvoiceNotes, invoice.InvoiceNotes);
-
         Assert.Equal(expected.ProcessControl, invoice.ProcessControl);
-
         Assert.Equal(expected.PrecedingInvoiceReferences, invoice.PrecedingInvoiceReferences);
-
         Assert.Equal(expected.Seller, invoice.Seller);
-
+        Assert.Equal(expected.Buyer, invoice.Buyer);
+        Assert.Equal(expected.PaymentInstructions, invoice.PaymentInstructions);
         //Console.WriteLine(irDestination.getXdmNode());
 
         //Assert.Equal(expected, invoice);
