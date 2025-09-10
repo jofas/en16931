@@ -586,9 +586,9 @@
           </direct-debit>
         </xsl:if>
       </payment-instructions>
-      <xsl:if test="exists(cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:Amount)">
+      <xsl:if test="exists(cac:AllowanceCharge[cbc:ChargeIndicator = 'false']/cbc:Amount)">
         <document-level-allowances id="bg-20">
-          <xsl:for-each select="cac:AllowanceCharge[cbc:ChargeIndicator = false()]">
+          <xsl:for-each select="cac:AllowanceCharge[cbc:ChargeIndicator = 'false']">
             <document-level-allowance id="bg-20">
               <document-level-allowance-amount id="bt-92">
                 <xsl:value-of select="./cbc:Amount"/>
@@ -625,9 +625,9 @@
           </xsl:for-each>
         </document-level-allowances>
       </xsl:if>
-      <xsl:if test="exists(cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:Amount)">
+      <xsl:if test="exists(cac:AllowanceCharge[cbc:ChargeIndicator = 'true']/cbc:Amount)">
         <document-level-charges id="bg-21">
-          <xsl:for-each select="cac:AllowanceCharge[cbc:ChargeIndicator = false()]">
+          <xsl:for-each select="cac:AllowanceCharge[cbc:ChargeIndicator = 'true']">
             <document-level-charge id="bg-21">
               <document-level-charge-amount id="bt-99">
                 <xsl:value-of select="./cbc:Amount"/>
@@ -832,9 +832,9 @@
                 </xsl:if>
               </invoice-line-period>
             </xsl:if>
-            <xsl:if test="exists(./cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:Amount)">
+            <xsl:if test="exists(./cac:AllowanceCharge[cbc:ChargeIndicator = 'false']/cbc:Amount)">
               <invoice-line-allowances id="bg-27">
-                <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = false()]">
+                <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = 'false']">
                   <invoice-line-allowance id="bg-27">
                     <invoice-line-allowance-amount id="bt-136">
                       <xsl:value-of select="./cbc:Amount"/>
@@ -863,9 +863,9 @@
                 </xsl:for-each>
               </invoice-line-allowances>
             </xsl:if>
-            <xsl:if test="exists(./cac:AllowanceCharge[cbc:ChargeIndicator = true()]/cbc:Amount)">
+            <xsl:if test="exists(./cac:AllowanceCharge[cbc:ChargeIndicator = 'true']/cbc:Amount)">
               <invoice-line-charges id="bg-28">
-                <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = true()]">
+                <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = 'true']">
                   <invoice-line-charge id="bg-28">
                     <invoice-line-charge-amount id="bt-141">
                       <xsl:value-of select="./cbc:Amount"/>

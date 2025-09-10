@@ -135,8 +135,8 @@ public class IR
                     },
                 ]),
             },
-            DocumentLevelAllowances = [],
-            DocumentLevelCharges = [],
+            DocumentLevelAllowances = new Array<DocumentLevelAllowance>([]),
+            DocumentLevelCharges = new Array<DocumentLevelCharge>([]),
             DocumentTotals = new DocumentTotals
             {
                 SumOfInvoiceLineNetAmount = new Amount(10781.25m),
@@ -144,9 +144,9 @@ public class IR
                 InvoiceTotalAmountWithVat = new Amount(12829.69m),
                 AmountDueForPayment = new Amount(12829.69m),
             },
-            VatBreakdown = [],
-            AdditionalSupportingDocuments = [],
-            InvoiceLines = [],
+            VatBreakdown = new Array<VatBreakdown>([]),
+            AdditionalSupportingDocuments = new Array<AdditionalSupportingDocument>([]),
+            InvoiceLines = new Array<InvoiceLine>([]),
         };
 
         Assert.Equal(expected.InvoiceNotes, invoice.InvoiceNotes);
@@ -155,8 +155,10 @@ public class IR
         Assert.Equal(expected.Seller, invoice.Seller);
         Assert.Equal(expected.Buyer, invoice.Buyer);
         Assert.Equal(expected.PaymentInstructions, invoice.PaymentInstructions);
+
+        Console.WriteLine(irDestination.getXdmNode());
+
         Assert.Equal(expected.DocumentLevelAllowances, invoice.DocumentLevelAllowances);
-        //Console.WriteLine(irDestination.getXdmNode());
 
         //Assert.Equal(expected, invoice);
     }
