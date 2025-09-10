@@ -125,7 +125,15 @@ public class IR
             PaymentInstructions = new PaymentInstructions
             {
                 PaymentMeansTypeCode = new Code("58"),
-                CreditTransfers = [],
+                PaymentMeansText = new Text("[Payment means text]"),
+                RemittanceInformation = new Text("Deb. 12345 / Fact. 9876543"),
+                CreditTransfers = new Array<CreditTransfer>([
+                    new CreditTransfer {
+                        PaymentAccountIdentifier = new Identifier("DE75512108001245126199"),
+                        PaymentAccountName = new Text("[Payment account name]"),
+                        PaymentServiceProviderIdentifier = new Identifier("[BIC]"),
+                    },
+                ]),
             },
             DocumentLevelAllowances = [],
             DocumentLevelCharges = [],
@@ -147,6 +155,7 @@ public class IR
         Assert.Equal(expected.Seller, invoice.Seller);
         Assert.Equal(expected.Buyer, invoice.Buyer);
         Assert.Equal(expected.PaymentInstructions, invoice.PaymentInstructions);
+        Assert.Equal(expected.DocumentLevelAllowances, invoice.DocumentLevelAllowances);
         //Console.WriteLine(irDestination.getXdmNode());
 
         //Assert.Equal(expected, invoice);
