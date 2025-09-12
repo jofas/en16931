@@ -6,6 +6,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Dev.Fassbender.En16931;
 using Dev.Fassbender.En16931.Model;
+using Dev.Fassbender.En16931.Model.Primitives;
 using net.liberty_development.SaxonHE12s9apiExtensions;
 using net.sf.saxon.s9api;
 using Xunit;
