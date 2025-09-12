@@ -202,9 +202,34 @@ public record struct UnitPriceAmount : IXmlSerializable
     }
 }
 
+/*
+public record struct Bytes : IXmlSerializable {
+    private Array<byte> _inner;
+
+    public Array<byte> Inner { get => _inner; }
+
+    public Bytes(Array<byte> inner) => _inner = inner;
+
+    public void ReadXml(XmlReader reader) {
+        byte[] content = new byte[1000000000];
+        reader.ReadElementContentAsBase64(content, 0, 1000000000);
+        _inner = new Array<byte>(content.ToList());
+    }
+
+    public void WriteXml(XmlWriter writer) {
+        throw new NotImplementedException();
+    }
+
+    public XmlSchema? GetSchema() {
+        return null;
+    }
+}
+*/
+
 public record struct BinaryObject
 {
-    // TODO: value-equality semantics for byte[]
+    // TODO: value-equality semantics for a byte[] ... Bytes type?
+    //
     [XmlElement(ElementName = "content")]
     public required byte[] Content { get; init; }
 
@@ -260,7 +285,7 @@ public struct Array<T> : IEnumerable<T>, IEquatable<Array<T>>
 
     public ImmutableArray<T> Inner { get => _inner.ToImmutableArray(); }
 
-    public Array(List<T> inner)
+    public Array(IEnumerable<T> inner)
     {
         _inner.AddRange(inner);
     }
