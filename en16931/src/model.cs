@@ -3,6 +3,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Dev.Fassbender.En16931.Model.Primitives;
+using Im = Dev.Fassbender.En16931.Model.Immutable;
 
 namespace Dev.Fassbender.En16931.Model;
 
@@ -924,4 +925,13 @@ public class ItemAttribute
     // BT-161
     [XmlElement(ElementName = "item-attribute-value")]
     public required Text ItemAttributeValue { get; set; }
+
+    public Im.ItemAttribute ToImmutable()
+    {
+        return new Im.ItemAttribute
+        {
+            ItemAttributeName = ItemAttributeName.ToImmutable(),
+            ItemAttributeValue = ItemAttributeValue.ToImmutable(),
+        };
+    }
 }

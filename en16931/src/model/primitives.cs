@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Im = Dev.Fassbender.En16931.Model.Immutable.Primitives;
 
 namespace Dev.Fassbender.En16931.Model.Primitives;
 
@@ -12,6 +13,11 @@ public struct Amount : IXmlSerializable
 
     [SetsRequiredMembers]
     public Amount(decimal v) => Value = v;
+
+    public Im.Amount ToImmutable()
+    {
+        return new Im.Amount(Value);
+    }
 
     public void ReadXml(XmlReader reader)
     {
@@ -36,6 +42,11 @@ public struct Code : IXmlSerializable
     [SetsRequiredMembers]
     public Code(string v) => Value = v;
 
+    public Im.Code ToImmutable()
+    {
+        return new Im.Code(Value);
+    }
+
     public void ReadXml(XmlReader reader)
     {
         Value = reader.ReadElementContentAsString();
@@ -58,6 +69,11 @@ public struct Date : IXmlSerializable
 
     [SetsRequiredMembers]
     public Date(DateTime v) => Value = v;
+
+    public Im.Date ToImmutable()
+    {
+        return new Im.Date(Value);
+    }
 
     public void ReadXml(XmlReader reader)
     {
@@ -82,6 +98,11 @@ public struct DocumentReference : IXmlSerializable
     [SetsRequiredMembers]
     public DocumentReference(string v) => Value = v;
 
+    public Im.DocumentReference ToImmutable()
+    {
+        return new Im.DocumentReference(Value);
+    }
+
     public void ReadXml(XmlReader reader)
     {
         Value = reader.ReadElementContentAsString();
@@ -104,6 +125,11 @@ public struct Percentage : IXmlSerializable
 
     [SetsRequiredMembers]
     public Percentage(decimal v) => Value = v;
+
+    public Im.Percentage ToImmutable()
+    {
+        return new Im.Percentage(Value);
+    }
 
     public void ReadXml(XmlReader reader)
     {
@@ -128,6 +154,11 @@ public struct Quantity : IXmlSerializable
     [SetsRequiredMembers]
     public Quantity(decimal v) => Value = v;
 
+    public Im.Quantity ToImmutable()
+    {
+        return new Im.Quantity(Value);
+    }
+
     public void ReadXml(XmlReader reader)
     {
         Value = reader.ReadElementContentAsDecimal();
@@ -151,6 +182,11 @@ public struct Text : IXmlSerializable
     [SetsRequiredMembers]
     public Text(string v) => Value = v;
 
+    public Im.Text ToImmutable()
+    {
+        return new Im.Text(Value);
+    }
+
     public void ReadXml(XmlReader reader)
     {
         Value = reader.ReadElementContentAsString();
@@ -173,6 +209,11 @@ public struct UnitPriceAmount : IXmlSerializable
 
     [SetsRequiredMembers]
     public UnitPriceAmount(decimal v) => Value = v;
+
+    public Im.UnitPriceAmount ToImmutable()
+    {
+        return new Im.UnitPriceAmount(Value);
+    }
 
     public void ReadXml(XmlReader reader)
     {
@@ -208,6 +249,11 @@ public struct BinaryObject
         MimeCode = mimeCode;
         Filename = filename;
     }
+
+    public Im.BinaryObject ToImmutable()
+    {
+        return new Im.BinaryObject(new Im.Array<byte>(Content), MimeCode, Filename);
+    }
 }
 
 public struct Identifier
@@ -222,18 +268,28 @@ public struct Identifier
     public string? SchemeVersionIdentifier { get; set; }
 
     [SetsRequiredMembers]
-    public Identifier(string content) => Content = content;
+    public Identifier(string content)
+    {
+        Content = content;
+    }
 
     [SetsRequiredMembers]
-    public Identifier(string content, string schemeIdentifier) : this(content)
+    public Identifier(string content, string? schemeIdentifier)
     {
+        Content = content;
         SchemeIdentifier = schemeIdentifier;
     }
 
     [SetsRequiredMembers]
-    public Identifier(string content, string schemeIdentifier, string schemeVersionIdentifier) : this(content)
+    public Identifier(string content, string? schemeIdentifier, string? schemeVersionIdentifier)
     {
+        Content = content;
         SchemeIdentifier = schemeIdentifier;
         SchemeVersionIdentifier = schemeVersionIdentifier;
+    }
+
+    public Im.Identifier ToImmutable()
+    {
+        return new Im.Identifier(Content, SchemeIdentifier, SchemeVersionIdentifier);
     }
 }

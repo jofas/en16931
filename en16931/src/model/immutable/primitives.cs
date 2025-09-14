@@ -34,7 +34,7 @@ public record struct Identifier
     }
 
     [SetsRequiredMembers]
-    public Identifier(string content, string schemeIdentifier)
+    public Identifier(string content, string? schemeIdentifier)
     {
         Content = content;
         SchemeIdentifier = schemeIdentifier;
@@ -42,7 +42,7 @@ public record struct Identifier
     }
 
     [SetsRequiredMembers]
-    public Identifier(string content, string schemeIdentifier, string schemeVersionIdentifier)
+    public Identifier(string content, string? schemeIdentifier, string? schemeVersionIdentifier)
     {
         Content = content;
         SchemeIdentifier = schemeIdentifier;
