@@ -8,8 +8,6 @@ using Im = Dev.Fassbender.En16931.Model.Immutable;
 
 namespace Dev.Fassbender.En16931.Model;
 
-// TODO: IR test as immutable model
-
 [XmlRoot(ElementName = "invoice", Namespace = "urn:todo")]
 public class Invoice : IToImmutable<Im.Invoice>
 {
