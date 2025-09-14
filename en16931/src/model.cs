@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -784,7 +785,7 @@ public class InvoiceLine
     public required ItemInformation ItemInformation { get; set; }
 }
 
-public class InvoiceLinePeriod
+public class InvoiceLinePeriod : IToImmutable<Im.InvoiceLinePeriod>
 {
     // BT-134
     [XmlElement(ElementName = "invoice-line-period-start-date")]
@@ -793,9 +794,18 @@ public class InvoiceLinePeriod
     // BT-135
     [XmlElement(ElementName = "invoice-line-period-end-date")]
     public Date? InvoiceLinePeriodEndDate { get; set; }
+
+    public Im.InvoiceLinePeriod ToImmutable()
+    {
+        return new Im.InvoiceLinePeriod
+        {
+            InvoiceLinePeriodStartDate = InvoiceLinePeriodStartDate?.ToImmutable(),
+            InvoiceLinePeriodEndDate = InvoiceLinePeriodEndDate?.ToImmutable(),
+        };
+    }
 }
 
-public class InvoiceLineAllowance
+public class InvoiceLineAllowance : IToImmutable<Im.InvoiceLineAllowance>
 {
     // BT-136
     [XmlElement(ElementName = "invoice-line-allowance-amount")]
@@ -816,9 +826,21 @@ public class InvoiceLineAllowance
     // BT-140
     [XmlElement(ElementName = "invoice-line-allowance-reason-code")]
     public Code? InvoiceLineAllowanceReasonCode { get; set; }
+
+    public Im.InvoiceLineAllowance ToImmutable()
+    {
+        return new Im.InvoiceLineAllowance
+        {
+            InvoiceLineAllowanceAmount = InvoiceLineAllowanceAmount.ToImmutable(),
+            InvoiceLineAllowanceBaseAmount = InvoiceLineAllowanceBaseAmount?.ToImmutable(),
+            InvoiceLineAllowancePercentage = InvoiceLineAllowancePercentage?.ToImmutable(),
+            InvoiceLineAllowanceReason = InvoiceLineAllowanceReason?.ToImmutable(),
+            InvoiceLineAllowanceReasonCode = InvoiceLineAllowanceReasonCode?.ToImmutable(),
+        };
+    }
 }
 
-public class InvoiceLineCharge
+public class InvoiceLineCharge : IToImmutable<Im.InvoiceLineCharge>
 {
     // BT-141
     [XmlElement(ElementName = "invoice-line-charge-amount")]
@@ -839,9 +861,21 @@ public class InvoiceLineCharge
     // BT-145
     [XmlElement(ElementName = "invoice-line-charge-reason-code")]
     public Code? InvoiceLineChargeReasonCode { get; set; }
+
+    public Im.InvoiceLineCharge ToImmutable()
+    {
+        return new Im.InvoiceLineCharge
+        {
+            InvoiceLineChargeAmount = InvoiceLineChargeAmount.ToImmutable(),
+            InvoiceLineChargeBaseAmount = InvoiceLineChargeBaseAmount?.ToImmutable(),
+            InvoiceLineChargePercentage = InvoiceLineChargePercentage?.ToImmutable(),
+            InvoiceLineChargeReason = InvoiceLineChargeReason?.ToImmutable(),
+            InvoiceLineChargeReasonCode = InvoiceLineChargeReasonCode?.ToImmutable(),
+        };
+    }
 }
 
-public class PriceDetails
+public class PriceDetails : IToImmutable<Im.PriceDetails>
 {
     // BT-146
     [XmlElement(ElementName = "item-net-price")]
@@ -863,9 +897,21 @@ public class PriceDetails
     // UN/ECE Rec No 20,21
     [XmlElement(ElementName = "item-price-base-quantity-unit-of-measure")]
     public Code? ItemPriceBaseQuantityUnitOfMeasure { get; set; }
+
+    public Im.PriceDetails ToImmutable()
+    {
+        return new Im.PriceDetails
+        {
+            ItemNetPrice = ItemNetPrice.ToImmutable(),
+            ItemPriceDiscount = ItemPriceDiscount?.ToImmutable(),
+            ItemGrossPrice = ItemGrossPrice?.ToImmutable(),
+            ItemPriceBaseQuantity = ItemPriceBaseQuantity?.ToImmutable(),
+            ItemPriceBaseQuantityUnitOfMeasure = ItemPriceBaseQuantityUnitOfMeasure?.ToImmutable(),
+        };
+    }
 }
 
-public class LineVatInformation
+public class LineVatInformation : IToImmutable<Im.LineVatInformation>
 {
     // BT-151
     // UNTDID 5305
@@ -875,9 +921,18 @@ public class LineVatInformation
     // BT-152
     [XmlElement(ElementName = "invoiced-item-vat-rate")]
     public Percentage? InvoicedItemVatRate { get; set; }
+
+    public Im.LineVatInformation ToImmutable()
+    {
+        return new Im.LineVatInformation
+        {
+            InvoicedItemVatCategoryCode = InvoicedItemVatCategoryCode.ToImmutable(),
+            InvoicedItemVatRate = InvoicedItemVatRate?.ToImmutable(),
+        };
+    }
 }
 
-public class ItemInformation
+public class ItemInformation : IToImmutable<Im.ItemInformation>
 {
     // BT-153
     [XmlElement(ElementName = "item-name")]
@@ -914,9 +969,24 @@ public class ItemInformation
     [XmlArray(ElementName = "item-attributes")]
     [XmlArrayItem(ElementName = "item-attribute")]
     public ItemAttribute[] ItemAttributes { get; set; } = [];
+
+    public Im.ItemInformation ToImmutable()
+    {
+        return new Im.ItemInformation
+        {
+            ItemName = ItemName.ToImmutable(),
+            ItemDescription = ItemDescription?.ToImmutable(),
+            ItemSellersIdentifier = ItemSellersIdentifier?.ToImmutable(),
+            ItemBuyersIdentifier = ItemBuyersIdentifier?.ToImmutable(),
+            ItemStandardIdentifier = ItemStandardIdentifier?.ToImmutable(),
+            ItemClassificationIdentifiers = ItemClassificationIdentifiers.ToImmutable<Identifier, Im.Primitives.Identifier>(),
+            ItemCountryOfOrigin = ItemCountryOfOrigin?.ToImmutable(),
+            ItemAttributes = ItemAttributes.ToImmutable<ItemAttribute, Im.ItemAttribute>(),
+        };
+    }
 }
 
-public class ItemAttribute
+public class ItemAttribute : IToImmutable<Im.ItemAttribute>
 {
     // BT-160
     [XmlElement(ElementName = "item-attribute-name")]

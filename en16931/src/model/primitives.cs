@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -7,7 +9,7 @@ using Im = Dev.Fassbender.En16931.Model.Immutable.Primitives;
 
 namespace Dev.Fassbender.En16931.Model.Primitives;
 
-public struct Amount : IXmlSerializable
+public struct Amount : IToImmutable<Im.Amount>, IXmlSerializable
 {
     public required decimal Value { get; set; }
 
@@ -35,7 +37,7 @@ public struct Amount : IXmlSerializable
     }
 }
 
-public struct Code : IXmlSerializable
+public struct Code : IToImmutable<Im.Code>, IXmlSerializable
 {
     public required string Value { get; set; }
 
@@ -63,7 +65,7 @@ public struct Code : IXmlSerializable
     }
 }
 
-public struct Date : IXmlSerializable
+public struct Date : IToImmutable<Im.Date>, IXmlSerializable
 {
     public required DateTime Value { get; set; }
 
@@ -91,7 +93,7 @@ public struct Date : IXmlSerializable
     }
 }
 
-public struct DocumentReference : IXmlSerializable
+public struct DocumentReference : IToImmutable<Im.DocumentReference>, IXmlSerializable
 {
     public required string Value { get; set; }
 
@@ -119,7 +121,7 @@ public struct DocumentReference : IXmlSerializable
     }
 }
 
-public struct Percentage : IXmlSerializable
+public struct Percentage : IToImmutable<Im.Percentage>, IXmlSerializable
 {
     public required decimal Value { get; set; }
 
@@ -147,7 +149,7 @@ public struct Percentage : IXmlSerializable
     }
 }
 
-public struct Quantity : IXmlSerializable
+public struct Quantity : IToImmutable<Im.Quantity>, IXmlSerializable
 {
     public required decimal Value { get; set; }
 
@@ -175,7 +177,7 @@ public struct Quantity : IXmlSerializable
     }
 }
 
-public struct Text : IXmlSerializable
+public struct Text : IToImmutable<Im.Text>, IXmlSerializable
 {
     public required string Value { get; set; }
 
@@ -203,7 +205,7 @@ public struct Text : IXmlSerializable
     }
 }
 
-public struct UnitPriceAmount : IXmlSerializable
+public struct UnitPriceAmount : IToImmutable<Im.UnitPriceAmount>, IXmlSerializable
 {
     public required decimal Value { get; set; }
 
@@ -231,7 +233,7 @@ public struct UnitPriceAmount : IXmlSerializable
     }
 }
 
-public struct BinaryObject
+public struct BinaryObject : IToImmutable<Im.BinaryObject>
 {
     [XmlElement(ElementName = "content")]
     public required byte[] Content { get; set; }
@@ -256,7 +258,7 @@ public struct BinaryObject
     }
 }
 
-public struct Identifier
+public struct Identifier : IToImmutable<Im.Identifier>
 {
     [XmlElement(ElementName = "content")]
     public required string Content { get; set; }
@@ -291,5 +293,21 @@ public struct Identifier
     public Im.Identifier ToImmutable()
     {
         return new Im.Identifier(Content, SchemeIdentifier, SchemeVersionIdentifier);
+    }
+}
+
+// TODO: To own module?
+
+public interface IToImmutable<T>
+{
+    public T ToImmutable();
+}
+
+public static class ArrayToImmutableExt
+{
+    public static Im.Array<TResult> ToImmutable<T, TResult>(this IEnumerable<T> self)
+    where T : IToImmutable<TResult>
+    {
+        return new Im.Array<TResult>(self.Select(x => x.ToImmutable()));
     }
 }
