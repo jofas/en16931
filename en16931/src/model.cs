@@ -8,11 +8,10 @@ using Im = Dev.Fassbender.En16931.Model.Immutable;
 
 namespace Dev.Fassbender.En16931.Model;
 
-// TODO: ToImmutable() for mutable model
 // TODO: IR test as immutable model
 
 [XmlRoot(ElementName = "invoice", Namespace = "urn:todo")]
-public class Invoice
+public class Invoice : IToImmutable<Im.Invoice>
 {
     // BT-1
     [XmlElement(ElementName = "invoice-number")]
@@ -164,9 +163,50 @@ public class Invoice
     [XmlArray(ElementName = "invoice-lines")]
     [XmlArrayItem(ElementName = "invoice-line")]
     public InvoiceLine[] InvoiceLines { get; set; } = [];
+
+    public Im.Invoice ToImmutable()
+    {
+        return new Im.Invoice
+        {
+            InvoiceNumber = InvoiceNumber.ToImmutable(),
+            InvoiceIssueDate = InvoiceIssueDate.ToImmutable(),
+            InvoiceTypeCode = InvoiceTypeCode.ToImmutable(),
+            InvoiceCurrencyCode = InvoiceCurrencyCode.ToImmutable(),
+            VatAccountingCurrencyCode = VatAccountingCurrencyCode?.ToImmutable(),
+            ValueAddedTaxPointDate = ValueAddedTaxPointDate?.ToImmutable(),
+            ValueAddedTaxPointDateCode = ValueAddedTaxPointDateCode?.ToImmutable(),
+            PaymentDueDate = PaymentDueDate?.ToImmutable(),
+            BuyerReference = BuyerReference.ToImmutable(),
+            ProjectReference = ProjectReference?.ToImmutable(),
+            ContractReference = ContractReference?.ToImmutable(),
+            PurchaseOrderReference = PurchaseOrderReference?.ToImmutable(),
+            SalesOrderReference = SalesOrderReference?.ToImmutable(),
+            ReceivingAdviceReference = ReceivingAdviceReference?.ToImmutable(),
+            DespatchAdviceReference = DespatchAdviceReference?.ToImmutable(),
+            TenderOrLotReference = TenderOrLotReference?.ToImmutable(),
+            InvoicedObjectIdentifier = InvoicedObjectIdentifier?.ToImmutable(),
+            BuyerAccountingReference = BuyerAccountingReference?.ToImmutable(),
+            PaymentTerms = PaymentTerms?.ToImmutable(),
+            InvoiceNotes = InvoiceNotes.ToImmutable<InvoiceNote, Im.InvoiceNote>(),
+            ProcessControl = ProcessControl.ToImmutable(),
+            PrecedingInvoiceReferences = PrecedingInvoiceReferences.ToImmutable<PrecedingInvoiceReference, Im.PrecedingInvoiceReference>(),
+            Seller = Seller.ToImmutable(),
+            Buyer = Buyer.ToImmutable(),
+            Payee = Payee?.ToImmutable(),
+            SellerTaxRepresentativeParty = SellerTaxRepresentativeParty?.ToImmutable(),
+            DeliveryInformation = DeliveryInformation?.ToImmutable(),
+            PaymentInstructions = PaymentInstructions.ToImmutable(),
+            DocumentLevelAllowances = DocumentLevelAllowances.ToImmutable<DocumentLevelAllowance, Im.DocumentLevelAllowance>(),
+            DocumentLevelCharges = DocumentLevelCharges.ToImmutable<DocumentLevelCharge, Im.DocumentLevelCharge>(),
+            DocumentTotals = DocumentTotals.ToImmutable(),
+            VatBreakdown = VatBreakdown.ToImmutable<VatBreakdown, Im.VatBreakdown>(),
+            AdditionalSupportingDocuments = AdditionalSupportingDocuments.ToImmutable<AdditionalSupportingDocument, Im.AdditionalSupportingDocument>(),
+            InvoiceLines = InvoiceLines.ToImmutable<InvoiceLine, Im.InvoiceLine>(),
+        };
+    }
 }
 
-public class InvoiceNote
+public class InvoiceNote : IToImmutable<Im.InvoiceNote>
 {
     // BT-21
     [XmlElement(ElementName = "invoice-note-subject-code")]
@@ -175,9 +215,18 @@ public class InvoiceNote
     // BT-22
     [XmlElement(ElementName = "invoice-note")]
     public required Text Note { get; set; }
+
+    public Im.InvoiceNote ToImmutable()
+    {
+        return new Im.InvoiceNote
+        {
+            InvoiceNoteSubjectCode = InvoiceNoteSubjectCode?.ToImmutable(),
+            Note = Note.ToImmutable(),
+        };
+    }
 }
 
-public class ProcessControl
+public class ProcessControl : IToImmutable<Im.ProcessControl>
 {
     // BT-23
     [XmlElement(ElementName = "business-process-type")]
@@ -186,9 +235,18 @@ public class ProcessControl
     // BT-24
     [XmlElement(ElementName = "specification-identifier")]
     public required Identifier SpecificationIdentifier { get; set; }
+
+    public Im.ProcessControl ToImmutable()
+    {
+        return new Im.ProcessControl
+        {
+            BusinessProcessType = BusinessProcessType.ToImmutable(),
+            SpecificationIdentifier = SpecificationIdentifier.ToImmutable(),
+        };
+    }
 }
 
-public class PrecedingInvoiceReference
+public class PrecedingInvoiceReference : IToImmutable<Im.PrecedingInvoiceReference>
 {
     // BT-25
     [XmlElement(ElementName = "preceding-invoice-reference")]
@@ -197,9 +255,18 @@ public class PrecedingInvoiceReference
     // BT-26
     [XmlElement(ElementName = "preceding-invoice-issue-date")]
     public Date? PrecedingInvoiceIssueDate { get; set; }
+
+    public Im.PrecedingInvoiceReference ToImmutable()
+    {
+        return new Im.PrecedingInvoiceReference
+        {
+            Reference = Reference.ToImmutable(),
+            PrecedingInvoiceIssueDate = PrecedingInvoiceIssueDate?.ToImmutable(),
+        };
+    }
 }
 
-public class Seller
+public class Seller : IToImmutable<Im.Seller>
 {
     // BT-27
     [XmlElement(ElementName = "seller-name")]
@@ -242,9 +309,25 @@ public class Seller
     [XmlElement(ElementName = "seller-contact")]
     public required SellerContact SellerContact { get; set; }
 
+    public Im.Seller ToImmutable()
+    {
+        return new Im.Seller
+        {
+            SellerName = SellerName.ToImmutable(),
+            SellerTradingName = SellerTradingName?.ToImmutable(),
+            SellerIdentifiers = SellerIdentifiers.ToImmutable<Identifier, Im.Primitives.Identifier>(),
+            SellerLegalRegistrationIdentifier = SellerLegalRegistrationIdentifier?.ToImmutable(),
+            SellerVatIdentifier = SellerVatIdentifier?.ToImmutable(),
+            SellerTaxRegistrationIdentifier = SellerTaxRegistrationIdentifier?.ToImmutable(),
+            SellerAdditionalLegalInformation = SellerAdditionalLegalInformation?.ToImmutable(),
+            SellerElectronicAddress = SellerElectronicAddress.ToImmutable(),
+            SellerPostalAddress = SellerPostalAddress.ToImmutable(),
+            SellerContact = SellerContact.ToImmutable(),
+        };
+    }
 }
 
-public class SellerPostalAddress
+public class SellerPostalAddress : IToImmutable<Im.SellerPostalAddress>
 {
     // BT-35
     [XmlElement(ElementName = "seller-address-line-1")]
@@ -274,9 +357,23 @@ public class SellerPostalAddress
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     [XmlElement(ElementName = "seller-country-code")]
     public required Code SellerCountryCode { get; set; }
+
+    public Im.SellerPostalAddress ToImmutable()
+    {
+        return new Im.SellerPostalAddress
+        {
+            SellerAddressLine1 = SellerAddressLine1?.ToImmutable(),
+            SellerAddressLine2 = SellerAddressLine2?.ToImmutable(),
+            SellerAddressLine3 = SellerAddressLine3?.ToImmutable(),
+            SellerCity = SellerCity.ToImmutable(),
+            SellerPostCode = SellerPostCode.ToImmutable(),
+            SellerCountrySubdivision = SellerCountrySubdivision?.ToImmutable(),
+            SellerCountryCode = SellerCountryCode.ToImmutable(),
+        };
+    }
 }
 
-public class SellerContact
+public class SellerContact : IToImmutable<Im.SellerContact>
 {
     // BT-41
     [XmlElement(ElementName = "seller-contact-point")]
@@ -289,9 +386,19 @@ public class SellerContact
     // BT-43
     [XmlElement(ElementName = "seller-contact-email-address")]
     public required Text SellerContactEmailAddress { get; set; }
+
+    public Im.SellerContact ToImmutable()
+    {
+        return new Im.SellerContact
+        {
+            SellerContactPoint = SellerContactPoint.ToImmutable(),
+            SellerContactTelephoneNumber = SellerContactTelephoneNumber.ToImmutable(),
+            SellerContactEmailAddress = SellerContactEmailAddress.ToImmutable(),
+        };
+    }
 }
 
-public class Buyer
+public class Buyer : IToImmutable<Im.Buyer>
 {
     // BT-44
     [XmlElement(ElementName = "buyer-name")]
@@ -324,9 +431,24 @@ public class Buyer
     // BG-9
     [XmlElement(ElementName = "buyer-contact")]
     public BuyerContact? BuyerContact { get; set; }
+
+    public Im.Buyer ToImmutable()
+    {
+        return new Im.Buyer
+        {
+            BuyerName = BuyerName.ToImmutable(),
+            BuyerTradingName = BuyerTradingName?.ToImmutable(),
+            BuyerIdentifier = BuyerIdentifier?.ToImmutable(),
+            BuyerLegalRegistrationIdentifier = BuyerLegalRegistrationIdentifier?.ToImmutable(),
+            BuyerVatIdentifier = BuyerVatIdentifier?.ToImmutable(),
+            BuyerElectronicAddress = BuyerElectronicAddress?.ToImmutable(),
+            BuyerPostalAddress = BuyerPostalAddress.ToImmutable(),
+            BuyerContact = BuyerContact?.ToImmutable(),
+        };
+    }
 }
 
-public class BuyerPostalAddress
+public class BuyerPostalAddress : IToImmutable<Im.BuyerPostalAddress>
 {
     // BT-50
     [XmlElement(ElementName = "buyer-address-line-1")]
@@ -356,9 +478,23 @@ public class BuyerPostalAddress
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     [XmlElement(ElementName = "buyer-country-code")]
     public required Code BuyerCountryCode { get; set; }
+
+    public Im.BuyerPostalAddress ToImmutable()
+    {
+        return new Im.BuyerPostalAddress
+        {
+            BuyerAddressLine1 = BuyerAddressLine1?.ToImmutable(),
+            BuyerAddressLine2 = BuyerAddressLine2?.ToImmutable(),
+            BuyerAddressLine3 = BuyerAddressLine3?.ToImmutable(),
+            BuyerCity = BuyerCity.ToImmutable(),
+            BuyerPostCode = BuyerPostCode.ToImmutable(),
+            BuyerCountrySubdivision = BuyerCountrySubdivision?.ToImmutable(),
+            BuyerCountryCode = BuyerCountryCode.ToImmutable(),
+        };
+    }
 }
 
-public class BuyerContact
+public class BuyerContact : IToImmutable<Im.BuyerContact>
 {
     // BT-56
     [XmlElement(ElementName = "buyer-contact-point")]
@@ -371,9 +507,19 @@ public class BuyerContact
     // BT-58
     [XmlElement(ElementName = "buyer-contact-electronic-email")]
     public Text? EmailAddress { get; set; }
+
+    public Im.BuyerContact ToImmutable()
+    {
+        return new Im.BuyerContact
+        {
+            ContactPoint = ContactPoint?.ToImmutable(),
+            PhoneNumber = PhoneNumber?.ToImmutable(),
+            EmailAddress = EmailAddress?.ToImmutable(),
+        };
+    }
 }
 
-public class Payee
+public class Payee : IToImmutable<Im.Payee>
 {
     // BT-59
     [XmlElement(ElementName = "payee-name")]
@@ -386,9 +532,19 @@ public class Payee
     // BT-61
     [XmlElement(ElementName = "payee-legal-registration-identifier")]
     public Identifier? PayeeLegalRegistrationIdentifier { get; set; }
+
+    public Im.Payee ToImmutable()
+    {
+        return new Im.Payee
+        {
+            PayeeName = PayeeName.ToImmutable(),
+            PayeeIdentifier = PayeeIdentifier?.ToImmutable(),
+            PayeeLegalRegistrationIdentifier = PayeeLegalRegistrationIdentifier?.ToImmutable(),
+        };
+    }
 }
 
-public class SellerTaxRepresentativeParty
+public class SellerTaxRepresentativeParty : IToImmutable<Im.SellerTaxRepresentativeParty>
 {
     // BT-62
     [XmlElement(ElementName = "seller-tax-representative-name")]
@@ -401,9 +557,19 @@ public class SellerTaxRepresentativeParty
     // BG-12
     [XmlElement(ElementName = "seller-tax-representative-postal-address")]
     public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress { get; set; }
+
+    public Im.SellerTaxRepresentativeParty ToImmutable()
+    {
+        return new Im.SellerTaxRepresentativeParty
+        {
+            SellerTaxRepresentativeName = SellerTaxRepresentativeName.ToImmutable(),
+            SellerTaxRepresentativeVatIdentifier = SellerTaxRepresentativeVatIdentifier.ToImmutable(),
+            SellerTaxRepresentativePostalAddress = SellerTaxRepresentativePostalAddress.ToImmutable(),
+        };
+    }
 }
 
-public class SellerTaxRepresentativePostalAddress
+public class SellerTaxRepresentativePostalAddress : IToImmutable<Im.SellerTaxRepresentativePostalAddress>
 {
     // BT-64
     [XmlElement(ElementName = "tax-representative-address-line-1")]
@@ -433,9 +599,23 @@ public class SellerTaxRepresentativePostalAddress
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     [XmlElement(ElementName = "tax-representative-country-code")]
     public required Code TaxRepresentativeCountryCode { get; set; }
+
+    public Im.SellerTaxRepresentativePostalAddress ToImmutable()
+    {
+        return new Im.SellerTaxRepresentativePostalAddress
+        {
+            TaxRepresentativeAddressLine1 = TaxRepresentativeAddressLine1?.ToImmutable(),
+            TaxRepresentativeAddressLine2 = TaxRepresentativeAddressLine2?.ToImmutable(),
+            TaxRepresentativeAddressLine3 = TaxRepresentativeAddressLine3?.ToImmutable(),
+            TaxRepresentativeCity = TaxRepresentativeCity.ToImmutable(),
+            TaxRepresentativePostCode = TaxRepresentativePostCode.ToImmutable(),
+            TaxRepresentativeCountrySubdivision = TaxRepresentativeCountrySubdivision?.ToImmutable(),
+            TaxRepresentativeCountryCode = TaxRepresentativeCountryCode.ToImmutable(),
+        };
+    }
 }
 
-public class DeliveryInformation
+public class DeliveryInformation : IToImmutable<Im.DeliveryInformation>
 {
     // BT-70
     [XmlElement(ElementName = "deliver-to-party-name")]
@@ -456,9 +636,21 @@ public class DeliveryInformation
     // BG-15
     [XmlElement(ElementName = "deliver-to-address")]
     public DeliverToAddress? DeliverToAddress { get; set; }
+
+    public Im.DeliveryInformation ToImmutable()
+    {
+        return new Im.DeliveryInformation
+        {
+            DeliverToPartyName = DeliverToPartyName?.ToImmutable(),
+            DeliverToLocationIdentifier = DeliverToLocationIdentifier?.ToImmutable(),
+            ActualDeliveryDate = ActualDeliveryDate?.ToImmutable(),
+            InvoicingPeriod = InvoicingPeriod?.ToImmutable(),
+            DeliverToAddress = DeliverToAddress?.ToImmutable(),
+        };
+    }
 }
 
-public class InvoicingPeriod
+public class InvoicingPeriod : IToImmutable<Im.InvoicingPeriod>
 {
     // BT-73
     [XmlElement(ElementName = "invoicing-period-start-date")]
@@ -467,13 +659,22 @@ public class InvoicingPeriod
     // BT-74
     [XmlElement(ElementName = "invoicing-period-end-date")]
     public Date? InvoicingPeriodEndDate { get; set; }
+
+    public Im.InvoicingPeriod ToImmutable()
+    {
+        return new Im.InvoicingPeriod
+        {
+            InvoicingPeriodStartDate = InvoicingPeriodStartDate?.ToImmutable(),
+            InvoicingPeriodEndDate = InvoicingPeriodEndDate?.ToImmutable(),
+        };
+    }
 }
 
-public class DeliverToAddress
+public class DeliverToAddress : IToImmutable<Im.DeliverToAddress>
 {
     // BT-75
     [XmlElement(ElementName = "deliver-to-address-line-1")]
-    public required Text DeliverToAddressLine1 { get; set; }
+    public Text? DeliverToAddressLine1 { get; set; }
 
     // BT-76
     [XmlElement(ElementName = "deliver-to-address-line-2")]
@@ -499,9 +700,23 @@ public class DeliverToAddress
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     [XmlElement(ElementName = "deliver-to-country-code")]
     public required Code DeliverToCountryCode { get; set; }
+
+    public Im.DeliverToAddress ToImmutable()
+    {
+        return new Im.DeliverToAddress
+        {
+            DeliverToAddressLine1 = DeliverToAddressLine1?.ToImmutable(),
+            DeliverToAddressLine2 = DeliverToAddressLine2?.ToImmutable(),
+            DeliverToAddressLine3 = DeliverToAddressLine3?.ToImmutable(),
+            DeliverToCity = DeliverToCity.ToImmutable(),
+            DeliverToPostCode = DeliverToPostCode.ToImmutable(),
+            DeliverToCountrySubdivision = DeliverToCountrySubdivision?.ToImmutable(),
+            DeliverToCountryCode = DeliverToCountryCode.ToImmutable(),
+        };
+    }
 }
 
-public class PaymentInstructions
+public class PaymentInstructions : IToImmutable<Im.PaymentInstructions>
 {
     // BT-81
     // UNTDID-4461
@@ -528,9 +743,22 @@ public class PaymentInstructions
     // BG-19
     [XmlElement(ElementName = "direct-debit")]
     public DirectDebit? DirectDebit { get; set; }
+
+    public Im.PaymentInstructions ToImmutable()
+    {
+        return new Im.PaymentInstructions
+        {
+            PaymentMeansTypeCode = PaymentMeansTypeCode.ToImmutable(),
+            PaymentMeansText = PaymentMeansText?.ToImmutable(),
+            RemittanceInformation = RemittanceInformation?.ToImmutable(),
+            CreditTransfers = CreditTransfers.ToImmutable<CreditTransfer, Im.CreditTransfer>(),
+            PaymentCardInformation = PaymentCardInformation?.ToImmutable(),
+            DirectDebit = DirectDebit?.ToImmutable(),
+        };
+    }
 }
 
-public class CreditTransfer
+public class CreditTransfer : IToImmutable<Im.CreditTransfer>
 {
     // BT-84
     [XmlElement(ElementName = "payment-account-identifier")]
@@ -543,9 +771,19 @@ public class CreditTransfer
     // BT-86
     [XmlElement(ElementName = "payment-service-provider-identifier")]
     public Identifier? PaymentServiceProviderIdentifier { get; set; }
+
+    public Im.CreditTransfer ToImmutable()
+    {
+        return new Im.CreditTransfer
+        {
+            PaymentAccountIdentifier = PaymentAccountIdentifier.ToImmutable(),
+            PaymentAccountName = PaymentAccountName?.ToImmutable(),
+            PaymentServiceProviderIdentifier = PaymentServiceProviderIdentifier?.ToImmutable(),
+        };
+    }
 }
 
-public class PaymentCardInformation
+public class PaymentCardInformation : IToImmutable<Im.PaymentCardInformation>
 {
     // BT-87
     [XmlElement(ElementName = "payment-card-primary-account-number")]
@@ -554,9 +792,18 @@ public class PaymentCardInformation
     // BT-88
     [XmlElement(ElementName = "payment-card-holder-name")]
     public Text? PaymentCardHolderName { get; set; }
+
+    public Im.PaymentCardInformation ToImmutable()
+    {
+        return new Im.PaymentCardInformation
+        {
+            PaymentCardPrimaryAccountNumber = PaymentCardPrimaryAccountNumber.ToImmutable(),
+            PaymentCardHolderName = PaymentCardHolderName?.ToImmutable(),
+        };
+    }
 }
 
-public class DirectDebit
+public class DirectDebit : IToImmutable<Im.DirectDebit>
 {
     // BT-89
     [XmlElement(ElementName = "mandate-reference-identifier")]
@@ -569,9 +816,19 @@ public class DirectDebit
     // BT-91
     [XmlElement(ElementName = "debited-account-identifier")]
     public required Identifier DebitedAccountIdentifier { get; set; }
+
+    public Im.DirectDebit ToImmutable()
+    {
+        return new Im.DirectDebit
+        {
+            MandateReferenceIdentifier = MandateReferenceIdentifier.ToImmutable(),
+            BankAssignedCreditorIdentifier = BankAssignedCreditorIdentifier.ToImmutable(),
+            DebitedAccountIdentifier = DebitedAccountIdentifier.ToImmutable(),
+        };
+    }
 }
 
-public class DocumentLevelAllowance
+public class DocumentLevelAllowance : IToImmutable<Im.DocumentLevelAllowance>
 {
     // BT-92
     [XmlElement(ElementName = "document-level-allowance-amount")]
@@ -600,9 +857,23 @@ public class DocumentLevelAllowance
     // BT-98
     [XmlElement(ElementName = "document-level-allowance-reason-code")]
     public Code? DocumentLevelAllowanceReasonCode { get; set; }
+
+    public Im.DocumentLevelAllowance ToImmutable()
+    {
+        return new Im.DocumentLevelAllowance
+        {
+            DocumentLevelAllowanceAmount = DocumentLevelAllowanceAmount.ToImmutable(),
+            DocumentLevelAllowanceBaseAmount = DocumentLevelAllowanceBaseAmount?.ToImmutable(),
+            DocumentLevelAllowancePercentage = DocumentLevelAllowancePercentage?.ToImmutable(),
+            DocumentLevelAllowanceVatCategoryCode = DocumentLevelAllowanceVatCategoryCode.ToImmutable(),
+            DocumentLevelAllowanceVatRate = DocumentLevelAllowanceVatRate?.ToImmutable(),
+            DocumentLevelAllowanceReason = DocumentLevelAllowanceReason?.ToImmutable(),
+            DocumentLevelAllowanceReasonCode = DocumentLevelAllowanceReasonCode?.ToImmutable(),
+        };
+    }
 }
 
-public class DocumentLevelCharge
+public class DocumentLevelCharge : IToImmutable<Im.DocumentLevelCharge>
 {
     // BT-99
     [XmlElement(ElementName = "document-level-charge-amount")]
@@ -631,9 +902,23 @@ public class DocumentLevelCharge
     // BT-105
     [XmlElement(ElementName = "document-level-charge-reason-code")]
     public Code? DocumentLevelChargeReasonCode { get; set; }
+
+    public Im.DocumentLevelCharge ToImmutable()
+    {
+        return new Im.DocumentLevelCharge
+        {
+            DocumentLevelChargeAmount = DocumentLevelChargeAmount.ToImmutable(),
+            DocumentLevelChargeBaseAmount = DocumentLevelChargeBaseAmount?.ToImmutable(),
+            DocumentLevelChargePercentage = DocumentLevelChargePercentage?.ToImmutable(),
+            DocumentLevelChargeVatCategoryCode = DocumentLevelChargeVatCategoryCode.ToImmutable(),
+            DocumentLevelChargeVatRate = DocumentLevelChargeVatRate?.ToImmutable(),
+            DocumentLevelChargeReason = DocumentLevelChargeReason?.ToImmutable(),
+            DocumentLevelChargeReasonCode = DocumentLevelChargeReasonCode?.ToImmutable(),
+        };
+    }
 }
 
-public class DocumentTotals
+public class DocumentTotals : IToImmutable<Im.DocumentTotals>
 {
     // BT-106
     [XmlElement(ElementName = "sum-of-invoice-line-net-amount")]
@@ -674,9 +959,26 @@ public class DocumentTotals
     // BT-115
     [XmlElement(ElementName = "amount-due-for-payment")]
     public required Amount AmountDueForPayment { get; set; }
+
+    public Im.DocumentTotals ToImmutable()
+    {
+        return new Im.DocumentTotals
+        {
+            SumOfInvoiceLineNetAmount = SumOfInvoiceLineNetAmount.ToImmutable(),
+            SumOfAllowancesOnDocumentLevel = SumOfAllowancesOnDocumentLevel?.ToImmutable(),
+            SumOfChargesOnDocumentLevel = SumOfChargesOnDocumentLevel?.ToImmutable(),
+            InvoiceTotalAmountWithoutVat = InvoiceTotalAmountWithoutVat.ToImmutable(),
+            InvoiceTotalVatAmount = InvoiceTotalVatAmount?.ToImmutable(),
+            InvoiceTotalVatAmountInAccountingCurrency = InvoiceTotalVatAmountInAccountingCurrency?.ToImmutable(),
+            InvoiceTotalAmountWithVat = InvoiceTotalAmountWithVat.ToImmutable(),
+            PaidAmount = PaidAmount?.ToImmutable(),
+            RoundingAmount = RoundingAmount?.ToImmutable(),
+            AmountDueForPayment = AmountDueForPayment.ToImmutable(),
+        };
+    }
 }
 
-public class VatBreakdown
+public class VatBreakdown : IToImmutable<Im.VatBreakdown>
 {
     // BT-116
     [XmlElement(ElementName = "vat-category-taxable-amount")]
@@ -703,9 +1005,22 @@ public class VatBreakdown
     // VATEX Vat exemption reason code list
     [XmlElement(ElementName = "vat-exemption-reason-code")]
     public Code? VatExemptionReasonCode { get; set; }
+
+    public Im.VatBreakdown ToImmutable()
+    {
+        return new Im.VatBreakdown
+        {
+            VatCategoryTaxableAmount = VatCategoryTaxableAmount.ToImmutable(),
+            VatCategoryTaxAmount = VatCategoryTaxAmount.ToImmutable(),
+            VatCategoryCode = VatCategoryCode.ToImmutable(),
+            VatCategoryRate = VatCategoryRate.ToImmutable(),
+            VatExemptionReasonText = VatExemptionReasonText?.ToImmutable(),
+            VatExemptionReasonCode = VatExemptionReasonCode?.ToImmutable(),
+        };
+    }
 }
 
-public class AdditionalSupportingDocument
+public class AdditionalSupportingDocument : IToImmutable<Im.AdditionalSupportingDocument>
 {
     // BT-122
     [XmlElement(ElementName = "supporting-document-reference")]
@@ -722,9 +1037,20 @@ public class AdditionalSupportingDocument
     // BT-125
     [XmlElement(ElementName = "attached-document")]
     public BinaryObject? AttachedDocument { get; set; }
+
+    public Im.AdditionalSupportingDocument ToImmutable()
+    {
+        return new Im.AdditionalSupportingDocument
+        {
+            SupportingDocumentReference = SupportingDocumentReference.ToImmutable(),
+            SupportingDocumentDescription = SupportingDocumentDescription?.ToImmutable(),
+            ExternalDocumentLocation = ExternalDocumentLocation?.ToImmutable(),
+            AttachedDocument = AttachedDocument?.ToImmutable(),
+        };
+    }
 }
 
-public class InvoiceLine
+public class InvoiceLine : IToImmutable<Im.InvoiceLine>
 {
     // BT-126
     [XmlElement(ElementName = "invoice-line-identifier")]
@@ -783,6 +1109,27 @@ public class InvoiceLine
     // BG-31
     [XmlElement(ElementName = "item-information")]
     public required ItemInformation ItemInformation { get; set; }
+
+    public Im.InvoiceLine ToImmutable()
+    {
+        return new Im.InvoiceLine
+        {
+            InvoiceLineIdentifier = InvoiceLineIdentifier.ToImmutable(),
+            InvoiceLineNote = InvoiceLineNote?.ToImmutable(),
+            InvoiceLineObjectIdentifier = InvoiceLineObjectIdentifier?.ToImmutable(),
+            InvoicedQuantity = InvoicedQuantity.ToImmutable(),
+            InvoicedQuantityUnitOfMeasure = InvoicedQuantityUnitOfMeasure.ToImmutable(),
+            InvoiceLineNetAmount = InvoiceLineNetAmount.ToImmutable(),
+            ReferencedPurchaseOrderLineReference = ReferencedPurchaseOrderLineReference?.ToImmutable(),
+            InvoiceLineBuyerAccountingReference = InvoiceLineBuyerAccountingReference?.ToImmutable(),
+            InvoiceLinePeriod = InvoiceLinePeriod?.ToImmutable(),
+            InvoiceLineAllowances = InvoiceLineAllowances.ToImmutable<InvoiceLineAllowance, Im.InvoiceLineAllowance>(),
+            InvoiceLineCharges = InvoiceLineCharges.ToImmutable<InvoiceLineCharge, Im.InvoiceLineCharge>(),
+            PriceDetails = PriceDetails.ToImmutable(),
+            LineVatInformation = LineVatInformation.ToImmutable(),
+            ItemInformation = ItemInformation.ToImmutable(),
+        };
+    }
 }
 
 public class InvoiceLinePeriod : IToImmutable<Im.InvoiceLinePeriod>

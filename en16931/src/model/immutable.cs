@@ -356,7 +356,7 @@ public record InvoicingPeriod
 public record DeliverToAddress
 {
     // BT-75
-    public required Text DeliverToAddressLine1 { get; init; }
+    public required Text? DeliverToAddressLine1 { get; init; }
 
     // BT-76
     public required Text? DeliverToAddressLine2 { get; init; }
