@@ -20,50 +20,50 @@ public record Invoice
 
     // BT-6
     // ISO 4217 - Codes for the representation of currencies and funds - Alpha-3 representation
-    public Code? VatAccountingCurrencyCode { get; init; }
+    public required Code? VatAccountingCurrencyCode { get; init; }
 
     // BT-7
-    public Date? ValueAddedTaxPointDate { get; init; }
+    public required Date? ValueAddedTaxPointDate { get; init; }
 
     // BT-8
     // UNTDID 2005
-    public Code? ValueAddedTaxPointDateCode { get; init; }
+    public required Code? ValueAddedTaxPointDateCode { get; init; }
 
     // BT-9
-    public Date? PaymentDueDate { get; init; }
+    public required Date? PaymentDueDate { get; init; }
 
     // BT-10
     public required Text BuyerReference { get; init; }
 
     // BT-11
-    public DocumentReference? ProjectReference { get; init; }
+    public required DocumentReference? ProjectReference { get; init; }
 
     // BT-12
-    public DocumentReference? ContractReference { get; init; }
+    public required DocumentReference? ContractReference { get; init; }
 
     // BT-13
-    public DocumentReference? PurchaseOrderReference { get; init; }
+    public required DocumentReference? PurchaseOrderReference { get; init; }
 
     // BT-14
-    public DocumentReference? SalesOrderReference { get; init; }
+    public required DocumentReference? SalesOrderReference { get; init; }
 
     // BT-15
-    public DocumentReference? ReceivingAdviceReference { get; init; }
+    public required DocumentReference? ReceivingAdviceReference { get; init; }
 
     // BT-16
-    public DocumentReference? DespatchAdviceReference { get; init; }
+    public required DocumentReference? DespatchAdviceReference { get; init; }
 
     // BT-17
-    public DocumentReference? TenderOrLotReference { get; init; }
+    public required DocumentReference? TenderOrLotReference { get; init; }
 
     // BT-18
-    public Identifier? InvoicedObjectIdentifier { get; init; }
+    public required Identifier? InvoicedObjectIdentifier { get; init; }
 
     // BT-19
-    public Text? BuyerAccountingReference { get; init; }
+    public required Text? BuyerAccountingReference { get; init; }
 
     // BT-20
-    public Text? PaymentTerms { get; init; }
+    public required Text? PaymentTerms { get; init; }
 
     // BG-1
     public required Array<InvoiceNote> InvoiceNotes { get; init; }
@@ -81,13 +81,13 @@ public record Invoice
     public required Buyer Buyer { get; init; }
 
     // BG-10
-    public Payee? Payee { get; init; }
+    public required Payee? Payee { get; init; }
 
     // BG-11
-    public SellerTaxRepresentativeParty? SellerTaxRepresentativeParty { get; init; }
+    public required SellerTaxRepresentativeParty? SellerTaxRepresentativeParty { get; init; }
 
     // BG-13
-    public DeliveryInformation? DeliveryInformation { get; init; }
+    public required DeliveryInformation? DeliveryInformation { get; init; }
 
     // BG-16
     public required PaymentInstructions PaymentInstructions { get; init; }
@@ -118,7 +118,7 @@ public record Invoice
 public record InvoiceNote
 {
     // BT-21
-    public Code? InvoiceNoteSubjectCode { get; init; }
+    public required Code? InvoiceNoteSubjectCode { get; init; }
 
     // BT-22
     public required Text Note { get; init; }
@@ -139,7 +139,7 @@ public record PrecedingInvoiceReference
     public required DocumentReference Reference { get; init; }
 
     // BT-26
-    public Date? PrecedingInvoiceIssueDate { get; init; }
+    public required Date? PrecedingInvoiceIssueDate { get; init; }
 }
 
 public record Seller
@@ -148,22 +148,22 @@ public record Seller
     public required Text SellerName { get; init; }
 
     // BT-28
-    public Text? SellerTradingName { get; init; }
+    public required Text? SellerTradingName { get; init; }
 
     // BT-29
     public required Array<Identifier> SellerIdentifiers { get; init; }
 
     // BT-30
-    public Identifier? SellerLegalRegistrationIdentifier { get; init; }
+    public required Identifier? SellerLegalRegistrationIdentifier { get; init; }
 
     // BT-31
-    public Identifier? SellerVatIdentifier { get; init; }
+    public required Identifier? SellerVatIdentifier { get; init; }
 
     // BT-32
-    public Identifier? SellerTaxRegistrationIdentifier { get; init; }
+    public required Identifier? SellerTaxRegistrationIdentifier { get; init; }
 
     // BT-33
-    public Text? SellerAdditionalLegalInformation { get; init; }
+    public required Text? SellerAdditionalLegalInformation { get; init; }
 
     // BT-34
     public required Identifier SellerElectronicAddress { get; init; }
@@ -179,13 +179,13 @@ public record Seller
 public record SellerPostalAddress
 {
     // BT-35
-    public Text? SellerAddressLine1 { get; init; }
+    public required Text? SellerAddressLine1 { get; init; }
 
     // BT-36
-    public Text? SellerAddressLine2 { get; init; }
+    public required Text? SellerAddressLine2 { get; init; }
 
     // BT-162
-    public Text? SellerAddressLine3 { get; init; }
+    public required Text? SellerAddressLine3 { get; init; }
 
     // BT-37
     public required Text SellerCity { get; init; }
@@ -194,7 +194,7 @@ public record SellerPostalAddress
     public required Text SellerPostCode { get; init; }
 
     // BT-39
-    public Text? SellerCountrySubdivision { get; init; }
+    public required Text? SellerCountrySubdivision { get; init; }
 
     // BT-40
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
@@ -219,37 +219,37 @@ public record Buyer
     public required Text BuyerName { get; init; }
 
     // BT-45
-    public Text? BuyerTradingName { get; init; }
+    public required Text? BuyerTradingName { get; init; }
 
     // BT-46
-    public Identifier? BuyerIdentifier { get; init; }
+    public required Identifier? BuyerIdentifier { get; init; }
 
     // BT-47
-    public Identifier? BuyerLegalRegistrationIdentifier { get; init; }
+    public required Identifier? BuyerLegalRegistrationIdentifier { get; init; }
 
     // BT-48
-    public Identifier? BuyerVatIdentifier { get; init; }
+    public required Identifier? BuyerVatIdentifier { get; init; }
 
     // BT-49
-    public Identifier? BuyerElectronicAddress { get; init; }
+    public required Identifier? BuyerElectronicAddress { get; init; }
 
     // BG-8
     public required BuyerPostalAddress BuyerPostalAddress { get; init; }
 
     // BG-9
-    public BuyerContact? BuyerContact { get; init; }
+    public required BuyerContact? BuyerContact { get; init; }
 }
 
 public record BuyerPostalAddress
 {
     // BT-50
-    public Text? BuyerAddressLine1 { get; init; }
+    public required Text? BuyerAddressLine1 { get; init; }
 
     // BT-51
-    public Text? BuyerAddressLine2 { get; init; }
+    public required Text? BuyerAddressLine2 { get; init; }
 
     // BT-163
-    public Text? BuyerAddressLine3 { get; init; }
+    public required Text? BuyerAddressLine3 { get; init; }
 
     // BT-52
     public required Text BuyerCity { get; init; }
@@ -258,7 +258,7 @@ public record BuyerPostalAddress
     public required Text BuyerPostCode { get; init; }
 
     // BT-54
-    public Text? BuyerCountrySubdivision { get; init; }
+    public required Text? BuyerCountrySubdivision { get; init; }
 
     // BT-55
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
@@ -268,13 +268,13 @@ public record BuyerPostalAddress
 public record BuyerContact
 {
     // BT-56
-    public Text? ContactPoint { get; init; }
+    public required Text? ContactPoint { get; init; }
 
     // BT-57
-    public Text? PhoneNumber { get; init; }
+    public required Text? PhoneNumber { get; init; }
 
     // BT-58
-    public Text? EmailAddress { get; init; }
+    public required Text? EmailAddress { get; init; }
 }
 
 public record Payee
@@ -283,10 +283,10 @@ public record Payee
     public required Text PayeeName { get; init; }
 
     // BT-60
-    public Identifier? PayeeIdentifier { get; init; }
+    public required Identifier? PayeeIdentifier { get; init; }
 
     // BT-61
-    public Identifier? PayeeLegalRegistrationIdentifier { get; init; }
+    public required Identifier? PayeeLegalRegistrationIdentifier { get; init; }
 }
 
 public record SellerTaxRepresentativeParty
@@ -304,13 +304,13 @@ public record SellerTaxRepresentativeParty
 public record SellerTaxRepresentativePostalAddress
 {
     // BT-64
-    public Text? TaxRepresentativeAddressLine1 { get; init; }
+    public required Text? TaxRepresentativeAddressLine1 { get; init; }
 
     // BT-65
-    public Text? TaxRepresentativeAddressLine2 { get; init; }
+    public required Text? TaxRepresentativeAddressLine2 { get; init; }
 
     // BT-164
-    public Text? TaxRepresentativeAddressLine3 { get; init; }
+    public required Text? TaxRepresentativeAddressLine3 { get; init; }
 
     // BT-66
     public required Text TaxRepresentativeCity { get; init; }
@@ -319,7 +319,7 @@ public record SellerTaxRepresentativePostalAddress
     public required Text TaxRepresentativePostCode { get; init; }
 
     // BT-68
-    public Text? TaxRepresentativeCountrySubdivision { get; init; }
+    public required Text? TaxRepresentativeCountrySubdivision { get; init; }
 
     // BT-69
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
@@ -329,28 +329,28 @@ public record SellerTaxRepresentativePostalAddress
 public record DeliveryInformation
 {
     // BT-70
-    public Text? DeliverToPartyName { get; init; }
+    public required Text? DeliverToPartyName { get; init; }
 
     // BT-71
-    public Identifier? DeliverToLocationIdentifier { get; init; }
+    public required Identifier? DeliverToLocationIdentifier { get; init; }
 
     // BT-72
-    public Date? ActualDeliveryDate { get; init; }
+    public required Date? ActualDeliveryDate { get; init; }
 
     // BG-14
-    public InvoicingPeriod? InvoicingPeriod { get; init; }
+    public required InvoicingPeriod? InvoicingPeriod { get; init; }
 
     // BG-15
-    public DeliverToAddress? DeliverToAddress { get; init; }
+    public required DeliverToAddress? DeliverToAddress { get; init; }
 }
 
 public record InvoicingPeriod
 {
     // BT-73
-    public Date? InvoicingPeriodStartDate { get; init; }
+    public required Date? InvoicingPeriodStartDate { get; init; }
 
     // BT-74
-    public Date? InvoicingPeriodEndDate { get; init; }
+    public required Date? InvoicingPeriodEndDate { get; init; }
 }
 
 public record DeliverToAddress
@@ -359,10 +359,10 @@ public record DeliverToAddress
     public required Text DeliverToAddressLine1 { get; init; }
 
     // BT-76
-    public Text? DeliverToAddressLine2 { get; init; }
+    public required Text? DeliverToAddressLine2 { get; init; }
 
     // BT-165
-    public Text? DeliverToAddressLine3 { get; init; }
+    public required Text? DeliverToAddressLine3 { get; init; }
 
     // BT-77
     public required Text DeliverToCity { get; init; }
@@ -371,7 +371,7 @@ public record DeliverToAddress
     public required Text DeliverToPostCode { get; init; }
 
     // BT-79
-    public Text? DeliverToCountrySubdivision { get; init; }
+    public required Text? DeliverToCountrySubdivision { get; init; }
 
     // BT-80
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
@@ -385,19 +385,19 @@ public record PaymentInstructions
     public required Code PaymentMeansTypeCode { get; init; }
 
     // BT-82
-    public Text? PaymentMeansText { get; init; }
+    public required Text? PaymentMeansText { get; init; }
 
     // BT-83
-    public Text? RemittanceInformation { get; init; }
+    public required Text? RemittanceInformation { get; init; }
 
     // BG-17
     public required Array<CreditTransfer> CreditTransfers { get; init; }
 
     // BG-18
-    public PaymentCardInformation? PaymentCardInformation { get; init; }
+    public required PaymentCardInformation? PaymentCardInformation { get; init; }
 
     // BG-19
-    public DirectDebit? DirectDebit { get; init; }
+    public required DirectDebit? DirectDebit { get; init; }
 }
 
 public record CreditTransfer
@@ -406,10 +406,10 @@ public record CreditTransfer
     public required Identifier PaymentAccountIdentifier { get; init; }
 
     // BT-85
-    public Text? PaymentAccountName { get; init; }
+    public required Text? PaymentAccountName { get; init; }
 
     // BT-86
-    public Identifier? PaymentServiceProviderIdentifier { get; init; }
+    public required Identifier? PaymentServiceProviderIdentifier { get; init; }
 }
 
 public record PaymentCardInformation
@@ -418,7 +418,7 @@ public record PaymentCardInformation
     public required Text PaymentCardPrimaryAccountNumber { get; init; }
 
     // BT-88
-    public Text? PaymentCardHolderName { get; init; }
+    public required Text? PaymentCardHolderName { get; init; }
 }
 
 public record DirectDebit
@@ -439,22 +439,22 @@ public record DocumentLevelAllowance
     public required Amount DocumentLevelAllowanceAmount { get; init; }
 
     // BT-93
-    public Amount? DocumentLevelAllowanceBaseAmount { get; init; }
+    public required Amount? DocumentLevelAllowanceBaseAmount { get; init; }
 
     // BT-94
-    public Percentage? DocumentLevelAllowancePercentage { get; init; }
+    public required Percentage? DocumentLevelAllowancePercentage { get; init; }
 
     // BT-95
     public required Code DocumentLevelAllowanceVatCategoryCode { get; init; }
 
     // BT-96
-    public Percentage? DocumentLevelAllowanceVatRate { get; init; }
+    public required Percentage? DocumentLevelAllowanceVatRate { get; init; }
 
     // BT-97
-    public Text? DocumentLevelAllowanceReason { get; init; }
+    public required Text? DocumentLevelAllowanceReason { get; init; }
 
     // BT-98
-    public Code? DocumentLevelAllowanceReasonCode { get; init; }
+    public required Code? DocumentLevelAllowanceReasonCode { get; init; }
 }
 
 public record DocumentLevelCharge
@@ -463,22 +463,22 @@ public record DocumentLevelCharge
     public required Amount DocumentLevelChargeAmount { get; init; }
 
     // BT-100
-    public Amount? DocumentLevelChargeBaseAmount { get; init; }
+    public required Amount? DocumentLevelChargeBaseAmount { get; init; }
 
     // BT-101
-    public Percentage? DocumentLevelChargePercentage { get; init; }
+    public required Percentage? DocumentLevelChargePercentage { get; init; }
 
     // BT-102
     public required Code DocumentLevelChargeVatCategoryCode { get; init; }
 
     // BT-103
-    public Percentage? DocumentLevelChargeVatRate { get; init; }
+    public required Percentage? DocumentLevelChargeVatRate { get; init; }
 
     // BT-104
-    public Text? DocumentLevelChargeReason { get; init; }
+    public required Text? DocumentLevelChargeReason { get; init; }
 
     // BT-105
-    public Code? DocumentLevelChargeReasonCode { get; init; }
+    public required Code? DocumentLevelChargeReasonCode { get; init; }
 }
 
 public record DocumentTotals
@@ -487,28 +487,28 @@ public record DocumentTotals
     public required Amount SumOfInvoiceLineNetAmount { get; init; }
 
     // BT-107
-    public Amount? SumOfAllowancesOnDocumentLevel { get; init; }
+    public required Amount? SumOfAllowancesOnDocumentLevel { get; init; }
 
     // BT-108
-    public Amount? SumOfChargesOnDocumentLevel { get; init; }
+    public required Amount? SumOfChargesOnDocumentLevel { get; init; }
 
     // BT-109
     public required Amount InvoiceTotalAmountWithoutVat { get; init; }
 
     // BT-110
-    public Amount? InvoiceTotalVatAmount { get; init; }
+    public required Amount? InvoiceTotalVatAmount { get; init; }
 
     // BT-111
-    public Amount? InvoiceTotalVatAmountInAccountingCurrency { get; init; }
+    public required Amount? InvoiceTotalVatAmountInAccountingCurrency { get; init; }
 
     // BT-112
     public required Amount InvoiceTotalAmountWithVat { get; init; }
 
     // BT-113
-    public Amount? PaidAmount { get; init; }
+    public required Amount? PaidAmount { get; init; }
 
     // BT-114
-    public Amount? RoundingAmount { get; init; }
+    public required Amount? RoundingAmount { get; init; }
 
     // BT-115
     public required Amount AmountDueForPayment { get; init; }
@@ -530,11 +530,11 @@ public record VatBreakdown
     public required Percentage VatCategoryRate { get; init; }
 
     // BT-120
-    public Text? VatExemptionReasonText { get; init; }
+    public required Text? VatExemptionReasonText { get; init; }
 
     // BT-121
     // VATEX Vat exemption reason code list
-    public Code? VatExemptionReasonCode { get; init; }
+    public required Code? VatExemptionReasonCode { get; init; }
 }
 
 public record AdditionalSupportingDocument
@@ -543,13 +543,13 @@ public record AdditionalSupportingDocument
     public required DocumentReference SupportingDocumentReference { get; init; }
 
     // BT-123
-    public Text? SupportingDocumentDescription { get; init; }
+    public required Text? SupportingDocumentDescription { get; init; }
 
     // BT-124
-    public Text? ExternalDocumentLocation { get; init; }
+    public required Text? ExternalDocumentLocation { get; init; }
 
     // BT-125
-    public BinaryObject? AttachedDocument { get; init; }
+    public required BinaryObject? AttachedDocument { get; init; }
 }
 
 public record InvoiceLine
@@ -558,10 +558,10 @@ public record InvoiceLine
     public required Identifier InvoiceLineIdentifier { get; init; }
 
     // BT-127
-    public Text? InvoiceLineNote { get; init; }
+    public required Text? InvoiceLineNote { get; init; }
 
     // BT-128
-    public Identifier? InvoiceLineObjectIdentifier { get; init; }
+    public required Identifier? InvoiceLineObjectIdentifier { get; init; }
 
     // BT-129
     public required Quantity InvoicedQuantity { get; init; }
@@ -573,13 +573,13 @@ public record InvoiceLine
     public required Amount InvoiceLineNetAmount { get; init; }
 
     // BT-132
-    public DocumentReference? ReferencedPurchaseOrderLineReference { get; init; }
+    public required DocumentReference? ReferencedPurchaseOrderLineReference { get; init; }
 
     // BT-133
-    public Text? InvoiceLineBuyerAccountingReference { get; init; }
+    public required Text? InvoiceLineBuyerAccountingReference { get; init; }
 
     // BG-26
-    public InvoiceLinePeriod? InvoiceLinePeriod { get; init; }
+    public required InvoiceLinePeriod? InvoiceLinePeriod { get; init; }
 
     // BG-27
     public required Array<InvoiceLineAllowance> InvoiceLineAllowances { get; init; }
@@ -600,10 +600,10 @@ public record InvoiceLine
 public record InvoiceLinePeriod
 {
     // BT-134
-    public Date? InvoiceLinePeriodStartDate { get; init; }
+    public required Date? InvoiceLinePeriodStartDate { get; init; }
 
     // BT-135
-    public Date? InvoiceLinePeriodEndDate { get; init; }
+    public required Date? InvoiceLinePeriodEndDate { get; init; }
 }
 
 public record InvoiceLineAllowance
@@ -612,16 +612,16 @@ public record InvoiceLineAllowance
     public required Amount InvoiceLineAllowanceAmount { get; init; }
 
     // BT-137
-    public Amount? InvoiceLineAllowanceBaseAmount { get; init; }
+    public required Amount? InvoiceLineAllowanceBaseAmount { get; init; }
 
     // BT-138
-    public Percentage? InvoiceLineAllowancePercentage { get; init; }
+    public required Percentage? InvoiceLineAllowancePercentage { get; init; }
 
     // BT-139
-    public Text? InvoiceLineAllowanceReason { get; init; }
+    public required Text? InvoiceLineAllowanceReason { get; init; }
 
     // BT-140
-    public Code? InvoiceLineAllowanceReasonCode { get; init; }
+    public required Code? InvoiceLineAllowanceReasonCode { get; init; }
 }
 
 public record InvoiceLineCharge
@@ -630,16 +630,16 @@ public record InvoiceLineCharge
     public required Amount InvoiceLineChargeAmount { get; init; }
 
     // BT-142
-    public Amount? InvoiceLineChargeBaseAmount { get; init; }
+    public required Amount? InvoiceLineChargeBaseAmount { get; init; }
 
     // BT-143
-    public Percentage? InvoiceLineChargePercentage { get; init; }
+    public required Percentage? InvoiceLineChargePercentage { get; init; }
 
     // BT-144
-    public Text? InvoiceLineChargeReason { get; init; }
+    public required Text? InvoiceLineChargeReason { get; init; }
 
     // BT-145
-    public Code? InvoiceLineChargeReasonCode { get; init; }
+    public required Code? InvoiceLineChargeReasonCode { get; init; }
 }
 
 public record PriceDetails
@@ -648,17 +648,17 @@ public record PriceDetails
     public required UnitPriceAmount ItemNetPrice { get; init; }
 
     // BT-147
-    public UnitPriceAmount? ItemPriceDiscount { get; init; }
+    public required UnitPriceAmount? ItemPriceDiscount { get; init; }
 
     // BT-148
-    public UnitPriceAmount? ItemGrossPrice { get; init; }
+    public required UnitPriceAmount? ItemGrossPrice { get; init; }
 
     // BT-149
-    public Quantity? ItemPriceBaseQuantity { get; init; }
+    public required Quantity? ItemPriceBaseQuantity { get; init; }
 
     // BT-150
     // UN/ECE Rec No 20,21
-    public Code? ItemPriceBaseQuantityUnitOfMeasure { get; init; }
+    public required Code? ItemPriceBaseQuantityUnitOfMeasure { get; init; }
 }
 
 public record LineVatInformation
@@ -668,7 +668,7 @@ public record LineVatInformation
     public required Code InvoicedItemVatCategoryCode { get; init; }
 
     // BT-152
-    public Percentage? InvoicedItemVatRate { get; init; }
+    public required Percentage? InvoicedItemVatRate { get; init; }
 }
 
 public record ItemInformation
@@ -677,16 +677,16 @@ public record ItemInformation
     public required Text ItemName { get; init; }
 
     // BT-154
-    public Text? ItemDescription { get; init; }
+    public required Text? ItemDescription { get; init; }
 
     // BT-155
-    public Identifier? ItemSellersIdentifier { get; init; }
+    public required Identifier? ItemSellersIdentifier { get; init; }
 
     // BT-156
-    public Identifier? ItemBuyersIdentifier { get; init; }
+    public required Identifier? ItemBuyersIdentifier { get; init; }
 
     // BT-157
-    public Identifier? ItemStandardIdentifier { get; init; }
+    public required Identifier? ItemStandardIdentifier { get; init; }
 
     // BT-158
     // UNTDID 7143
@@ -694,7 +694,7 @@ public record ItemInformation
 
     // BT-159
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2 representation
-    public Code? ItemCountryOfOrigin { get; init; }
+    public required Code? ItemCountryOfOrigin { get; init; }
 
     // BG-32
     public required Array<ItemAttribute> ItemAttributes { get; init; }

@@ -21,22 +21,30 @@ public record struct Identifier
 {
     public required string Content { get; init; }
 
-    public string? SchemeIdentifier { get; init; }
+    public required string? SchemeIdentifier { get; init; }
 
-    public string? SchemeVersionIdentifier { get; init; }
-
-    [SetsRequiredMembers]
-    public Identifier(string content) => Content = content;
+    public required string? SchemeVersionIdentifier { get; init; }
 
     [SetsRequiredMembers]
-    public Identifier(string content, string schemeIdentifier) : this(content)
+    public Identifier(string content)
     {
-        SchemeIdentifier = schemeIdentifier;
+        Content = content;
+        SchemeIdentifier = null;
+        SchemeVersionIdentifier = null;
     }
 
     [SetsRequiredMembers]
-    public Identifier(string content, string schemeIdentifier, string schemeVersionIdentifier) : this(content)
+    public Identifier(string content, string schemeIdentifier)
     {
+        Content = content;
+        SchemeIdentifier = schemeIdentifier;
+        SchemeVersionIdentifier = null;
+    }
+
+    [SetsRequiredMembers]
+    public Identifier(string content, string schemeIdentifier, string schemeVersionIdentifier)
+    {
+        Content = content;
         SchemeIdentifier = schemeIdentifier;
         SchemeVersionIdentifier = schemeVersionIdentifier;
     }
