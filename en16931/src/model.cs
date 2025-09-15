@@ -503,7 +503,7 @@ public class BuyerContact : IToImmutable<Im.BuyerContact>
     public Text? PhoneNumber { get; set; }
 
     // BT-58
-    [XmlElement(ElementName = "buyer-contact-electronic-email")]
+    [XmlElement(ElementName = "buyer-contact-email-address")]
     public Text? EmailAddress { get; set; }
 
     public Im.BuyerContact ToImmutable()
@@ -996,7 +996,7 @@ public class VatBreakdown : IToImmutable<Im.VatBreakdown>
     public required Percentage VatCategoryRate { get; set; }
 
     // BT-120
-    [XmlElement(ElementName = "vat-exemption-reason")]
+    [XmlElement(ElementName = "vat-exemption-reason-text")]
     public Text? VatExemptionReasonText { get; set; }
 
     // BT-121
@@ -1067,8 +1067,8 @@ public class InvoiceLine : IToImmutable<Im.InvoiceLine>
     public required Quantity InvoicedQuantity { get; set; }
 
     // BT-130
-    [XmlElement(ElementName = "invoiced-quantity-unit-of-measure")]
-    public required Code InvoicedQuantityUnitOfMeasure { get; set; }
+    [XmlElement(ElementName = "invoiced-quantity-unit-of-measure-code")]
+    public required Code InvoicedQuantityUnitOfMeasureCode { get; set; }
 
     // BT-131
     [XmlElement(ElementName = "invoice-line-net-amount")]
@@ -1116,7 +1116,7 @@ public class InvoiceLine : IToImmutable<Im.InvoiceLine>
             InvoiceLineNote = InvoiceLineNote?.ToImmutable(),
             InvoiceLineObjectIdentifier = InvoiceLineObjectIdentifier?.ToImmutable(),
             InvoicedQuantity = InvoicedQuantity.ToImmutable(),
-            InvoicedQuantityUnitOfMeasure = InvoicedQuantityUnitOfMeasure.ToImmutable(),
+            InvoicedQuantityUnitOfMeasureCode = InvoicedQuantityUnitOfMeasureCode.ToImmutable(),
             InvoiceLineNetAmount = InvoiceLineNetAmount.ToImmutable(),
             ReferencedPurchaseOrderLineReference = ReferencedPurchaseOrderLineReference?.ToImmutable(),
             InvoiceLineBuyerAccountingReference = InvoiceLineBuyerAccountingReference?.ToImmutable(),
@@ -1240,8 +1240,8 @@ public class PriceDetails : IToImmutable<Im.PriceDetails>
 
     // BT-150
     // UN/ECE Rec No 20,21
-    [XmlElement(ElementName = "item-price-base-quantity-unit-of-measure")]
-    public Code? ItemPriceBaseQuantityUnitOfMeasure { get; set; }
+    [XmlElement(ElementName = "item-price-base-quantity-unit-of-measure-code")]
+    public Code? ItemPriceBaseQuantityUnitOfMeasureCode { get; set; }
 
     public Im.PriceDetails ToImmutable()
     {
@@ -1251,7 +1251,7 @@ public class PriceDetails : IToImmutable<Im.PriceDetails>
             ItemPriceDiscount = ItemPriceDiscount?.ToImmutable(),
             ItemGrossPrice = ItemGrossPrice?.ToImmutable(),
             ItemPriceBaseQuantity = ItemPriceBaseQuantity?.ToImmutable(),
-            ItemPriceBaseQuantityUnitOfMeasure = ItemPriceBaseQuantityUnitOfMeasure?.ToImmutable(),
+            ItemPriceBaseQuantityUnitOfMeasureCode = ItemPriceBaseQuantityUnitOfMeasureCode?.ToImmutable(),
         };
     }
 }

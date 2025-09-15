@@ -79,4 +79,10 @@ public struct Array<T> : IEquatable<Array<T>>
     }
 
     #endregion
+
+    public override String ToString()
+    {
+        string items = string.Join(", ", Value);
+        return $"Array {{ Value = [{items}] }}";
+    }
 }

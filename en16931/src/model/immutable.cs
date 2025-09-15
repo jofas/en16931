@@ -567,7 +567,7 @@ public record InvoiceLine
     public required Quantity InvoicedQuantity { get; init; }
 
     // BT-130
-    public required Code InvoicedQuantityUnitOfMeasure { get; init; }
+    public required Code InvoicedQuantityUnitOfMeasureCode { get; init; }
 
     // BT-131
     public required Amount InvoiceLineNetAmount { get; init; }
@@ -658,7 +658,7 @@ public record PriceDetails
 
     // BT-150
     // UN/ECE Rec No 20,21
-    public required Code? ItemPriceBaseQuantityUnitOfMeasure { get; init; }
+    public required Code? ItemPriceBaseQuantityUnitOfMeasureCode { get; init; }
 }
 
 public record LineVatInformation

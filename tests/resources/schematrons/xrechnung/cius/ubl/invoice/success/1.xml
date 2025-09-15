@@ -160,6 +160,7 @@
   <cac:PayeeParty>
     <cac:PartyIdentification>
       <cbc:ID>74</cbc:ID>
+      <cbc:CompanyID schemeID="0204">90000000-03083-72</cbc:CompanyID>
     </cac:PartyIdentification>
     <cac:PartyName>
       <cbc:Name>[Payee name]</cbc:Name>
@@ -176,7 +177,7 @@
       <cbc:PostalZone>12345</cbc:PostalZone>
       <cbc:CountrySubentity>Bayern</cbc:CountrySubentity>
       <cac:AddressLine>
-        <cbc:Line>[Seller tax representative address line 2]</cbc:Line>
+        <cbc:Line>[Seller tax representative address line 3]</cbc:Line>
       </cac:AddressLine>
       <cac:Country>
         <cbc:IdentificationCode>DE</cbc:IdentificationCode>
@@ -325,6 +326,7 @@
     <cbc:AllowanceTotalAmount currencyID="EUR">20</cbc:AllowanceTotalAmount>
     <cbc:ChargeTotalAmount currencyID="EUR">20</cbc:ChargeTotalAmount>
     <cbc:PrepaidAmount currencyID="EUR">0</cbc:PrepaidAmount>
+    <cbc:PayableRoundingAmount currencyID="EUR">0</cbc:PayableRoundingAmount>
     <cbc:PayableAmount currencyID="EUR">12829.69</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:InvoiceLine>

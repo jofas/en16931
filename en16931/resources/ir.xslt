@@ -397,7 +397,9 @@
             <xsl:value-of select="cac:TaxRepresentativeParty/cac:PartyName/cbc:Name"/>
           </seller-tax-representative-name>
           <seller-tax-representative-vat-identifier id="bt-63">
-            <xsl:value-of select="cac:TaxRepresentativeParty/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:CompanyID"/>
+            <content>
+              <xsl:value-of select="cac:TaxRepresentativeParty/cac:PartyTaxScheme[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:CompanyID"/>
+            </content>
           </seller-tax-representative-vat-identifier>
           <seller-tax-representative-postal-address id="bg-12">
             <xsl:if test="exists(cac:TaxRepresentativeParty/cac:PostalAddress/cbc:StreetName)">
@@ -681,14 +683,14 @@
         <invoice-total-amount-without-vat id="bt-109">
           <xsl:value-of select="cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"/>
         </invoice-total-amount-without-vat>
-        <xsl:if test="exists(cac:TaxTotal/cbc:TaxAmount[@currencyID=cbc:DocumentCurrencyCode])">
+        <xsl:if test="exists(cac:TaxTotal/cbc:TaxAmount[@currencyID=/ubl:Invoice/cbc:DocumentCurrencyCode])">
           <invoice-total-vat-amount id="bt-110">
-            <xsl:value-of select="cac:TaxTotal/cbc:TaxAmount[@currencyID=cbc:DocumentCurrencyCode]"/>
+              <xsl:value-of select="cac:TaxTotal/cbc:TaxAmount[@currencyID=/ubl:Invoice/cbc:DocumentCurrencyCode]"/>
           </invoice-total-vat-amount>
         </xsl:if>
-        <xsl:if test="exists(cac:TaxTotal/cbc:TaxAmount[@currencyID=cbc:TaxCurrencyCode])">
+        <xsl:if test="exists(cac:TaxTotal/cbc:TaxAmount[@currencyID=/ubl:Invoice/cbc:TaxCurrencyCode])">
           <invoice-total-vat-amount-in-accounting-currency id="bt-111">
-            <xsl:value-of select="cac:TaxTotal/cbc:TaxAmount[@currencyID=cbc:TaxCurrencyCode]"/>
+              <xsl:value-of select="cac:TaxTotal/cbc:TaxAmount[@currencyID=/ubl:Invoice/cbc:TaxCurrencyCode]"/>
           </invoice-total-vat-amount-in-accounting-currency>
         </xsl:if>
         <invoice-total-amount-with-vat id="bt-112">
@@ -914,9 +916,9 @@
                 </item-price-base-quantity>
               </xsl:if>
               <xsl:if test="exists(./cac:Price/cbc:BaseQuantity[@unitCode])">
-                <item-price-base-quantity-unit-of-measure id="bt-150">
+                <item-price-base-quantity-unit-of-measure-code id="bt-150">
                   <xsl:value-of select="./cac:Price/cbc:BaseQuantity/@unitCode"/>
-                </item-price-base-quantity-unit-of-measure>
+                </item-price-base-quantity-unit-of-measure-code>
               </xsl:if>
             </price-details>
             <line-vat-information id="bg-30">
@@ -981,7 +983,7 @@
                   </xsl:for-each>
                 </item-classification-identifiers>
               </xsl:if>
-              <xsl:if test="exists(./cacItem/cac:OriginCountry/cbc:IdentificationCode)">
+              <xsl:if test="exists(./cac:Item/cac:OriginCountry/cbc:IdentificationCode)">
                 <item-country-of-origin id="bt-159">
                   <xsl:value-of select="./cac:Item/cac:OriginCountry/cbc:IdentificationCode"/>
                 </item-country-of-origin>

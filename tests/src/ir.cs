@@ -48,21 +48,21 @@ public class IR
             InvoiceIssueDate = new Date(new DateTime(2018, 4, 13)),
             InvoiceTypeCode = new Code("380"),
             InvoiceCurrencyCode = new Code("EUR"),
-            VatAccountingCurrencyCode = null,
-            ValueAddedTaxPointDate = null,
+            VatAccountingCurrencyCode = new Code("GBP"),
+            ValueAddedTaxPointDate = new Date(new DateTime(2018, 4, 13)),
             ValueAddedTaxPointDateCode = null,
-            PaymentDueDate = null,
+            PaymentDueDate = new Date(new DateTime(2018, 4, 13)),
             BuyerReference = new Text("90000000-03083-72"),
-            ProjectReference = null,
-            ContractReference = null,
-            PurchaseOrderReference = null,
-            SalesOrderReference = null,
-            ReceivingAdviceReference = null,
-            DespatchAdviceReference = null,
-            TenderOrLotReference = null,
-            InvoicedObjectIdentifier = null,
-            BuyerAccountingReference = null,
-            PaymentTerms = null,
+            ProjectReference = new DocumentReference("PR12345678"),
+            ContractReference = new DocumentReference("0000000752"),
+            PurchaseOrderReference = new DocumentReference("65002278"),
+            SalesOrderReference = new DocumentReference("ABC123456789"),
+            ReceivingAdviceReference = new DocumentReference("RAR123456789"),
+            DespatchAdviceReference = new DocumentReference("DAR123456789"),
+            TenderOrLotReference = new DocumentReference("ANG987654321"),
+            InvoicedObjectIdentifier = new Identifier("OK987654321"),
+            BuyerAccountingReference = new Text("Buchungscode1"),
+            PaymentTerms = new Text("Beschreibung 1: Bitte überweisen Sie bis zum 13.04.2018 auf das unten aufgeführte Konto."),
             InvoiceNotes = new Array<InvoiceNote>([
                 new InvoiceNote {
                     InvoiceNoteSubjectCode = new Code("AAC"),
@@ -139,12 +139,51 @@ public class IR
                 {
                     ContactPoint = new Text("Tina Tester"),
                     PhoneNumber = new Text("0800 123456"),
-                    EmailAddress = null,
+                    EmailAddress = new Text("tester@test.de"),
                 },
             },
-            Payee = null,
-            SellerTaxRepresentativeParty = null,
-            DeliveryInformation = null,
+            Payee = new Payee
+            {
+                PayeeName = new Text("[Payee name]"),
+                PayeeIdentifier = new Identifier("74"),
+                PayeeLegalRegistrationIdentifier = new Identifier("90000000-03083-72", "0204"),
+            },
+            SellerTaxRepresentativeParty = new SellerTaxRepresentativeParty
+            {
+                SellerTaxRepresentativeName = new Text("[Seller tax representative name]"),
+                SellerTaxRepresentativeVatIdentifier = new Identifier("DE124567"),
+                SellerTaxRepresentativePostalAddress = new SellerTaxRepresentativePostalAddress
+                {
+                    TaxRepresentativeAddressLine1 = new Text("[Seller tax representative address line 1]"),
+                    TaxRepresentativeAddressLine2 = new Text("[Seller tax representative address line 2]"),
+                    TaxRepresentativeAddressLine3 = new Text("[Seller tax representative address line 3]"),
+                    TaxRepresentativeCity = new Text("[Seller tax representative city]"),
+                    TaxRepresentativePostCode = new Text("12345"),
+                    TaxRepresentativeCountrySubdivision = new Text("Bayern"),
+                    TaxRepresentativeCountryCode = new Code("DE"),
+                },
+            },
+            DeliveryInformation = new DeliveryInformation
+            {
+                DeliverToPartyName = new Text("[Deliver to party name]"),
+                DeliverToLocationIdentifier = new Identifier("68"),
+                ActualDeliveryDate = new Date(new DateTime(2018, 4, 13)),
+                InvoicingPeriod = new InvoicingPeriod
+                {
+                    InvoicingPeriodStartDate = new Date(new DateTime(2018, 4, 13)),
+                    InvoicingPeriodEndDate = new Date(new DateTime(2018, 4, 13)),
+                },
+                DeliverToAddress = new DeliverToAddress
+                {
+                    DeliverToAddressLine1 = new Text("[Deliver to street]"),
+                    DeliverToAddressLine2 = new Text("4. OG"),
+                    DeliverToAddressLine3 = new Text("More Details"),
+                    DeliverToCity = new Text("[Deliver to city]"),
+                    DeliverToPostCode = new Text("98765"),
+                    DeliverToCountrySubdivision = new Text("Bayern"),
+                    DeliverToCountryCode = new Code("DE"),
+                },
+            },
             PaymentInstructions = new PaymentInstructions
             {
                 PaymentMeansTypeCode = new Code("58"),
@@ -203,14 +242,14 @@ public class IR
             DocumentTotals = new DocumentTotals
             {
                 SumOfInvoiceLineNetAmount = new Amount(10781.25m),
-                SumOfAllowancesOnDocumentLevel = null,
-                SumOfChargesOnDocumentLevel = null,
+                SumOfAllowancesOnDocumentLevel = new Amount(20m),
+                SumOfChargesOnDocumentLevel = new Amount(20m),
                 InvoiceTotalAmountWithoutVat = new Amount(10781.25m),
-                InvoiceTotalVatAmount = null,
-                InvoiceTotalVatAmountInAccountingCurrency = null,
+                InvoiceTotalVatAmount = new Amount(2048.44m),
+                InvoiceTotalVatAmountInAccountingCurrency = new Amount(2048.44m),
                 InvoiceTotalAmountWithVat = new Amount(12829.69m),
-                PaidAmount = null,
-                RoundingAmount = null,
+                PaidAmount = new Amount(0),
+                RoundingAmount = new Amount(0),
                 AmountDueForPayment = new Amount(12829.69m),
             },
             VatBreakdown = new Array<VatBreakdown>([
@@ -227,7 +266,7 @@ public class IR
                     VatCategoryTaxAmount = new Amount(0m),
                     VatCategoryCode = new Code("E"),
                     VatCategoryRate = new Percentage(0m),
-                    VatExemptionReasonText = null,
+                    VatExemptionReasonText = new Text("[VAT exemption reason text]"),
                     VatExemptionReasonCode = new Code("VATEX-EU-132-1A"),
                 },
             ]),
@@ -253,24 +292,157 @@ public class IR
                     ),
                 },
             ]),
-            InvoiceLines = new Array<InvoiceLine>([]),
+            InvoiceLines = new Array<InvoiceLine>([
+                new InvoiceLine {
+                    InvoiceLineIdentifier = new Identifier("1"),
+                    InvoiceLineNote = new Text("Die letzte Lieferung im Rahmen des abgerechneten Abonnements erfolgt in 12/2016 Lieferung erfolgt / erfolgte direkt vom Verlag"),
+                    InvoiceLineObjectIdentifier = new Identifier("ANG987654321", "ABZ"),
+                    InvoicedQuantity = new Quantity(30m),
+                    InvoicedQuantityUnitOfMeasureCode = new Code("XPP"),
+                    InvoiceLineNetAmount = new Amount(4743.75m),
+                    ReferencedPurchaseOrderLineReference = new DocumentReference("6171175.1"),
+                    InvoiceLineBuyerAccountingReference = new Text("Konto 1"),
+                    InvoiceLinePeriod = new InvoiceLinePeriod {
+                        InvoiceLinePeriodStartDate = new Date(new DateTime(2018, 04, 13)),
+                        InvoiceLinePeriodEndDate = new Date(new DateTime(2018, 04, 13)),
+                    },
+                    InvoiceLineAllowances = new Array<InvoiceLineAllowance>([
+                        new InvoiceLineAllowance {
+                            InvoiceLineAllowanceAmount = new Amount(20m),
+                            InvoiceLineAllowanceBaseAmount = new Amount(200m),
+                            InvoiceLineAllowancePercentage = new Percentage(10m),
+                            InvoiceLineAllowanceReason = new Text("Fixed long term"),
+                            InvoiceLineAllowanceReasonCode = new Code("102"),
+                        },
+                        new InvoiceLineAllowance {
+                            InvoiceLineAllowanceAmount = new Amount(20m),
+                            InvoiceLineAllowanceBaseAmount = new Amount(200m),
+                            InvoiceLineAllowancePercentage = new Percentage(10m),
+                            InvoiceLineAllowanceReason = new Text("Fixed long term 2"),
+                            InvoiceLineAllowanceReasonCode = new Code("102"),
+                        }
+                    ]),
+                    InvoiceLineCharges = new Array<InvoiceLineCharge>([
+                        new InvoiceLineCharge {
+                            InvoiceLineChargeAmount = new Amount(20m),
+                            InvoiceLineChargeBaseAmount = new Amount(200m),
+                            InvoiceLineChargePercentage = new Percentage(10m),
+                            InvoiceLineChargeReason = new Text("Testing"),
+                            InvoiceLineChargeReasonCode = new Code("TAC"),
+                        },
+                        new InvoiceLineCharge {
+                            InvoiceLineChargeAmount = new Amount(20m),
+                            InvoiceLineChargeBaseAmount = new Amount(200m),
+                            InvoiceLineChargePercentage = new Percentage(10m),
+                            InvoiceLineChargeReason = new Text("Testing 2"),
+                            InvoiceLineChargeReasonCode = new Code("TAC"),
+                        },
+                    ]),
+                    PriceDetails = new PriceDetails {
+                        ItemNetPrice = new UnitPriceAmount(158.125m),
+                        ItemPriceDiscount = new UnitPriceAmount(10m),
+                        ItemGrossPrice = new UnitPriceAmount(168.125m),
+                        ItemPriceBaseQuantity = new Quantity(1m),
+                        ItemPriceBaseQuantityUnitOfMeasureCode = new Code("XPP"),
+                    },
+                    LineVatInformation = new LineVatInformation {
+                        InvoicedItemVatCategoryCode = new Code("S"),
+                        InvoicedItemVatRate = new Percentage(19m),
+                    },
+                    ItemInformation = new ItemInformation {
+                        ItemName = new Text("Beratung"),
+                        ItemDescription = new Text("Anforderungsmanagement"),
+                        ItemSellersIdentifier = new Identifier("1034"),
+                        ItemBuyersIdentifier = new Identifier("5034"),
+                        ItemStandardIdentifier = new Identifier("123456789", "0088"),
+                        ItemClassificationIdentifiers = new Array<Identifier>([]),
+                        ItemCountryOfOrigin = new Code("DE"),
+                        ItemAttributes = new Array<ItemAttribute>([
+                            new ItemAttribute {
+                                ItemAttributeName = new Text("[Description]"),
+                                ItemAttributeValue = new Text ("[Value]"),
+                             },
+                             new ItemAttribute {
+                                 ItemAttributeName = new Text("[Description 2]"),
+                                 ItemAttributeValue = new Text("[Value 2]"),
+                              },
+                        ]),
+                    },
+                },
+                new InvoiceLine {
+                    InvoiceLineIdentifier = new Identifier("2"),
+                    InvoiceLineNote = null,
+                    InvoiceLineObjectIdentifier = null,
+                    InvoicedQuantity = new Quantity(42m),
+                    InvoicedQuantityUnitOfMeasureCode = new Code("XPP"),
+                    InvoiceLineNetAmount = new Amount(6037.5m),
+                    ReferencedPurchaseOrderLineReference = null,
+                    InvoiceLineBuyerAccountingReference = null,
+                    InvoiceLinePeriod = null,
+                    InvoiceLineAllowances = new Array<InvoiceLineAllowance>([]),
+                    InvoiceLineCharges = new Array<InvoiceLineCharge>([]),
+                    PriceDetails = new PriceDetails {
+                        ItemNetPrice = new UnitPriceAmount(143.75m),
+                        ItemPriceDiscount = null,
+                        ItemGrossPrice = null,
+                        ItemPriceBaseQuantity = new Quantity(1m),
+                        ItemPriceBaseQuantityUnitOfMeasureCode = new Code("XPP"),
+                    },
+                    LineVatInformation = new LineVatInformation {
+                        InvoicedItemVatCategoryCode = new Code("S"),
+                        InvoicedItemVatRate = new Percentage(19m),
+                    },
+                    ItemInformation = new ItemInformation {
+                        ItemName = new Text("Beratung"),
+                        ItemDescription = null,
+                        ItemSellersIdentifier = null,
+                        ItemBuyersIdentifier = null,
+                        ItemStandardIdentifier = null,
+                        ItemClassificationIdentifiers = new Array<Identifier>([]),
+                        ItemCountryOfOrigin = null,
+                        ItemAttributes = new Array<ItemAttribute>([]),
+                    },
+                },
+            ]),
         };
 
+        Assert.Equal(expected.InvoiceNumber, invoice.InvoiceNumber);
+        Assert.Equal(expected.InvoiceIssueDate, invoice.InvoiceIssueDate);
+        Assert.Equal(expected.InvoiceTypeCode, invoice.InvoiceTypeCode);
+        Assert.Equal(expected.InvoiceCurrencyCode, invoice.InvoiceCurrencyCode);
+        Assert.Equal(expected.VatAccountingCurrencyCode, invoice.VatAccountingCurrencyCode);
+        Assert.Equal(expected.ValueAddedTaxPointDate, invoice.ValueAddedTaxPointDate);
+        Assert.Equal(expected.ValueAddedTaxPointDateCode, invoice.ValueAddedTaxPointDateCode);
+        Assert.Equal(expected.PaymentDueDate, invoice.PaymentDueDate);
+        Assert.Equal(expected.BuyerReference, invoice.BuyerReference);
+        Assert.Equal(expected.ProjectReference, invoice.ProjectReference);
+        Assert.Equal(expected.ContractReference, invoice.ContractReference);
+        Assert.Equal(expected.PurchaseOrderReference, invoice.PurchaseOrderReference);
+        Assert.Equal(expected.SalesOrderReference, invoice.SalesOrderReference);
+        Assert.Equal(expected.ReceivingAdviceReference, invoice.ReceivingAdviceReference);
+        Assert.Equal(expected.DespatchAdviceReference, invoice.DespatchAdviceReference);
+        Assert.Equal(expected.TenderOrLotReference, invoice.TenderOrLotReference);
+        Assert.Equal(expected.InvoicedObjectIdentifier, invoice.InvoicedObjectIdentifier);
+        Assert.Equal(expected.BuyerAccountingReference, invoice.BuyerAccountingReference);
+        Assert.Equal(expected.PaymentTerms, invoice.PaymentTerms);
         Assert.Equal(expected.InvoiceNotes, invoice.InvoiceNotes);
         Assert.Equal(expected.ProcessControl, invoice.ProcessControl);
         Assert.Equal(expected.PrecedingInvoiceReferences, invoice.PrecedingInvoiceReferences);
         Assert.Equal(expected.Seller, invoice.Seller);
         Assert.Equal(expected.Buyer, invoice.Buyer);
+        Assert.Equal(expected.Payee, invoice.Payee);
+        Assert.Equal(expected.SellerTaxRepresentativeParty, invoice.SellerTaxRepresentativeParty);
+        Assert.Equal(expected.DeliveryInformation, invoice.DeliveryInformation);
         Assert.Equal(expected.PaymentInstructions, invoice.PaymentInstructions);
         Assert.Equal(expected.DocumentLevelAllowances, invoice.DocumentLevelAllowances);
         Assert.Equal(expected.DocumentLevelCharges, invoice.DocumentLevelCharges);
+        Assert.Equal(expected.DocumentTotals, invoice.DocumentTotals);
         Assert.Equal(expected.VatBreakdown, invoice.VatBreakdown);
         Assert.Equal(expected.AdditionalSupportingDocuments, invoice.AdditionalSupportingDocuments);
+        Assert.Equal(expected.InvoiceLines, invoice.InvoiceLines);
 
         Console.WriteLine(irDestination.getXdmNode());
 
-        Assert.Equal(expected.InvoiceLines, invoice.InvoiceLines);
-
-        //Assert.Equal(expected, invoice);
+        Assert.Equal(expected, invoice);
     }
 }
