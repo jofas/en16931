@@ -161,16 +161,16 @@
             <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name"/>
           </seller-trading-name>
         </xsl:if>
-        <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[not(normalize-space(upper-case(@schmeID)) = 'SEPA')])">
+        <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[not(normalize-space(upper-case(@schemeID)) = 'SEPA')])">
           <seller-identifiers id="bt-29">
-            <xsl:for-each select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[not(normalize-space(upper-case(@schmeID)) = 'SEPA')]">
+            <xsl:for-each select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[not(normalize-space(upper-case(@schemeID)) = 'SEPA')]">
               <seller-identifier id="bt-29">
                 <content>
-                  <xsl:value-of select="./cbc:ID"/>
+                  <xsl:value-of select="."/>
                 </content>
-                <xsl:if test="exists(./cbc:ID[@schemeID])">
+                <xsl:if test="exists(.[@schemeID])">
                   <scheme-identifier>
-                    <xsl:value-of select="./cbc:ID/@schemeID"/>
+                    <xsl:value-of select="./@schemeID"/>
                   </scheme-identifier>
                 </xsl:if>
               </seller-identifier>
@@ -577,7 +577,7 @@
             </mandate-reference-identifier>
             <bank-assigned-creditor-identifier id="bt-90">
               <content>
-                <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[normalize-space(upper-case(@schemeID)) = 'SEPA']/cbc:ID"/>
+                <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[normalize-space(upper-case(@schemeID)) = 'SEPA']"/>
               </content>
             </bank-assigned-creditor-identifier>
             <debited-account-identifier id="bt-91">
