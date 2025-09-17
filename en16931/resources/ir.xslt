@@ -377,14 +377,14 @@
               </xsl:if>
             </payee-identifier>
           </xsl:if>
-          <xsl:if test="exists(cac:PayeeParty/cac:PartyIdentification/cbc:CompanyID)">
+          <xsl:if test="exists(cac:PayeeParty/cac:PartyLegalEntity/cbc:CompanyID)">
             <payee-legal-registration-identifier id="bt-61">
               <content>
-                <xsl:value-of select="cac:PayeeParty/cac:PartyIdentification/cbc:CompanyID"/>
+                <xsl:value-of select="cac:PayeeParty/cac:PartyLegalEntity/cbc:CompanyID"/>
               </content>
-              <xsl:if test="exists(cac:PayeeParty/cac:PartyIdentification/cbc:CompanyID[@schemeID])">
+              <xsl:if test="exists(cac:PayeeParty/cac:PartyLegalEntity/cbc:CompanyID[@schemeID])">
                 <scheme-identifier>
-                  <xsl:value-of select="cac:PayeeParty/cac:PartyIdentification/cbc:CompanyID/@schemeID"/>
+                  <xsl:value-of select="cac:PayeeParty/cac:PartyLegalEntity/cbc:CompanyID/@schemeID"/>
                 </scheme-identifier>
               </xsl:if>
             </payee-legal-registration-identifier>

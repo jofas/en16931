@@ -20,27 +20,9 @@ public class IR
     [InlineData("resources/schematrons/xrechnung/cius/ubl/invoice/success/1.xml")]
     public void UblInvoice1(string invoiceLocation)
     {
-        Processor processor = new Processor(false);
+        Parser parser = new Parser();
 
-        XsltTransformer irTransformer = processor.newXsltCompiler().Compile(
-           new FileInfo("resources/ir.xslt")
-        ).load();
-
-        XdmNode node = processor.newDocumentBuilder().Build(new FileInfo(invoiceLocation));
-
-        XdmDestination irDestination = new XdmDestination();
-
-        irTransformer.setDestination(irDestination);
-        irTransformer.setInitialContextNode(node);
-        irTransformer.transform();
-
-        XmlSerializer invoiceSerializer = new XmlSerializer(typeof(Mut.Invoice));
-
-        Mut.Invoice invoiceMut = (Mut.Invoice)invoiceSerializer.Deserialize(
-            new StringReader(irDestination.getXdmNode().ToString())
-        )!;
-
-        Invoice invoice = invoiceMut.ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
 
         Invoice expected = new Invoice
         {
@@ -440,8 +422,6 @@ public class IR
         Assert.Equal(expected.VatBreakdown, invoice.VatBreakdown);
         Assert.Equal(expected.AdditionalSupportingDocuments, invoice.AdditionalSupportingDocuments);
         Assert.Equal(expected.InvoiceLines, invoice.InvoiceLines);
-
-        Console.WriteLine(irDestination.getXdmNode());
 
         Assert.Equal(expected, invoice);
     }
