@@ -16,6 +16,7 @@
       <invoice-issue-date id="bt-2">
         <xsl:value-of select="cbc:IssueDate"/>
       </invoice-issue-date>
+      <!-- UBL CreditNote: cbc:CreditNoteTypeCode -->
       <invoice-type-code id="bt-3">
         <xsl:value-of select="cbc:InvoiceTypeCode"/>
       </invoice-type-code>
@@ -37,6 +38,7 @@
           <xsl:value-of select="cac:InvoicePeriod/cbc:DescriptionCode"/>
         </value-added-tax-point-date-code>
       </xsl:if>
+      <!-- UBL CreditNote: cac:PaymentMeans/cbc:PaymentDueDate -->
       <xsl:if test="exists(cbc:DueDate)">
         <payment-due-date id="bt-9">
           <xsl:value-of select="cbc:DueDate"/>
@@ -683,6 +685,7 @@
         <invoice-total-amount-without-vat id="bt-109">
           <xsl:value-of select="cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"/>
         </invoice-total-amount-without-vat>
+        <!-- TODO: not global but <xsl:variable> instead -->
         <xsl:if test="exists(cac:TaxTotal/cbc:TaxAmount[@currencyID=/ubl:Invoice/cbc:DocumentCurrencyCode])">
           <invoice-total-vat-amount id="bt-110">
               <xsl:value-of select="cac:TaxTotal/cbc:TaxAmount[@currencyID=/ubl:Invoice/cbc:DocumentCurrencyCode]"/>

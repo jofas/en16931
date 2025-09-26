@@ -14,6 +14,13 @@ using Mut = Dev.Fassbender.En16931.Model;
 
 namespace Tests;
 
+// TODO: * [ ] create ubl credit note test case
+// TODO: * [ ] fix ubl credit note test case to pass schema
+// TODO: * [ ] implement ubl credit note IR transformation:
+// TODO:   - [ ] split current template into common and ubl invoice templates
+// TODO:   - [ ] create ubl credit note template
+// TODO: * [ ] create 3 more credit note test cases
+
 public class IR
 {
     [Theory]
