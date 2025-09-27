@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cec="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+<CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cec="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
   <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0</cbc:CustomizationID>
   <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
   <cbc:ID>1234567</cbc:ID>
   <cbc:IssueDate>2018-04-13</cbc:IssueDate>
+  <!--
   <cbc:DueDate>2018-04-13</cbc:DueDate>
-  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+  -->
+  <cbc:CreditNoteTypeCode>380</cbc:CreditNoteTypeCode>
   <cbc:Note>#AAC#Invoice Note Description</cbc:Note>
   <cbc:Note>#AAC#Invoice Note Description 2</cbc:Note>
+  <!--
   <cbc:TaxPointDate>2018-04-13</cbc:TaxPointDate>
+  -->
   <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
   <cbc:TaxCurrencyCode>GBP</cbc:TaxCurrencyCode>
   <cbc:AccountingCost>Buchungscode1</cbc:AccountingCost>
@@ -42,9 +46,12 @@
   <cac:OriginatorDocumentReference>
     <cbc:ID>ANG987654321</cbc:ID>
   </cac:OriginatorDocumentReference>
+  <!--
   <cac:ContractDocumentReference>
     <cbc:ID>0000000752</cbc:ID>
   </cac:ContractDocumentReference>
+  -->
+  <!--
   <cac:AdditionalDocumentReference>
     <cbc:ID>01_15_Anhang_01.pdf</cbc:ID>
     <cbc:DocumentDescription>Aufschlüsselung der einzelnen Leistungspositionen</cbc:DocumentDescription>
@@ -69,9 +76,12 @@
     <cbc:ID>OK987654321</cbc:ID>
     <cbc:DocumentTypeCode>130</cbc:DocumentTypeCode>
   </cac:AdditionalDocumentReference>
+  -->
+  <!--
   <cac:ProjectReference>
     <cbc:ID>PR12345678</cbc:ID>
   </cac:ProjectReference>
+  -->
   <cac:AccountingSupplierParty>
     <cac:Party>
       <cbc:EndpointID schemeID="EM">rechnungsausgang@test.com</cbc:EndpointID>
@@ -331,10 +341,10 @@
     <cbc:PayableRoundingAmount currencyID="EUR">0</cbc:PayableRoundingAmount>
     <cbc:PayableAmount currencyID="EUR">12829.69</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
-  <cac:InvoiceLine>
+  <cac:CreditNoteLine>
     <cbc:ID>1</cbc:ID>
     <cbc:Note>Die letzte Lieferung im Rahmen des abgerechneten Abonnements erfolgt in 12/2016 Lieferung erfolgt / erfolgte direkt vom Verlag</cbc:Note>
-    <cbc:InvoicedQuantity unitCode="XPP">30</cbc:InvoicedQuantity>
+    <cbc:CreditedQuantity unitCode="XPP">30</cbc:CreditedQuantity>
     <cbc:LineExtensionAmount currencyID="EUR">4743.75</cbc:LineExtensionAmount>
     <cbc:AccountingCost>Konto 1</cbc:AccountingCost>
     <cac:InvoicePeriod>
@@ -426,10 +436,10 @@
         <cbc:BaseAmount currencyID="EUR">168.125</cbc:BaseAmount>
       </cac:AllowanceCharge>
     </cac:Price>
-  </cac:InvoiceLine>
-  <cac:InvoiceLine>
+  </cac:CreditNoteLine>
+  <cac:CreditNoteLine>
     <cbc:ID>2</cbc:ID>
-    <cbc:InvoicedQuantity unitCode="XPP">42</cbc:InvoicedQuantity>
+    <cbc:CreditedQuantity unitCode="XPP">42</cbc:CreditedQuantity>
     <cbc:LineExtensionAmount currencyID="EUR">6037.5</cbc:LineExtensionAmount>
     <cac:Item>
       <cbc:Name>Beratung</cbc:Name>
@@ -445,5 +455,5 @@
       <cbc:PriceAmount currencyID="EUR">143.75</cbc:PriceAmount>
       <cbc:BaseQuantity unitCode="XPP">1</cbc:BaseQuantity>
     </cac:Price>
-  </cac:InvoiceLine>
-</Invoice>
+  </cac:CreditNoteLine>
+</CreditNote>
