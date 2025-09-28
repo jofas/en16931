@@ -38,7 +38,7 @@
           <xsl:value-of select="cac:InvoicePeriod/cbc:DescriptionCode"/>
         </value-added-tax-point-date-code>
       </xsl:if>
-      <!-- UBL CreditNote: cac:PaymentMeans/cbc:PaymentDueDate -->
+      <!-- UBL CreditNote: cac:PaymentTerms/cbc:PaymentDueDate -->
       <xsl:if test="exists(cbc:DueDate)">
         <payment-due-date id="bt-9">
           <xsl:value-of select="cbc:DueDate"/>
@@ -741,7 +741,7 @@
           </vat-breakdown>
         </xsl:for-each>
       </vat-breakdown>
-      <!-- UBL CreditNote DocumentType can't be 90 either -->
+      <!-- UBL CreditNote DocumentType can't be 50 either -->
       <xsl:if test="exists(cac:AdditionalDocumentReference[not(cbc:DocumentTypeCode = '130')]/cbc:ID)">
         <additional-supporting-documents id="bg-24">
           <xsl:for-each select="cac:AdditionalDocumentReference[not(cbc:DocumentTypeCode = '130')]">

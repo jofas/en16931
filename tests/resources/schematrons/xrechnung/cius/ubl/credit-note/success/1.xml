@@ -4,15 +4,10 @@
   <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
   <cbc:ID>1234567</cbc:ID>
   <cbc:IssueDate>2018-04-13</cbc:IssueDate>
-  <!--
-  <cbc:DueDate>2018-04-13</cbc:DueDate>
-  -->
+  <cbc:TaxPointDate>2018-04-13</cbc:TaxPointDate>
   <cbc:CreditNoteTypeCode>380</cbc:CreditNoteTypeCode>
   <cbc:Note>#AAC#Invoice Note Description</cbc:Note>
   <cbc:Note>#AAC#Invoice Note Description 2</cbc:Note>
-  <!--
-  <cbc:TaxPointDate>2018-04-13</cbc:TaxPointDate>
-  -->
   <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
   <cbc:TaxCurrencyCode>GBP</cbc:TaxCurrencyCode>
   <cbc:AccountingCost>Buchungscode1</cbc:AccountingCost>
@@ -43,15 +38,9 @@
   <cac:ReceiptDocumentReference>
     <cbc:ID>RAR123456789</cbc:ID>
   </cac:ReceiptDocumentReference>
-  <cac:OriginatorDocumentReference>
-    <cbc:ID>ANG987654321</cbc:ID>
-  </cac:OriginatorDocumentReference>
-  <!--
   <cac:ContractDocumentReference>
     <cbc:ID>0000000752</cbc:ID>
   </cac:ContractDocumentReference>
-  -->
-  <!--
   <cac:AdditionalDocumentReference>
     <cbc:ID>01_15_Anhang_01.pdf</cbc:ID>
     <cbc:DocumentDescription>Aufschlüsselung der einzelnen Leistungspositionen</cbc:DocumentDescription>
@@ -76,12 +65,13 @@
     <cbc:ID>OK987654321</cbc:ID>
     <cbc:DocumentTypeCode>130</cbc:DocumentTypeCode>
   </cac:AdditionalDocumentReference>
-  -->
-  <!--
-  <cac:ProjectReference>
+  <cac:AdditionalDocumentReference>
     <cbc:ID>PR12345678</cbc:ID>
-  </cac:ProjectReference>
-  -->
+    <cbc:DocumentTypeCode>50</cbc:DocumentTypeCode>
+  </cac:AdditionalDocumentReference>
+  <cac:OriginatorDocumentReference>
+    <cbc:ID>ANG987654321</cbc:ID>
+  </cac:OriginatorDocumentReference>
   <cac:AccountingSupplierParty>
     <cac:Party>
       <cbc:EndpointID schemeID="EM">rechnungsausgang@test.com</cbc:EndpointID>
@@ -240,6 +230,7 @@
   </cac:PaymentMeans>
   <cac:PaymentTerms>
     <cbc:Note>Beschreibung 1: Bitte überweisen Sie bis zum 13.04.2018 auf das unten aufgeführte Konto.</cbc:Note>
+    <cbc:PaymentDueDate>2018-04-13</cbc:PaymentDueDate>
   </cac:PaymentTerms>
   <cac:AllowanceCharge>
     <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
