@@ -9,79 +9,27 @@
   <xsl:include href="common.xslt"/>
   <xsl:template match="ubl:Invoice">
     <invoice>
-      <xsl:call-template name="common-bt-1-2"/>
+      <xsl:call-template name="common-invoice-bt-1-2"/>
       <!-- UBL CreditNote: cbc:CreditNoteTypeCode -->
       <invoice-type-code id="bt-3">
         <xsl:value-of select="cbc:InvoiceTypeCode"/>
       </invoice-type-code>
-      <xsl:call-template name="common-bt-5-8"/>
+      <xsl:call-template name="common-invoice-bt-5-8"/>
       <!-- UBL CreditNote: cac:PaymentTerms/cbc:PaymentDueDate -->
       <xsl:if test="exists(cbc:DueDate)">
         <payment-due-date id="bt-9">
           <xsl:value-of select="cbc:DueDate"/>
         </payment-due-date>
       </xsl:if>
-      <buyer-reference id="bt-10">
-        <xsl:value-of select="cbc:BuyerReference"/>
-      </buyer-reference>
+      <xsl:call-template name="common-invoice-bt-10"/>
+      <!-- UBL CreditNote: cac:AdditionalDocumentReference[cbc:DocumentTypeCode='50']/cbc:ID -->
       <xsl:if test="exists(cac:ProjectReference/cbc:ID)">
         <project-reference id="bt-11">
-          <!-- UBL CreditNote: cac:AdditionalDocumentReference[cbc:DocumentTypeCode='50']/cbc:ID -->
           <xsl:value-of select="cac:ProjectReference/cbc:ID"/>
         </project-reference>
       </xsl:if>
-      <xsl:if test="exists(cac:ContractDocumentReference/cbc:ID)">
-        <contract-reference id="bt-12">
-          <xsl:value-of select="cac:ContractDocumentReference/cbc:ID"/>
-        </contract-reference>
-      </xsl:if>
-      <xsl:if test="exists(cac:OrderReference/cbc:ID)">
-        <purchase-order-reference id="bt-13">
-          <xsl:value-of select="cac:OrderReference/cbc:ID"/>
-        </purchase-order-reference>
-      </xsl:if>
-      <xsl:if test="exists(cac:OrderReference/cbc:SalesOrderID)">
-        <sales-order-reference id="bt-14">
-          <xsl:value-of select="cac:OrderReference/cbc:SalesOrderID"/>
-        </sales-order-reference>
-      </xsl:if>
-      <xsl:if test="exists(cac:ReceiptDocumentReference/cbc:ID)">
-        <receiving-advice-reference id="bt-15">
-          <xsl:value-of select="cac:ReceiptDocumentReference/cbc:ID"/>
-        </receiving-advice-reference>
-      </xsl:if>
-      <xsl:if test="exists(cac:DespatchDocumentReference/cbc:ID)">
-        <despatch-advice-reference id="bt-16">
-          <xsl:value-of select="cac:DespatchDocumentReference/cbc:ID"/>
-        </despatch-advice-reference>
-      </xsl:if>
-      <xsl:if test="exists(cac:OriginatorDocumentReference/cbc:ID)">
-        <tender-or-lot-reference id="bt-17">
-          <xsl:value-of select="cac:OriginatorDocumentReference/cbc:ID"/>
-        </tender-or-lot-reference>
-      </xsl:if>
-      <xsl:if test="exists(cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID)">
-        <invoiced-object-identifier id="bt-18">
-          <content>
-            <xsl:value-of select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID"/>
-          </content>
-          <xsl:if test="exists(cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID[@schemeID])">
-            <scheme-identifier>
-              <xsl:value-of select="cac:AdditionalDocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID/@schemeID"/>
-            </scheme-identifier>
-          </xsl:if>
-        </invoiced-object-identifier>
-      </xsl:if>
-      <xsl:if test="exists(cbc:AccountingCost)">
-        <buyer-accounting-reference id="bt-19">
-          <xsl:value-of select="cbc:AccountingCost"/>
-        </buyer-accounting-reference>
-      </xsl:if>
-      <xsl:if test="exists(cac:PaymentTerms/cbc:Note)">
-        <payment-terms id="bt-20">
-          <xsl:value-of select="cac:PaymentTerms/cbc:Note"/>
-        </payment-terms>
-      </xsl:if>
+      <xsl:call-template name="common-invoice-bt-12-20"/>
+
       <xsl:if test="exists(cbc:Note)">
         <invoice-notes id="bg-1">
           <xsl:for-each select="cbc:Note">
@@ -718,6 +666,7 @@
           </vat-breakdown>
         </xsl:for-each>
       </vat-breakdown>
+
       <!-- UBL CreditNote DocumentType can't be 50 either -->
       <xsl:if test="exists(cac:AdditionalDocumentReference[not(cbc:DocumentTypeCode = '130')]/cbc:ID)">
         <additional-supporting-documents id="bg-24">
@@ -753,6 +702,7 @@
           </xsl:for-each>
         </additional-supporting-documents>
       </xsl:if>
+
       <invoice-lines id="bg-25">
         <!-- CreditNote: cac:CreditNoteLine -->
         <xsl:for-each select="cac:InvoiceLine">
