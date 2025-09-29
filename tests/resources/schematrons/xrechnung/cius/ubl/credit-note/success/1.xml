@@ -5,7 +5,7 @@
   <cbc:ID>1234567</cbc:ID>
   <cbc:IssueDate>2018-04-13</cbc:IssueDate>
   <cbc:TaxPointDate>2018-04-13</cbc:TaxPointDate>
-  <cbc:CreditNoteTypeCode>380</cbc:CreditNoteTypeCode>
+  <cbc:CreditNoteTypeCode>381</cbc:CreditNoteTypeCode>
   <cbc:Note>#AAC#Invoice Note Description</cbc:Note>
   <cbc:Note>#AAC#Invoice Note Description 2</cbc:Note>
   <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>

@@ -135,6 +135,7 @@ public class Parser
 
         if (en16931FailedAsserts.size() > 0)
         {
+            Console.WriteLine(en16931FailedAsserts);
             throw new En16931SchematronException();
         }
 
