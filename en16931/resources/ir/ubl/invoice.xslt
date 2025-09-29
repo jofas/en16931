@@ -5,7 +5,6 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     exclude-result-prefixes="ubl cac cbc xsl"
     version="1.0">
-  <xsl:output method="xml" indent="yes"/>
   <xsl:template match="ubl:Invoice">
     <invoice xmlns="urn:todo">
       <invoice-number id="bt-1">

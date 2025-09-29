@@ -74,7 +74,7 @@ public class Parser
         _xRechnungUblValidator = _xsltCompiler.Compile(new FileInfo("resources/xrechnung/ubl/XRechnung-UBL-validation.xsl")).load();
         _xRechnungCiiValidator = _xsltCompiler.Compile(new FileInfo("resources/xrechnung/cii/XRechnung-CII-validation.xsl")).load();
 
-        _irTransformer = _xsltCompiler.Compile(new FileInfo("resources/ir.xslt")).load();
+        _irTransformer = _xsltCompiler.Compile(new FileInfo("resources/ir/ir.xslt")).load();
     }
 
     public Mut.Invoice ParseFile(string filepath)
@@ -169,6 +169,8 @@ public class Parser
         _irTransformer.setDestination(irDestination);
         _irTransformer.setInitialContextNode(node);
         _irTransformer.transform();
+
+        Console.WriteLine(irDestination.getXdmNode().ToString());
 
         Mut.Invoice invoice = (Mut.Invoice)_invoiceSerializer.Deserialize(
             new StringReader(irDestination.getXdmNode().ToString())
