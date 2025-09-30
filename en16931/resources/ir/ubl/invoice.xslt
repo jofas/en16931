@@ -6,7 +6,7 @@
     xmlns="urn:todo"
     exclude-result-prefixes="ubl cac cbc xsl"
     version="1.0">
-  <xsl:include href="common.xslt"/>
+  <xsl:import href="common.xslt"/>
   <xsl:template match="ubl:Invoice">
     <invoice>
       <xsl:call-template name="common-invoice-bt-1-2"/>
