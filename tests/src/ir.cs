@@ -17,9 +17,9 @@ namespace Tests;
 // TODO: * [x] create ubl credit note test case
 // TODO: * [x] fix ubl credit note test case to pass schema
 // TODO: * [x] fix validation pipeline
-// TODO: * [ ] implement ubl credit note IR transformation:
+// TODO: * [x] implement ubl credit note IR transformation:
 // TODO:   - [x] split current template into common and ubl invoice templates
-// TODO:   - [ ] create ubl credit note template
+// TODO:   - [x] create ubl credit note template
 // TODO: * [ ] create 3 more credit note test cases
 
 public class IR
@@ -36,7 +36,7 @@ public class IR
         {
             InvoiceNumber = new Identifier("1234567"),
             InvoiceIssueDate = new Date(new DateTime(2018, 4, 13)),
-            InvoiceTypeCode = new Code("380"),
+            InvoiceTypeCode = new Code("381"),
             InvoiceCurrencyCode = new Code("EUR"),
             VatAccountingCurrencyCode = new Code("GBP"),
             ValueAddedTaxPointDate = new Date(new DateTime(2018, 4, 13)),
@@ -396,6 +396,7 @@ public class IR
             ]),
         };
 
+        DebugAssert(expected, invoice);
         Assert.Equal(expected, invoice);
     }
 

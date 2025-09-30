@@ -170,8 +170,6 @@ public class Parser
         _irTransformer.setInitialContextNode(node);
         _irTransformer.transform();
 
-        Console.WriteLine(irDestination.getXdmNode().ToString());
-
         Mut.Invoice invoice = (Mut.Invoice)_invoiceSerializer.Deserialize(
             new StringReader(irDestination.getXdmNode().ToString())
         )!;
