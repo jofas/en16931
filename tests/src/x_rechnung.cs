@@ -124,6 +124,20 @@ public class XRechnungValidation
     }
 
     [Theory]
+    [InlineData("resources/schematrons/xrechnung/cius/ubl/credit-note/success")]
+    public void TestSuccessfulXRechnungCiusUblCreditNote(string testsLocation)
+    {
+        Parser parser = new Parser();
+
+        string[] testFiles = Directory.GetFiles(testsLocation);
+
+        foreach (string test in testFiles)
+        {
+            parser.ParseFile(test);
+        }
+    }
+
+    [Theory]
     [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/failure")]
     public void TestSchematronViolationXRechnungCiusCiiCrossIndustryInvoice(string testsLocation)
     {
