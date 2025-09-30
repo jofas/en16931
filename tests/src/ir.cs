@@ -18,7 +18,7 @@ namespace Tests;
 // TODO: * [x] fix ubl credit note test case to pass schema
 // TODO: * [x] fix validation pipeline
 // TODO: * [ ] implement ubl credit note IR transformation:
-// TODO:   - [ ] split current template into common and ubl invoice templates
+// TODO:   - [x] split current template into common and ubl invoice templates
 // TODO:   - [ ] create ubl credit note template
 // TODO: * [ ] create 3 more credit note test cases
 
