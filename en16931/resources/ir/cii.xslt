@@ -1,0 +1,33 @@
+<xsl:stylesheet
+    xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+    xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+    xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+    xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="urn:todo"
+    exclude-result-prefixes="rsm ram qdt udt xsl"
+    version="1.0">
+  <xsl:template match="rsm:CrossIndustryInvoice">
+    <invoice>
+      <invoice-number id="bt-1">
+        <content>
+          <xsl:value-of select="rsm:ExchangedDocument/ram:ID"/>
+        </content>
+      </invoice-number>
+      <invoice-issue-date id="bt-2">
+        <xsl:call-template name="date">
+          <xsl:with-param name="node" select="rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString[@format = '102']"/>
+        </xsl:call-template>
+      </invoice-issue-date>
+      <invoice-type-code id="bt-3">
+        <xsl:value-of select="rsm:ExchangedDocument/ram:TypeCode"/>
+      </invoice-type-code>
+    </invoice>
+  </xsl:template>
+
+  <!-- TODO: support for format codes 610 and 616. 102 already implemented. See https://github.com/itplr-kosit/validator-configuration-xrechnung/issues/56 -->
+  <xsl:template name="date">
+    <xsl:param name="node"/>
+    <xsl:value-of select="substring($node, 1, 4)"/>-<xsl:value-of select="substring($node, 5, 2)"/>-<xsl:value-of select="substring($node, 7, 2)"/>
+  </xsl:template>
+</xsl:stylesheet>

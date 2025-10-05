@@ -1335,6 +1335,17 @@ public class IR
     }
 
     [Theory]
+    [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/1.xml")]
+    public void CiiCrossIndustryInvoice1(string invoiceLocation)
+    {
+        Parser parser = new Parser();
+
+        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+
+        Assert.Equal(_expected1, invoice);
+    }
+
+    [Theory]
     [InlineData("resources/schematrons/xrechnung/cius/ubl/invoice/success/2.xml")]
     public void UblInvoice2(string invoiceLocation)
     {
