@@ -22,7 +22,49 @@
       <invoice-type-code id="bt-3">
         <xsl:value-of select="rsm:ExchangedDocument/ram:TypeCode"/>
       </invoice-type-code>
+      <invoice-currency-code id="bt-5">
+        <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceCurrencyCode"/>
+      </invoice-currency-code>
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:TaxCurrencyCode)">
+        <vat-accounting-currency-code id="bt-6">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:TaxCurrencyCode"/>
+        </vat-accounting-currency-code>
+      </xsl:if>
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString[@format = '102'])">
+        <value-added-tax-point-date id="bt-7">
+          <xsl:call-template name="date">
+            <xsl:with-param name="node" select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString[@format = '102'])"/>
+          </xsl:call-template>
+        </value-added-tax-point-date>
+      </xsl:if>
+      <!-- TODO: bt-8 -->
+      <!-- TODO: bt-9 -->
+      <buyer-reference id="bt-10">
+        <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerReference"/>
+      </buyer-reference>
+      <!-- TODO: bt-11 -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:ContractReferencedDocument/ram:IssuerAssignedID)">
+        <contract-reference id="bt-12">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:ContractReferencedDocument/ram:IssuerAssignedID"/>
+        </contract-reference>
+      </xsl:if>
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerOrderReferencedDocument/ram:IssuerAssignedID)">
+        <purchase-order-reference id="bt-13">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerOrderReferencedDocument/ram:IssuerAssignedID"/>
+        </purchase-order-reference>
+      </xsl:if>
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerOrderReferencedDocument/ram:IssuerAssignedID)">
+        <sales-order-reference id="bt-14">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerOrderReferencedDocument/ram:IssuerAssignedID"/>
+        </sales-order-reference>
+      </xsl:if>
     </invoice>
+    <!-- TODO: bg-2 -->
+    <!-- TODO: bg-4 -->
+    <!-- TODO: bg-7 -->
+    <!-- TODO: bg-16 -->
+    <!-- TODO: bg-22 -->
+    <!-- TODO: bg-23 -->
   </xsl:template>
 
   <!-- TODO: support for format codes 610 and 616. 102 already implemented. See https://github.com/itplr-kosit/validator-configuration-xrechnung/issues/56 -->
