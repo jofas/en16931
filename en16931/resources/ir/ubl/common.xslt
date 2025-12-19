@@ -256,7 +256,7 @@
         </seller-contact-email-address>
       </seller-contact>
     </seller>
-    <buyer id="bt-7">
+    <buyer id="bg-7">
       <buyer-name id="bt-44">
         <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName"/>
       </buyer-name>
