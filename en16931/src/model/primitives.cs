@@ -350,7 +350,7 @@ public struct Identifier : IToImmutable<Im.Identifier>
 
 // TODO: To own module?
 
-public interface IToImmutable<T>
+public interface IToImmutable<T> where T : struct
 {
     public T ToImmutable();
 }
@@ -358,7 +358,7 @@ public interface IToImmutable<T>
 public static class ArrayToImmutableExt
 {
     public static Im.Array<TResult> ToImmutable<T, TResult>(this IEnumerable<T> self)
-    where T : IToImmutable<TResult>
+    where T : IToImmutable<TResult> where TResult : struct
     {
         return new Im.Array<TResult>(self.Select(x => x.ToImmutable()));
     }

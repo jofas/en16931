@@ -8,7 +8,9 @@ using Im = Dev.Fassbender.En16931.Model.Immutable;
 
 namespace Dev.Fassbender.En16931.Model;
 
-// TODO: add null-check to every non-nullable reference-type property
+// TODO: add null-check to every element of arrays that contain non-nullable reference types
+// TODO: add non-empty checks inline
+// TODO: add immutable.primitives.NonEmptyArray for non-empty checks
 
 [XmlRoot(ElementName = "invoice", Namespace = "urn:todo")]
 public class Invoice : IToImmutable<Im.Invoice>
@@ -96,24 +98,59 @@ public class Invoice : IToImmutable<Im.Invoice>
     // BG-1
     [XmlArray(ElementName = "invoice-notes")]
     [XmlArrayItem(ElementName = "invoice-note")]
-    public InvoiceNote[] InvoiceNotes { get; set; } = [];
+    public InvoiceNote[] InvoiceNotes
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(InvoiceNotes));
+        }
+    } = [];
 
     // BG-2
     [XmlElement(ElementName = "process-control")]
-    public required ProcessControl ProcessControl { get; set; }
+    public required ProcessControl ProcessControl
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(ProcessControl));
+        }
+    }
 
     // BG-3
     [XmlArray(ElementName = "preceding-invoice-references")]
     [XmlArrayItem(ElementName = "preceding-invoice-reference")]
-    public PrecedingInvoiceReference[] PrecedingInvoiceReferences { get; set; } = [];
+    public PrecedingInvoiceReference[] PrecedingInvoiceReferences
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(PrecedingInvoiceReference));
+        }
+    } = [];
 
     // BG-4
     [XmlElement(ElementName = "seller")]
-    public required Seller Seller { get; set; }
+    public required Seller Seller
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(Seller));
+        }
+    }
 
     // BG-7
     [XmlElement(ElementName = "buyer")]
-    public required Buyer Buyer { get; set; }
+    public required Buyer Buyer
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(Buyer));
+        }
+    }
 
     // BG-10
     [XmlElement(ElementName = "payee")]
@@ -129,40 +166,89 @@ public class Invoice : IToImmutable<Im.Invoice>
 
     // BG-16
     [XmlElement(ElementName = "payment-instructions")]
-    public required PaymentInstructions PaymentInstructions { get; set; }
+    public required PaymentInstructions PaymentInstructions
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(PaymentInstructions));
+        }
+    }
 
     // BG-20
     [XmlArray(ElementName = "document-level-allowances")]
     [XmlArrayItem(ElementName = "document-level-allowance")]
-    public DocumentLevelAllowance[] DocumentLevelAllowances { get; set; } = [];
+    public DocumentLevelAllowance[] DocumentLevelAllowances
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(DocumentLevelAllowances));
+        }
+    } = [];
 
     // BG-21
     [XmlArray(ElementName = "document-level-charges")]
     [XmlArrayItem(ElementName = "document-level-charge")]
-    public DocumentLevelCharge[] DocumentLevelCharges { get; set; } = [];
+    public DocumentLevelCharge[] DocumentLevelCharges
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(DocumentLevelCharges));
+        }
+    } = [];
 
     // BG-22
     [XmlElement(ElementName = "document-totals")]
-    public required DocumentTotals DocumentTotals { get; set; }
+    public required DocumentTotals DocumentTotals
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(DocumentTotals));
+        }
+    }
 
     // BG-23
     //
     // non-empty
     [XmlArray(ElementName = "vat-breakdown")]
     [XmlArrayItem(ElementName = "vat-breakdown")]
-    public VatBreakdown[] VatBreakdown { get; set; } = [];
+    public required VatBreakdown[] VatBreakdown
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(DocumentLevelCharges));
+        }
+    }
 
     // BG-24
     [XmlArray(ElementName = "additional-supporting-documents")]
     [XmlArrayItem(ElementName = "additional-supporting-document")]
-    public AdditionalSupportingDocument[] AdditionalSupportingDocuments { get; set; } = [];
+    public AdditionalSupportingDocument[] AdditionalSupportingDocuments
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(AdditionalSupportingDocuments));
+        }
+    } = [];
 
     // BG-25
     //
     // non-empty
     [XmlArray(ElementName = "invoice-lines")]
     [XmlArrayItem(ElementName = "invoice-line")]
-    public InvoiceLine[] InvoiceLines { get; set; } = [];
+    public required InvoiceLine[] InvoiceLines
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(InvoiceLines));
+        }
+    }
 
     public Im.Invoice ToImmutable()
     {
@@ -279,7 +365,14 @@ public class Seller : IToImmutable<Im.Seller>
     // BT-29
     [XmlArray(ElementName = "seller-identifiers")]
     [XmlArrayItem(ElementName = "seller-identifier")]
-    public Identifier[] SellerIdentifiers { get; set; } = [];
+    public Identifier[] SellerIdentifiers
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(SellerIdentifiers));
+        }
+    } = [];
 
     // BT-30
     [XmlElement(ElementName = "seller-legal-registration-identifier")]
@@ -303,11 +396,25 @@ public class Seller : IToImmutable<Im.Seller>
 
     // BG-5
     [XmlElement(ElementName = "seller-postal-address")]
-    public required SellerPostalAddress SellerPostalAddress { get; set; }
+    public required SellerPostalAddress SellerPostalAddress
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(SellerPostalAddress));
+        }
+    }
 
     // BG-6
     [XmlElement(ElementName = "seller-contact")]
-    public required SellerContact SellerContact { get; set; }
+    public required SellerContact SellerContact
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(SellerContact));
+        }
+    }
 
     public Im.Seller ToImmutable()
     {
@@ -426,7 +533,14 @@ public class Buyer : IToImmutable<Im.Buyer>
 
     // BG-8
     [XmlElement(ElementName = "buyer-postal-address")]
-    public required BuyerPostalAddress BuyerPostalAddress { get; set; }
+    public required BuyerPostalAddress BuyerPostalAddress
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(BuyerPostalAddress));
+        }
+    }
 
     // BG-9
     [XmlElement(ElementName = "buyer-contact")]
@@ -556,7 +670,14 @@ public class SellerTaxRepresentativeParty : IToImmutable<Im.SellerTaxRepresentat
 
     // BG-12
     [XmlElement(ElementName = "seller-tax-representative-postal-address")]
-    public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress { get; set; }
+    public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(SellerTaxRepresentativePostalAddress));
+        }
+    }
 
     public Im.SellerTaxRepresentativeParty ToImmutable()
     {
@@ -734,7 +855,14 @@ public class PaymentInstructions : IToImmutable<Im.PaymentInstructions>
     // BG-17
     [XmlArray(ElementName = "credit-transfers")]
     [XmlArrayItem(ElementName = "credit-transfer")]
-    public CreditTransfer[] CreditTransfers { get; set; } = [];
+    public CreditTransfer[] CreditTransfers
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(CreditTransfers));
+        }
+    } = [];
 
     // BG-18
     [XmlElement(ElementName = "payment-card-information")]
@@ -1091,24 +1219,59 @@ public class InvoiceLine : IToImmutable<Im.InvoiceLine>
     // BG-27
     [XmlArray(ElementName = "invoice-line-allowances")]
     [XmlArrayItem(ElementName = "invoice-line-allowance")]
-    public InvoiceLineAllowance[] InvoiceLineAllowances { get; set; } = [];
+    public InvoiceLineAllowance[] InvoiceLineAllowances
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(InvoiceLineAllowances));
+        }
+    } = [];
 
     // BG-28
     [XmlArray(ElementName = "invoice-line-charges")]
     [XmlArrayItem(ElementName = "invoice-line-charge")]
-    public InvoiceLineCharge[] InvoiceLineCharges { get; set; } = [];
+    public InvoiceLineCharge[] InvoiceLineCharges
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(InvoiceLineCharges));
+        }
+    } = [];
 
     // BG-29
     [XmlElement(ElementName = "price-details")]
-    public required PriceDetails PriceDetails { get; set; }
+    public required PriceDetails PriceDetails
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(PriceDetails));
+        }
+    }
 
     // BG-30
     [XmlElement(ElementName = "line-vat-information")]
-    public required LineVatInformation LineVatInformation { get; set; }
+    public required LineVatInformation LineVatInformation
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(LineVatInformation));
+        }
+    }
 
     // BG-31
     [XmlElement(ElementName = "item-information")]
-    public required ItemInformation ItemInformation { get; set; }
+    public required ItemInformation ItemInformation
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(ItemInformation));
+        }
+    }
 
     public Im.InvoiceLine ToImmutable()
     {
@@ -1305,7 +1468,14 @@ public class ItemInformation : IToImmutable<Im.ItemInformation>
     // UNTDID 7143
     [XmlArray(ElementName = "item-classification-identifiers")]
     [XmlArrayItem(ElementName = "item-classification-identifier")]
-    public Identifier[] ItemClassificationIdentifiers { get; set; } = [];
+    public Identifier[] ItemClassificationIdentifiers
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(ItemClassificationIdentifiers));
+        }
+    } = [];
 
     // BT-159
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2 representation
@@ -1315,7 +1485,14 @@ public class ItemInformation : IToImmutable<Im.ItemInformation>
     // BG-32
     [XmlArray(ElementName = "item-attributes")]
     [XmlArrayItem(ElementName = "item-attribute")]
-    public ItemAttribute[] ItemAttributes { get; set; } = [];
+    public ItemAttribute[] ItemAttributes
+    {
+        get;
+        set
+        {
+            field = value ?? throw new ArgumentNullException(nameof(ItemAttributes));
+        }
+    } = [];
 
     public Im.ItemInformation ToImmutable()
     {

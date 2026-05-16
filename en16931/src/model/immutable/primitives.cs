@@ -138,7 +138,7 @@ public readonly record struct Identifier
     }
 }
 
-public readonly struct Array<T> : IEquatable<Array<T>>
+public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
 {
     public required ImmutableArray<T> Value { get; init; }
 
