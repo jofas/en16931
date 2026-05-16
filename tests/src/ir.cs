@@ -1342,6 +1342,7 @@ public class IR
 
         Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
 
+        DebugAssert(_expected1, invoice);
         Assert.Equal(_expected1, invoice);
     }
 

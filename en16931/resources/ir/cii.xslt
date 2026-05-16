@@ -33,7 +33,7 @@
       <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString[@format = '102'])">
         <value-added-tax-point-date id="bt-7">
           <xsl:call-template name="date">
-            <xsl:with-param name="node" select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString[@format = '102'])"/>
+            <xsl:with-param name="node" select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString[@format = '102']"/>
           </xsl:call-template>
         </value-added-tax-point-date>
       </xsl:if>
@@ -58,13 +58,22 @@
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerOrderReferencedDocument/ram:IssuerAssignedID"/>
         </sales-order-reference>
       </xsl:if>
+      <!-- TODO: bg-2 -->
+      <process-control>
+      </process-control>
+      <!-- TODO: bg-4 -->
+      <seller>
+      </seller>
+      <!-- TODO: bg-7 -->
+      <buyer>
+      </buyer>
+      <!-- TODO: bg-16 -->
+      <payment-instructions>
+      </payment-instructions>
+      <!-- TODO: bg-22 -->
+      <document-totals>
+      </document-totals>
     </invoice>
-    <!-- TODO: bg-2 -->
-    <!-- TODO: bg-4 -->
-    <!-- TODO: bg-7 -->
-    <!-- TODO: bg-16 -->
-    <!-- TODO: bg-22 -->
-    <!-- TODO: bg-23 -->
   </xsl:template>
 
   <!-- TODO: support for format codes 610 and 616. 102 already implemented. See https://github.com/itplr-kosit/validator-configuration-xrechnung/issues/56 -->
