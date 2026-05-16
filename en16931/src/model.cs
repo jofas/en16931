@@ -8,6 +8,8 @@ using Im = Dev.Fassbender.En16931.Model.Immutable;
 
 namespace Dev.Fassbender.En16931.Model;
 
+// TODO: add null-check to every non-nullable reference-type property
+
 [XmlRoot(ElementName = "invoice", Namespace = "urn:todo")]
 public class Invoice : IToImmutable<Im.Invoice>
 {

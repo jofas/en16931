@@ -2,7 +2,7 @@ using Dev.Fassbender.En16931.Model.Immutable.Primitives;
 
 namespace Dev.Fassbender.En16931.Model.Immutable;
 
-public record Invoice
+public readonly record struct Invoice
 {
     // BT-1
     public required Identifier InvoiceNumber { get; init; }
@@ -115,7 +115,7 @@ public record Invoice
     public required Array<InvoiceLine> InvoiceLines { get; init; }
 }
 
-public record InvoiceNote
+public readonly record struct InvoiceNote
 {
     // BT-21
     public required Code? InvoiceNoteSubjectCode { get; init; }
@@ -124,7 +124,7 @@ public record InvoiceNote
     public required Text Note { get; init; }
 }
 
-public record ProcessControl
+public readonly record struct ProcessControl
 {
     // BT-23
     public required Text BusinessProcessType { get; init; }
@@ -133,7 +133,7 @@ public record ProcessControl
     public required Identifier SpecificationIdentifier { get; init; }
 }
 
-public record PrecedingInvoiceReference
+public readonly record struct PrecedingInvoiceReference
 {
     // BT-25
     public required DocumentReference Reference { get; init; }
@@ -142,7 +142,7 @@ public record PrecedingInvoiceReference
     public required Date? PrecedingInvoiceIssueDate { get; init; }
 }
 
-public record Seller
+public readonly record struct Seller
 {
     // BT-27
     public required Text SellerName { get; init; }
@@ -176,7 +176,7 @@ public record Seller
 
 }
 
-public record SellerPostalAddress
+public readonly record struct SellerPostalAddress
 {
     // BT-35
     public required Text? SellerAddressLine1 { get; init; }
@@ -201,7 +201,7 @@ public record SellerPostalAddress
     public required Code SellerCountryCode { get; init; }
 }
 
-public record SellerContact
+public readonly record struct SellerContact
 {
     // BT-41
     public required Text SellerContactPoint { get; init; }
@@ -213,7 +213,7 @@ public record SellerContact
     public required Text SellerContactEmailAddress { get; init; }
 }
 
-public record Buyer
+public readonly record struct Buyer
 {
     // BT-44
     public required Text BuyerName { get; init; }
@@ -240,7 +240,7 @@ public record Buyer
     public required BuyerContact? BuyerContact { get; init; }
 }
 
-public record BuyerPostalAddress
+public readonly record struct BuyerPostalAddress
 {
     // BT-50
     public required Text? BuyerAddressLine1 { get; init; }
@@ -265,7 +265,7 @@ public record BuyerPostalAddress
     public required Code BuyerCountryCode { get; init; }
 }
 
-public record BuyerContact
+public readonly record struct BuyerContact
 {
     // BT-56
     public required Text? ContactPoint { get; init; }
@@ -277,7 +277,7 @@ public record BuyerContact
     public required Text? EmailAddress { get; init; }
 }
 
-public record Payee
+public readonly record struct Payee
 {
     // BT-59
     public required Text PayeeName { get; init; }
@@ -289,7 +289,7 @@ public record Payee
     public required Identifier? PayeeLegalRegistrationIdentifier { get; init; }
 }
 
-public record SellerTaxRepresentativeParty
+public readonly record struct SellerTaxRepresentativeParty
 {
     // BT-62
     public required Text SellerTaxRepresentativeName { get; init; }
@@ -301,7 +301,7 @@ public record SellerTaxRepresentativeParty
     public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress { get; init; }
 }
 
-public record SellerTaxRepresentativePostalAddress
+public readonly record struct SellerTaxRepresentativePostalAddress
 {
     // BT-64
     public required Text? TaxRepresentativeAddressLine1 { get; init; }
@@ -326,7 +326,7 @@ public record SellerTaxRepresentativePostalAddress
     public required Code TaxRepresentativeCountryCode { get; init; }
 }
 
-public record DeliveryInformation
+public readonly record struct DeliveryInformation
 {
     // BT-70
     public required Text? DeliverToPartyName { get; init; }
@@ -344,7 +344,7 @@ public record DeliveryInformation
     public required DeliverToAddress? DeliverToAddress { get; init; }
 }
 
-public record InvoicingPeriod
+public readonly record struct InvoicingPeriod
 {
     // BT-73
     public required Date? InvoicingPeriodStartDate { get; init; }
@@ -353,7 +353,7 @@ public record InvoicingPeriod
     public required Date? InvoicingPeriodEndDate { get; init; }
 }
 
-public record DeliverToAddress
+public readonly record struct DeliverToAddress
 {
     // BT-75
     public required Text? DeliverToAddressLine1 { get; init; }
@@ -378,7 +378,7 @@ public record DeliverToAddress
     public required Code DeliverToCountryCode { get; init; }
 }
 
-public record PaymentInstructions
+public readonly record struct PaymentInstructions
 {
     // BT-81
     // UNTDID-4461
@@ -400,7 +400,7 @@ public record PaymentInstructions
     public required DirectDebit? DirectDebit { get; init; }
 }
 
-public record CreditTransfer
+public readonly record struct CreditTransfer
 {
     // BT-84
     public required Identifier PaymentAccountIdentifier { get; init; }
@@ -412,7 +412,7 @@ public record CreditTransfer
     public required Identifier? PaymentServiceProviderIdentifier { get; init; }
 }
 
-public record PaymentCardInformation
+public readonly record struct PaymentCardInformation
 {
     // BT-87
     public required Text PaymentCardPrimaryAccountNumber { get; init; }
@@ -421,7 +421,7 @@ public record PaymentCardInformation
     public required Text? PaymentCardHolderName { get; init; }
 }
 
-public record DirectDebit
+public readonly record struct DirectDebit
 {
     // BT-89
     public required Identifier MandateReferenceIdentifier { get; init; }
@@ -433,7 +433,7 @@ public record DirectDebit
     public required Identifier DebitedAccountIdentifier { get; init; }
 }
 
-public record DocumentLevelAllowance
+public readonly record struct DocumentLevelAllowance
 {
     // BT-92
     public required Amount DocumentLevelAllowanceAmount { get; init; }
@@ -457,7 +457,7 @@ public record DocumentLevelAllowance
     public required Code? DocumentLevelAllowanceReasonCode { get; init; }
 }
 
-public record DocumentLevelCharge
+public readonly record struct DocumentLevelCharge
 {
     // BT-99
     public required Amount DocumentLevelChargeAmount { get; init; }
@@ -481,7 +481,7 @@ public record DocumentLevelCharge
     public required Code? DocumentLevelChargeReasonCode { get; init; }
 }
 
-public record DocumentTotals
+public readonly record struct DocumentTotals
 {
     // BT-106
     public required Amount SumOfInvoiceLineNetAmount { get; init; }
@@ -514,7 +514,7 @@ public record DocumentTotals
     public required Amount AmountDueForPayment { get; init; }
 }
 
-public record VatBreakdown
+public readonly record struct VatBreakdown
 {
     // BT-116
     public required Amount VatCategoryTaxableAmount { get; init; }
@@ -537,7 +537,7 @@ public record VatBreakdown
     public required Code? VatExemptionReasonCode { get; init; }
 }
 
-public record AdditionalSupportingDocument
+public readonly record struct AdditionalSupportingDocument
 {
     // BT-122
     public required DocumentReference SupportingDocumentReference { get; init; }
@@ -552,7 +552,7 @@ public record AdditionalSupportingDocument
     public required BinaryObject? AttachedDocument { get; init; }
 }
 
-public record InvoiceLine
+public readonly record struct InvoiceLine
 {
     // BT-126
     public required Identifier InvoiceLineIdentifier { get; init; }
@@ -597,7 +597,7 @@ public record InvoiceLine
     public required ItemInformation ItemInformation { get; init; }
 }
 
-public record InvoiceLinePeriod
+public readonly record struct InvoiceLinePeriod
 {
     // BT-134
     public required Date? InvoiceLinePeriodStartDate { get; init; }
@@ -606,7 +606,7 @@ public record InvoiceLinePeriod
     public required Date? InvoiceLinePeriodEndDate { get; init; }
 }
 
-public record InvoiceLineAllowance
+public readonly record struct InvoiceLineAllowance
 {
     // BT-136
     public required Amount InvoiceLineAllowanceAmount { get; init; }
@@ -624,7 +624,7 @@ public record InvoiceLineAllowance
     public required Code? InvoiceLineAllowanceReasonCode { get; init; }
 }
 
-public record InvoiceLineCharge
+public readonly record struct InvoiceLineCharge
 {
     // BT-141
     public required Amount InvoiceLineChargeAmount { get; init; }
@@ -642,7 +642,7 @@ public record InvoiceLineCharge
     public required Code? InvoiceLineChargeReasonCode { get; init; }
 }
 
-public record PriceDetails
+public readonly record struct PriceDetails
 {
     // BT-146
     public required UnitPriceAmount ItemNetPrice { get; init; }
@@ -661,7 +661,7 @@ public record PriceDetails
     public required Code? ItemPriceBaseQuantityUnitOfMeasureCode { get; init; }
 }
 
-public record LineVatInformation
+public readonly record struct LineVatInformation
 {
     // BT-151
     // UNTDID 5305
@@ -671,7 +671,7 @@ public record LineVatInformation
     public required Percentage? InvoicedItemVatRate { get; init; }
 }
 
-public record ItemInformation
+public readonly record struct ItemInformation
 {
     // BT-153
     public required Text ItemName { get; init; }
@@ -700,7 +700,7 @@ public record ItemInformation
     public required Array<ItemAttribute> ItemAttributes { get; init; }
 }
 
-public record ItemAttribute
+public readonly record struct ItemAttribute
 {
     // BT-160
     public required Text ItemAttributeName { get; init; }

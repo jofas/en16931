@@ -7,19 +7,107 @@ using System.Linq;
 namespace Dev.Fassbender.En16931.Model.Immutable.Primitives;
 
 public readonly record struct Amount(decimal Value);
-public readonly record struct Code(string Value);
-public readonly record struct Date(DateTime Value);
-public readonly record struct DocumentReference(string Value);
 public readonly record struct Percentage(decimal Value);
 public readonly record struct Quantity(decimal Value);
-public readonly record struct Text(string Value);
 public readonly record struct UnitPriceAmount(decimal Value);
 
-public record struct BinaryObject(Array<byte> Content, string MimeCode, string Filename);
+public readonly record struct Date(DateTime Value);
 
-public record struct Identifier
+public readonly record struct Code
 {
-    public required string Content { get; init; }
+    public required string Value
+    {
+        get;
+        init
+        {
+            field = value ?? throw new ArgumentNullException(nameof(Value));
+        }
+    }
+
+    [SetsRequiredMembers]
+    public Code(string value)
+    {
+        Value = value;
+    }
+}
+
+public readonly record struct DocumentReference
+{
+    public required string Value
+    {
+        get;
+        init
+        {
+            field = value ?? throw new ArgumentNullException(nameof(Value));
+        }
+    }
+
+    [SetsRequiredMembers]
+    public DocumentReference(string value)
+    {
+        Value = value;
+    }
+}
+
+public readonly record struct Text
+{
+    public required string Value
+    {
+        get;
+        init
+        {
+            field = value ?? throw new ArgumentNullException(nameof(Value));
+        }
+    }
+
+    [SetsRequiredMembers]
+    public Text(string value)
+    {
+        Value = value;
+    }
+}
+
+public readonly record struct BinaryObject
+{
+    public required Array<byte> Content { get; init; }
+
+    public required string MimeCode
+    {
+        get;
+        init
+        {
+            field = value ?? throw new ArgumentNullException(nameof(MimeCode));
+        }
+    }
+
+    public required string Filename
+    {
+        get;
+        init
+        {
+            field = value ?? throw new ArgumentNullException(nameof(Filename));
+        }
+    }
+
+    [SetsRequiredMembers]
+    public BinaryObject(Array<byte> content, string mimeCode, string filename)
+    {
+        Content = content;
+        MimeCode = mimeCode;
+        Filename = filename;
+    }
+}
+
+public readonly record struct Identifier
+{
+    public required string Content
+    {
+        get;
+        init
+        {
+            field = value ?? throw new ArgumentNullException(nameof(Content));
+        }
+    }
 
     public required string? SchemeIdentifier { get; init; }
 
@@ -50,7 +138,7 @@ public record struct Identifier
     }
 }
 
-public struct Array<T> : IEquatable<Array<T>>
+public readonly struct Array<T> : IEquatable<Array<T>>
 {
     public required ImmutableArray<T> Value { get; init; }
 
@@ -61,12 +149,12 @@ public struct Array<T> : IEquatable<Array<T>>
 
     public override bool Equals(object? o) => o is Array<T> other && this.Equals(other);
 
+    public override int GetHashCode() => Value.GetHashCode();
+
     public bool Equals(Array<T> other)
     {
         return Value.SequenceEqual(other.Value);
     }
-
-    public override int GetHashCode() => Value.GetHashCode();
 
     public static bool operator ==(Array<T> lhs, Array<T> rhs)
     {
