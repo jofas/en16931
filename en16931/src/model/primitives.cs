@@ -153,11 +153,8 @@ public struct Code : IToImmutable<Im.Code>, IXmlSerializable
 {
     public required string Value
     {
-        get;
-        set
-        {
-            field = value ?? throw new ArgumentNullException(nameof(Value));
-        }
+        get => field ?? throw new NullReferenceException();
+        set => field = value ?? throw new ArgumentNullException(nameof(Value));
     }
 
     [SetsRequiredMembers]
@@ -188,11 +185,8 @@ public struct DocumentReference : IToImmutable<Im.DocumentReference>, IXmlSerial
 {
     public required string Value
     {
-        get;
-        set
-        {
-            field = value ?? throw new ArgumentNullException(nameof(Value));
-        }
+        get => field ?? throw new NullReferenceException();
+        set => field = value ?? throw new ArgumentNullException(nameof(Value));
     }
 
     [SetsRequiredMembers]
@@ -223,11 +217,8 @@ public struct Text : IToImmutable<Im.Text>, IXmlSerializable
 {
     public required string Value
     {
-        get;
-        set
-        {
-            field = value ?? throw new ArgumentNullException(nameof(Value));
-        }
+        get => field ?? throw new NullReferenceException();
+        set => field = value ?? throw new ArgumentNullException(nameof(Value));
     }
 
     [SetsRequiredMembers]
@@ -259,31 +250,22 @@ public struct BinaryObject : IToImmutable<Im.BinaryObject>
     [XmlElement(ElementName = "content")]
     public required byte[] Content
     {
-        get;
-        set
-        {
-            field = value ?? throw new ArgumentNullException(nameof(Content));
-        }
+        get => field ?? throw new NullReferenceException();
+        set => field = value ?? throw new ArgumentNullException(nameof(Content));
     }
 
     [XmlElement(ElementName = "mime-code")]
     public required string MimeCode
     {
-        get;
-        set
-        {
-            field = value ?? throw new ArgumentNullException(nameof(MimeCode));
-        }
+        get => field ?? throw new NullReferenceException();
+        set => field = value ?? throw new ArgumentNullException(nameof(MimeCode));
     }
 
     [XmlElement(ElementName = "filename")]
     public required string Filename
     {
-        get;
-        set
-        {
-            field = value ?? throw new ArgumentNullException(nameof(Filename));
-        }
+        get => field ?? throw new NullReferenceException();
+        set => field = value ?? throw new ArgumentNullException(nameof(Filename));
     }
 
     [SetsRequiredMembers]
@@ -305,11 +287,8 @@ public struct Identifier : IToImmutable<Im.Identifier>
     [XmlElement(ElementName = "content")]
     public required string Content
     {
-        get;
-        set
-        {
-            field = value ?? throw new ArgumentNullException(nameof(Content));
-        }
+        get => field ?? throw new NullReferenceException();
+        set => field = value ?? throw new ArgumentNullException(nameof(Content));
     }
 
     [XmlElement(ElementName = "scheme-identifier")]
