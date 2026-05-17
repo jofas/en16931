@@ -3,14 +3,13 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+
 using Dev.Fassbender.En16931.Model.Primitives;
+using Dev.Fassbender.En16931.Utils;
+
 using Im = Dev.Fassbender.En16931.Model.Immutable;
 
 namespace Dev.Fassbender.En16931.Model;
-
-// TODO: add null-check to every element of arrays that contain non-nullable reference types
-// TODO: add non-empty checks inline
-// TODO: add immutable.primitives.NonEmptyArray for non-empty checks
 
 [XmlRoot(ElementName = "invoice", Namespace = "urn:todo")]
 public class Invoice : IToImmutable<Im.Invoice>
@@ -100,10 +99,16 @@ public class Invoice : IToImmutable<Im.Invoice>
     [XmlArrayItem(ElementName = "invoice-note")]
     public InvoiceNote[] InvoiceNotes
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(InvoiceNotes));
+            Assert.ArgIsNotNull(value);
+            Assert.ArgContainsNoNullValues(value, "InvoiceNotes can't contain null values");
+            field = value;
         }
     } = [];
 
@@ -111,10 +116,15 @@ public class Invoice : IToImmutable<Im.Invoice>
     [XmlElement(ElementName = "process-control")]
     public required ProcessControl ProcessControl
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(ProcessControl));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
@@ -123,10 +133,16 @@ public class Invoice : IToImmutable<Im.Invoice>
     [XmlArrayItem(ElementName = "preceding-invoice-reference")]
     public PrecedingInvoiceReference[] PrecedingInvoiceReferences
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(PrecedingInvoiceReference));
+            Assert.ArgIsNotNull(value);
+            Assert.ArgContainsNoNullValues(value, "PrecedingInvoiceReferences can't contain null values");
+            field = value;
         }
     } = [];
 
@@ -134,10 +150,15 @@ public class Invoice : IToImmutable<Im.Invoice>
     [XmlElement(ElementName = "seller")]
     public required Seller Seller
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(Seller));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
@@ -145,10 +166,15 @@ public class Invoice : IToImmutable<Im.Invoice>
     [XmlElement(ElementName = "buyer")]
     public required Buyer Buyer
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(Buyer));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
@@ -168,10 +194,15 @@ public class Invoice : IToImmutable<Im.Invoice>
     [XmlElement(ElementName = "payment-instructions")]
     public required PaymentInstructions PaymentInstructions
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(PaymentInstructions));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
@@ -180,10 +211,16 @@ public class Invoice : IToImmutable<Im.Invoice>
     [XmlArrayItem(ElementName = "document-level-allowance")]
     public DocumentLevelAllowance[] DocumentLevelAllowances
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(DocumentLevelAllowances));
+            Assert.ArgIsNotNull(value);
+            Assert.ArgContainsNoNullValues(value, "DocumentLevelAllowances can't contain null values");
+            field = value;
         }
     } = [];
 
@@ -192,10 +229,16 @@ public class Invoice : IToImmutable<Im.Invoice>
     [XmlArrayItem(ElementName = "document-level-charge")]
     public DocumentLevelCharge[] DocumentLevelCharges
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(DocumentLevelCharges));
+            Assert.ArgIsNotNull(value);
+            Assert.ArgContainsNoNullValues(value, "DocumentLevelCharges can't contain null values");
+            field = value;
         }
     } = [];
 
@@ -203,24 +246,34 @@ public class Invoice : IToImmutable<Im.Invoice>
     [XmlElement(ElementName = "document-totals")]
     public required DocumentTotals DocumentTotals
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(DocumentTotals));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
     // BG-23
-    //
-    // non-empty
     [XmlArray(ElementName = "vat-breakdown")]
     [XmlArrayItem(ElementName = "vat-breakdown")]
     public required VatBreakdown[] VatBreakdown
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(DocumentLevelCharges));
+            Assert.ArgIsNotNull(value);
+            Assert.ArgIsNotEmpty(value, "VatBreakdown can't be empty");
+            Assert.ArgContainsNoNullValues(value, "VatBreakdown can't contain null values");
+            field = value;
         }
     }
 
@@ -229,24 +282,35 @@ public class Invoice : IToImmutable<Im.Invoice>
     [XmlArrayItem(ElementName = "additional-supporting-document")]
     public AdditionalSupportingDocument[] AdditionalSupportingDocuments
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(AdditionalSupportingDocuments));
+            Assert.ArgIsNotNull(value);
+            Assert.ArgContainsNoNullValues(value, "AdditionalSupportingDocuments can't contain null values");
+            field = value;
         }
     } = [];
 
     // BG-25
-    //
-    // non-empty
     [XmlArray(ElementName = "invoice-lines")]
     [XmlArrayItem(ElementName = "invoice-line")]
     public required InvoiceLine[] InvoiceLines
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(InvoiceLines));
+            Assert.ArgIsNotNull(value);
+            Assert.ArgIsNotEmpty(value, "InvoiceLines can't be empty");
+            Assert.ArgContainsNoNullValues(value, "InvoiceLines can't contain null values");
+            field = value;
         }
     }
 
@@ -285,9 +349,9 @@ public class Invoice : IToImmutable<Im.Invoice>
             DocumentLevelAllowances = DocumentLevelAllowances.ToImmutable<DocumentLevelAllowance, Im.DocumentLevelAllowance>(),
             DocumentLevelCharges = DocumentLevelCharges.ToImmutable<DocumentLevelCharge, Im.DocumentLevelCharge>(),
             DocumentTotals = DocumentTotals.ToImmutable(),
-            VatBreakdown = VatBreakdown.ToImmutable<VatBreakdown, Im.VatBreakdown>(),
+            VatBreakdown = VatBreakdown.ToNonEmptyImmutable<VatBreakdown, Im.VatBreakdown>(),
             AdditionalSupportingDocuments = AdditionalSupportingDocuments.ToImmutable<AdditionalSupportingDocument, Im.AdditionalSupportingDocument>(),
-            InvoiceLines = InvoiceLines.ToImmutable<InvoiceLine, Im.InvoiceLine>(),
+            InvoiceLines = InvoiceLines.ToNonEmptyImmutable<InvoiceLine, Im.InvoiceLine>(),
         };
     }
 }
@@ -367,10 +431,15 @@ public class Seller : IToImmutable<Im.Seller>
     [XmlArrayItem(ElementName = "seller-identifier")]
     public Identifier[] SellerIdentifiers
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(SellerIdentifiers));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     } = [];
 
@@ -398,10 +467,15 @@ public class Seller : IToImmutable<Im.Seller>
     [XmlElement(ElementName = "seller-postal-address")]
     public required SellerPostalAddress SellerPostalAddress
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(SellerPostalAddress));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
@@ -409,10 +483,15 @@ public class Seller : IToImmutable<Im.Seller>
     [XmlElement(ElementName = "seller-contact")]
     public required SellerContact SellerContact
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(SellerContact));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
@@ -535,10 +614,15 @@ public class Buyer : IToImmutable<Im.Buyer>
     [XmlElement(ElementName = "buyer-postal-address")]
     public required BuyerPostalAddress BuyerPostalAddress
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(BuyerPostalAddress));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
@@ -672,10 +756,15 @@ public class SellerTaxRepresentativeParty : IToImmutable<Im.SellerTaxRepresentat
     [XmlElement(ElementName = "seller-tax-representative-postal-address")]
     public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(SellerTaxRepresentativePostalAddress));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
@@ -857,10 +946,16 @@ public class PaymentInstructions : IToImmutable<Im.PaymentInstructions>
     [XmlArrayItem(ElementName = "credit-transfer")]
     public CreditTransfer[] CreditTransfers
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(CreditTransfers));
+            Assert.ArgIsNotNull(value);
+            Assert.ArgContainsNoNullValues(value, "CreditTransfers can't contain null values");
+            field = value;
         }
     } = [];
 
@@ -1221,10 +1316,16 @@ public class InvoiceLine : IToImmutable<Im.InvoiceLine>
     [XmlArrayItem(ElementName = "invoice-line-allowance")]
     public InvoiceLineAllowance[] InvoiceLineAllowances
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(InvoiceLineAllowances));
+            Assert.ArgIsNotNull(value);
+            Assert.ArgContainsNoNullValues(value, "InvoiceLineAllowances can't contain null values");
+            field = value;
         }
     } = [];
 
@@ -1233,10 +1334,16 @@ public class InvoiceLine : IToImmutable<Im.InvoiceLine>
     [XmlArrayItem(ElementName = "invoice-line-charge")]
     public InvoiceLineCharge[] InvoiceLineCharges
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(InvoiceLineCharges));
+            Assert.ArgIsNotNull(value);
+            Assert.ArgContainsNoNullValues(value, "InvoiceLineCharges can't contain null values");
+            field = value;
         }
     } = [];
 
@@ -1244,10 +1351,15 @@ public class InvoiceLine : IToImmutable<Im.InvoiceLine>
     [XmlElement(ElementName = "price-details")]
     public required PriceDetails PriceDetails
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(PriceDetails));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
@@ -1255,10 +1367,15 @@ public class InvoiceLine : IToImmutable<Im.InvoiceLine>
     [XmlElement(ElementName = "line-vat-information")]
     public required LineVatInformation LineVatInformation
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(LineVatInformation));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
@@ -1266,10 +1383,15 @@ public class InvoiceLine : IToImmutable<Im.InvoiceLine>
     [XmlElement(ElementName = "item-information")]
     public required ItemInformation ItemInformation
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(ItemInformation));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     }
 
@@ -1470,10 +1592,15 @@ public class ItemInformation : IToImmutable<Im.ItemInformation>
     [XmlArrayItem(ElementName = "item-classification-identifier")]
     public Identifier[] ItemClassificationIdentifiers
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(ItemClassificationIdentifiers));
+            Assert.ArgIsNotNull(value);
+            field = value;
         }
     } = [];
 
@@ -1487,10 +1614,16 @@ public class ItemInformation : IToImmutable<Im.ItemInformation>
     [XmlArrayItem(ElementName = "item-attribute")]
     public ItemAttribute[] ItemAttributes
     {
-        get;
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
         set
         {
-            field = value ?? throw new ArgumentNullException(nameof(ItemAttributes));
+            Assert.ArgIsNotNull(value);
+            Assert.ArgContainsNoNullValues(value, "ItemAttributes can't contain null values");
+            field = value;
         }
     } = [];
 

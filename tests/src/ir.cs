@@ -226,7 +226,7 @@ public class IR
             RoundingAmount = new Amount(0),
             AmountDueForPayment = new Amount(12829.69m),
         },
-        VatBreakdown = new Array<VatBreakdown>([
+        VatBreakdown = new NonEmptyArray<VatBreakdown>([
                 new VatBreakdown {
                     VatCategoryTaxableAmount = new Amount(10781.25m),
                     VatCategoryTaxAmount = new Amount(2048.44m),
@@ -266,7 +266,7 @@ public class IR
                     ),
                 },
             ]),
-        InvoiceLines = new Array<InvoiceLine>([
+        InvoiceLines = new NonEmptyArray<InvoiceLine>([
                 new InvoiceLine {
                     InvoiceLineIdentifier = new Identifier("1"),
                     InvoiceLineNote = new Text("Die letzte Lieferung im Rahmen des abgerechneten Abonnements erfolgt in 12/2016 Lieferung erfolgt / erfolgte direkt vom Verlag"),
@@ -564,7 +564,7 @@ public class IR
             RoundingAmount = null,
             AmountDueForPayment = new Amount(12829.69m),
         },
-        VatBreakdown = new Array<VatBreakdown>([
+        VatBreakdown = new NonEmptyArray<VatBreakdown>([
                 new VatBreakdown {
                     VatCategoryTaxableAmount = new Amount(10781.25m),
                     VatCategoryTaxAmount = new Amount(2048.44m),
@@ -594,7 +594,7 @@ public class IR
                     ),
                 },
             ]),
-        InvoiceLines = new Array<InvoiceLine>([
+        InvoiceLines = new NonEmptyArray<InvoiceLine>([
                 new InvoiceLine {
                     InvoiceLineIdentifier = new Identifier("1"),
                     InvoiceLineNote = new Text("Die letzte Lieferung im Rahmen des abgerechneten Abonnements erfolgt in 12/2016 Lieferung erfolgt / erfolgte direkt vom Verlag"),
@@ -872,7 +872,7 @@ public class IR
             RoundingAmount = null,
             AmountDueForPayment = new Amount(12829.69m),
         },
-        VatBreakdown = new Array<VatBreakdown>([
+        VatBreakdown = new NonEmptyArray<VatBreakdown>([
                 new VatBreakdown {
                     VatCategoryTaxableAmount = new Amount(10781.25m),
                     VatCategoryTaxAmount = new Amount(2048.44m),
@@ -902,7 +902,7 @@ public class IR
                     ),
                 },
             ]),
-        InvoiceLines = new Array<InvoiceLine>([
+        InvoiceLines = new NonEmptyArray<InvoiceLine>([
                 new InvoiceLine {
                     InvoiceLineIdentifier = new Identifier("1"),
                     InvoiceLineNote = new Text("Die letzte Lieferung im Rahmen des abgerechneten Abonnements erfolgt in 12/2016 Lieferung erfolgt / erfolgte direkt vom Verlag"),
@@ -1181,7 +1181,7 @@ public class IR
             RoundingAmount = null,
             AmountDueForPayment = new Amount(12829.69m),
         },
-        VatBreakdown = new Array<VatBreakdown>([
+        VatBreakdown = new NonEmptyArray<VatBreakdown>([
                 new VatBreakdown {
                     VatCategoryTaxableAmount = new Amount(10781.25m),
                     VatCategoryTaxAmount = new Amount(2048.44m),
@@ -1211,7 +1211,7 @@ public class IR
                     ),
                 },
             ]),
-        InvoiceLines = new Array<InvoiceLine>([
+        InvoiceLines = new NonEmptyArray<InvoiceLine>([
                 new InvoiceLine {
                     InvoiceLineIdentifier = new Identifier("1"),
                     InvoiceLineNote = new Text("Die letzte Lieferung im Rahmen des abgerechneten Abonnements erfolgt in 12/2016 Lieferung erfolgt / erfolgte direkt vom Verlag"),

@@ -4,6 +4,8 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
+using Dev.Fassbender.En16931.Utils;
+
 namespace Dev.Fassbender.En16931.Model.Immutable.Primitives;
 
 public readonly record struct Amount(decimal Value);
@@ -17,8 +19,16 @@ public readonly record struct Code
 {
     public required string Value
     {
-        get => field ?? throw new NullReferenceException();
-        init => field = value ?? throw new ArgumentNullException(nameof(Value));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     [SetsRequiredMembers]
@@ -32,8 +42,16 @@ public readonly record struct DocumentReference
 {
     public required string Value
     {
-        get => field ?? throw new NullReferenceException();
-        init => field = value ?? throw new ArgumentNullException(nameof(Value));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     [SetsRequiredMembers]
@@ -47,8 +65,16 @@ public readonly record struct Text
 {
     public required string Value
     {
-        get => field ?? throw new NullReferenceException();
-        init => field = value ?? throw new ArgumentNullException(nameof(Value));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     [SetsRequiredMembers]
@@ -64,14 +90,30 @@ public readonly record struct BinaryObject
 
     public required string MimeCode
     {
-        get => field ?? throw new NullReferenceException();
-        init => field = value ?? throw new ArgumentNullException(nameof(MimeCode));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     public required string Filename
     {
-        get => field ?? throw new NullReferenceException();
-        init => field = value ?? throw new ArgumentNullException(nameof(Filename));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     [SetsRequiredMembers]
@@ -87,8 +129,16 @@ public readonly record struct Identifier
 {
     public required string Content
     {
-        get => field ?? throw new NullReferenceException();
-        init => field = value ?? throw new ArgumentNullException(nameof(Content));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     public required string? SchemeIdentifier { get; init; }
@@ -124,8 +174,16 @@ public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
 {
     public required ImmutableArray<T> Value
     {
-        get => field.IsDefault ? throw new NullReferenceException() : field;
-        init => field = value.IsDefault ? throw new ArgumentNullException(nameof(Value)) : value;
+        get
+        {
+            Assert.IsFalse(field.IsDefault, "Value can't be uninitialized or empty");
+            return field;
+        }
+        init
+        {
+            Assert.IsFalse(value.IsDefault, "Value can't be uninitialized or empty");
+            field = value;
+        }
     }
 
     [SetsRequiredMembers]
@@ -158,5 +216,54 @@ public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
     {
         string items = string.Join(", ", Value);
         return $"Array {{ Value = [{items}] }}";
+    }
+}
+
+public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>> where T : struct
+{
+    public required ImmutableArray<T> Value
+    {
+        get
+        {
+            Assert.IsFalse(field.IsDefaultOrEmpty, "Value can't be uninitialized or empty");
+            return field;
+        }
+        init
+        {
+            Assert.IsFalse(value.IsDefaultOrEmpty, "Value can't be uninitialized or empty");
+            field = value;
+        }
+    }
+
+    [SetsRequiredMembers]
+    public NonEmptyArray(IEnumerable<T> v) => Value = ImmutableArray.CreateRange(v);
+
+    #region value-equality
+
+    public override bool Equals(object? o) => o is NonEmptyArray<T> other && this.Equals(other);
+
+    public override int GetHashCode() => Value.GetHashCode();
+
+    public bool Equals(NonEmptyArray<T> other)
+    {
+        return Value.SequenceEqual(other.Value);
+    }
+
+    public static bool operator ==(NonEmptyArray<T> lhs, NonEmptyArray<T> rhs)
+    {
+        return lhs.Equals(rhs);
+    }
+
+    public static bool operator !=(NonEmptyArray<T> lhs, NonEmptyArray<T> rhs)
+    {
+        return !lhs.Equals(rhs);
+    }
+
+    #endregion
+
+    public override string ToString()
+    {
+        string items = string.Join(", ", Value);
+        return $"NonEmptyArray {{ Value = [{items}] }}";
     }
 }

@@ -102,17 +102,13 @@ public readonly record struct Invoice
     public required DocumentTotals DocumentTotals { get; init; }
 
     // BG-23
-    //
-    // non-empty
-    public required Array<VatBreakdown> VatBreakdown { get; init; }
+    public required NonEmptyArray<VatBreakdown> VatBreakdown { get; init; }
 
     // BG-24
     public required Array<AdditionalSupportingDocument> AdditionalSupportingDocuments { get; init; }
 
     // BG-25
-    //
-    // non-empty
-    public required Array<InvoiceLine> InvoiceLines { get; init; }
+    public required NonEmptyArray<InvoiceLine> InvoiceLines { get; init; }
 }
 
 public readonly record struct InvoiceNote

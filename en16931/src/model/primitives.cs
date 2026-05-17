@@ -5,6 +5,9 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+
+using Dev.Fassbender.En16931.Utils;
+
 using Im = Dev.Fassbender.En16931.Model.Immutable.Primitives;
 
 namespace Dev.Fassbender.En16931.Model.Primitives;
@@ -28,7 +31,7 @@ public struct Amount : IToImmutable<Im.Amount>, IXmlSerializable
 
     public void WriteXml(XmlWriter writer)
     {
-        throw new NotImplementedException();
+        ThrowHelper.ThrowNotImplementedException();
     }
 
     public XmlSchema? GetSchema()
@@ -56,7 +59,7 @@ public struct Percentage : IToImmutable<Im.Percentage>, IXmlSerializable
 
     public void WriteXml(XmlWriter writer)
     {
-        throw new NotImplementedException();
+        ThrowHelper.ThrowNotImplementedException();
     }
 
     public XmlSchema? GetSchema()
@@ -84,7 +87,7 @@ public struct Quantity : IToImmutable<Im.Quantity>, IXmlSerializable
 
     public void WriteXml(XmlWriter writer)
     {
-        throw new NotImplementedException();
+        ThrowHelper.ThrowNotImplementedException();
     }
 
     public XmlSchema? GetSchema()
@@ -112,7 +115,7 @@ public struct UnitPriceAmount : IToImmutable<Im.UnitPriceAmount>, IXmlSerializab
 
     public void WriteXml(XmlWriter writer)
     {
-        throw new NotImplementedException();
+        ThrowHelper.ThrowNotImplementedException();
     }
 
     public XmlSchema? GetSchema()
@@ -140,7 +143,7 @@ public struct Date : IToImmutable<Im.Date>, IXmlSerializable
 
     public void WriteXml(XmlWriter writer)
     {
-        throw new NotImplementedException();
+        ThrowHelper.ThrowNotImplementedException();
     }
 
     public XmlSchema? GetSchema()
@@ -153,8 +156,16 @@ public struct Code : IToImmutable<Im.Code>, IXmlSerializable
 {
     public required string Value
     {
-        get => field ?? throw new NullReferenceException();
-        set => field = value ?? throw new ArgumentNullException(nameof(Value));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        set
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     [SetsRequiredMembers]
@@ -172,7 +183,7 @@ public struct Code : IToImmutable<Im.Code>, IXmlSerializable
 
     public void WriteXml(XmlWriter writer)
     {
-        throw new NotImplementedException();
+        ThrowHelper.ThrowNotImplementedException();
     }
 
     public XmlSchema? GetSchema()
@@ -185,8 +196,16 @@ public struct DocumentReference : IToImmutable<Im.DocumentReference>, IXmlSerial
 {
     public required string Value
     {
-        get => field ?? throw new NullReferenceException();
-        set => field = value ?? throw new ArgumentNullException(nameof(Value));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        set
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     [SetsRequiredMembers]
@@ -204,7 +223,7 @@ public struct DocumentReference : IToImmutable<Im.DocumentReference>, IXmlSerial
 
     public void WriteXml(XmlWriter writer)
     {
-        throw new NotImplementedException();
+        ThrowHelper.ThrowNotImplementedException();
     }
 
     public XmlSchema? GetSchema()
@@ -217,8 +236,16 @@ public struct Text : IToImmutable<Im.Text>, IXmlSerializable
 {
     public required string Value
     {
-        get => field ?? throw new NullReferenceException();
-        set => field = value ?? throw new ArgumentNullException(nameof(Value));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        set
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     [SetsRequiredMembers]
@@ -236,7 +263,7 @@ public struct Text : IToImmutable<Im.Text>, IXmlSerializable
 
     public void WriteXml(XmlWriter writer)
     {
-        throw new NotImplementedException();
+        ThrowHelper.ThrowNotImplementedException();
     }
 
     public XmlSchema? GetSchema()
@@ -250,22 +277,46 @@ public struct BinaryObject : IToImmutable<Im.BinaryObject>
     [XmlElement(ElementName = "content")]
     public required byte[] Content
     {
-        get => field ?? throw new NullReferenceException();
-        set => field = value ?? throw new ArgumentNullException(nameof(Content));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        set
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     [XmlElement(ElementName = "mime-code")]
     public required string MimeCode
     {
-        get => field ?? throw new NullReferenceException();
-        set => field = value ?? throw new ArgumentNullException(nameof(MimeCode));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        set
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     [XmlElement(ElementName = "filename")]
     public required string Filename
     {
-        get => field ?? throw new NullReferenceException();
-        set => field = value ?? throw new ArgumentNullException(nameof(Filename));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        set
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     [SetsRequiredMembers]
@@ -287,8 +338,16 @@ public struct Identifier : IToImmutable<Im.Identifier>
     [XmlElement(ElementName = "content")]
     public required string Content
     {
-        get => field ?? throw new NullReferenceException();
-        set => field = value ?? throw new ArgumentNullException(nameof(Content));
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        set
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
     }
 
     [XmlElement(ElementName = "scheme-identifier")]
@@ -340,5 +399,14 @@ public static class ArrayToImmutableExt
     where T : IToImmutable<TResult> where TResult : struct
     {
         return new Im.Array<TResult>(self.Select(x => x.ToImmutable()));
+    }
+}
+
+public static class ArrayToNonEmptyImmutableExt
+{
+    public static Im.NonEmptyArray<TResult> ToNonEmptyImmutable<T, TResult>(this IEnumerable<T> self)
+    where T : IToImmutable<TResult> where TResult : struct
+    {
+        return new Im.NonEmptyArray<TResult>(self.Select(x => x.ToImmutable()));
     }
 }
