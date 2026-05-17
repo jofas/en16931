@@ -17,11 +17,8 @@ public readonly record struct Code
 {
     public required string Value
     {
-        get;
-        init
-        {
-            field = value ?? throw new ArgumentNullException(nameof(Value));
-        }
+        get => field ?? throw new NullReferenceException();
+        init => field = value ?? throw new ArgumentNullException(nameof(Value));
     }
 
     [SetsRequiredMembers]
@@ -35,11 +32,8 @@ public readonly record struct DocumentReference
 {
     public required string Value
     {
-        get;
-        init
-        {
-            field = value ?? throw new ArgumentNullException(nameof(Value));
-        }
+        get => field ?? throw new NullReferenceException();
+        init => field = value ?? throw new ArgumentNullException(nameof(Value));
     }
 
     [SetsRequiredMembers]
@@ -53,11 +47,8 @@ public readonly record struct Text
 {
     public required string Value
     {
-        get;
-        init
-        {
-            field = value ?? throw new ArgumentNullException(nameof(Value));
-        }
+        get => field ?? throw new NullReferenceException();
+        init => field = value ?? throw new ArgumentNullException(nameof(Value));
     }
 
     [SetsRequiredMembers]
@@ -73,20 +64,14 @@ public readonly record struct BinaryObject
 
     public required string MimeCode
     {
-        get;
-        init
-        {
-            field = value ?? throw new ArgumentNullException(nameof(MimeCode));
-        }
+        get => field ?? throw new NullReferenceException();
+        init => field = value ?? throw new ArgumentNullException(nameof(MimeCode));
     }
 
     public required string Filename
     {
-        get;
-        init
-        {
-            field = value ?? throw new ArgumentNullException(nameof(Filename));
-        }
+        get => field ?? throw new NullReferenceException();
+        init => field = value ?? throw new ArgumentNullException(nameof(Filename));
     }
 
     [SetsRequiredMembers]
@@ -102,11 +87,8 @@ public readonly record struct Identifier
 {
     public required string Content
     {
-        get;
-        init
-        {
-            field = value ?? throw new ArgumentNullException(nameof(Content));
-        }
+        get => field ?? throw new NullReferenceException();
+        init => field = value ?? throw new ArgumentNullException(nameof(Content));
     }
 
     public required string? SchemeIdentifier { get; init; }
@@ -140,7 +122,11 @@ public readonly record struct Identifier
 
 public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
 {
-    public required ImmutableArray<T> Value { get; init; }
+    public required ImmutableArray<T> Value
+    {
+        get => field.IsDefault ? throw new NullReferenceException() : field;
+        init => field = value.IsDefault ? throw new ArgumentNullException(nameof(Value)) : value;
+    }
 
     [SetsRequiredMembers]
     public Array(IEnumerable<T> v) => Value = ImmutableArray.CreateRange(v);
@@ -168,7 +154,7 @@ public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
 
     #endregion
 
-    public override String ToString()
+    public override string ToString()
     {
         string items = string.Join(", ", Value);
         return $"Array {{ Value = [{items}] }}";
