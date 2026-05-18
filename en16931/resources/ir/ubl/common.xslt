@@ -354,8 +354,8 @@
               <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail"/>
             </buyer-contact-email-address>
           </xsl:if>
-         </buyer-contact>
-       </xsl:if>
+        </buyer-contact>
+      </xsl:if>
     </buyer>
     <xsl:if test="exists(cac:PayeeParty/cac:PartyName/cbc:Name)">
       <payee id="bg-10">
