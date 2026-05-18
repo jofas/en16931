@@ -105,13 +105,91 @@
       </seller>
       <!-- TODO: bg-7 -->
       <buyer>
+        <buyer-name id="bt-44">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:Name"/>
+        </buyer-name>
+        <buyer-electronic-address id="bt-49">
+          <content>
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:URIUniversalCommunication/ram:URIID"/>
+          </content>
+          <scheme-identifier>
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:URIUniversalCommunication/ram:URIID/@schemeID"/>
+          </scheme-identifier>
+        </buyer-electronic-address>
+        <buyer-postal-address id="bg-8">
+          <buyer-city id="bt-52">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:CityName"/>
+          </buyer-city>
+          <buyer-post-code id="bt-53">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:PostcodeCode"/>
+          </buyer-post-code>
+          <buyer-country-code id="bt-55">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:CountryID"/>
+          </buyer-country-code>
+        </buyer-postal-address>
       </buyer>
-      <!-- TODO: bg-16 -->
-      <payment-instructions>
+      <payment-instructions id="bg-16">
+        <payment-means-type-code id="bt-81">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode"/>
+        </payment-means-type-code>
       </payment-instructions>
-      <!-- TODO: bg-22 -->
-      <document-totals>
+      <document-totals id="bg-22">
       </document-totals>
+      <vat-breakdown id="bg-23">
+        <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax">
+          <vat-breakdown id="bg-23">
+            <vat-category-taxable-amount id="bt-116">
+              <xsl:value-of select="./ram:BasisAmount"/>
+            </vat-category-taxable-amount>
+            <vat-category-tax-amount id="bt-117">
+              <xsl:value-of select="./ram:CalculatedAmount"/>
+            </vat-category-tax-amount>
+            <!-- TODO: what's up with ./ram:TypeCode = 'VAT'? Do I need to consider it maybe in for-loop? Ignore it? -->
+            <vat-category-code id="bt-118">
+              <xsl:value-of select="./ram:CategoryCode"/>
+            </vat-category-code>
+            <vat-category-rate id="bt-119">
+              <xsl:value-of select="./ram:RateApplicablePercent"/>
+            </vat-category-rate>
+          </vat-breakdown>
+        </xsl:for-each>
+      </vat-breakdown>
+      <invoice-lines id="bg-25">
+        <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem">
+          <invoice-line id="bg-25">
+            <invoice-line-identifier id="bt-126">
+              <content>
+                <xsl:value-of select="./ram:AssociatedDocumentLineDocument/ram:LineID"/>
+              </content>
+            </invoice-line-identifier>
+            <invoiced-quantity id="bt-129">
+              <xsl:value-of select="./ram:SpecifiedLineTradeDelivery/ram:BilledQuantity"/>
+            </invoiced-quantity>
+            <invoiced-quantity-unit-of-measure-code id="bt-130">
+              <xsl:value-of select="./ram:SpecifiedLineTradeDelivery/ram:BilledQuantity/@unitCode"/>
+            </invoiced-quantity-unit-of-measure-code>
+            <invoice-line-net-amount id="bt-131">
+              <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeSettlementLineMonetarySummation/ram:LineTotalAmount"/>
+            </invoice-line-net-amount>
+            <price-details id="bg-29">
+              <item-net-price id="bt-146">
+                <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:ChargeAmount"/>
+              </item-net-price>
+            </price-details>
+            <line-vat-information id="bg-30">
+              <!-- TODO: what's up with ram:TypeCode = 'VAT'? Do I need to consider it maybe in for-loop? Ignore it? -->
+              <invoiced-item-vat-category-code id="bt-151">
+                <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode"/>
+              </invoiced-item-vat-category-code>
+            </line-vat-information>
+            <item-information id="bg-31">
+              <item-name id="bt-153">
+                <xsl:value-of select="./ram:SpecifiedTradeProduct/ram:Name"/>
+              </item-name>
+            </item-information>
+          </invoice-line>
+        </xsl:for-each>
+      </invoice-lines>
     </invoice>
   </xsl:template>
 
