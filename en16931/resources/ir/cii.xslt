@@ -58,11 +58,50 @@
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerOrderReferencedDocument/ram:IssuerAssignedID"/>
         </sales-order-reference>
       </xsl:if>
-      <!-- TODO: bg-2 -->
-      <process-control>
+      <process-control id="bg-2">
+        <business-process-type id="bt-23">
+          <xsl:value-of select="rsm:ExchangedDocumentContext/ram:BusinessProcessSpecifiedDocumentContextParameter/ram:ID"/>
+        </business-process-type>
+        <specification-identifier id="bt-24">
+          <content>
+            <xsl:value-of select="rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID"/>
+          </content>
+        </specification-identifier>
       </process-control>
-      <!-- TODO: bg-4 -->
-      <seller>
+      <seller id="bg-4">
+        <seller-name id="bt-27">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:Name"/>
+        </seller-name>
+        <seller-electronic-address id="bt-34">
+          <content>
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:URIUniversalCommunication/ram:URIID"/>
+          </content>
+          <scheme-identifier>
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:URIUniversalCommunication/ram:URIID/@schemeID"/>
+          </scheme-identifier>
+        </seller-electronic-address>
+        <seller-postal-address id="bg-5">
+          <seller-city id="bt-37">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CityName"/>
+          </seller-city>
+          <seller-post-code id="bt-38">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:PostcodeCode"/>
+          </seller-post-code>
+          <seller-country-code id="bt-40">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CountryID"/>
+          </seller-country-code>
+        </seller-postal-address>
+        <seller-contact id="bg-6">
+          <seller-contact-point id="bt-41">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:DefinedTradeContact/ram:PersonName"/>
+          </seller-contact-point>
+          <seller-contact-telephone-number id="bt-42">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber"/>
+          </seller-contact-telephone-number>
+          <seller-contact-email-address id="bt-43">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:DefinedTradeContact/ram:EmailURIUniversalCommunication/ram:URIID"/>
+          </seller-contact-email-address>
+        </seller-contact>
       </seller>
       <!-- TODO: bg-7 -->
       <buyer>
