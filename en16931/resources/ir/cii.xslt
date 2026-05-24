@@ -30,6 +30,7 @@
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:TaxCurrencyCode"/>
         </vat-accounting-currency-code>
       </xsl:if>
+      <!-- CII-SR-461 fails if more than one ram:TaxPointDate node is present (there can be multiple ram:ApplicableTradeTax elements)  -->
       <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString[@format = '102'])">
         <value-added-tax-point-date id="bt-7">
           <xsl:call-template name="date">
@@ -37,7 +38,12 @@
           </xsl:call-template>
         </value-added-tax-point-date>
       </xsl:if>
-      <!-- TODO: bt-8 -->
+      <!-- CII-SR-462 fails if more than one ram:DueDateTypeCode node is present (there can be multiple ram:ApplicableTradeTax elements) -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:DueDateTypeCode)">
+        <value-added-tax-point-date-code id="bt-8">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:DueDateTypeCode"/>
+        </value-added-tax-point-date-code>
+      </xsl:if>
       <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString[@format = '102'])">
         <payment-due-date id="bt-9">
           <xsl:call-template name="date">
