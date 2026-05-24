@@ -154,9 +154,45 @@
         <seller-name id="bt-27">
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:Name"/>
         </seller-name>
-        <!-- TODO: bt-28 -->
-        <!-- TODO: bt-29 -->
-        <!-- TODO: bt-30 -->
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:TradingBusinessName)">
+          <seller-trading-name id="bt-28">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:TradingBusinessName"/>
+          </seller-trading-name>
+        </xsl:if>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:ID)
+            or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:GlobalID)">
+          <seller-identifiers id="bt-29">
+            <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:ID">
+              <seller-identifier id="bt-29">
+                <content>
+                  <xsl:value-of select="."/>
+                </content>
+              </seller-identifier>
+            </xsl:for-each>
+            <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:GlobalID">
+              <seller-identifier id="bt-29">
+                <content>
+                  <xsl:value-of select="."/>
+                </content>
+                <scheme-identifier>
+                  <xsl:value-of select="./@schemeID"/>
+                </scheme-identifier>
+              </seller-identifier>
+            </xsl:for-each>
+          </seller-identifiers>
+        </xsl:if>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:ID)">
+          <seller-legal-registration-identifier id="bt-30">
+            <content>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:ID"/>
+            </content>
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:ID[@schemeID])">
+              <scheme-identifier>
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:ID/@schemeID"/>
+              </scheme-identifier>
+            </xsl:if>
+          </seller-legal-registration-identifier>
+        </xsl:if>
         <!-- TODO: bt-31 -->
         <!-- TODO: bt-32 -->
         <!-- TODO: bt-33 -->

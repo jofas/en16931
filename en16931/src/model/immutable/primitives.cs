@@ -189,6 +189,8 @@ public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
     [SetsRequiredMembers]
     public Array(IEnumerable<T> v) => Value = ImmutableArray.CreateRange(v);
 
+    public T this[int index] { get => Value[index]; }
+
     #region value-equality
 
     public override bool Equals(object? o) => o is Array<T> other && this.Equals(other);
@@ -237,6 +239,8 @@ public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>> where T :
 
     [SetsRequiredMembers]
     public NonEmptyArray(IEnumerable<T> v) => Value = ImmutableArray.CreateRange(v);
+
+    public T this[int index] { get => Value[index]; }
 
     #region value-equality
 

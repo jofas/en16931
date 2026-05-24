@@ -27,6 +27,12 @@
       <cbc:IssueDate>2018-02-04</cbc:IssueDate>
     </cac:InvoiceDocumentReference>
   </cac:BillingReference>
+  <cac:BillingReference>
+    <cac:InvoiceDocumentReference>
+      <cbc:ID>PIR0987654321</cbc:ID>
+      <cbc:IssueDate>2018-03-05</cbc:IssueDate>
+    </cac:InvoiceDocumentReference>
+  </cac:BillingReference>
   <cac:DespatchDocumentReference>
     <cbc:ID>DAR123456789</cbc:ID>
   </cac:DespatchDocumentReference>
@@ -69,6 +75,12 @@
   <cac:AccountingSupplierParty>
     <cac:Party>
       <cbc:EndpointID schemeID="EM">rechnungsausgang@test.com</cbc:EndpointID>
+      <cac:PartyIdentification>
+        <cbc:ID>9876543217894897438</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyIdentification>
+        <cbc:ID>748387437438</cbc:ID>
+      </cac:PartyIdentification>
       <cac:PartyIdentification>
         <cbc:ID schemeID="0088">987654321</cbc:ID>
       </cac:PartyIdentification>

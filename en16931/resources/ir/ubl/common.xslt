@@ -158,16 +158,16 @@
           <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name"/>
         </seller-trading-name>
       </xsl:if>
-      <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[not(normalize-space(upper-case(@schemeID)) = 'SEPA')])">
+      <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[cbc:ID[not(normalize-space(upper-case(@schemeID)) = 'SEPA')]])">
         <seller-identifiers id="bt-29">
-          <xsl:for-each select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[not(normalize-space(upper-case(@schemeID)) = 'SEPA')]">
+          <xsl:for-each select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification[cbc:ID[not(normalize-space(upper-case(@schemeID)) = 'SEPA')]]">
             <seller-identifier id="bt-29">
               <content>
-                <xsl:value-of select="."/>
+                <xsl:value-of select="./cbc:ID"/>
               </content>
-              <xsl:if test="exists(.[@schemeID])">
+              <xsl:if test="exists(./cbc:ID[@schemeID])">
                 <scheme-identifier>
-                  <xsl:value-of select="./@schemeID"/>
+                  <xsl:value-of select="./cbc:ID/@schemeID"/>
                 </scheme-identifier>
               </xsl:if>
             </seller-identifier>

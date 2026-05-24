@@ -57,12 +57,18 @@ public class IR
                     Reference = new DocumentReference("PIR1234567890"),
                     PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 2, 4)),
                 },
+                new PrecedingInvoiceReference {
+                    Reference = new DocumentReference("PIR0987654321"),
+                    PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 3, 5)),
+                },
             ]),
         Seller = new Seller
         {
             SellerName = new Text("[Seller name]"),
             SellerTradingName = new Text("[Seller trading name]"),
             SellerIdentifiers = new Array<Identifier>([
+                    new Identifier("9876543217894897438"),
+                    new Identifier("748387437438"),
                     new Identifier("987654321", "0088")
                 ]),
             SellerLegalRegistrationIdentifier = new Identifier("123456789", "0088"),
@@ -1338,8 +1344,13 @@ public class IR
 
         Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
 
-        DebugAssert(_expected1, invoice);
-        Assert.Equal(_expected1, invoice);
+        // CII only supports a single preceding invoice reference
+        Invoice expected = _expected1 with {
+            PrecedingInvoiceReferences = new Array<PrecedingInvoiceReference>([_expected1.PrecedingInvoiceReferences[0]]),
+        };
+
+        DebugAssert(expected, invoice);
+        Assert.Equal(expected, invoice);
     }
 
     [Theory]
@@ -1448,7 +1459,15 @@ public class IR
         Assert.Equal(expected.InvoiceNotes, invoice.InvoiceNotes);
         Assert.Equal(expected.ProcessControl, invoice.ProcessControl);
         Assert.Equal(expected.PrecedingInvoiceReferences, invoice.PrecedingInvoiceReferences);
+
+        Assert.Equal(expected.Seller.SellerName, invoice.Seller.SellerName);
+        Assert.Equal(expected.Seller.SellerTradingName, invoice.Seller.SellerTradingName);
+        Assert.Equal(expected.Seller.SellerIdentifiers, invoice.Seller.SellerIdentifiers);
+        Assert.Equal(expected.Seller.SellerLegalRegistrationIdentifier, invoice.Seller.SellerLegalRegistrationIdentifier);
+        Assert.Equal(expected.Seller.SellerVatIdentifier, invoice.Seller.SellerVatIdentifier);
+        Assert.Equal(expected.Seller.SellerTaxRegistrationIdentifier, invoice.Seller.SellerTaxRegistrationIdentifier);
         Assert.Equal(expected.Seller, invoice.Seller);
+
         Assert.Equal(expected.Buyer, invoice.Buyer);
         Assert.Equal(expected.Payee, invoice.Payee);
         Assert.Equal(expected.SellerTaxRepresentativeParty, invoice.SellerTaxRepresentativeParty);
