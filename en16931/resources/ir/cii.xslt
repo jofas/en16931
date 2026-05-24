@@ -38,11 +38,21 @@
         </value-added-tax-point-date>
       </xsl:if>
       <!-- TODO: bt-8 -->
-      <!-- TODO: bt-9 -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString[@format = '102'])">
+        <payment-due-date id="bt-9">
+          <xsl:call-template name="date">
+            <xsl:with-param name="node" select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString[@format = '102']"/>
+          </xsl:call-template>
+        </payment-due-date>
+      </xsl:if>
       <buyer-reference id="bt-10">
         <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerReference"/>
       </buyer-reference>
-      <!-- TODO: bt-11 -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SpecifiedProcuringProject/ram:ID)">
+        <project-reference id="bt-11">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SpecifiedProcuringProject/ram:ID"/>
+        </project-reference>
+      </xsl:if>
       <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:ContractReferencedDocument/ram:IssuerAssignedID)">
         <contract-reference id="bt-12">
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:ContractReferencedDocument/ram:IssuerAssignedID"/>
@@ -58,6 +68,50 @@
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerOrderReferencedDocument/ram:IssuerAssignedID"/>
         </sales-order-reference>
       </xsl:if>
+      <!-- TODO: bt-15 -->
+      <!-- TODO: bt-16 -->
+      <!-- TODO: bt-17 -->
+      <!-- TODO: bt-18 -->
+      <!-- TODO: bt-19 -->
+      <!-- TODO: bt-20 -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ReceivingAdviceReferencedDocument/ram:IssuerAssignedID)">
+        <receiving-advice-reference id="bt-15">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ReceivingAdviceReferencedDocument/ram:IssuerAssignedID"/>
+        </receiving-advice-reference>
+      </xsl:if>
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:DespatchAdviceReferencedDocument/ram:IssuerAssignedID)">
+        <despatch-advice-reference id="bt-16">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:DespatchAdviceReferencedDocument/ram:IssuerAssignedID"/>
+        </despatch-advice-reference>
+      </xsl:if>
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[ram:TypeCode = '50'])">
+        <tender-or-lot-reference id="bt-17">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[ram:TypeCode = '50']/ram:IssuerAssignedID"/>
+        </tender-or-lot-reference>
+      </xsl:if>
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[ram:TypeCode = '130'])">
+        <invoiced-object-identifier id="bt-18">
+          <content>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[ram:TypeCode = '130']/ram:IssuerAssignedID"/>
+          </content>
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[ram:TypeCode = '130']/ram:ReferenceTypeCode)">
+            <scheme-identifier>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[ram:TypeCode = '130']/ram:ReferenceTypeCode"/>
+            </scheme-identifier>
+          </xsl:if>
+        </invoiced-object-identifier>
+      </xsl:if>
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ReceivableSpecifiedTradeAccountingAccount/ram:ID)">
+        <buyer-accounting-reference id="bt-19">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ReceivableSpecifiedTradeAccountingAccount/ram:ID"/>
+        </buyer-accounting-reference>
+      </xsl:if>
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:Description)">
+        <payment-terms id="bt-20">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:Description"/>
+        </payment-terms>
+      </xsl:if>
+      <!-- TODO: bg-1 -->
       <process-control id="bg-2">
         <business-process-type id="bt-23">
           <xsl:value-of select="rsm:ExchangedDocumentContext/ram:BusinessProcessSpecifiedDocumentContextParameter/ram:ID"/>
@@ -68,6 +122,7 @@
           </content>
         </specification-identifier>
       </process-control>
+      <!-- TODO: bg-3 -->
       <seller id="bg-4">
         <seller-name id="bt-27">
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:Name"/>
@@ -103,8 +158,7 @@
           </seller-contact-email-address>
         </seller-contact>
       </seller>
-      <!-- TODO: bg-7 -->
-      <buyer>
+      <buyer id="bg-7">
         <buyer-name id="bt-44">
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:Name"/>
         </buyer-name>
@@ -128,15 +182,21 @@
           </buyer-country-code>
         </buyer-postal-address>
       </buyer>
+      <!-- TODO: bg-10 -->
+      <!-- TODO: bg-11 -->
+      <!-- TODO: bg-13 -->
       <payment-instructions id="bg-16">
         <payment-means-type-code id="bt-81">
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode"/>
         </payment-means-type-code>
       </payment-instructions>
+      <!-- TODO: bg-16 -->
+      <!-- TODO: bg-20 -->
+      <!-- TODO: bg-21 -->
       <document-totals id="bg-22">
       </document-totals>
       <vat-breakdown id="bg-23">
-        <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax">
+        <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax[upper-case(ram:TypeCode) = 'VAT']">
           <vat-breakdown id="bg-23">
             <vat-category-taxable-amount id="bt-116">
               <xsl:value-of select="./ram:BasisAmount"/>
@@ -144,7 +204,6 @@
             <vat-category-tax-amount id="bt-117">
               <xsl:value-of select="./ram:CalculatedAmount"/>
             </vat-category-tax-amount>
-            <!-- TODO: what's up with ./ram:TypeCode = 'VAT'? Do I need to consider it maybe in for-loop? Ignore it? -->
             <vat-category-code id="bt-118">
               <xsl:value-of select="./ram:CategoryCode"/>
             </vat-category-code>
@@ -154,6 +213,8 @@
           </vat-breakdown>
         </xsl:for-each>
       </vat-breakdown>
+      <!-- TODO: bg-24 -->
+      <!-- TypeCode = '916' -->
       <invoice-lines id="bg-25">
         <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem">
           <invoice-line id="bg-25">
@@ -162,6 +223,8 @@
                 <xsl:value-of select="./ram:AssociatedDocumentLineDocument/ram:LineID"/>
               </content>
             </invoice-line-identifier>
+            <!-- TODO: bt-128 -->
+            <!-- TypeCode = '130' -->
             <invoiced-quantity id="bt-129">
               <xsl:value-of select="./ram:SpecifiedLineTradeDelivery/ram:BilledQuantity"/>
             </invoiced-quantity>
@@ -177,9 +240,8 @@
               </item-net-price>
             </price-details>
             <line-vat-information id="bg-30">
-              <!-- TODO: what's up with ram:TypeCode = 'VAT'? Do I need to consider it maybe in for-loop? Ignore it? -->
               <invoiced-item-vat-category-code id="bt-151">
-                <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode"/>
+                <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[upper-case(ram:TypeCode) = 'VAT']/ram:CategoryCode"/>
               </invoiced-item-vat-category-code>
             </line-vat-information>
             <item-information id="bg-31">
