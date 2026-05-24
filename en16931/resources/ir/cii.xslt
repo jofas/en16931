@@ -68,12 +68,6 @@
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerOrderReferencedDocument/ram:IssuerAssignedID"/>
         </sales-order-reference>
       </xsl:if>
-      <!-- TODO: bt-15 -->
-      <!-- TODO: bt-16 -->
-      <!-- TODO: bt-17 -->
-      <!-- TODO: bt-18 -->
-      <!-- TODO: bt-19 -->
-      <!-- TODO: bt-20 -->
       <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ReceivingAdviceReferencedDocument/ram:IssuerAssignedID)">
         <receiving-advice-reference id="bt-15">
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ReceivingAdviceReferencedDocument/ram:IssuerAssignedID"/>
@@ -111,7 +105,22 @@
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:Description"/>
         </payment-terms>
       </xsl:if>
-      <!-- TODO: bg-1 -->
+      <xsl:if test="exists(rsm:ExchangedDocument/ram:IncludedNote)">
+        <invoice-notes id="bg-1">
+          <xsl:for-each select="rsm:ExchangedDocument/ram:IncludedNote">
+            <invoice-note id="bg-1">
+              <xsl:if test="exists(./ram:SubjectCode)">
+                <invoice-note-subject-code id="bt-21">
+                  <xsl:value-of select="./ram:SubjectCode"/>
+                </invoice-note-subject-code>
+              </xsl:if>
+              <invoice-note id="bt-22">
+                <xsl:value-of select="ram:Content"/>
+              </invoice-note>
+            </invoice-note>
+          </xsl:for-each>
+        </invoice-notes>
+      </xsl:if>
       <process-control id="bg-2">
         <business-process-type id="bt-23">
           <xsl:value-of select="rsm:ExchangedDocumentContext/ram:BusinessProcessSpecifiedDocumentContextParameter/ram:ID"/>
@@ -122,11 +131,35 @@
           </content>
         </specification-identifier>
       </process-control>
-      <!-- TODO: bg-3 -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceReferencedDocument)">
+        <preceding-invoice-references id="bg-3">
+          <!-- Note that CII does not actually support multiple bg-3 instances -->
+          <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceReferencedDocument">
+            <preceding-invoice-reference id="bg-3">
+              <preceding-invoice-reference id="bt-25">
+                <xsl:value-of select="./ram:IssuerAssignedID"/>
+              </preceding-invoice-reference>
+              <xsl:if test="exists(./ram:FormattedIssueDateTime/qdt:DateTimeString[@format = '102'])">
+                <preceding-invoice-issue-date id="bt-26">
+                  <xsl:call-template name="date">
+                    <xsl:with-param name="node" select="./ram:FormattedIssueDateTime/qdt:DateTimeString[@format = '102']"/>
+                  </xsl:call-template>
+                </preceding-invoice-issue-date>
+              </xsl:if>
+            </preceding-invoice-reference>
+          </xsl:for-each>
+        </preceding-invoice-references>
+      </xsl:if>
       <seller id="bg-4">
         <seller-name id="bt-27">
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:Name"/>
         </seller-name>
+        <!-- TODO: bt-28 -->
+        <!-- TODO: bt-29 -->
+        <!-- TODO: bt-30 -->
+        <!-- TODO: bt-31 -->
+        <!-- TODO: bt-32 -->
+        <!-- TODO: bt-33 -->
         <seller-electronic-address id="bt-34">
           <content>
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:URIUniversalCommunication/ram:URIID"/>
@@ -136,12 +169,16 @@
           </scheme-identifier>
         </seller-electronic-address>
         <seller-postal-address id="bg-5">
+          <!-- TODO: bt-35 -->
+          <!-- TODO: bt-36 -->
+          <!-- TODO: bt-162 -->
           <seller-city id="bt-37">
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CityName"/>
           </seller-city>
           <seller-post-code id="bt-38">
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:PostcodeCode"/>
           </seller-post-code>
+          <!-- TODO: bt-39 -->
           <seller-country-code id="bt-40">
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CountryID"/>
           </seller-country-code>

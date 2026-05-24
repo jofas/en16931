@@ -57,10 +57,6 @@ public class IR
                     Reference = new DocumentReference("PIR1234567890"),
                     PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 2, 4)),
                 },
-                new PrecedingInvoiceReference {
-                    Reference = new DocumentReference("PIR0987654321"),
-                    PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 3, 5)),
-                }
             ]),
         Seller = new Seller
         {
