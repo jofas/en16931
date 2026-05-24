@@ -193,9 +193,25 @@
             </xsl:if>
           </seller-legal-registration-identifier>
         </xsl:if>
-        <!-- TODO: bt-31 -->
-        <!-- TODO: bt-32 -->
-        <!-- TODO: bt-33 -->
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration[ram:ID[upper-case(@schemeID) = 'VA']])">
+          <seller-vat-identifier id="bt-31">
+            <content>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration[ram:ID[upper-case(@schemeID) = 'VA']]/ram:ID"/>
+            </content>
+          </seller-vat-identifier>
+        </xsl:if>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration[ram:ID[upper-case(@schemeID) = 'FC']])">
+          <seller-tax-registration-identifier id="bt-32">
+            <content>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration[ram:ID[upper-case(@schemeID) = 'FC']]/ram:ID"/>
+            </content>
+          </seller-tax-registration-identifier>
+        </xsl:if>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:Description)">
+          <seller-additional-legal-information id="bt-33">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:Description"/>
+          </seller-additional-legal-information>
+        </xsl:if>
         <seller-electronic-address id="bt-34">
           <content>
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:URIUniversalCommunication/ram:URIID"/>
@@ -205,16 +221,32 @@
           </scheme-identifier>
         </seller-electronic-address>
         <seller-postal-address id="bg-5">
-          <!-- TODO: bt-35 -->
-          <!-- TODO: bt-36 -->
-          <!-- TODO: bt-162 -->
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:LineOne)">
+            <seller-address-line-1 id="bt-35">
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:LineOne"/>
+            </seller-address-line-1>
+          </xsl:if>
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:LineTwo)">
+            <seller-address-line-2 id="bt-36">
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:LineTwo"/>
+            </seller-address-line-2>
+          </xsl:if>
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:LineThree)">
+            <seller-address-line-3 id="bt-162">
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:LineThree"/>
+            </seller-address-line-3>
+          </xsl:if>
           <seller-city id="bt-37">
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CityName"/>
           </seller-city>
           <seller-post-code id="bt-38">
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:PostcodeCode"/>
           </seller-post-code>
-          <!-- TODO: bt-39 -->
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CountrySubDivisionName)">
+            <seller-country-subdivision id="bt-39">
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CountrySubDivisionName"/>
+            </seller-country-subdivision>
+          </xsl:if>
           <seller-country-code id="bt-40">
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CountryID"/>
           </seller-country-code>
@@ -235,6 +267,49 @@
         <buyer-name id="bt-44">
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:Name"/>
         </buyer-name>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:SpecifiedLegalOrganization/ram:TradingBusinessName)">
+          <buyer-trading-name id="bt-45">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:SpecifiedLegalOrganization/ram:TradingBusinessName"/>
+          </buyer-trading-name>
+        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:GlobalID)">
+            <buyer-identifier id="bt-46">
+              <content>
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:GlobalID"/>
+              </content>
+              <scheme-identifier>
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:GlobalID/@schemeID"/>
+              </scheme-identifier>
+            </buyer-identifier>
+          </xsl:when>
+          <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:ID)">
+            <buyer-identifier id="bt-46">
+              <content>
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:ID"/>
+              </content>
+            </buyer-identifier>
+          </xsl:when>
+        </xsl:choose>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:SpecifiedLegalOrganization/ram:ID)">
+          <buyer-legal-registration-identifier id="bt-47">
+            <content>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:SpecifiedLegalOrganization/ram:ID"/>
+            </content>
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:SpecifiedLegalOrganization/ram:ID[@schemeID])">
+              <scheme-identifier>
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:SpecifiedLegalOrganization/ram:ID/@schemeID"/>
+              </scheme-identifier>
+            </xsl:if>
+          </buyer-legal-registration-identifier>
+        </xsl:if>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:SpecifiedTaxRegistration[ram:ID[upper-case(@schemeID) = 'VA']])">
+          <buyer-vat-identifier id="bt-48">
+            <content>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:SpecifiedTaxRegistration[ram:ID[upper-case(@schemeID) = 'VA']]/ram:ID"/>
+            </content>
+          </buyer-vat-identifier>
+        </xsl:if>
         <buyer-electronic-address id="bt-49">
           <content>
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:URIUniversalCommunication/ram:URIID"/>
@@ -244,16 +319,57 @@
           </scheme-identifier>
         </buyer-electronic-address>
         <buyer-postal-address id="bg-8">
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:LineOne)">
+            <buyer-address-line-1 id="bt-50">
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:LineOne"/>
+            </buyer-address-line-1>
+          </xsl:if>
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:LineTwo)">
+            <buyer-address-line-2 id="bt-51">
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:LineTwo"/>
+            </buyer-address-line-2>
+          </xsl:if>
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:LineThree)">
+            <buyer-address-line-3 id="bt-163">
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:LineThree"/>
+            </buyer-address-line-3>
+          </xsl:if>
           <buyer-city id="bt-52">
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:CityName"/>
           </buyer-city>
           <buyer-post-code id="bt-53">
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:PostcodeCode"/>
           </buyer-post-code>
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:CountrySubDivisionName)">
+            <buyer-country-subdivision id="bt-54">
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:CountrySubDivisionName"/>
+            </buyer-country-subdivision>
+          </xsl:if>
           <buyer-country-code id="bt-55">
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:CountryID"/>
           </buyer-country-code>
         </buyer-postal-address>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:PersonName)
+            or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber)
+            or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:EmailURIUniversalCommunication/ram:URIID)">
+          <buyer-contact id="bg-9">
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:PersonName)">
+              <buyer-contact-point id="bt-56">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:PersonName"/>
+              </buyer-contact-point>
+            </xsl:if>
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber)">
+              <buyer-contact-telephone-number id="bt-57">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber"/>
+              </buyer-contact-telephone-number>
+            </xsl:if>
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:EmailURIUniversalCommunication/ram:URIID)">
+              <buyer-contact-email-address id="bt-58">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:EmailURIUniversalCommunication/ram:URIID"/>
+              </buyer-contact-email-address>
+            </xsl:if>
+          </buyer-contact>
+        </xsl:if>
       </buyer>
       <!-- TODO: bg-10 -->
       <!-- TODO: bg-11 -->

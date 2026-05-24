@@ -1466,9 +1466,27 @@ public class IR
         Assert.Equal(expected.Seller.SellerLegalRegistrationIdentifier, invoice.Seller.SellerLegalRegistrationIdentifier);
         Assert.Equal(expected.Seller.SellerVatIdentifier, invoice.Seller.SellerVatIdentifier);
         Assert.Equal(expected.Seller.SellerTaxRegistrationIdentifier, invoice.Seller.SellerTaxRegistrationIdentifier);
+        Assert.Equal(expected.Seller.SellerAdditionalLegalInformation, invoice.Seller.SellerAdditionalLegalInformation);
+        Assert.Equal(expected.Seller.SellerElectronicAddress, invoice.Seller.SellerElectronicAddress);
+        Assert.Equal(expected.Seller.SellerPostalAddress.SellerAddressLine1, invoice.Seller.SellerPostalAddress.SellerAddressLine1);
+        Assert.Equal(expected.Seller.SellerPostalAddress.SellerAddressLine2, invoice.Seller.SellerPostalAddress.SellerAddressLine2);
+        Assert.Equal(expected.Seller.SellerPostalAddress.SellerAddressLine3, invoice.Seller.SellerPostalAddress.SellerAddressLine3);
+        Assert.Equal(expected.Seller.SellerPostalAddress, invoice.Seller.SellerPostalAddress);
         Assert.Equal(expected.Seller, invoice.Seller);
 
+        Assert.Equal(expected.Buyer.BuyerName, invoice.Buyer.BuyerName);
+        Assert.Equal(expected.Buyer.BuyerTradingName, invoice.Buyer.BuyerTradingName);
+        Assert.Equal(expected.Buyer.BuyerIdentifier, invoice.Buyer.BuyerIdentifier);
+        Assert.Equal(expected.Buyer.BuyerLegalRegistrationIdentifier, invoice.Buyer.BuyerLegalRegistrationIdentifier);
+        Assert.Equal(expected.Buyer.BuyerVatIdentifier, invoice.Buyer.BuyerVatIdentifier);
+        Assert.Equal(expected.Buyer.BuyerElectronicAddress, invoice.Buyer.BuyerElectronicAddress);
+        Assert.Equal(expected.Buyer.BuyerPostalAddress.BuyerAddressLine1, invoice.Buyer.BuyerPostalAddress.BuyerAddressLine1);
+        Assert.Equal(expected.Buyer.BuyerPostalAddress.BuyerAddressLine2, invoice.Buyer.BuyerPostalAddress.BuyerAddressLine2);
+        Assert.Equal(expected.Buyer.BuyerPostalAddress.BuyerAddressLine3, invoice.Buyer.BuyerPostalAddress.BuyerAddressLine3);
+        Assert.Equal(expected.Buyer.BuyerPostalAddress, invoice.Buyer.BuyerPostalAddress);
+        Assert.Equal(expected.Buyer.BuyerContact, invoice.Buyer.BuyerContact);
         Assert.Equal(expected.Buyer, invoice.Buyer);
+
         Assert.Equal(expected.Payee, invoice.Payee);
         Assert.Equal(expected.SellerTaxRepresentativeParty, invoice.SellerTaxRepresentativeParty);
         Assert.Equal(expected.DeliveryInformation, invoice.DeliveryInformation);
