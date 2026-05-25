@@ -555,11 +555,77 @@
           </xsl:if>
         </delivery-information>
       </xsl:if>
-      <!-- TODO: bg-16 -->
       <payment-instructions id="bg-16">
         <payment-means-type-code id="bt-81">
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode"/>
         </payment-means-type-code>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:Information)">
+          <payment-means-text id="bt-82">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:Information"/>
+          </payment-means-text>
+        </xsl:if>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PaymentReference)">
+          <remittance-information id="bt-83">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PaymentReference"/>
+          </remittance-information>
+        </xsl:if>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID)">
+          <!-- Note that CII does not actually support multiple bg-17 instances -->
+          <credit-transfers id="bg-17">
+            <credit-transfer id="bg-17">
+              <payment-account-identifier id="bt-84">
+                <content>
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID"/>
+                </content>
+              </payment-account-identifier>
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:AccountName)">
+                <payment-account-name id="bt-85">
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:AccountName"/>
+                </payment-account-name>
+              </xsl:if>
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeeSpecifiedCreditorFinancialInstitution/ram:BICID)">
+                <payment-service-provider-identifier id="bt-86">
+                  <content>
+                    <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeeSpecifiedCreditorFinancialInstitution/ram:BICID"/>
+                  </content>
+                </payment-service-provider-identifier>
+              </xsl:if>
+            </credit-transfer>
+          </credit-transfers>
+        </xsl:if>
+        <!-- TODO
+        <xsl:if test="exists()">
+          <payment-card-information id="bg-18">
+            <payment-card-primary-account-number id="bt-87">
+              <xsl:value-of select=""/>
+            </payment-card-primary-account-number>
+            <xsl:if test="exists()">
+              <payment-card-holder-name id="bt-88">
+                <xsl:value-of select=""/>
+              </payment-card-holder-name>
+            </xsl:if>
+          </payment-card-information>
+        </xsl:if>
+        <xsl:if test="exists()">
+          <direct-debit id="bg-19">
+            <mandate-reference-identifier id="bt-89">
+              <content>
+                <xsl:value-of select=""/>
+              </content>
+            </mandate-reference-identifier>
+            <bank-assigned-creditor-identifier id="bt-90">
+              <content>
+                <xsl:value-of select=""/>
+              </content>
+            </bank-assigned-creditor-identifier>
+            <debited-account-identifier id="bt-91">
+              <content>
+                <xsl:value-of select=""/>
+              </content>
+            </debited-account-identifier>
+          </direct-debit>
+        </xsl:if>
+        -->
       </payment-instructions>
       <!-- TODO: bg-20 -->
       <!-- TODO: bg-21 -->
