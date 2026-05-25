@@ -176,12 +176,12 @@ public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
     {
         get
         {
-            Assert.IsFalse(field.IsDefault, "Value can't be uninitialized or empty");
+            Assert.IsFalse(field.IsDefault, "Value can't be uninitialized");
             return field;
         }
         init
         {
-            Assert.IsFalse(value.IsDefault, "Value can't be uninitialized or empty");
+            Assert.IsFalse(value.IsDefault, "Value can't be uninitialized");
             field = value;
         }
     }
