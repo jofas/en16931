@@ -415,7 +415,53 @@
           </xsl:if>
         </payee>
       </xsl:if>
-      <!-- TODO: bg-11 -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:Name)">
+        <seller-tax-representative-party id="bg-11">
+          <seller-tax-representative-name id="bt-62">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:Name"/>
+          </seller-tax-representative-name>
+          <seller-tax-representative-vat-identifier id="bt-63">
+            <content>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration[ram:ID[upper-case(@schemeID) = 'VA']]/ram:ID"/>
+            </content>
+          </seller-tax-representative-vat-identifier>
+          <seller-tax-representative-postal-address id="bg-12">
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:LineOne)">
+              <tax-representative-address-line-1 id="bt-64">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:LineOne"/>
+              </tax-representative-address-line-1>
+            </xsl:if>
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:LineTwo)">
+              <tax-representative-address-line-2 id="bt-65">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:LineTwo"/>
+              </tax-representative-address-line-2>
+            </xsl:if>
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:LineThree)">
+              <tax-representative-address-line-3 id="bt-164">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:LineThree"/>
+              </tax-representative-address-line-3>
+            </xsl:if>
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:CityName)">
+              <tax-representative-city id="bt-66">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:CityName"/>
+              </tax-representative-city>
+            </xsl:if>
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:PostcodeCode)">
+              <tax-representative-post-code id="bt-67">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:PostcodeCode"/>
+              </tax-representative-post-code>
+            </xsl:if>
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:CountrySubDivisionName)">
+              <tax-representative-country-subdivision id="bt-68">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:CountrySubDivisionName"/>
+              </tax-representative-country-subdivision>
+            </xsl:if>
+            <tax-representative-country-code id="bt-69">
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTaxRepresentativeTradeParty/ram:PostalTradeAddress/ram:CountryID"/>
+            </tax-representative-country-code>
+          </seller-tax-representative-postal-address>
+        </seller-tax-representative-party>
+      </xsl:if>
       <!-- TODO: bg-13 -->
       <payment-instructions id="bg-16">
         <payment-means-type-code id="bt-81">
