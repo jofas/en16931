@@ -377,7 +377,44 @@
           </buyer-contact>
         </xsl:if>
       </buyer>
-      <!-- TODO: bg-10 -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PayeeTradeParty/ram:Name)">
+        <payee id="bg-10">
+          <payee-name id="bt-59">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PayeeTradeParty/ram:Name"/>
+          </payee-name>
+          <xsl:choose>
+            <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PayeeTradeParty/ram:GlobalID)">
+              <payee-identifier id="bt-60">
+                <content>
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PayeeTradeParty/ram:GlobalID"/>
+                </content>
+                <scheme-identifier>
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PayeeTradeParty/ram:GlobalID/@schemeID"/>
+                </scheme-identifier>
+              </payee-identifier>
+            </xsl:when>
+            <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PayeeTradeParty/ram:ID)">
+              <payee-identifier id="bt-60">
+                <content>
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PayeeTradeParty/ram:ID"/>
+                </content>
+              </payee-identifier>
+            </xsl:when>
+          </xsl:choose>
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PayeeTradeParty/ram:SpecifiedLegalOrganization/ram:ID)">
+            <payee-legal-registration-identifier id="bt-61">
+              <content>
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PayeeTradeParty/ram:SpecifiedLegalOrganization/ram:ID"/>
+              </content>
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PayeeTradeParty/ram:SpecifiedLegalOrganization/ram:ID[@schemeID])">
+                <scheme-identifier>
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PayeeTradeParty/ram:SpecifiedLegalOrganization/ram:ID/@schemeID"/>
+                </scheme-identifier>
+              </xsl:if>
+            </payee-legal-registration-identifier>
+          </xsl:if>
+        </payee>
+      </xsl:if>
       <!-- TODO: bg-11 -->
       <!-- TODO: bg-13 -->
       <payment-instructions id="bg-16">
