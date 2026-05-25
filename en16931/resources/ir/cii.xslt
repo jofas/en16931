@@ -462,15 +462,108 @@
           </seller-tax-representative-postal-address>
         </seller-tax-representative-party>
       </xsl:if>
-      <!-- TODO: bg-13 -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:Name)
+          or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:GlobalID)
+          or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:ID)
+          or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString[@format = '102'])
+          or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString[@format = '102'])
+          or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString[@format = '102'])
+          or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CityName)">
+        <delivery-information id="bg-13">
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:Name)">
+            <deliver-to-party-name id="bt-70">
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:Name"/>
+            </deliver-to-party-name>
+          </xsl:if>
+          <xsl:choose>
+            <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:GlobalID)">
+              <deliver-to-location-identifier id="bt-71">
+                <content>
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:GlobalID"/>
+                </content>
+                <scheme-identifier>
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:GlobalID/@schemeID"/>
+                </scheme-identifier>
+              </deliver-to-location-identifier>
+            </xsl:when>
+            <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:ID)">
+              <deliver-to-location-identifier id="bt-71">
+                <content>
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:ID"/>
+                </content>
+              </deliver-to-location-identifier>
+            </xsl:when>
+          </xsl:choose>
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString[@format = '102'])">
+            <actual-delivery-date id="bt-72">
+              <xsl:call-template name="date">
+                <xsl:with-param name="node" select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString[@format = '102']"/>
+              </xsl:call-template>
+            </actual-delivery-date>
+          </xsl:if>
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString[@format = '102'])
+              or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString[@format = '102'])">
+            <invoicing-period id="bg-14">
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString[@format = '102'])">
+                <invoicing-period-start-date id="bt-73">
+                  <xsl:call-template name="date">
+                    <xsl:with-param name="node" select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString[@format = '102']"/>
+                  </xsl:call-template>
+                </invoicing-period-start-date>
+              </xsl:if>
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString[@format = '102'])">
+                <invoicing-period-end-date id="bt-74">
+                  <xsl:call-template name="date">
+                    <xsl:with-param name="node" select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString[@format = '102']"/>
+                  </xsl:call-template>
+                </invoicing-period-end-date>
+              </xsl:if>
+            </invoicing-period>
+          </xsl:if>
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CityName)">
+            <deliver-to-address id="bg-15">
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:LineOne)">
+                <deliver-to-address-line-1 id="bt-75">
+                  <xsl:value-of select="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:LineOne"/>
+                </deliver-to-address-line-1>
+              </xsl:if>
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:LineTwo)">
+                <deliver-to-address-line-2 id="bt-76">
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:LineTwo"/>
+                </deliver-to-address-line-2>
+              </xsl:if>
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:LineThree)">
+                <deliver-to-address-line-3 id="bt-165">
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:LineThree"/>
+                </deliver-to-address-line-3>
+              </xsl:if>
+              <deliver-to-city id="bt-77">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CityName"/>
+              </deliver-to-city>
+              <deliver-to-post-code id="bt-78">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:PostcodeCode"/>
+              </deliver-to-post-code>
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CountrySubDivisionName)">
+                <deliver-to-country-subdivision id="bt-79">
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CountrySubDivisionName"/>
+                </deliver-to-country-subdivision>
+              </xsl:if>
+              <deliver-to-country-code id="bt-80">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CountryID"/>
+              </deliver-to-country-code>
+            </deliver-to-address>
+          </xsl:if>
+        </delivery-information>
+      </xsl:if>
+      <!-- TODO: bg-16 -->
       <payment-instructions id="bg-16">
         <payment-means-type-code id="bt-81">
           <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode"/>
         </payment-means-type-code>
       </payment-instructions>
-      <!-- TODO: bg-16 -->
       <!-- TODO: bg-20 -->
       <!-- TODO: bg-21 -->
+      <!-- TODO: bg-22 -->
       <document-totals id="bg-22">
       </document-totals>
       <vat-breakdown id="bg-23">
