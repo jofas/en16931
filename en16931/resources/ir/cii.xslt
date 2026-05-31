@@ -821,8 +821,23 @@
                 <xsl:value-of select="./ram:AssociatedDocumentLineDocument/ram:LineID"/>
               </content>
             </invoice-line-identifier>
-            <!-- TODO: bt-128 -->
-            <!-- TypeCode = '130' -->
+            <xsl:if test="exists(./ram:AssociatedDocumentLineDocument/ram:IncludedNote/ram:Content)">
+              <invoice-line-note id="bt-127">
+                <xsl:value-of select="./ram:AssociatedDocumentLineDocument/ram:IncludedNote/ram:Content"/>
+              </invoice-line-note>
+            </xsl:if>
+            <xsl:if test="exists(./ram:SpecifiedLineTradeSettlement/ram:AdditionalReferencedDocument[ram:TypeCode = '130']/ram:IssuerAssignedID)">
+              <invoice-line-object-identifier id="bt-128">
+                <content>
+                  <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:AdditionalReferencedDocument[ram:TypeCode = '130']/ram:IssuerAssignedID"/>
+                </content>
+                <xsl:if test="exists(./ram:SpecifiedLineTradeSettlement/ram:AdditionalReferencedDocument[ram:TypeCode = '130']/ram:ReferenceTypeCode)">
+                  <scheme-identifier>
+                    <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:AdditionalReferencedDocument[ram:TypeCode = '130']/ram:ReferenceTypeCode"/>
+                  </scheme-identifier>
+                </xsl:if>
+              </invoice-line-object-identifier>
+            </xsl:if>
             <invoiced-quantity id="bt-129">
               <xsl:value-of select="./ram:SpecifiedLineTradeDelivery/ram:BilledQuantity"/>
             </invoiced-quantity>
@@ -832,16 +847,32 @@
             <invoice-line-net-amount id="bt-131">
               <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeSettlementLineMonetarySummation/ram:LineTotalAmount"/>
             </invoice-line-net-amount>
+            <xsl:if test="exists(./ram:SpecifiedLineTradeAgreement/ram:BuyerOrderReferencedDocument/ram:LineID)">
+              <referenced-purchase-order-line-reference id="bt-132">
+                <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:BuyerOrderReferencedDocument/ram:LineID"/>
+              </referenced-purchase-order-line-reference>
+            </xsl:if>
+            <xsl:if test="exists(./ram:SpecifiedLineTradeSettlement/ram:ReceivableSpecifiedTradeAccountingAccount/ram:ID)">
+              <invoice-line-buyer-accounting-reference id="bt-133">
+                <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:ReceivableSpecifiedTradeAccountingAccount/ram:ID"/>
+              </invoice-line-buyer-accounting-reference>
+            </xsl:if>
+            <!-- TODO: bg-26 -->
+            <!-- TODO: bg-27 -->
+            <!-- TODO: bg-28 -->
+            <!-- TODO: bg-29 -->
             <price-details id="bg-29">
               <item-net-price id="bt-146">
                 <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:ChargeAmount"/>
               </item-net-price>
             </price-details>
+            <!-- TODO: bg-30 -->
             <line-vat-information id="bg-30">
               <invoiced-item-vat-category-code id="bt-151">
                 <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[upper-case(ram:TypeCode) = 'VAT']/ram:CategoryCode"/>
               </invoiced-item-vat-category-code>
             </line-vat-information>
+            <!-- TODO: bg-31 -->
             <item-information id="bg-31">
               <item-name id="bt-153">
                 <xsl:value-of select="./ram:SpecifiedTradeProduct/ram:Name"/>

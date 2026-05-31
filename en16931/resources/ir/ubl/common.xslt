@@ -779,14 +779,14 @@
         <xsl:value-of select="./cbc:Note"/>
       </invoice-line-note>
     </xsl:if>
-    <xsl:if test="exists(./cac:DocumentReference[cbc:DocumentTypeCode='130']/cbc:ID)">
+    <xsl:if test="exists(./cac:DocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID)">
       <invoice-line-object-identifier id="bt-128">
         <content>
-          <xsl:value-of select="./cac:DocumentReference[cbc:DocumentTypeCode='130']/cbc:ID"/>
+          <xsl:value-of select="./cac:DocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID"/>
         </content>
-        <xsl:if test="exists(./cac:DocumentReference[cbc:DocumentTypeCode='130']/cbc:ID[@schemeID])">
+        <xsl:if test="exists(./cac:DocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID[@schemeID])">
           <scheme-identifier>
-            <xsl:value-of select="./cac:DocumentReference[cbc:DocumentTypeCode='130']/cbc:ID/@schemeID"/>
+            <xsl:value-of select="./cac:DocumentReference[cbc:DocumentTypeCode = '130']/cbc:ID/@schemeID"/>
           </scheme-identifier>
         </xsl:if>
       </invoice-line-object-identifier>
