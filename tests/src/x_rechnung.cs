@@ -15,14 +15,12 @@ public class XRechnungValidation
         parser.ParseFile("resources/xrechnung-testsuite/standard/01.01a-INVOICE_ubl.xml");
     }
 
-    /* TODO: uncomment once CII parsing is implemented
     [Fact]
     public void TestCorrectCii()
     {
         Parser parser = new Parser();
         parser.ParseFile("resources/xrechnung-testsuite/standard/01.01a-INVOICE_uncefact.xml");
     }
-    */
 
     [Theory]
     [InlineData("resources/schemas/ubl/invoice/failure")]
@@ -188,7 +186,6 @@ public class XRechnungValidation
         }
     }
 
-    /* TODO: uncomment once CII parsing is implemented
     [Theory]
     [InlineData("resources/xrechnung-testsuite/standard")]
     [InlineData("resources/xrechnung-testsuite/extension")]
@@ -204,5 +201,4 @@ public class XRechnungValidation
             parser.ParseFile(standardTest);
         }
     }
-    */
 }
