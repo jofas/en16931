@@ -216,7 +216,16 @@ public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
 
     public override string ToString()
     {
-        string items = string.Join(", ", Value);
+        string items;
+
+        if (Value.Length > 10) {
+            string firstThree = string.Join(", ", Value[0..3]);
+            string lastThree = string.Join(", ", Value[^3..^0]);
+            items = $"{firstThree}, ..., {lastThree}";
+        } else {
+            items = string.Join(", ", Value);
+        }
+
         return $"Array {{ Value = [{items}] }}";
     }
 }
@@ -267,7 +276,16 @@ public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>> where T :
 
     public override string ToString()
     {
-        string items = string.Join(", ", Value);
+        string items;
+
+        if (Value.Length > 10) {
+            string firstThree = string.Join(", ", Value[0..3]);
+            string lastThree = string.Join(", ", Value[^3..^0]);
+            items = $"{firstThree}, ..., {lastThree}";
+        } else {
+            items = string.Join(", ", Value);
+        }
+
         return $"NonEmptyArray {{ Value = [{items}] }}";
     }
 }
