@@ -331,7 +331,10 @@ public class IR
                         ItemSellersIdentifier = new Identifier("1034"),
                         ItemBuyersIdentifier = new Identifier("5034"),
                         ItemStandardIdentifier = new Identifier("123456789", "0088"),
-                        ItemClassificationIdentifiers = new Array<Identifier>([]),
+                        ItemClassificationIdentifiers = new Array<Identifier>([
+                            new Identifier("0721-880X", "IB", "88"),
+                            new Identifier("0721-880XYZ", "IB", "88"),
+                        ]),
                         ItemCountryOfOrigin = new Code("DE"),
                         ItemAttributes = new Array<ItemAttribute>([
                             new ItemAttribute {
@@ -645,7 +648,9 @@ public class IR
                         ItemSellersIdentifier = new Identifier("1034"),
                         ItemBuyersIdentifier = new Identifier("5034"),
                         ItemStandardIdentifier = new Identifier("123456789", "0088"),
-                        ItemClassificationIdentifiers = new Array<Identifier>([]),
+                        ItemClassificationIdentifiers = new Array<Identifier>([
+                            new Identifier("0721-880X", "IB", "88"),
+                        ]),
                         ItemCountryOfOrigin = new Code("DE"),
                         ItemAttributes = new Array<ItemAttribute>([
                             new ItemAttribute {
@@ -953,7 +958,9 @@ public class IR
                         ItemSellersIdentifier = new Identifier("1034"),
                         ItemBuyersIdentifier = new Identifier("5034"),
                         ItemStandardIdentifier = new Identifier("123456789", "0088"),
-                        ItemClassificationIdentifiers = new Array<Identifier>([]),
+                        ItemClassificationIdentifiers = new Array<Identifier>([
+                            new Identifier("0721-880X", "IB", "88"),
+                        ]),
                         ItemCountryOfOrigin = new Code("DE"),
                         ItemAttributes = new Array<ItemAttribute>([
                             new ItemAttribute {
@@ -1262,7 +1269,9 @@ public class IR
                         ItemSellersIdentifier = new Identifier("1034"),
                         ItemBuyersIdentifier = new Identifier("5034"),
                         ItemStandardIdentifier = new Identifier("123456789", "0088"),
-                        ItemClassificationIdentifiers = new Array<Identifier>([]),
+                        ItemClassificationIdentifiers = new Array<Identifier>([
+                            new Identifier("0721-880X", "IB", "88"),
+                        ]),
                         ItemCountryOfOrigin = new Code("DE"),
                         ItemAttributes = new Array<ItemAttribute>([
                             new ItemAttribute {

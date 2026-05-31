@@ -954,9 +954,9 @@
           </scheme-identifier>
         </item-standard-identifier>
       </xsl:if>
-      <xsl:if test="exists(./cac:Item/cac:CommoditiyClassification/cbc:ItemClassificationCode)">
+      <xsl:if test="exists(./cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode)">
         <item-classification-identifiers id="bt-158">
-          <xsl:for-each select="./cac:Item/cac:CommoditiyClassification">
+          <xsl:for-each select="./cac:Item/cac:CommodityClassification">
             <item-classification-identifier id="bt-158">
               <content>
                 <xsl:value-of select="./cbc:ItemClassificationCode"/>
