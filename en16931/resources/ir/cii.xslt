@@ -779,8 +779,40 @@
           </vat-breakdown>
         </xsl:for-each>
       </vat-breakdown>
-      <!-- TODO: bg-24 -->
-      <!-- TypeCode = '916' -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[ram:TypeCode = '916']/ram:IssuerAssignedID)">
+        <additional-supporting-documents id="bg-24">
+          <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[ram:TypeCode = '916']">
+            <additional-supporting-document id="bg-24">
+              <supporting-document-reference id="bt-122">
+                <xsl:value-of select="./ram:IssuerAssignedID"/>
+              </supporting-document-reference>
+              <xsl:if test="exists(./ram:Name)">
+                <supporting-document-description id="bt-123">
+                  <xsl:value-of select="./ram:Name"/>
+                </supporting-document-description>
+              </xsl:if>
+              <xsl:if test="exists(./ram:URIID)">
+                <external-document-location id="bt-124">
+                  <xsl:value-of select="./ram:URIID"/>
+                </external-document-location>
+              </xsl:if>
+              <xsl:if test="exists(./ram:AttachmentBinaryObject)">
+                <attached-document id="bt-125">
+                  <content>
+                    <xsl:value-of select="./ram:AttachmentBinaryObject"/>
+                  </content>
+                  <mime-code>
+                    <xsl:value-of select="./ram:AttachmentBinaryObject/@mimeCode"/>
+                  </mime-code>
+                  <filename>
+                    <xsl:value-of select="./ram:AttachmentBinaryObject/@filename"/>
+                  </filename>
+                </attached-document>
+              </xsl:if>
+            </additional-supporting-document>
+          </xsl:for-each>
+        </additional-supporting-documents>
+      </xsl:if>
       <invoice-lines id="bg-25">
         <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem">
           <invoice-line id="bg-25">
