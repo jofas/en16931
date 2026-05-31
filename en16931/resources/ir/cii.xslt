@@ -857,7 +857,25 @@
                 <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:ReceivableSpecifiedTradeAccountingAccount/ram:ID"/>
               </invoice-line-buyer-accounting-reference>
             </xsl:if>
-            <!-- TODO: bg-26 -->
+            <xsl:if test="exists(./ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString[@format = '102'])
+                or exists(./ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString[@format = '102'])">
+              <invoice-line-period id="bg-26">
+                <xsl:if test="exists(./ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString[@format = '102'])">
+                  <invoice-line-period-start-date id="bt-134">
+                    <xsl:call-template name="date">
+                      <xsl:with-param name="node" select="./ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString[@format = '102']"/>
+                    </xsl:call-template>
+                  </invoice-line-period-start-date>
+                </xsl:if>
+                <xsl:if test="exists(./ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString[@format = '102'])">
+                  <invoice-line-period-end-date id="bt-135">
+                    <xsl:call-template name="date">
+                      <xsl:with-param name="node" select="./ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString[@format = '102']"/>
+                    </xsl:call-template>
+                  </invoice-line-period-end-date>
+                </xsl:if>
+              </invoice-line-period>
+            </xsl:if>
             <!-- TODO: bg-27 -->
             <!-- TODO: bg-28 -->
             <!-- TODO: bg-29 -->
