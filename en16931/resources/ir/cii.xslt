@@ -627,8 +627,85 @@
         </xsl:if>
         -->
       </payment-instructions>
-      <!-- TODO: bg-20 -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'false']/ram:ActualAmount)">
+        <document-level-allowances id="bg-20">
+          <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'false']">
+            <document-level-allowance id="bg-20">
+              <document-level-allowance-amount id="bt-92">
+                <xsl:value-of select="./ram:ActualAmount"/>
+              </document-level-allowance-amount>
+              <xsl:if test="exists(./ram:BasisAmount)">
+                <document-level-allowance-base-amount id="bt-93">
+                  <xsl:value-of select="./ram:BasisAmount"/>
+                </document-level-allowance-base-amount>
+              </xsl:if>
+              <xsl:if test="exists(./ram:CalculationPercent)">
+                <document-level-allowance-percentage id="bt-94">
+                  <xsl:value-of select="./ram:CalculationPercent"/>
+                </document-level-allowance-percentage>
+              </xsl:if>
+              <document-level-allowance-vat-category-code id="bt-95">
+                <xsl:value-of select="./ram:CategoryTradeTax[normalize-space(upper-case(ram:TypeCode)) = 'VAT']/ram:CategoryCode"/>
+              </document-level-allowance-vat-category-code>
+              <xsl:if test="exists(./ram:CategoryTradeTax[normalize-space(upper-case(ram:TypeCode)) = 'VAT']/ram:RateApplicablePercent)">
+                <document-level-allowance-vat-rate id="bt-96">
+                  <xsl:value-of select="./ram:CategoryTradeTax[normalize-space(upper-case(ram:TypeCode)) = 'VAT']/ram:RateApplicablePercent"/>
+                </document-level-allowance-vat-rate>
+              </xsl:if>
+              <xsl:if test="exists(./ram:Reason)">
+                <document-level-allowance-reason id="bt-97">
+                  <xsl:value-of select="./ram:Reason"/>
+                </document-level-allowance-reason>
+              </xsl:if>
+              <xsl:if test="exists(./ram:ReasonCode)">
+                <document-level-allowance-reason-code id="bt-98">
+                  <xsl:value-of select="./ram:ReasonCode"/>
+                </document-level-allowance-reason-code>
+              </xsl:if>
+            </document-level-allowance>
+          </xsl:for-each>
+        </document-level-allowances>
+      </xsl:if>
       <!-- TODO: bg-21 -->
+      <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'true']/ram:ActualAmount)">
+        <document-level-charges id="bg-21">
+          <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'true']">
+            <document-level-charge id="bg-21">
+              <document-level-charge-amount id="bt-99">
+                <xsl:value-of select="./ram:ActualAmount"/>
+              </document-level-charge-amount>
+              <xsl:if test="exists(./ram:BasisAmount)">
+                <document-level-charge-base-amount id="bt-100">
+                  <xsl:value-of select="./ram:BasisAmount"/>
+                </document-level-charge-base-amount>
+              </xsl:if>
+              <xsl:if test="exists(./ram:CalculationPercent)">
+                <document-level-charge-percentage id="bt-101">
+                  <xsl:value-of select="./ram:CalculationPercent"/>
+                </document-level-charge-percentage>
+              </xsl:if>
+              <document-level-charge-vat-category-code id="bt-102">
+                <xsl:value-of select="./ram:CategoryTradeTax[normalize-space(upper-case(ram:TypeCode)) = 'VAT']/ram:CategoryCode"/>
+              </document-level-charge-vat-category-code>
+              <xsl:if test="exists(./ram:CategoryTradeTax[normalize-space(upper-case(ram:TypeCode)) = 'VAT']/ram:RateApplicablePercent)">
+                <document-level-charge-vat-rate id="bt-103">
+                  <xsl:value-of select="./ram:CategoryTradeTax[normalize-space(upper-case(ram:TypeCode)) = 'VAT']/ram:RateApplicablePercent"/>
+                </document-level-charge-vat-rate>
+              </xsl:if>
+              <xsl:if test="exists(./ram:Reason)">
+                <document-level-charge-reason id="bt-104">
+                  <xsl:value-of select="./ram:Reason"/>
+                </document-level-charge-reason>
+              </xsl:if>
+              <xsl:if test="exists(./ram:ReasonCode)">
+                <document-level-charge-reason-code id="bt-105">
+                  <xsl:value-of select="./ram:ReasonCode"/>
+                </document-level-charge-reason-code>
+              </xsl:if>
+            </document-level-charge>
+          </xsl:for-each>
+        </document-level-charges>
+      </xsl:if>
       <!-- TODO: bg-22 -->
       <document-totals id="bg-22">
       </document-totals>

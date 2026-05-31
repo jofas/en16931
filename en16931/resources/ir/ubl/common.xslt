@@ -603,11 +603,11 @@
               </document-level-allowance-percentage>
             </xsl:if>
             <document-level-allowance-vat-category-code id="bt-95">
-              <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID"/>
+              <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID)) = 'VAT']/cbc:ID"/>
             </document-level-allowance-vat-category-code>
-            <xsl:if test="exists(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent)">
+            <xsl:if test="exists(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID)) = 'VAT']/cbc:Percent)">
               <document-level-allowance-vat-rate id="bt-96">
-                <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent"/>
+                <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID)) = 'VAT']/cbc:Percent"/>
               </document-level-allowance-vat-rate>
             </xsl:if>
             <xsl:if test="exists(./cbc:AllowanceChargeReason)">
@@ -642,11 +642,11 @@
               </document-level-charge-percentage>
             </xsl:if>
             <document-level-charge-vat-category-code id="bt-102">
-              <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID"/>
+              <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID)) = 'VAT']/cbc:ID"/>
             </document-level-charge-vat-category-code>
-            <xsl:if test="exists(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent)">
+            <xsl:if test="exists(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID)) = 'VAT']/cbc:Percent)">
               <document-level-charge-vat-rate id="bt-103">
-                <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent"/>
+                <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID)) = 'VAT']/cbc:Percent"/>
               </document-level-charge-vat-rate>
             </xsl:if>
             <xsl:if test="exists(./cbc:AllowanceChargeReason)">
