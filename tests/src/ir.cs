@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Immutable;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -364,8 +365,8 @@ public class IR
                         ItemNetPrice = new UnitPriceAmount(143.75m),
                         ItemPriceDiscount = null,
                         ItemGrossPrice = null,
-                        ItemPriceBaseQuantity = new Quantity(1m),
-                        ItemPriceBaseQuantityUnitOfMeasureCode = new Code("XPP"),
+                        ItemPriceBaseQuantity = null,
+                        ItemPriceBaseQuantityUnitOfMeasureCode = null,
                     },
                     LineVatInformation = new LineVatInformation {
                         InvoicedItemVatCategoryCode = new Code("S"),
@@ -1506,23 +1507,26 @@ public class IR
         Assert.Equal(expected.VatBreakdown, invoice.VatBreakdown);
         Assert.Equal(expected.AdditionalSupportingDocuments, invoice.AdditionalSupportingDocuments);
 
-        Assert.Equal(expected.InvoiceLines.Value[0].InvoiceLineIdentifier, invoice.InvoiceLines.Value[0].InvoiceLineIdentifier);
-        Assert.Equal(expected.InvoiceLines.Value[0].InvoiceLineNote, invoice.InvoiceLines.Value[0].InvoiceLineNote);
-        Assert.Equal(expected.InvoiceLines.Value[0].InvoiceLineObjectIdentifier, invoice.InvoiceLines.Value[0].InvoiceLineObjectIdentifier);
-        Assert.Equal(expected.InvoiceLines.Value[0].InvoicedQuantity, invoice.InvoiceLines.Value[0].InvoicedQuantity);
-        Assert.Equal(expected.InvoiceLines.Value[0].InvoicedQuantityUnitOfMeasureCode, invoice.InvoiceLines.Value[0].InvoicedQuantityUnitOfMeasureCode);
-        Assert.Equal(expected.InvoiceLines.Value[0].InvoiceLineNetAmount, invoice.InvoiceLines.Value[0].InvoiceLineNetAmount);
-        Assert.Equal(expected.InvoiceLines.Value[0].ReferencedPurchaseOrderLineReference, invoice.InvoiceLines.Value[0].ReferencedPurchaseOrderLineReference);
-        Assert.Equal(expected.InvoiceLines.Value[0].InvoiceLineBuyerAccountingReference, invoice.InvoiceLines.Value[0].InvoiceLineBuyerAccountingReference);
-        Assert.Equal(expected.InvoiceLines.Value[0].InvoiceLinePeriod, invoice.InvoiceLines.Value[0].InvoiceLinePeriod);
-        Assert.Equal(expected.InvoiceLines.Value[0].InvoiceLineAllowances, invoice.InvoiceLines.Value[0].InvoiceLineAllowances);
-        Assert.Equal(expected.InvoiceLines.Value[0].InvoiceLineCharges, invoice.InvoiceLines.Value[0].InvoiceLineCharges);
-        Assert.Equal(expected.InvoiceLines.Value[0].PriceDetails, invoice.InvoiceLines.Value[0].PriceDetails);
-        Assert.Equal(expected.InvoiceLines.Value[0].LineVatInformation, invoice.InvoiceLines.Value[0].LineVatInformation);
-        Assert.Equal(expected.InvoiceLines.Value[0].ItemInformation, invoice.InvoiceLines.Value[0].ItemInformation);
-        Assert.Equal(expected.InvoiceLines.Value[0], invoice.InvoiceLines.Value[0]);
+        Assert.Equal(expected.InvoiceLines.Value.Length, invoice.InvoiceLines.Value.Length);
 
-        Assert.Equal(expected.InvoiceLines.Value[1], invoice.InvoiceLines.Value[1]);
+        foreach ((InvoiceLine expectedLine, InvoiceLine invoiceLine) in expected.InvoiceLines.Value.Zip(invoice.InvoiceLines.Value)) {
+            Assert.Equal(expectedLine.InvoiceLineIdentifier, invoiceLine.InvoiceLineIdentifier);
+            Assert.Equal(expectedLine.InvoiceLineNote, invoiceLine.InvoiceLineNote);
+            Assert.Equal(expectedLine.InvoiceLineObjectIdentifier, invoiceLine.InvoiceLineObjectIdentifier);
+            Assert.Equal(expectedLine.InvoicedQuantity, invoiceLine.InvoicedQuantity);
+            Assert.Equal(expectedLine.InvoicedQuantityUnitOfMeasureCode, invoiceLine.InvoicedQuantityUnitOfMeasureCode);
+            Assert.Equal(expectedLine.InvoiceLineNetAmount, invoiceLine.InvoiceLineNetAmount);
+            Assert.Equal(expectedLine.ReferencedPurchaseOrderLineReference, invoiceLine.ReferencedPurchaseOrderLineReference);
+            Assert.Equal(expectedLine.InvoiceLineBuyerAccountingReference, invoiceLine.InvoiceLineBuyerAccountingReference);
+            Assert.Equal(expectedLine.InvoiceLinePeriod, invoiceLine.InvoiceLinePeriod);
+            Assert.Equal(expectedLine.InvoiceLineAllowances, invoiceLine.InvoiceLineAllowances);
+            Assert.Equal(expectedLine.InvoiceLineCharges, invoiceLine.InvoiceLineCharges);
+            Assert.Equal(expectedLine.PriceDetails, invoiceLine.PriceDetails);
+            Assert.Equal(expectedLine.LineVatInformation, invoiceLine.LineVatInformation);
+            Assert.Equal(expectedLine.ItemInformation, invoiceLine.ItemInformation);
+            Assert.Equal(expectedLine, invoiceLine);
+        }
+
         Assert.Equal(expected.InvoiceLines, invoice.InvoiceLines);
     }
 }

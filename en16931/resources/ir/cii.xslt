@@ -973,11 +973,77 @@
                 </invoiced-item-vat-rate>
               </xsl:if>
             </line-vat-information>
-            <!-- TODO: bg-31 -->
             <item-information id="bg-31">
               <item-name id="bt-153">
                 <xsl:value-of select="./ram:SpecifiedTradeProduct/ram:Name"/>
               </item-name>
+              <xsl:if test="exists(./ram:SpecifiedTradeProduct/ram:Description)">
+                <item-description id="bt-154">
+                  <xsl:value-of select="./ram:SpecifiedTradeProduct/ram:Description"/>
+                </item-description>
+              </xsl:if>
+              <xsl:if test="exists(./ram:SpecifiedTradeProduct/ram:SellerAssignedID)">
+                <item-sellers-identifier id="bt-155">
+                  <content>
+                    <xsl:value-of select="./ram:SpecifiedTradeProduct/ram:SellerAssignedID"/>
+                  </content>
+                </item-sellers-identifier>
+              </xsl:if>
+              <xsl:if test="exists(./ram:SpecifiedTradeProduct/ram:BuyerAssignedID)">
+                <item-buyers-identifier id="bt-156">
+                  <content>
+                    <xsl:value-of select="./ram:SpecifiedTradeProduct/ram:BuyerAssignedID"/>
+                  </content>
+                </item-buyers-identifier>
+              </xsl:if>
+              <xsl:if test="exists(./ram:SpecifiedTradeProduct/ram:GlobalID)">
+                <item-standard-identifier id="bt-157">
+                  <content>
+                      <xsl:value-of select="./ram:SpecifiedTradeProduct/ram:GlobalID"/>
+                  </content>
+                  <scheme-identifier>
+                    <xsl:value-of select="./ram:SpecifiedTradeProduct/ram:GlobalID/@schemeID"/>
+                  </scheme-identifier>
+                </item-standard-identifier>
+              </xsl:if>
+              <xsl:if test="exists(./ram:SpecifiedTradeProduct/ram:DesignatedProductClassification/ram:ClassCode)">
+                <item-classification-identifiers id="bt-158">
+                  <xsl:for-each select="./ram:SpecifiedTradeProduct/ram:DesignatedProductClassification">
+                    <item-classification-identifier id="bt-158">
+                      <content>
+                        <xsl:value-of select="./ram:ClassCode"/>
+                      </content>
+                      <scheme-identifier>
+                        <xsl:value-of select="./ram:ClassCode/@listID"/>
+                      </scheme-identifier>
+                      <xsl:if test="exists(./ram:ClassCode[@listVersionID])">
+                        <scheme-version-identifier>
+                          <xsl:value-of select="./ram:ClassCode/@listVersionID"/>
+                        </scheme-version-identifier>
+                      </xsl:if>
+                    </item-classification-identifier>
+                  </xsl:for-each>
+                </item-classification-identifiers>
+              </xsl:if>
+              <xsl:if test="exists(./ram:SpecifiedTradeProduct/ram:OriginTradeCountry/ram:ID)">
+                <item-country-of-origin id="bt-159">
+                  <xsl:value-of select="./ram:SpecifiedTradeProduct/ram:OriginTradeCountry/ram:ID"/>
+                </item-country-of-origin>
+              </xsl:if>
+              <xsl:if test="exists(./ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:Description)">
+                <item-attributes id="bg-32">
+                    <xsl:for-each select="./ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic">
+                    <item-attribute id="bg-32">
+                      <item-attribute-name id="bt-160">
+                        <xsl:value-of select="./ram:Description"/>
+                      </item-attribute-name>
+                      <item-attribute-value id="bt-161">
+                        <xsl:value-of select="./ram:Value"/>
+                      </item-attribute-value>
+                    </item-attribute>
+                  </xsl:for-each>
+                </item-attributes>
+              </xsl:if>
             </item-information>
           </invoice-line>
         </xsl:for-each>
