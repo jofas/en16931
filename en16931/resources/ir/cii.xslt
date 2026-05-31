@@ -876,19 +876,102 @@
                 </xsl:if>
               </invoice-line-period>
             </xsl:if>
-            <!-- TODO: bg-27 -->
-            <!-- TODO: bg-28 -->
-            <!-- TODO: bg-29 -->
+            <xsl:if test="exists(./ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'false']/ram:ActualAmount)">
+              <invoice-line-allowances id="bg-27">
+                <xsl:for-each select="./ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'false']">
+                  <invoice-line-allowance id="bg-27">
+                    <invoice-line-allowance-amount id="bt-136">
+                      <xsl:value-of select="./ram:ActualAmount"/>
+                    </invoice-line-allowance-amount>
+                    <xsl:if test="exists(./ram:BasisAmount)">
+                      <invoice-line-allowance-base-amount id="bt-137">
+                        <xsl:value-of select="./ram:BasisAmount"/>
+                      </invoice-line-allowance-base-amount>
+                    </xsl:if>
+                    <xsl:if test="exists(./ram:CalculationPercent)">
+                      <invoice-line-allowance-percentage id="bt-138">
+                        <xsl:value-of select="./ram:CalculationPercent"/>
+                      </invoice-line-allowance-percentage>
+                    </xsl:if>
+                    <xsl:if test="exists(./ram:Reason)">
+                      <invoice-line-allowance-reason id="bt-139">
+                        <xsl:value-of select="./ram:Reason"/>
+                      </invoice-line-allowance-reason>
+                    </xsl:if>
+                    <xsl:if test="exists(./ram:ReasonCode)">
+                      <invoice-line-allowance-reason-code id="bt-140">
+                        <xsl:value-of select="./ram:ReasonCode"/>
+                      </invoice-line-allowance-reason-code>
+                    </xsl:if>
+                  </invoice-line-allowance>
+                </xsl:for-each>
+              </invoice-line-allowances>
+            </xsl:if>
+            <xsl:if test="exists(./ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'true']/ram:ActualAmount)">
+              <invoice-line-charges id="bg-28">
+                <xsl:for-each select="./ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'true']">
+                  <invoice-line-charge id="bg-28">
+                    <invoice-line-charge-amount id="bt-141">
+                      <xsl:value-of select="./ram:ActualAmount"/>
+                    </invoice-line-charge-amount>
+                    <xsl:if test="exists(./ram:BasisAmount)">
+                      <invoice-line-charge-base-amount id="bt-142">
+                        <xsl:value-of select="./ram:BasisAmount"/>
+                      </invoice-line-charge-base-amount>
+                    </xsl:if>
+                    <xsl:if test="exists(./ram:CalculationPercent)">
+                      <invoice-line-charge-percentage id="bt-143">
+                        <xsl:value-of select="./ram:CalculationPercent"/>
+                      </invoice-line-charge-percentage>
+                    </xsl:if>
+                    <xsl:if test="exists(./ram:Reason)">
+                      <invoice-line-charge-reason id="bt-144">
+                        <xsl:value-of select="./ram:Reason"/>
+                      </invoice-line-charge-reason>
+                    </xsl:if>
+                    <xsl:if test="exists(./ram:ReasonCode)">
+                      <invoice-line-charge-reason-code id="bt-145">
+                        <xsl:value-of select="./ram:ReasonCode"/>
+                      </invoice-line-charge-reason-code>
+                    </xsl:if>
+                  </invoice-line-charge>
+                </xsl:for-each>
+              </invoice-line-charges>
+            </xsl:if>
             <price-details id="bg-29">
               <item-net-price id="bt-146">
                 <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:ChargeAmount"/>
               </item-net-price>
+              <xsl:if test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'false']/ram:ActualAmount)">
+                <item-price-discount id="bt-147">
+                  <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'false']/ram:ActualAmount"/>
+                </item-price-discount>
+              </xsl:if>
+              <xsl:if test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount)">
+                <item-gross-price id="bt-148">
+                  <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount"/>
+                </item-gross-price>
+              </xsl:if>
+              <xsl:if test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity)">
+                <item-price-base-quantity id="bt-149">
+                  <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity"/>
+                </item-price-base-quantity>
+              </xsl:if>
+              <xsl:if test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity[@unitCode])">
+                <item-price-base-quantity-unit-of-measure-code id="bt-150">
+                  <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity/@unitCode"/>
+                </item-price-base-quantity-unit-of-measure-code>
+              </xsl:if>
             </price-details>
-            <!-- TODO: bg-30 -->
             <line-vat-information id="bg-30">
               <invoiced-item-vat-category-code id="bt-151">
                 <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[upper-case(ram:TypeCode) = 'VAT']/ram:CategoryCode"/>
               </invoiced-item-vat-category-code>
+              <xsl:if test="exists(./ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[upper-case(ram:TypeCode) = 'VAT']/ram:RateApplicablePercent)">
+                <invoiced-item-vat-rate id="bt-152">
+                  <xsl:value-of select="./ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[upper-case(ram:TypeCode) = 'VAT']/ram:RateApplicablePercent"/>
+                </invoiced-item-vat-rate>
+              </xsl:if>
             </line-vat-information>
             <!-- TODO: bg-31 -->
             <item-information id="bg-31">
