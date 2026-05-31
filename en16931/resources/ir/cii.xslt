@@ -8,6 +8,8 @@
     exclude-result-prefixes="rsm ram qdt udt xsl"
     version="1.0">
   <xsl:template match="rsm:CrossIndustryInvoice">
+    <!-- Used in document-totals (bg-22) to refer to bt-5 and bt-6 -->
+    <xsl:variable name="root" select="."/>
     <invoice>
       <invoice-number id="bt-1">
         <content>
@@ -666,7 +668,6 @@
           </xsl:for-each>
         </document-level-allowances>
       </xsl:if>
-      <!-- TODO: bg-21 -->
       <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'true']/ram:ActualAmount)">
         <document-level-charges id="bg-21">
           <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'true']">
@@ -706,8 +707,49 @@
           </xsl:for-each>
         </document-level-charges>
       </xsl:if>
-      <!-- TODO: bg-22 -->
       <document-totals id="bg-22">
+        <sum-of-invoice-line-net-amount id="bt-106">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:LineTotalAmount"/>
+        </sum-of-invoice-line-net-amount>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:AllowanceTotalAmount)">
+          <sum-of-allowances-on-document-level id="bt-107">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:AllowanceTotalAmount"/>
+          </sum-of-allowances-on-document-level>
+        </xsl:if>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:ChargeTotalAmount)">
+          <sum-of-charges-on-document-level id="bt-108">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:ChargeTotalAmount"/>
+          </sum-of-charges-on-document-level>
+        </xsl:if>
+        <invoice-total-amount-without-vat id="bt-109">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxBasisTotalAmount"/>
+        </invoice-total-amount-without-vat>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID = $root/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceCurrencyCode])">
+          <invoice-total-vat-amount id="bt-110">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID = $root/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceCurrencyCode]"/>
+          </invoice-total-vat-amount>
+        </xsl:if>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID = $root/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:TaxCurrencyCode])">
+          <invoice-total-vat-amount-in-accounting-currency id="bt-111">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID = $root/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:TaxCurrencyCode]"/>
+          </invoice-total-vat-amount-in-accounting-currency>
+        </xsl:if>
+        <invoice-total-amount-with-vat id="bt-112">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:GrandTotalAmount"/>
+        </invoice-total-amount-with-vat>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TotalPrepaidAmount)">
+          <paid-amount id="bt-113">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TotalPrepaidAmount"/>
+          </paid-amount>
+        </xsl:if>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:RoundingAmount)">
+          <rounding-amount id="bt-114">
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:RoundingAmount"/>
+          </rounding-amount>
+        </xsl:if>
+        <amount-due-for-payment id="bt-115">
+          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:DuePayableAmount"/>
+        </amount-due-for-payment>
       </document-totals>
       <vat-breakdown id="bg-23">
         <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax[upper-case(ram:TypeCode) = 'VAT']">
@@ -724,6 +766,16 @@
             <vat-category-rate id="bt-119">
               <xsl:value-of select="./ram:RateApplicablePercent"/>
             </vat-category-rate>
+            <xsl:if test="exists(./ram:ExemptionReason)">
+              <vat-exemption-reason-text id="bt-120">
+                <xsl:value-of select="./ram:ExemptionReason"/>
+              </vat-exemption-reason-text>
+            </xsl:if>
+            <xsl:if test="exists(./ram:ExemptionReasonCode)">
+              <vat-exemption-reason-code id="bt-121">
+                <xsl:value-of select="./ram:ExemptionReasonCode"/>
+              </vat-exemption-reason-code>
+            </xsl:if>
           </vat-breakdown>
         </xsl:for-each>
       </vat-breakdown>
