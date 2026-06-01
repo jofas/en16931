@@ -90,8 +90,7 @@
                     <!-- BT-148 -->
                     <ram:ChargeAmount>168.1250000000</ram:ChargeAmount>
                     <!-- BT-149, BT-150 -->
-                    <ram:BasisQuantity
-                        unitCode="XPP">1</ram:BasisQuantity>
+                    <ram:BasisQuantity unitCode="XPP">1</ram:BasisQuantity>
                     <ram:AppliedTradeAllowanceCharge>
                         <ram:ChargeIndicator>
                             <udt:Indicator>false</udt:Indicator>
@@ -359,7 +358,7 @@
 					<!-- BT-65 -->
                     <ram:LineTwo>[Seller tax representative address line 2]</ram:LineTwo>
 					<!-- BT-164 -->
-                    <ram:LineThree>[Seller tax representative address line 2]</ram:LineThree>
+                    <ram:LineThree>[Seller tax representative address line 3]</ram:LineThree>
 					<!-- BT-66 -->
                     <ram:CityName>[Seller tax representative city]</ram:CityName>
 					<!-- BT-69 -->

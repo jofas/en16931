@@ -68,7 +68,7 @@ echo "Extraction done"
 echo "Downloading XRechnung schematrons"
 
 xrechnung_version=${XRECHNUNG_VERSION:-3.0.2}
-xrechnung_schematron_version=${XRECHNUNG_SCHEMATRON_VERSION:-2.2.0}
+xrechnung_schematron_version=${XRECHNUNG_SCHEMATRON_VERSION:-2.5.0}
 
 wget -P $tempdir https://github.com/itplr-kosit/xrechnung-schematron/releases/download/release-$xrechnung_schematron_version/xrechnung-$xrechnung_version-schematron-$xrechnung_schematron_version.zip
 unzip -o -d $tempdir/xrechnung $tempdir/xrechnung-$xrechnung_version-schematron-$xrechnung_schematron_version.zip

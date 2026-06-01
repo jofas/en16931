@@ -11,28 +11,30 @@ public class XRechnungValidation
     [Fact]
     public void TestCorrectUbl()
     {
-        string path = "resources/xrechnung-testsuite/standard/01.01a-INVOICE_ubl.xml";
-        Validator.ValidateFromFile(path);
+        Parser parser = new Parser();
+        parser.ParseFile("resources/xrechnung-testsuite/standard/01.01a-INVOICE_ubl.xml");
     }
 
     [Fact]
     public void TestCorrectCii()
     {
-        string path = "resources/xrechnung-testsuite/standard/01.01a-INVOICE_uncefact.xml";
-        Validator.ValidateFromFile(path);
+        Parser parser = new Parser();
+        parser.ParseFile("resources/xrechnung-testsuite/standard/01.01a-INVOICE_uncefact.xml");
     }
 
     [Theory]
     [InlineData("resources/schemas/ubl/invoice/failure")]
     public void TestSchemaViolationUblInvoice(string testsLocation)
     {
+        Parser parser = new Parser();
+
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
         {
             Assert.Throws<XmlSchemaValidationException>(() =>
             {
-                Validator.ValidateFromFile(test);
+                parser.ParseFile(test);
             });
         }
     }
@@ -41,13 +43,15 @@ public class XRechnungValidation
     [InlineData("resources/schemas/cii/cross-industry-invoice/failure")]
     public void TestSchemaViolationCiiCrossIndustryInvoice(string testsLocation)
     {
+        Parser parser = new Parser();
+
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
         {
             Assert.Throws<XmlSchemaValidationException>(() =>
             {
-                Validator.ValidateFromFile(test);
+                parser.ParseFile(test);
             });
         }
     }
@@ -56,13 +60,15 @@ public class XRechnungValidation
     [InlineData("resources/schematrons/en16931/ubl/invoice/failure")]
     public void TestSchematronViolationEn16931UblInvoice(string testsLocation)
     {
+        Parser parser = new Parser();
+
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
         {
             Assert.Throws<En16931SchematronException>(() =>
             {
-                Validator.ValidateFromFile(test);
+                parser.ParseFile(test);
             });
         }
     }
@@ -71,14 +77,30 @@ public class XRechnungValidation
     [InlineData("resources/schematrons/en16931/cii/cross-industry-invoice/failure")]
     public void TestSchematronViolationEn16931CiiCrossIndustryInvoice(string testsLocation)
     {
+        Parser parser = new Parser();
+
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
         {
             Assert.Throws<En16931SchematronException>(() =>
             {
-                Validator.ValidateFromFile(test);
+                parser.ParseFile(test);
             });
+        }
+    }
+
+    [Theory]
+    [InlineData("resources/schematrons/xrechnung/cius/ubl/invoice/success")]
+    public void TestSuccessfulXRechnungCiusUblInvoice(string testsLocation)
+    {
+        Parser parser = new Parser();
+
+        string[] testFiles = Directory.GetFiles(testsLocation);
+
+        foreach (string test in testFiles)
+        {
+            parser.ParseFile(test);
         }
     }
 
@@ -86,14 +108,30 @@ public class XRechnungValidation
     [InlineData("resources/schematrons/xrechnung/cius/ubl/invoice/failure")]
     public void TestSchematronViolationXRechnungCiusUblInvoice(string testsLocation)
     {
+        Parser parser = new Parser();
+
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
         {
             Assert.Throws<XRechnungSchematronException>(() =>
             {
-                Validator.ValidateFromFile(test);
+                parser.ParseFile(test);
             });
+        }
+    }
+
+    [Theory]
+    [InlineData("resources/schematrons/xrechnung/cius/ubl/credit-note/success")]
+    public void TestSuccessfulXRechnungCiusUblCreditNote(string testsLocation)
+    {
+        Parser parser = new Parser();
+
+        string[] testFiles = Directory.GetFiles(testsLocation);
+
+        foreach (string test in testFiles)
+        {
+            parser.ParseFile(test);
         }
     }
 
@@ -101,13 +139,15 @@ public class XRechnungValidation
     [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/failure")]
     public void TestSchematronViolationXRechnungCiusCiiCrossIndustryInvoice(string testsLocation)
     {
+        Parser parser = new Parser();
+
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
         {
             Assert.Throws<XRechnungSchematronException>(() =>
             {
-                Validator.ValidateFromFile(test);
+                parser.ParseFile(test);
             });
         }
     }
@@ -116,13 +156,15 @@ public class XRechnungValidation
     [InlineData("resources/schematrons/xrechnung/extension/ubl/invoice/failure")]
     public void TestSchematronViolationXRechnungExtensionUblInvoice(string testsLocation)
     {
+        Parser parser = new Parser();
+
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
         {
             Assert.Throws<XRechnungSchematronException>(() =>
             {
-                Validator.ValidateFromFile(test);
+                parser.ParseFile(test);
             });
         }
     }
@@ -131,13 +173,15 @@ public class XRechnungValidation
     [InlineData("resources/schematrons/xrechnung/extension/cii/cross-industry-invoice/failure")]
     public void TestSchematronViolationXRechnungExtensionCiiCrossIndustryInvoice(string testsLocation)
     {
+        Parser parser = new Parser();
+
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
         {
             Assert.Throws<XRechnungSchematronException>(() =>
             {
-                Validator.ValidateFromFile(test);
+                parser.ParseFile(test);
             });
         }
     }
@@ -148,11 +192,13 @@ public class XRechnungValidation
     [InlineData("resources/xrechnung-testsuite/technical-cases")]
     public void ValidateXRechnungTestsuite(string testDirectory)
     {
+        Parser parser = new Parser();
+
         string[] standardTests = Directory.GetFiles(testDirectory);
 
         foreach (string standardTest in standardTests)
         {
-            Validator.ValidateFromFile(standardTest);
+            parser.ParseFile(standardTest);
         }
     }
 }
