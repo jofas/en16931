@@ -636,27 +636,25 @@
             </xsl:if>
           </payment-card-information>
         </xsl:if>
-        <!-- TODO
-        <xsl:if test="exists()">
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DirectDebitMandateID)">
           <direct-debit id="bg-19">
             <mandate-reference-identifier id="bt-89">
               <content>
-                <xsl:value-of select=""/>
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DirectDebitMandateID"/>
               </content>
             </mandate-reference-identifier>
             <bank-assigned-creditor-identifier id="bt-90">
               <content>
-                <xsl:value-of select=""/>
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:CreditorReferenceID"/>
               </content>
             </bank-assigned-creditor-identifier>
             <debited-account-identifier id="bt-91">
               <content>
-                <xsl:value-of select=""/>
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayerPartyDebtorFinancialAccount/ram:IBANID"/>
               </content>
             </debited-account-identifier>
           </direct-debit>
         </xsl:if>
-        -->
       </payment-instructions>
       <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = 'false']/ram:ActualAmount)">
         <document-level-allowances id="bg-20">

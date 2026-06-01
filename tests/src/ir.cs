@@ -1442,7 +1442,6 @@ public class IR
 
         Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
 
-        DebugAssert(_expected3, invoice);
         Assert.Equal(_expected3, invoice);
     }
 
@@ -1471,6 +1470,17 @@ public class IR
         };
 
         Assert.Equal(expected, invoice);
+    }
+
+    [Theory]
+    [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/4.xml")]
+    public void CiiCrossIndustryInvoice4(string invoiceLocation)
+    {
+        Parser parser = new Parser();
+
+        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+
+        Assert.Equal(_expected4, invoice);
     }
 
     // Helper method for pin-pointing erroneous fields in an `Invoice`.
