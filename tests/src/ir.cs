@@ -1404,7 +1404,6 @@ public class IR
             ValueAddedTaxPointDateCode = new Code("5"),
         };
 
-        DebugAssert(expected, invoice);
         Assert.Equal(expected, invoice);
     }
 
@@ -1433,6 +1432,18 @@ public class IR
         };
 
         Assert.Equal(expected, invoice);
+    }
+
+    [Theory]
+    [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/3.xml")]
+    public void CiiCrossIndustryInvoice3(string invoiceLocation)
+    {
+        Parser parser = new Parser();
+
+        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+
+        DebugAssert(_expected3, invoice);
+        Assert.Equal(_expected3, invoice);
     }
 
     [Theory]
@@ -1500,6 +1511,7 @@ public class IR
         Assert.Equal(expected.Seller.SellerPostalAddress.SellerAddressLine2, invoice.Seller.SellerPostalAddress.SellerAddressLine2);
         Assert.Equal(expected.Seller.SellerPostalAddress.SellerAddressLine3, invoice.Seller.SellerPostalAddress.SellerAddressLine3);
         Assert.Equal(expected.Seller.SellerPostalAddress, invoice.Seller.SellerPostalAddress);
+        Assert.Equal(expected.Seller.SellerContact, invoice.Seller.SellerContact);
         Assert.Equal(expected.Seller, invoice.Seller);
 
         Assert.Equal(expected.Buyer.BuyerName, invoice.Buyer.BuyerName);

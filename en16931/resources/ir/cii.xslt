@@ -260,9 +260,19 @@
           </seller-country-code>
         </seller-postal-address>
         <seller-contact id="bg-6">
-          <seller-contact-point id="bt-41">
-            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:DefinedTradeContact/ram:PersonName"/>
-          </seller-contact-point>
+          <!-- Design decision: choose ram:PersonName over ram:DepartmentName (standard does not properly define the mapping) -->
+          <xsl:choose>
+            <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:DefinedTradeContact/ram:PersonName)">
+              <seller-contact-point id="bt-41">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:DefinedTradeContact/ram:PersonName"/>
+              </seller-contact-point>
+            </xsl:when>
+            <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:DefinedTradeContact/ram:DepartmentName)">
+              <seller-contact-point id="bt-41">
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:DefinedTradeContact/ram:DepartmentName"/>
+              </seller-contact-point>
+            </xsl:when>
+          </xsl:choose>
           <seller-contact-telephone-number id="bt-42">
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber"/>
           </seller-contact-telephone-number>
@@ -358,14 +368,23 @@
           </buyer-country-code>
         </buyer-postal-address>
         <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:PersonName)
+            or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:DepartmentName)
             or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber)
             or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:EmailURIUniversalCommunication/ram:URIID)">
           <buyer-contact id="bg-9">
-            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:PersonName)">
-              <buyer-contact-point id="bt-56">
-                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:PersonName"/>
-              </buyer-contact-point>
-            </xsl:if>
+            <!-- Design decision: choose ram:PersonName over ram:DepartmentName (standard does not properly define the mapping) -->
+            <xsl:choose>
+              <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:PersonName)">
+                <buyer-contact-point id="bt-56">
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:PersonName"/>
+                </buyer-contact-point>
+              </xsl:when>
+              <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:DepartmentName)">
+                <buyer-contact-point id="bt-56">
+                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:DepartmentName"/>
+                </buyer-contact-point>
+              </xsl:when>
+            </xsl:choose>
             <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber)">
               <buyer-contact-telephone-number id="bt-57">
                 <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber"/>
@@ -605,19 +624,19 @@
             </credit-transfer>
           </credit-transfers>
         </xsl:if>
-        <!-- TODO
-        <xsl:if test="exists()">
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:ApplicableTradeSettlementFinancialCard/ram:ID)">
           <payment-card-information id="bg-18">
             <payment-card-primary-account-number id="bt-87">
-              <xsl:value-of select=""/>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:ApplicableTradeSettlementFinancialCard/ram:ID"/>
             </payment-card-primary-account-number>
-            <xsl:if test="exists()">
+            <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:ApplicableTradeSettlementFinancialCard/ram:CardholderName)">
               <payment-card-holder-name id="bt-88">
-                <xsl:value-of select=""/>
+                <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:ApplicableTradeSettlementFinancialCard/ram:CardholderName"/>
               </payment-card-holder-name>
             </xsl:if>
           </payment-card-information>
         </xsl:if>
+        <!-- TODO
         <xsl:if test="exists()">
           <direct-debit id="bg-19">
             <mandate-reference-identifier id="bt-89">
@@ -963,37 +982,31 @@
                 </item-gross-price>
               </xsl:if>
               <!-- XRechnung BR-TMP-3 makes sure that both fields are equal if both are present -->
-              <xsl:if test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity)
-                  or exists(./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity)">
-                <xsl:choose>
-                  <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity)">
-                    <item-price-base-quantity id="bt-149">
-                      <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity"/>
-                    </item-price-base-quantity>
-                  </xsl:when>
-                  <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity)">
-                    <item-price-base-quantity id="bt-149">
-                      <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity"/>
-                    </item-price-base-quantity>
-                  </xsl:when>
-                </xsl:choose>
-              </xsl:if>
+              <xsl:choose>
+                <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity)">
+                  <item-price-base-quantity id="bt-149">
+                    <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity"/>
+                  </item-price-base-quantity>
+                </xsl:when>
+                <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity)">
+                  <item-price-base-quantity id="bt-149">
+                    <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity"/>
+                  </item-price-base-quantity>
+                </xsl:when>
+              </xsl:choose>
               <!-- XRechnung BR-TMP-3 makes sure that both fields are equal if both are present -->
-              <xsl:if test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity[@unitCode])
-                  or exists(./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity[@unitCode])">
-                <xsl:choose>
-                  <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity[@unitCode])">
-                    <item-price-base-quantity-unit-of-measure-code id="bt-150">
-                      <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity/@unitCode"/>
-                    </item-price-base-quantity-unit-of-measure-code>
-                  </xsl:when>
-                  <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity[@unitCode])">
-                    <item-price-base-quantity-unit-of-measure-code id="bt-150">
-                      <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity/@unitCode"/>
-                    </item-price-base-quantity-unit-of-measure-code>
-                  </xsl:when>
-                </xsl:choose>
-              </xsl:if>
+              <xsl:choose>
+                <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity[@unitCode])">
+                  <item-price-base-quantity-unit-of-measure-code id="bt-150">
+                    <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity/@unitCode"/>
+                  </item-price-base-quantity-unit-of-measure-code>
+                </xsl:when>
+                <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity[@unitCode])">
+                  <item-price-base-quantity-unit-of-measure-code id="bt-150">
+                    <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity/@unitCode"/>
+                  </item-price-base-quantity-unit-of-measure-code>
+                </xsl:when>
+              </xsl:choose>
             </price-details>
             <line-vat-information id="bg-30">
               <invoiced-item-vat-category-code id="bt-151">
