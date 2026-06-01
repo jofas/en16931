@@ -151,6 +151,9 @@
     <cac:PartyName>
       <cbc:Name>[Payee name]</cbc:Name>
     </cac:PartyName>
+    <cac:PartyLegalEntity>
+      <cbc:CompanyID schemeID="0204">90000000-03083-72</cbc:CompanyID>
+    </cac:PartyLegalEntity>
   </cac:PayeeParty>
   <cac:TaxRepresentativeParty>
     <cac:PartyName>
@@ -282,6 +285,7 @@
     <cbc:AllowanceTotalAmount currencyID="EUR">0</cbc:AllowanceTotalAmount>
     <cbc:ChargeTotalAmount currencyID="EUR">0</cbc:ChargeTotalAmount>
     <cbc:PrepaidAmount currencyID="EUR">0</cbc:PrepaidAmount>
+    <cbc:PayableRoundingAmount currencyID="EUR">0</cbc:PayableRoundingAmount>
     <cbc:PayableAmount currencyID="EUR">12829.69</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:CreditNoteLine>

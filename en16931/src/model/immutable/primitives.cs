@@ -218,11 +218,14 @@ public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
     {
         string items;
 
-        if (Value.Length > 10) {
+        if (Value.Length > 10)
+        {
             string firstThree = string.Join(", ", Value[0..3]);
             string lastThree = string.Join(", ", Value[^3..^0]);
             items = $"{firstThree}, ..., {lastThree}";
-        } else {
+        }
+        else
+        {
             items = string.Join(", ", Value);
         }
 
@@ -278,11 +281,14 @@ public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>> where T :
     {
         string items;
 
-        if (Value.Length > 10) {
+        if (Value.Length > 10)
+        {
             string firstThree = string.Join(", ", Value[0..3]);
             string lastThree = string.Join(", ", Value[^3..^0]);
             items = $"{firstThree}, ..., {lastThree}";
-        } else {
+        }
+        else
+        {
             items = string.Join(", ", Value);
         }
 

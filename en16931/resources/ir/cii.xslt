@@ -571,14 +571,24 @@
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PaymentReference"/>
           </remittance-information>
         </xsl:if>
-        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID)">
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID)
+            or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:ProprietaryID)">
           <!-- Note that CII does not actually support multiple bg-17 instances -->
           <credit-transfers id="bg-17">
             <credit-transfer id="bg-17">
               <payment-account-identifier id="bt-84">
-                <content>
-                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID"/>
-                </content>
+                <xsl:choose>
+                  <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID)">
+                    <content>
+                      <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID"/>
+                    </content>
+                  </xsl:when>
+                  <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:ProprietaryID)">
+                    <content>
+                      <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:ProprietaryID"/>
+                    </content>
+                  </xsl:when>
+                </xsl:choose>
               </payment-account-identifier>
               <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:AccountName)">
                 <payment-account-name id="bt-85">
@@ -952,15 +962,37 @@
                   <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:ChargeAmount"/>
                 </item-gross-price>
               </xsl:if>
-              <xsl:if test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity)">
-                <item-price-base-quantity id="bt-149">
-                  <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity"/>
-                </item-price-base-quantity>
+              <!-- XRechnung BR-TMP-3 makes sure that both fields are equal if both are present -->
+              <xsl:if test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity)
+                  or exists(./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity)">
+                <xsl:choose>
+                  <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity)">
+                    <item-price-base-quantity id="bt-149">
+                      <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity"/>
+                    </item-price-base-quantity>
+                  </xsl:when>
+                  <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity)">
+                    <item-price-base-quantity id="bt-149">
+                      <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity"/>
+                    </item-price-base-quantity>
+                  </xsl:when>
+                </xsl:choose>
               </xsl:if>
-              <xsl:if test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity[@unitCode])">
-                <item-price-base-quantity-unit-of-measure-code id="bt-150">
-                  <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity/@unitCode"/>
-                </item-price-base-quantity-unit-of-measure-code>
+              <!-- XRechnung BR-TMP-3 makes sure that both fields are equal if both are present -->
+              <xsl:if test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity[@unitCode])
+                  or exists(./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity[@unitCode])">
+                <xsl:choose>
+                  <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity[@unitCode])">
+                    <item-price-base-quantity-unit-of-measure-code id="bt-150">
+                      <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:GrossPriceProductTradePrice/ram:BasisQuantity/@unitCode"/>
+                    </item-price-base-quantity-unit-of-measure-code>
+                  </xsl:when>
+                  <xsl:when test="exists(./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity[@unitCode])">
+                    <item-price-base-quantity-unit-of-measure-code id="bt-150">
+                      <xsl:value-of select="./ram:SpecifiedLineTradeAgreement/ram:NetPriceProductTradePrice/ram:BasisQuantity/@unitCode"/>
+                    </item-price-base-quantity-unit-of-measure-code>
+                  </xsl:when>
+                </xsl:choose>
               </xsl:if>
             </price-details>
             <line-vat-information id="bg-30">

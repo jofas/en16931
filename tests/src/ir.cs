@@ -482,7 +482,7 @@ public class IR
         {
             PayeeName = new Text("[Payee name]"),
             PayeeIdentifier = new Identifier("74", "0088"),
-            PayeeLegalRegistrationIdentifier = null,
+            PayeeLegalRegistrationIdentifier = new Identifier("90000000-03083-72", "0204"),
         },
         SellerTaxRepresentativeParty = new SellerTaxRepresentativeParty
         {
@@ -567,7 +567,7 @@ public class IR
             InvoiceTotalVatAmountInAccountingCurrency = new Amount(2048.44m),
             InvoiceTotalAmountWithVat = new Amount(12829.69m),
             PaidAmount = new Amount(0m),
-            RoundingAmount = null,
+            RoundingAmount = new Amount(0m),
             AmountDueForPayment = new Amount(12829.69m),
         },
         VatBreakdown = new NonEmptyArray<VatBreakdown>([
@@ -1355,11 +1355,11 @@ public class IR
         Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
 
         // CII only supports a single preceding invoice reference
-        Invoice expected = _expected1 with {
+        Invoice expected = _expected1 with
+        {
             PrecedingInvoiceReferences = new Array<PrecedingInvoiceReference>([_expected1.PrecedingInvoiceReferences[0]]),
         };
 
-        DebugAssert(expected, invoice);
         Assert.Equal(expected, invoice);
     }
 
@@ -1387,6 +1387,24 @@ public class IR
             InvoiceTypeCode = new Code("381"),
         };
 
+        Assert.Equal(expected, invoice);
+    }
+
+    [Theory]
+    [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/2.xml")]
+    public void CiiCrossIndustryInvoice2(string invoiceLocation)
+    {
+        Parser parser = new Parser();
+
+        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+
+        // BT-9 is mapped to different code lists in CII (UNTDID 2475) and UBL (UNTDID 2005)
+        Invoice expected = _expected2 with
+        {
+            ValueAddedTaxPointDateCode = new Code("5"),
+        };
+
+        DebugAssert(expected, invoice);
         Assert.Equal(expected, invoice);
     }
 
@@ -1509,7 +1527,8 @@ public class IR
 
         Assert.Equal(expected.InvoiceLines.Value.Length, invoice.InvoiceLines.Value.Length);
 
-        foreach ((InvoiceLine expectedLine, InvoiceLine invoiceLine) in expected.InvoiceLines.Value.Zip(invoice.InvoiceLines.Value)) {
+        foreach ((InvoiceLine expectedLine, InvoiceLine invoiceLine) in expected.InvoiceLines.Value.Zip(invoice.InvoiceLines.Value))
+        {
             Assert.Equal(expectedLine.InvoiceLineIdentifier, invoiceLine.InvoiceLineIdentifier);
             Assert.Equal(expectedLine.InvoiceLineNote, invoiceLine.InvoiceLineNote);
             Assert.Equal(expectedLine.InvoiceLineObjectIdentifier, invoiceLine.InvoiceLineObjectIdentifier);
