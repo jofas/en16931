@@ -36,7 +36,7 @@ public class Parser
     {
         _namespaces = new XmlNamespaceManager(new NameTable());
 
-        // UBL namespces
+        // UBL namespaces
         _namespaces.AddNamespace("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");
         _namespaces.AddNamespace("invoice", "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2");
         _namespaces.AddNamespace("creditnote", "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2");
@@ -77,8 +77,7 @@ public class Parser
         _irTransformer = _xsltCompiler.Compile(new FileInfo("resources/ir/ir.xslt")).load();
     }
 
-    public Mut.Invoice ParseFile(string filepath)
-    {
+    internal string ParseFileToIR(string filepath) {
         XmlDocument doc = new XmlDocument();
         doc.Schemas = _schemaSet;
 
@@ -169,8 +168,15 @@ public class Parser
         _irTransformer.setInitialContextNode(node);
         _irTransformer.transform();
 
+        return irDestination.getXdmNode().ToString();
+    }
+
+    public Mut.Invoice ParseFile(string filepath)
+    {
+        string ir = ParseFileToIR(filepath);
+
         Mut.Invoice invoice = (Mut.Invoice)_invoiceSerializer.Deserialize(
-            new StringReader(irDestination.getXdmNode().ToString())
+            new StringReader(ir)
         )!;
 
         return invoice;
