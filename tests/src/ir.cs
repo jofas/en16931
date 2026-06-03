@@ -87,7 +87,7 @@ public class IRTests
 
         Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
 
-        // BT-9 is mapped to different code lists in CII (UNTDID 2475) and UBL (UNTDID 2005)
+        // BT-8 is mapped to different code lists in CII (UNTDID 2475) and UBL (UNTDID 2005)
         Invoice expected = Data.Invoice2 with
         {
             ValueAddedTaxPointDateCode = new Code("5"),
