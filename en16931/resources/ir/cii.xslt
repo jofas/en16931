@@ -7,7 +7,7 @@
     xmlns="urn:todo"
     exclude-result-prefixes="rsm ram qdt udt xsl"
     version="1.0">
-  <xsl:template match="rsm:CrossIndustryInvoice">
+  <xsl:template match="/rsm:CrossIndustryInvoice">
     <!-- Used in document-totals (bg-22) to refer to bt-5 and bt-6 -->
     <xsl:variable name="root" select="."/>
     <invoice>

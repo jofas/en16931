@@ -1,11 +1,11 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using net.liberty_development.SaxonHE12s9apiExtensions;
-using net.sf.saxon.s9api;
+using Saxon.Api;
 using Im = Dev.Fassbender.En16931.Model.Immutable;
 using Mut = Dev.Fassbender.En16931.Model;
 
@@ -21,16 +21,17 @@ public class Parser
 
     Processor _processor;
 
-    XPathCompiler _xPathCompiler;
-    XsltCompiler _xsltCompiler;
+    DocumentBuilder _docBuilder;
 
-    XsltTransformer _en16931UblValidator;
-    XsltTransformer _en16931CiiValidator;
+    XPathExecutable _failedAssertsQuery;
 
-    XsltTransformer _xRechnungUblValidator;
-    XsltTransformer _xRechnungCiiValidator;
+    XsltExecutable _en16931UblValidator;
+    XsltExecutable _en16931CiiValidator;
 
-    XsltTransformer _irTransformer;
+    XsltExecutable _xRechnungUblValidator;
+    XsltExecutable _xRechnungCiiValidator;
+
+    XsltExecutable _irTransformer;
 
     public Parser()
     {
@@ -61,128 +62,182 @@ public class Parser
         _invoiceSerializer = new XmlSerializer(typeof(Mut.Invoice));
 
         _processor = new Processor(false);
-        _processor.getUnderlyingConfiguration().setStandardErrorOutput(new java.io.PrintStream(new NullOutputStream()));
+        _processor.ErrorWriter = TextWriter.Null;
 
-        _xPathCompiler = _processor.newXPathCompiler();
-        _xPathCompiler.declareNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
+        _docBuilder = _processor.NewDocumentBuilder();
 
-        _xsltCompiler = _processor.newXsltCompiler();
+        XPathCompiler xPathCompiler = _processor.NewXPathCompiler();
+        xPathCompiler.DeclareNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
 
-        _en16931UblValidator = _xsltCompiler.Compile(new FileInfo("resources/en16931/ubl/EN16931-UBL-validation.xslt")).load();
-        _en16931CiiValidator = _xsltCompiler.Compile(new FileInfo("resources/en16931/cii/EN16931-CII-validation.xslt")).load();
+        _failedAssertsQuery = xPathCompiler.Compile("svrl:failed-assert[@flag = 'fatal']");
 
-        _xRechnungUblValidator = _xsltCompiler.Compile(new FileInfo("resources/xrechnung/ubl/XRechnung-UBL-validation.xsl")).load();
-        _xRechnungCiiValidator = _xsltCompiler.Compile(new FileInfo("resources/xrechnung/cii/XRechnung-CII-validation.xsl")).load();
+        XsltCompiler xsltCompiler = _processor.NewXsltCompiler();
 
-        _irTransformer = _xsltCompiler.Compile(new FileInfo("resources/ir/ir.xslt")).load();
+        Uri en16931UblUri = new Uri(new FileInfo("resources/en16931/ubl/EN16931-UBL-validation.xslt").FullName);
+        _en16931UblValidator = xsltCompiler.Compile(en16931UblUri);
+
+        Uri en16931CiiUri = new Uri(new FileInfo("resources/en16931/cii/EN16931-CII-validation.xslt").FullName);
+        _en16931CiiValidator = xsltCompiler.Compile(en16931CiiUri);
+
+        Uri xRechnungUblUri = new Uri(new FileInfo("resources/xrechnung/ubl/XRechnung-UBL-validation.xsl").FullName);
+        _xRechnungUblValidator = xsltCompiler.Compile(xRechnungUblUri);
+
+        Uri xRechnungCiiUri = new Uri(new FileInfo("resources/xrechnung/cii/XRechnung-CII-validation.xsl").FullName);
+        _xRechnungCiiValidator = xsltCompiler.Compile(xRechnungCiiUri);
+
+        Uri irUri = new Uri(new FileInfo("resources/ir/ir.xslt").FullName);
+        _irTransformer = xsltCompiler.Compile(irUri);
     }
 
-    internal string ParseFileToIR(string filepath) {
-        XmlDocument doc = new XmlDocument();
-        doc.Schemas = _schemaSet;
+    public Mut.Invoice ParseFile(string filepath)
+    {
+        XmlDocument ir = ParseFileToIR(filepath);
+
+        XmlNodeReader reader = new(ir);
+
+        Mut.Invoice invoice = (Mut.Invoice)_invoiceSerializer.Deserialize(reader)!;
+
+        return invoice;
+    }
+
+    private XmlDocument ParseFileToIR(string filepath)
+    {
+        DocumentType docType = ValidateSchema(filepath);
+
+        using StreamReader reader = new(filepath);
+        XdmNode doc = _docBuilder.Build(reader);
+
+        try
+        {
+            ValidateEn16931(doc, docType);
+        }
+        catch (En16931SchematronException e)
+        {
+            if (docType.Standard == Standard.XRechnungExtension)
+            {
+                // Extensions can extend code listings and otherwise add elements
+                // or override rules of the EN16931 specification.
+                // These overridden rules of the EN16931 Schematron can fail early,
+                // even when the invoice is valid according to the extension.
+                // Here we remove these failed asserts from the query and continue
+                // executing the rules that override the code listings.
+                //
+                // The XRechnung Extension overrides the following rules:
+                //
+                // * BR-CL-10 => BR-DEX-04
+                // * BR-CL-11 => BR-DEX-05
+                // * BR-CL-21 => BR-DEX-06
+                // * BR-CL-25 => BR-DEX-07
+                // * BR-CL-26 => BR-DEX-08
+                // * BR-CO-16 => BR-DEX-09
+                //
+                if (!e.Errors.All(e =>
+                {
+                    return ((string[])[
+                        "BR-CL-10",
+                        "BR-CL-11",
+                        "BR-CL-21",
+                        "BR-CL-25",
+                        "BR-CL-26",
+                        "BR-CO-16",
+                    ]).Contains(e);
+                }))
+                {
+                    throw;
+                }
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        ValidateXRechnung(doc, docType);
+
+        DomDestination destination = new();
+
+        Xslt30Transformer transformer = _irTransformer.Load30();
+        transformer.GlobalContextItem = doc;
+        transformer.ApplyTemplates(doc, destination);
+
+        return destination.XmlDocument;
+    }
+
+    private DocumentType ValidateSchema(string filepath)
+    {
+        XmlDocument doc = new XmlDocument()
+        {
+            Schemas = _schemaSet,
+        };
 
         doc.Load(filepath);
 
-        DocumentType docType = GetDocumentType(doc);
-
         doc.Validate(null);
 
-        XdmNode node = _processor.newDocumentBuilder().Build(new FileInfo(filepath));
+        return GetDocumentType(doc);
+    }
 
-        XsltTransformer en16931Validator = docType.Schema switch
+    private void ValidateEn16931(XdmNode doc, DocumentType docType)
+    {
+        XsltExecutable validator = docType.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => _en16931UblValidator,
             Schema.CiiCrossIndustryInvoice => _en16931CiiValidator,
             _ => throw new UnreachableException(),
         };
 
-        XdmDestination en16931Destination = new XdmDestination();
+        Xslt30Transformer transformer = validator.Load30();
+        transformer.GlobalContextItem = doc;
+        XdmValue result = transformer.ApplyTemplates(doc);
 
-        en16931Validator.setDestination(en16931Destination);
-        en16931Validator.setInitialContextNode(node);
-        en16931Validator.transform();
+        XPathSelector selector = _failedAssertsQuery.Load();
+        selector.ContextItem = (XdmItem)result;
+        XdmValue failedAsserts = selector.Evaluate();
 
-        XdmNode? en16931Result = en16931Destination.getXdmNode().children().iterator().next()! as XdmNode;
-
-        string en16931FailedAssertsQuery = "/svrl:schematron-output/svrl:failed-assert[@flag='fatal']";
-
-        if (docType.Standard == Standard.XRechnungExtension)
+        if (failedAsserts.Count > 0)
         {
-            // Extensions can extend code listings and otherwise add elements
-            // or override rules of the EN16931 specification.
-            // These overridden rules of the EN16931 Schematron can fail early,
-            // even when the invoice is valid according to the extension.
-            // Here we remove these failed asserts from the query and continue
-            // executing the rules that override the code listings.
-            //
-            // The XRechnung Extension overrides the following rules:
-            //
-            // * BR-CL-10 => BR-DEX-04
-            // * BR-CL-11 => BR-DEX-05
-            // * BR-CL-21 => BR-DEX-06
-            // * BR-CL-25 => BR-DEX-07
-            // * BR-CL-26 => BR-DEX-08
-            // * BR-CO-16 => BR-DEX-09
-            //
-            en16931FailedAssertsQuery = $"{en16931FailedAssertsQuery}[not(contains(' BR-CL-10 BR-CL-11 BR-CL-21 BR-CL-25 BR-CL-26 BR-CO-16 ', concat(' ', normalize-space(@id), ' ')))]";
+            string[] errors = failedAsserts
+                .Select(i => ((XdmNode)i).GetAttributeValue("id"))
+                .ToArray();
+
+            throw new En16931SchematronException
+            {
+                Errors = errors,
+            };
         }
+    }
 
-        XdmValue en16931FailedAsserts = _xPathCompiler.evaluate(
-            en16931FailedAssertsQuery,
-            en16931Result!
-        );
-
-        if (en16931FailedAsserts.size() > 0)
-        {
-            throw new En16931SchematronException();
-        }
-
-        XsltTransformer xRechnungValidator = docType.Schema switch
+    private void ValidateXRechnung(XdmNode doc, DocumentType docType)
+    {
+        XsltExecutable validator = docType.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => _xRechnungUblValidator,
             Schema.CiiCrossIndustryInvoice => _xRechnungCiiValidator,
             _ => throw new UnreachableException(),
         };
 
-        XdmDestination xRechnungDestination = new XdmDestination();
+        Xslt30Transformer transformer = validator.Load30();
+        transformer.GlobalContextItem = doc;
+        XdmValue result = transformer.ApplyTemplates(doc);
 
-        xRechnungValidator.setDestination(xRechnungDestination);
-        xRechnungValidator.setInitialContextNode(node);
-        xRechnungValidator.transform();
+        XPathSelector selector = _failedAssertsQuery.Load();
+        selector.ContextItem = (XdmItem)result;
+        XdmValue failedAsserts = selector.Evaluate();
 
-        XdmNode? xRechnungResult = xRechnungDestination.getXdmNode().children().iterator().next() as XdmNode;
-
-        XdmValue xRechnungFailedAsserts = _xPathCompiler.evaluate(
-            "/svrl:schematron-output/svrl:failed-assert[@flag='fatal']",
-            xRechnungResult!
-        );
-
-        if (xRechnungFailedAsserts.size() > 0)
+        if (failedAsserts.Count > 0)
         {
-            throw new XRechnungSchematronException();
+            string[] errors = failedAsserts
+                .Select(i => ((XdmNode)i).GetAttributeValue("id"))
+                .ToArray();
+
+            throw new XRechnungSchematronException
+            {
+                Errors = errors,
+            };
         }
-
-        XdmDestination irDestination = new XdmDestination();
-
-        _irTransformer.setDestination(irDestination);
-        _irTransformer.setInitialContextNode(node);
-        _irTransformer.transform();
-
-        return irDestination.getXdmNode().ToString();
     }
 
-    public Mut.Invoice ParseFile(string filepath)
-    {
-        string ir = ParseFileToIR(filepath);
-
-        Mut.Invoice invoice = (Mut.Invoice)_invoiceSerializer.Deserialize(
-            new StringReader(ir)
-        )!;
-
-        return invoice;
-    }
-
-    DocumentType GetDocumentType(XmlDocument doc)
+    private DocumentType GetDocumentType(XmlDocument doc)
     {
         XmlNode root = doc.DocumentElement!;
 
@@ -238,7 +293,11 @@ public class Parser
             throw new Exception("unable to find identifier");
         }
 
-        return new DocumentType((Schema)schema, (Standard)standard);
+        return new DocumentType
+        {
+            Schema = schema.Value,
+            Standard = standard.Value,
+        };
     }
 }
 
@@ -255,8 +314,11 @@ enum Standard
     XRechnungExtension,
 }
 
-record DocumentType(Schema Schema, Standard Standard)
+readonly ref struct DocumentType
 {
+    public required Schema Schema { get; init; }
+    public required Standard Standard { get; init; }
+
     public string SchemaFilePath()
     {
         return Schema switch
@@ -269,14 +331,11 @@ record DocumentType(Schema Schema, Standard Standard)
     }
 }
 
-public class SchematronException : Exception { }
+public class SchematronException : Exception
+{
+    public required string[] Errors { get; init; }
+}
 
 public class En16931SchematronException : SchematronException { }
 
 public class XRechnungSchematronException : SchematronException { }
-
-// For throwing away stdout output from Saxon
-class NullOutputStream : java.io.OutputStream
-{
-    public override void write(int b) { }
-}

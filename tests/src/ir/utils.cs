@@ -1,12 +1,11 @@
 using System.Linq;
-
-using Xunit;
-
 using Dev.Fassbender.En16931.Model.Immutable;
+using Xunit;
 
 namespace Tests.IR;
 
-public static class Utils {
+public static class Utils
+{
     public static void RefinedInvoiceComparson(Invoice expected, Invoice invoice)
     {
         Assert.Equal(expected.InvoiceNumber, invoice.InvoiceNumber);

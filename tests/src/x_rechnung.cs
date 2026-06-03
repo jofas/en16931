@@ -6,17 +6,17 @@ using Xunit;
 
 namespace Tests;
 
-public class XRechnungValidation
+public class XRechnung
 {
     [Fact]
-    public void TestCorrectUbl()
+    public void CorrectUbl()
     {
         Parser parser = new Parser();
         parser.ParseFile("resources/xrechnung-testsuite/standard/01.01a-INVOICE_ubl.xml");
     }
 
     [Fact]
-    public void TestCorrectCii()
+    public void CorrectCii()
     {
         Parser parser = new Parser();
         parser.ParseFile("resources/xrechnung-testsuite/standard/01.01a-INVOICE_uncefact.xml");
@@ -24,7 +24,7 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schemas/ubl/invoice/failure")]
-    public void TestSchemaViolationUblInvoice(string testsLocation)
+    public void SchemaViolationUblInvoice(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -41,7 +41,7 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schemas/cii/cross-industry-invoice/failure")]
-    public void TestSchemaViolationCiiCrossIndustryInvoice(string testsLocation)
+    public void SchemaViolationCiiCrossIndustryInvoice(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -58,7 +58,7 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schematrons/en16931/ubl/invoice/failure")]
-    public void TestSchematronViolationEn16931UblInvoice(string testsLocation)
+    public void SchematronViolationEn16931UblInvoice(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -75,7 +75,7 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schematrons/en16931/cii/cross-industry-invoice/failure")]
-    public void TestSchematronViolationEn16931CiiCrossIndustryInvoice(string testsLocation)
+    public void SchematronViolationEn16931CiiCrossIndustryInvoice(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -92,7 +92,7 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schematrons/xrechnung/cius/ubl/invoice/success")]
-    public void TestSuccessfulXRechnungCiusUblInvoice(string testsLocation)
+    public void SuccessfulXRechnungCiusUblInvoice(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -106,7 +106,7 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schematrons/xrechnung/cius/ubl/invoice/failure")]
-    public void TestSchematronViolationXRechnungCiusUblInvoice(string testsLocation)
+    public void SchematronViolationXRechnungCiusUblInvoice(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -123,7 +123,7 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schematrons/xrechnung/cius/ubl/credit-note/success")]
-    public void TestSuccessfulXRechnungCiusUblCreditNote(string testsLocation)
+    public void SuccessfulXRechnungCiusUblCreditNote(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -137,7 +137,7 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/failure")]
-    public void TestSchematronViolationXRechnungCiusCiiCrossIndustryInvoice(string testsLocation)
+    public void SchematronViolationXRechnungCiusCiiCrossIndustryInvoice(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -154,7 +154,7 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schematrons/xrechnung/extension/ubl/invoice/failure")]
-    public void TestSchematronViolationXRechnungExtensionUblInvoice(string testsLocation)
+    public void SchematronViolationXRechnungExtensionUblInvoice(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -171,7 +171,7 @@ public class XRechnungValidation
 
     [Theory]
     [InlineData("resources/schematrons/xrechnung/extension/cii/cross-industry-invoice/failure")]
-    public void TestSchematronViolationXRechnungExtensionCiiCrossIndustryInvoice(string testsLocation)
+    public void SchematronViolationXRechnungExtensionCiiCrossIndustryInvoice(string testsLocation)
     {
         Parser parser = new Parser();
 
