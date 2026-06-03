@@ -4,7 +4,8 @@ using Dev.Fassbender.En16931.Model.Immutable.Primitives;
 
 namespace Tests.IR;
 
-public static class Data {
+public static class Data
+{
     public static readonly Invoice Invoice1 = new Invoice
     {
         InvoiceNumber = new Identifier("1234567"),

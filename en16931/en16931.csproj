@@ -12,8 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IKVM.Maven.Sdk" Version="1.11.0" />
-    <PackageReference Include="SaxonHE12s9apiExtensions" Version="12.9.10" />
+    <PackageReference Include="SaxonCS-HE" Version="13.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,4 +20,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tests" />
+  </ItemGroup>
+
 </Project>
