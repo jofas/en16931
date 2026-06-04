@@ -8,22 +8,8 @@ namespace Tests;
 
 public class XRechnung
 {
-    [Fact]
-    public void CorrectUbl()
-    {
-        Parser parser = new Parser();
-        parser.ParseFile("Resources/xrechnung-testsuite/standard/01.01a-INVOICE_ubl.xml");
-    }
-
-    [Fact]
-    public void CorrectCii()
-    {
-        Parser parser = new Parser();
-        parser.ParseFile("Resources/xrechnung-testsuite/standard/01.01a-INVOICE_uncefact.xml");
-    }
-
     [Theory]
-    [InlineData("Resources/schemas/ubl/invoice/failure")]
+    [InlineData("Resources/Ubl-Invoice/Failure")]
     public void SchemaViolationUblInvoice(string testsLocation)
     {
         Parser parser = new Parser();
@@ -40,8 +26,8 @@ public class XRechnung
     }
 
     [Theory]
-    [InlineData("Resources/schemas/cii/cross-industry-invoice/failure")]
-    public void SchemaViolationCiiCrossIndustryInvoice(string testsLocation)
+    [InlineData("Resources/Cii/Failure")]
+    public void SchemaViolationCii(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -57,7 +43,7 @@ public class XRechnung
     }
 
     [Theory]
-    [InlineData("Resources/schematrons/en16931/ubl/invoice/failure")]
+    [InlineData("Resources/En16931/Ubl-Invoice/Failure")]
     public void SchematronViolationEn16931UblInvoice(string testsLocation)
     {
         Parser parser = new Parser();
@@ -74,8 +60,8 @@ public class XRechnung
     }
 
     [Theory]
-    [InlineData("Resources/schematrons/en16931/cii/cross-industry-invoice/failure")]
-    public void SchematronViolationEn16931CiiCrossIndustryInvoice(string testsLocation)
+    [InlineData("Resources/En16931/Cii/Failure")]
+    public void SchematronViolationEn16931Cii(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -91,7 +77,7 @@ public class XRechnung
     }
 
     [Theory]
-    [InlineData("Resources/schematrons/xrechnung/cius/ubl/invoice/success")]
+    [InlineData("Resources/XRechnung-Cius/Ubl-Invoice/Success")]
     public void SuccessfulXRechnungCiusUblInvoice(string testsLocation)
     {
         Parser parser = new Parser();
@@ -105,7 +91,7 @@ public class XRechnung
     }
 
     [Theory]
-    [InlineData("Resources/schematrons/xrechnung/cius/ubl/invoice/failure")]
+    [InlineData("Resources/XRechnung-Cius/Ubl-Invoice/Failure")]
     public void SchematronViolationXRechnungCiusUblInvoice(string testsLocation)
     {
         Parser parser = new Parser();
@@ -122,7 +108,7 @@ public class XRechnung
     }
 
     [Theory]
-    [InlineData("Resources/schematrons/xrechnung/cius/ubl/credit-note/success")]
+    [InlineData("Resources/XRechnung-Cius/Ubl-Credit-Note/Success")]
     public void SuccessfulXRechnungCiusUblCreditNote(string testsLocation)
     {
         Parser parser = new Parser();
@@ -136,8 +122,8 @@ public class XRechnung
     }
 
     [Theory]
-    [InlineData("Resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/failure")]
-    public void SchematronViolationXRechnungCiusCiiCrossIndustryInvoice(string testsLocation)
+    [InlineData("Resources/XRechnung-Cius/Cii/Failure")]
+    public void SchematronViolationXRechnungCiusCii(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -153,7 +139,7 @@ public class XRechnung
     }
 
     [Theory]
-    [InlineData("Resources/schematrons/xrechnung/extension/ubl/invoice/failure")]
+    [InlineData("Resources/XRechnung-Extension/Ubl-Invoice/Failure")]
     public void SchematronViolationXRechnungExtensionUblInvoice(string testsLocation)
     {
         Parser parser = new Parser();
@@ -170,8 +156,8 @@ public class XRechnung
     }
 
     [Theory]
-    [InlineData("Resources/schematrons/xrechnung/extension/cii/cross-industry-invoice/failure")]
-    public void SchematronViolationXRechnungExtensionCiiCrossIndustryInvoice(string testsLocation)
+    [InlineData("Resources/XRechnung-Extension/Cii/Failure")]
+    public void SchematronViolationXRechnungExtensionCii(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -187,9 +173,9 @@ public class XRechnung
     }
 
     [Theory]
-    [InlineData("Resources/xrechnung-testsuite/standard")]
-    [InlineData("Resources/xrechnung-testsuite/extension")]
-    [InlineData("Resources/xrechnung-testsuite/technical-cases")]
+    [InlineData("Resources/Extern/xrechnung-testsuite/standard")]
+    [InlineData("Resources/Extern/xrechnung-testsuite/extension")]
+    [InlineData("Resources/Extern/xrechnung-testsuite/technical-cases")]
     public void ValidateXRechnungTestsuite(string testDirectory)
     {
         Parser parser = new Parser();
