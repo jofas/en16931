@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -19,11 +20,7 @@ public class Parser
 
     XmlSerializer _invoiceSerializer;
 
-    Processor _processor;
-
     DocumentBuilder _docBuilder;
-
-    XPathExecutable _failedAssertsQuery;
 
     XsltExecutable _en16931UblValidator;
     XsltExecutable _en16931CiiValidator;
@@ -40,7 +37,7 @@ public class Parser
         // UBL namespaces
         _namespaces.AddNamespace("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");
         _namespaces.AddNamespace("invoice", "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2");
-        _namespaces.AddNamespace("creditnote", "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2");
+        _namespaces.AddNamespace("credit-note", "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2");
 
         // CII namespaces
         _namespaces.AddNamespace("rsm", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100");
@@ -61,17 +58,12 @@ public class Parser
 
         _invoiceSerializer = new XmlSerializer(typeof(Mut.Invoice));
 
-        _processor = new Processor(false);
-        _processor.ErrorWriter = TextWriter.Null;
+        Processor processor = new Processor(false);
+        processor.ErrorWriter = TextWriter.Null;
 
-        _docBuilder = _processor.NewDocumentBuilder();
+        _docBuilder = processor.NewDocumentBuilder();
 
-        XPathCompiler xPathCompiler = _processor.NewXPathCompiler();
-        xPathCompiler.DeclareNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
-
-        _failedAssertsQuery = xPathCompiler.Compile("svrl:failed-assert[@flag = 'fatal']");
-
-        XsltCompiler xsltCompiler = _processor.NewXsltCompiler();
+        XsltCompiler xsltCompiler = processor.NewXsltCompiler();
 
         Uri en16931UblUri = new Uri(new FileInfo("resources/en16931/EN16931-UBL-validation.xslt").FullName);
         _en16931UblValidator = xsltCompiler.Compile(en16931UblUri);
@@ -188,21 +180,28 @@ public class Parser
 
         Xslt30Transformer transformer = validator.Load30();
         transformer.GlobalContextItem = doc;
-        XdmValue result = transformer.ApplyTemplates(doc);
+        XdmNode result = (XdmNode)transformer.ApplyTemplates(doc);
 
-        XPathSelector selector = _failedAssertsQuery.Load();
-        selector.ContextItem = (XdmItem)result;
-        XdmValue failedAsserts = selector.Evaluate();
+        List<string> infos = [];
+        List<string> warnings = [];
+        List<string> errors = [];
 
-        if (failedAsserts.Count > 0)
+        foreach (XdmNode node in result.Children("failed-assert")) {
+            List<string> list = node.GetAttributeValue("flag") switch {
+                "information" => infos,
+                "warning" => warnings,
+                "fatal" => errors,
+                _ => throw new UnreachableException(),
+            };
+
+            list.Add(node.GetAttributeValue("id"));
+        }
+
+        if (errors.Count > 0)
         {
-            string[] errors = failedAsserts
-                .Select(i => ((XdmNode)i).GetAttributeValue("id"))
-                .ToArray();
-
             throw new En16931SchematronException
             {
-                Errors = errors,
+                Errors = errors.ToArray(),
             };
         }
     }
@@ -218,85 +217,59 @@ public class Parser
 
         Xslt30Transformer transformer = validator.Load30();
         transformer.GlobalContextItem = doc;
-        XdmValue result = transformer.ApplyTemplates(doc);
+        XdmNode result = (XdmNode)transformer.ApplyTemplates(doc);
 
-        XPathSelector selector = _failedAssertsQuery.Load();
-        selector.ContextItem = (XdmItem)result;
-        XdmValue failedAsserts = selector.Evaluate();
+        List<string> infos = [];
+        List<string> warnings = [];
+        List<string> errors = [];
 
-        if (failedAsserts.Count > 0)
+        foreach (XdmNode node in result.Children("failed-assert")) {
+            List<string> list = node.GetAttributeValue("flag") switch {
+                "information" => infos,
+                "warning" => warnings,
+                "fatal" => errors,
+                _ => throw new UnreachableException(),
+            };
+
+            list.Add(node.GetAttributeValue("id"));
+        }
+
+        if (errors.Count > 0)
         {
-            string[] errors = failedAsserts
-                .Select(i => ((XdmNode)i).GetAttributeValue("id"))
-                .ToArray();
-
             throw new XRechnungSchematronException
             {
-                Errors = errors,
+                Errors = errors.ToArray(),
             };
         }
     }
 
     private DocumentType GetDocumentType(XmlDocument doc)
     {
-        XmlNode root = doc.DocumentElement!;
+        XmlNode root = doc.DocumentElement ?? throw new Exception("Could not find root node.");
 
-        XmlNode? identifier = root.SelectSingleNode(
-            "/invoice:Invoice/cbc:CustomizationID[ . = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0']",
-            _namespaces
-        );
-        Schema? schema = Schema.UblInvoice;
-        Standard? standard = Standard.XRechnungCIUS;
+        Schema schema = (root.NamespaceURI, root.LocalName) switch {
+            (string namespaceUri, "Invoice") when namespaceUri == _namespaces.LookupNamespace("invoice") => Schema.UblInvoice,
+            (string namespaceUri, "CreditNote") when namespaceUri == _namespaces.LookupNamespace("credit-note") => Schema.UblCreditNote,
+            (string namespaceUri, "CrossIndustryInvoice") when namespaceUri == _namespaces.LookupNamespace("rsm") => Schema.CiiCrossIndustryInvoice,
+            (_, _) => throw new Exception($"Unknown root node: {root.Name}."),
+        };
 
-        if (identifier == null)
-        {
-            identifier = root.SelectSingleNode(
-                "/invoice:Invoice/cbc:CustomizationID[ . = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0']",
-                _namespaces
-            );
-            schema = Schema.UblInvoice;
-            standard = Standard.XRechnungExtension;
-        }
+        string specificationIdentifier = schema switch {
+            Schema.UblInvoice or Schema.UblCreditNote => root.SelectSingleNode("cbc:CustomizationID", _namespaces)?.InnerText ?? throw new Exception("Could not find specification identifier node."),
+            Schema.CiiCrossIndustryInvoice => root.SelectSingleNode("rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID", _namespaces)?.InnerText ?? throw new Exception("Could not find specification identifier node."),
+            _ => throw new UnreachableException(),
+        };
 
-        if (identifier == null)
-        {
-            identifier = root.SelectSingleNode(
-                "/creditnote:CreditNote[ cbc:CustomizationID/text() = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0']",
-                _namespaces
-            );
-            schema = Schema.UblCreditNote;
-            standard = Standard.XRechnungCIUS;
-        }
-
-        if (identifier == null)
-        {
-            identifier = root.SelectSingleNode(
-                "/rsm:CrossIndustryInvoice[rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID/text() = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0']",
-                _namespaces
-            );
-            schema = Schema.CiiCrossIndustryInvoice;
-            standard = Standard.XRechnungCIUS;
-        }
-
-        if (identifier == null)
-        {
-            identifier = root.SelectSingleNode(
-                "/rsm:CrossIndustryInvoice[rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID/text() = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0']",
-                _namespaces
-            );
-            schema = Schema.CiiCrossIndustryInvoice;
-            standard = Standard.XRechnungExtension;
-        }
-
-        if (identifier == null)
-        {
-            throw new Exception("unable to find identifier");
-        }
+        Standard standard = specificationIdentifier switch {
+            "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0" => Standard.XRechnungCius,
+            "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0" => Standard.XRechnungExtension,
+            _ => throw new Exception($"Uncompatible specification identifier: {specificationIdentifier}."),
+        };
 
         return new DocumentType
         {
-            Schema = schema.Value,
-            Standard = standard.Value,
+            Schema = schema,
+            Standard = standard,
         };
     }
 }
@@ -310,7 +283,7 @@ enum Schema
 
 enum Standard
 {
-    XRechnungCIUS,
+    XRechnungCius,
     XRechnungExtension,
 }
 
