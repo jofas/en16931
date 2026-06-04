@@ -1,10 +1,10 @@
-using Dev.Fassbender.En16931.Collections.Immutable;
-using Dev.Fassbender.En16931.Model.Conversions;
-using Dev.Fassbender.En16931.Model.Immutable.Primitives;
+using En16931.Collections.Immutable;
+using En16931.Model.Conversions;
+using En16931.Model.Immutable.Primitives;
 
-using Mut = Dev.Fassbender.En16931.Model;
+using Mut = En16931.Model;
 
-namespace Dev.Fassbender.En16931.Model.Immutable;
+namespace En16931.Model.Immutable;
 
 public readonly record struct Invoice : IToMutable<Mut.Invoice>
 {

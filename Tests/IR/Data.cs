@@ -1,7 +1,7 @@
 using System;
-using Dev.Fassbender.En16931.Collections.Immutable;
-using Dev.Fassbender.En16931.Model.Immutable;
-using Dev.Fassbender.En16931.Model.Immutable.Primitives;
+using En16931.Collections.Immutable;
+using En16931.Model.Immutable;
+using En16931.Model.Immutable.Primitives;
 
 namespace Tests.IR;
 

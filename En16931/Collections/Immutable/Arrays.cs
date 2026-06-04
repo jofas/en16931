@@ -4,9 +4,9 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-using Dev.Fassbender.En16931.Utils;
+using En16931.Utils;
 
-namespace Dev.Fassbender.En16931.Collections.Immutable;
+namespace En16931.Collections.Immutable;
 
 public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
 {
