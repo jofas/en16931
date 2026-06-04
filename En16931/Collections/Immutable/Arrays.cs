@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -8,36 +9,53 @@ using En16931.Utils;
 
 namespace En16931.Collections.Immutable;
 
-public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
+public readonly struct Array<T> : IEquatable<Array<T>>, IEnumerable<T> where T : struct
 {
-    public required ImmutableArray<T> Values
+    private ImmutableArray<T> _values
     {
         get
         {
-            Assert.IsFalse(field.IsDefault, "Values can't be uninitialized");
+            Assert.IsFalse(field.IsDefault, "Array can't be uninitialized");
             return field;
         }
         init
         {
-            Assert.IsFalse(value.IsDefault, "Values can't be uninitialized");
+            Assert.IsFalse(value.IsDefault, "Array can't be uninitialized");
             field = value;
         }
     }
 
     [SetsRequiredMembers]
-    public Array(IEnumerable<T> v) => Values = ImmutableArray.CreateRange(v);
+    public Array(IEnumerable<T> v) => _values = ImmutableArray.CreateRange(v);
 
-    public T this[int index] { get => Values[index]; }
+    public int Length => _values.Length;
+
+    public T this[int index] { get => _values[index]; }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        return (_values as IEnumerable<T>).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public Array<T> Slice(int start, int length)
+    {
+        return new(_values.Slice(start, length));
+    }
 
     #region value-equality
 
     public override bool Equals(object? o) => o is Array<T> other && this.Equals(other);
 
-    public override int GetHashCode() => Values.GetHashCode();
+    public override int GetHashCode() => _values.GetHashCode();
 
     public bool Equals(Array<T> other)
     {
-        return Values.SequenceEqual(other.Values);
+        return this.SequenceEqual(other);
     }
 
     public static bool operator ==(Array<T> lhs, Array<T> rhs)
@@ -56,51 +74,68 @@ public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
     {
         string items;
 
-        if (Values.Length > 10)
+        if (Length > 10)
         {
-            string firstThree = string.Join(", ", Values[0..3]);
-            string lastThree = string.Join(", ", Values[^3..^0]);
+            string firstThree = string.Join(", ", this[0..3]);
+            string lastThree = string.Join(", ", this[^3..^0]);
             items = $"{firstThree}, ..., {lastThree}";
         }
         else
         {
-            items = string.Join(", ", Values);
+            items = string.Join(", ", this);
         }
 
-        return $"Array {{ Values = [{items}] }}";
+        return $"[{items}]";
     }
 }
 
-public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>> where T : struct
+public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>>, IEnumerable<T> where T : struct
 {
-    public required ImmutableArray<T> Values
+    private ImmutableArray<T> _values
     {
         get
         {
-            Assert.IsFalse(field.IsDefaultOrEmpty, "Values can't be uninitialized or empty");
+            Assert.IsFalse(field.IsDefaultOrEmpty, "NonEmptyArray can't be uninitialized or empty");
             return field;
         }
         init
         {
-            Assert.IsFalse(value.IsDefaultOrEmpty, "Values can't be uninitialized or empty");
+            Assert.IsFalse(value.IsDefaultOrEmpty, "NonEmptyArray can't be uninitialized or empty");
             field = value;
         }
     }
 
     [SetsRequiredMembers]
-    public NonEmptyArray(IEnumerable<T> v) => Values = ImmutableArray.CreateRange(v);
+    public NonEmptyArray(IEnumerable<T> v) => _values = ImmutableArray.CreateRange(v);
 
-    public T this[int index] { get => Values[index]; }
+    public int Length => _values.Length;
+
+    public T this[int index] { get => _values[index]; }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        return (_values as IEnumerable<T>).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public NonEmptyArray<T> Slice(int start, int length)
+    {
+        return new(_values.Slice(start, length));
+    }
 
     #region value-equality
 
     public override bool Equals(object? o) => o is NonEmptyArray<T> other && this.Equals(other);
 
-    public override int GetHashCode() => Values.GetHashCode();
+    public override int GetHashCode() => _values.GetHashCode();
 
     public bool Equals(NonEmptyArray<T> other)
     {
-        return Values.SequenceEqual(other.Values);
+        return this.SequenceEqual(other);
     }
 
     public static bool operator ==(NonEmptyArray<T> lhs, NonEmptyArray<T> rhs)
@@ -119,17 +154,17 @@ public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>> where T :
     {
         string items;
 
-        if (Values.Length > 10)
+        if (Length > 10)
         {
-            string firstThree = string.Join(", ", Values[0..3]);
-            string lastThree = string.Join(", ", Values[^3..^0]);
+            string firstThree = string.Join(", ", this[0..3]);
+            string lastThree = string.Join(", ", this[^3..^0]);
             items = $"{firstThree}, ..., {lastThree}";
         }
         else
         {
-            items = string.Join(", ", Values);
+            items = string.Join(", ", this);
         }
 
-        return $"NonEmptyArray {{ Values = [{items}] }}";
+        return $"[{items}]";
     }
 }

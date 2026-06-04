@@ -20,13 +20,13 @@ public static class ArrayToMutableExt
     public static TResult[] ToMutable<T, TResult>(this Array<T> self)
        where T : struct, IToMutable<TResult>
     {
-        return self.Values.Select(x => x.ToMutable()).ToArray();
+        return self.Select(x => x.ToMutable()).ToArray();
     }
 
     public static T[] ToMutable<T>(this Array<T> self)
        where T : struct
     {
-        return self.Values.ToArray();
+        return self.ToArray();
     }
 }
 
@@ -35,13 +35,13 @@ public static class NonEmptyArrayToMutableExt
     public static TResult[] ToMutable<T, TResult>(this NonEmptyArray<T> self)
        where T : struct, IToMutable<TResult>
     {
-        return self.Values.Select(x => x.ToMutable()).ToArray();
+        return self.Select(x => x.ToMutable()).ToArray();
     }
 
     public static T[] ToMutable<T>(this NonEmptyArray<T> self)
        where T : struct
     {
-        return self.Values.ToArray();
+        return self.ToArray();
     }
 }
 
