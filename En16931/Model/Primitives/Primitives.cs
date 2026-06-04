@@ -6,13 +6,13 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-using Dev.Fassbender.En16931.Collections.Immutable;
-using Dev.Fassbender.En16931.Model.Conversions;
-using Dev.Fassbender.En16931.Utils;
+using En16931.Collections.Immutable;
+using En16931.Model.Conversions;
+using En16931.Utils;
 
-using Im = Dev.Fassbender.En16931.Model.Immutable;
+using Im = En16931.Model.Immutable;
 
-namespace Dev.Fassbender.En16931.Model.Primitives;
+namespace En16931.Model.Primitives;
 
 public struct Amount : IToImmutable<Im.Primitives.Amount>, IXmlSerializable
 {

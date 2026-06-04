@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <PackageId>Dev.Fassbender.En16931</PackageId>
+    <PackageId>En16931</PackageId>
     <Version>0.1.0</Version>
     <Authors>Jonas Fassbender</Authors>
     <Company>fassbender.dev</Company>

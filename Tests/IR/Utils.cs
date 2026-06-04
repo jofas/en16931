@@ -1,5 +1,5 @@
 using System.Linq;
-using Dev.Fassbender.En16931.Model.Immutable;
+using En16931.Model.Immutable;
 using Xunit;
 
 namespace Tests.IR;

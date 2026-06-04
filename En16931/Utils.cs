@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Dev.Fassbender.En16931.Utils;
+namespace En16931.Utils;
 
 public static class Assert
 {

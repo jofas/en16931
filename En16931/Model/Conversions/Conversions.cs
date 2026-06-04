@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Dev.Fassbender.En16931.Collections.Immutable;
+using En16931.Collections.Immutable;
 
-namespace Dev.Fassbender.En16931.Model.Conversions;
+namespace En16931.Model.Conversions;
 
 public interface IToMutable<T>
 {

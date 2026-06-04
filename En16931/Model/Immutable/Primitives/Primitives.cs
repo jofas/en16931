@@ -1,13 +1,13 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-using Dev.Fassbender.En16931.Collections.Immutable;
-using Dev.Fassbender.En16931.Model.Conversions;
-using Dev.Fassbender.En16931.Utils;
+using En16931.Collections.Immutable;
+using En16931.Model.Conversions;
+using En16931.Utils;
 
-using Mut = Dev.Fassbender.En16931.Model;
+using Mut = En16931.Model;
 
-namespace Dev.Fassbender.En16931.Model.Immutable.Primitives;
+namespace En16931.Model.Immutable.Primitives;
 
 public readonly record struct Amount(decimal Value) : IToMutable<Mut.Primitives.Amount>
 {

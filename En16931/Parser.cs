@@ -7,10 +7,10 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Saxon.Api;
-using Im = Dev.Fassbender.En16931.Model.Immutable;
-using Mut = Dev.Fassbender.En16931.Model;
+using Im = En16931.Model.Immutable;
+using Mut = En16931.Model;
 
-namespace Dev.Fassbender.En16931;
+namespace En16931;
 
 public class Parser
 {
