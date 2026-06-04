@@ -1,21 +1,55 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
+using Dev.Fassbender.En16931.Collections.Immutable;
+using Dev.Fassbender.En16931.Model.Conversions;
 using Dev.Fassbender.En16931.Utils;
+
+using Mut = Dev.Fassbender.En16931.Model;
 
 namespace Dev.Fassbender.En16931.Model.Immutable.Primitives;
 
-public readonly record struct Amount(decimal Value);
-public readonly record struct Percentage(decimal Value);
-public readonly record struct Quantity(decimal Value);
-public readonly record struct UnitPriceAmount(decimal Value);
+public readonly record struct Amount(decimal Value) : IToMutable<Mut.Primitives.Amount>
+{
+    public Mut.Primitives.Amount ToMutable()
+    {
+        return new Mut.Primitives.Amount(Value);
+    }
+}
 
-public readonly record struct Date(DateTime Value);
+public readonly record struct Percentage(decimal Value) : IToMutable<Mut.Primitives.Percentage>
+{
+    public Mut.Primitives.Percentage ToMutable()
+    {
+        return new Mut.Primitives.Percentage(Value);
+    }
+}
 
-public readonly record struct Code
+public readonly record struct Quantity(decimal Value) : IToMutable<Mut.Primitives.Quantity>
+{
+    public Mut.Primitives.Quantity ToMutable()
+    {
+        return new Mut.Primitives.Quantity(Value);
+    }
+}
+
+public readonly record struct UnitPriceAmount(decimal Value) : IToMutable<Mut.Primitives.UnitPriceAmount>
+{
+    public Mut.Primitives.UnitPriceAmount ToMutable()
+    {
+        return new Mut.Primitives.UnitPriceAmount(Value);
+    }
+}
+
+public readonly record struct Date(DateTime Value) : IToMutable<Mut.Primitives.Date>
+{
+    public Mut.Primitives.Date ToMutable()
+    {
+        return new Mut.Primitives.Date(Value);
+    }
+}
+
+public readonly record struct Code : IToMutable<Mut.Primitives.Code>
 {
     public required string Value
     {
@@ -36,9 +70,14 @@ public readonly record struct Code
     {
         Value = value;
     }
+
+    public Mut.Primitives.Code ToMutable()
+    {
+        return new Mut.Primitives.Code(Value);
+    }
 }
 
-public readonly record struct DocumentReference
+public readonly record struct DocumentReference : IToMutable<Mut.Primitives.DocumentReference>
 {
     public required string Value
     {
@@ -59,9 +98,14 @@ public readonly record struct DocumentReference
     {
         Value = value;
     }
+
+    public Mut.Primitives.DocumentReference ToMutable()
+    {
+        return new Mut.Primitives.DocumentReference(Value);
+    }
 }
 
-public readonly record struct Text
+public readonly record struct Text : IToMutable<Mut.Primitives.Text>
 {
     public required string Value
     {
@@ -82,9 +126,14 @@ public readonly record struct Text
     {
         Value = value;
     }
+
+    public Mut.Primitives.Text ToMutable()
+    {
+        return new Mut.Primitives.Text(Value);
+    }
 }
 
-public readonly record struct BinaryObject
+public readonly record struct BinaryObject : IToMutable<Mut.Primitives.BinaryObject>
 {
     public required Array<byte> Content { get; init; }
 
@@ -123,9 +172,14 @@ public readonly record struct BinaryObject
         MimeCode = mimeCode;
         Filename = filename;
     }
+
+    public Mut.Primitives.BinaryObject ToMutable()
+    {
+        return new Mut.Primitives.BinaryObject(Content.ToMutable<byte>(), MimeCode, Filename);
+    }
 }
 
-public readonly record struct Identifier
+public readonly record struct Identifier : IToMutable<Mut.Primitives.Identifier>
 {
     public required string Content
     {
@@ -168,130 +222,9 @@ public readonly record struct Identifier
         SchemeIdentifier = schemeIdentifier;
         SchemeVersionIdentifier = schemeVersionIdentifier;
     }
-}
 
-public readonly struct Array<T> : IEquatable<Array<T>> where T : struct
-{
-    public required ImmutableArray<T> Value
+    public Mut.Primitives.Identifier ToMutable()
     {
-        get
-        {
-            Assert.IsFalse(field.IsDefault, "Value can't be uninitialized");
-            return field;
-        }
-        init
-        {
-            Assert.IsFalse(value.IsDefault, "Value can't be uninitialized");
-            field = value;
-        }
-    }
-
-    [SetsRequiredMembers]
-    public Array(IEnumerable<T> v) => Value = ImmutableArray.CreateRange(v);
-
-    public T this[int index] { get => Value[index]; }
-
-    #region value-equality
-
-    public override bool Equals(object? o) => o is Array<T> other && this.Equals(other);
-
-    public override int GetHashCode() => Value.GetHashCode();
-
-    public bool Equals(Array<T> other)
-    {
-        return Value.SequenceEqual(other.Value);
-    }
-
-    public static bool operator ==(Array<T> lhs, Array<T> rhs)
-    {
-        return lhs.Equals(rhs);
-    }
-
-    public static bool operator !=(Array<T> lhs, Array<T> rhs)
-    {
-        return !lhs.Equals(rhs);
-    }
-
-    #endregion
-
-    public override string ToString()
-    {
-        string items;
-
-        if (Value.Length > 10)
-        {
-            string firstThree = string.Join(", ", Value[0..3]);
-            string lastThree = string.Join(", ", Value[^3..^0]);
-            items = $"{firstThree}, ..., {lastThree}";
-        }
-        else
-        {
-            items = string.Join(", ", Value);
-        }
-
-        return $"Array {{ Value = [{items}] }}";
-    }
-}
-
-public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>> where T : struct
-{
-    public required ImmutableArray<T> Value
-    {
-        get
-        {
-            Assert.IsFalse(field.IsDefaultOrEmpty, "Value can't be uninitialized or empty");
-            return field;
-        }
-        init
-        {
-            Assert.IsFalse(value.IsDefaultOrEmpty, "Value can't be uninitialized or empty");
-            field = value;
-        }
-    }
-
-    [SetsRequiredMembers]
-    public NonEmptyArray(IEnumerable<T> v) => Value = ImmutableArray.CreateRange(v);
-
-    public T this[int index] { get => Value[index]; }
-
-    #region value-equality
-
-    public override bool Equals(object? o) => o is NonEmptyArray<T> other && this.Equals(other);
-
-    public override int GetHashCode() => Value.GetHashCode();
-
-    public bool Equals(NonEmptyArray<T> other)
-    {
-        return Value.SequenceEqual(other.Value);
-    }
-
-    public static bool operator ==(NonEmptyArray<T> lhs, NonEmptyArray<T> rhs)
-    {
-        return lhs.Equals(rhs);
-    }
-
-    public static bool operator !=(NonEmptyArray<T> lhs, NonEmptyArray<T> rhs)
-    {
-        return !lhs.Equals(rhs);
-    }
-
-    #endregion
-
-    public override string ToString()
-    {
-        string items;
-
-        if (Value.Length > 10)
-        {
-            string firstThree = string.Join(", ", Value[0..3]);
-            string lastThree = string.Join(", ", Value[^3..^0]);
-            items = $"{firstThree}, ..., {lastThree}";
-        }
-        else
-        {
-            items = string.Join(", ", Value);
-        }
-
-        return $"NonEmptyArray {{ Value = [{items}] }}";
+        return new Mut.Primitives.Identifier(Content, SchemeIdentifier, SchemeVersionIdentifier);
     }
 }

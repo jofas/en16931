@@ -1,5 +1,6 @@
 using System;
 using Dev.Fassbender.En16931;
+using Dev.Fassbender.En16931.Collections.Immutable;
 using Dev.Fassbender.En16931.Model.Immutable;
 using Dev.Fassbender.En16931.Model.Immutable.Primitives;
 using Xunit;

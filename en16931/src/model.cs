@@ -4,6 +4,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
+using Dev.Fassbender.En16931.Model.Conversions;
 using Dev.Fassbender.En16931.Model.Primitives;
 using Dev.Fassbender.En16931.Utils;
 
