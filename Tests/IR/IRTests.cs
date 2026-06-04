@@ -10,7 +10,7 @@ namespace Tests.IR;
 public class IRTests
 {
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/ubl/invoice/success/1.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/ubl/invoice/success/1.xml")]
     public void UblInvoice1(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -21,7 +21,7 @@ public class IRTests
     }
 
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/ubl/credit-note/success/1.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/ubl/credit-note/success/1.xml")]
     public void UblCreditNote1(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -37,7 +37,7 @@ public class IRTests
     }
 
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/1.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/1.xml")]
     public void CiiCrossIndustryInvoice1(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -54,7 +54,7 @@ public class IRTests
     }
 
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/ubl/invoice/success/2.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/ubl/invoice/success/2.xml")]
     public void UblInvoice2(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -65,7 +65,7 @@ public class IRTests
     }
 
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/ubl/credit-note/success/2.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/ubl/credit-note/success/2.xml")]
     public void UblCreditNote2(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -81,7 +81,7 @@ public class IRTests
     }
 
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/2.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/2.xml")]
     public void CiiCrossIndustryInvoice2(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -98,7 +98,7 @@ public class IRTests
     }
 
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/ubl/invoice/success/3.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/ubl/invoice/success/3.xml")]
     public void UblInvoice3(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -109,7 +109,7 @@ public class IRTests
     }
 
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/ubl/credit-note/success/3.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/ubl/credit-note/success/3.xml")]
     public void UblCreditNote3(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -125,7 +125,7 @@ public class IRTests
     }
 
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/3.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/3.xml")]
     public void CiiCrossIndustryInvoice3(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -136,7 +136,7 @@ public class IRTests
     }
 
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/ubl/invoice/success/4.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/ubl/invoice/success/4.xml")]
     public void UblInvoice4(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -147,7 +147,7 @@ public class IRTests
     }
 
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/ubl/credit-note/success/4.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/ubl/credit-note/success/4.xml")]
     public void UblCreditNote4(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -163,7 +163,7 @@ public class IRTests
     }
 
     [Theory]
-    [InlineData("resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/4.xml")]
+    [InlineData("Resources/schematrons/xrechnung/cius/cii/cross-industry-invoice/success/4.xml")]
     public void CiiCrossIndustryInvoice4(string invoiceLocation)
     {
         Parser parser = new Parser();
