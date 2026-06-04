@@ -45,14 +45,14 @@ public class Parser
 
         // Schema is DTD annotated, which is why we have to add it like this,
         // instead of adding the file directly with `_schemaSet.Add`
-        FileStream w3XmlSigSchemaFile = File.OpenRead("resources/w3/xmldsig-core-schema.xsd");
+        FileStream w3XmlSigSchemaFile = File.OpenRead("Resources/W3/xmldsig-core-schema.xsd");
         XmlSchema w3XmlSigSchema = XmlSchema.Read(w3XmlSigSchemaFile, null)!;
 
         _schemaSet = new XmlSchemaSet();
         _schemaSet.XmlResolver = new XmlUrlResolver();
-        _schemaSet.Add(null, "resources/ubl/maindoc/UBL-Invoice-2.1.xsd");
-        _schemaSet.Add(null, "resources/ubl/maindoc/UBL-CreditNote-2.1.xsd");
-        _schemaSet.Add(null, "resources/cii/CrossIndustryInvoice_100pD16B.xsd");
+        _schemaSet.Add(null, "Resources/Ubl/maindoc/UBL-Invoice-2.1.xsd");
+        _schemaSet.Add(null, "Resources/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
+        _schemaSet.Add(null, "Resources/Cii/CrossIndustryInvoice_100pD16B.xsd");
         _schemaSet.Add(w3XmlSigSchema);
         _schemaSet.Compile();
 
@@ -65,19 +65,19 @@ public class Parser
 
         XsltCompiler xsltCompiler = processor.NewXsltCompiler();
 
-        Uri en16931UblUri = new Uri(new FileInfo("resources/en16931/EN16931-UBL-validation.xslt").FullName);
+        Uri en16931UblUri = new Uri(new FileInfo("Resources/En16931/EN16931-UBL-validation.xslt").FullName);
         _en16931UblValidator = xsltCompiler.Compile(en16931UblUri);
 
-        Uri en16931CiiUri = new Uri(new FileInfo("resources/en16931/EN16931-CII-validation.xslt").FullName);
+        Uri en16931CiiUri = new Uri(new FileInfo("Resources/En16931/EN16931-CII-validation.xslt").FullName);
         _en16931CiiValidator = xsltCompiler.Compile(en16931CiiUri);
 
-        Uri xRechnungUblUri = new Uri(new FileInfo("resources/xrechnung/XRechnung-UBL-validation.xsl").FullName);
+        Uri xRechnungUblUri = new Uri(new FileInfo("Resources/XRechnung/XRechnung-UBL-validation.xsl").FullName);
         _xRechnungUblValidator = xsltCompiler.Compile(xRechnungUblUri);
 
-        Uri xRechnungCiiUri = new Uri(new FileInfo("resources/xrechnung/XRechnung-CII-validation.xsl").FullName);
+        Uri xRechnungCiiUri = new Uri(new FileInfo("Resources/XRechnung/XRechnung-CII-validation.xsl").FullName);
         _xRechnungCiiValidator = xsltCompiler.Compile(xRechnungCiiUri);
 
-        Uri irUri = new Uri(new FileInfo("resources/ir/ir.xslt").FullName);
+        Uri irUri = new Uri(new FileInfo("Resources/IR/ir.xslt").FullName);
         _irTransformer = xsltCompiler.Compile(irUri);
     }
 

@@ -16,11 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\en16931\en16931.csproj" />
+    <ProjectReference Include="..\En16931\En16931.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="resources\**\*.*">
+    <None Update="Resources\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

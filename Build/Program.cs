@@ -101,7 +101,7 @@ async Task DownloadXRechnungSchematron(ParseResult args)
         {
             File.Copy(
                 file,
-                Path.Combine("en16931/resources/xrechnung", Path.GetFileName(file)),
+                Path.Combine("En16931/Resources/XRechnung", Path.GetFileName(file)),
                 overwrite: true
             );
         }
@@ -135,7 +135,7 @@ async Task DownloadEn16931Schematron(ParseResult args)
     {
         File.Copy(
             file,
-            Path.Combine("en16931/resources/en16931", Path.GetFileName(file)),
+            Path.Combine("En16931/Resources/En16931", Path.GetFileName(file)),
             overwrite: true
         );
     }
@@ -163,20 +163,20 @@ async Task DownloadUblSchema(ParseResult args)
     {
         File.Copy(
             file,
-            Path.Combine("en16931/resources/ubl/common", Path.GetFileName(file)),
+            Path.Combine("En16931/Resources/Ubl/common", Path.GetFileName(file)),
             overwrite: true
         );
     }
 
     File.Copy(
         $"{temp.FullName}/xsd/maindoc/UBL-CreditNote-2.1.xsd",
-        "en16931/resources/ubl/maindoc/UBL-CreditNote-2.1.xsd",
+        "En16931/Resources/Ubl/maindoc/UBL-CreditNote-2.1.xsd",
         overwrite: true
     );
 
     File.Copy(
         $"{temp.FullName}/xsd/maindoc/UBL-Invoice-2.1.xsd",
-        "en16931/resources/ubl/maindoc/UBL-Invoice-2.1.xsd",
+        "En16931/Resources/Ubl/maindoc/UBL-Invoice-2.1.xsd",
         overwrite: true
     );
 
@@ -197,7 +197,7 @@ async Task DownloadW3Schemas(ParseResult args)
 
     string content = await response.Content.ReadAsStringAsync();
 
-    File.WriteAllText("en16931/resources/w3/xmldsig-core-schema.xsd", content);
+    File.WriteAllText("En16931/Resources/W3/xmldsig-core-schema.xsd", content);
 
     Console.WriteLine($"Successfully downloaded W3 schemas.");
 }
@@ -226,7 +226,7 @@ void InstallCiiSchema(ParseResult args)
     {
         File.Copy(
             file,
-            Path.Combine("en16931/resources/cii", Path.GetFileName(file)),
+            Path.Combine("En16931/Resources/Cii", Path.GetFileName(file)),
             overwrite: true
         );
     }
