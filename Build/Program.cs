@@ -5,8 +5,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Spectre.Console;
-using Microsoft.Playwright;
 
 Command downloadW3Schemas = new("w3", "Download schmema files from W3.");
 
@@ -46,7 +44,8 @@ download.Subcommands.Add(downloadEn16931Schematron);
 download.Subcommands.Add(downloadXRechnungSchematron);
 download.Subcommands.Add(downloadAll);
 
-Argument<string> ciiZipFileArgument = new("file") {
+Argument<string> ciiZipFileArgument = new("file")
+{
     Description = "Zip Archive downloaded from https://unece.org/DAM/cefact/xml_schemas/D16B_SCRDM__Subset__CII.zip.",
 };
 
@@ -96,8 +95,10 @@ async Task DownloadXRechnungSchematron(ParseResult args)
 
     ZipFile.ExtractToDirectory(await response.Content.ReadAsStreamAsync(), temp.FullName);
 
-    foreach (string syntax in (string[])["cii", "ubl"]) {
-        foreach (string file in Directory.GetFiles($"{temp.FullName}/schematron/{syntax}", "*.xsl")) {
+    foreach (string syntax in (string[])["cii", "ubl"])
+    {
+        foreach (string file in Directory.GetFiles($"{temp.FullName}/schematron/{syntax}", "*.xsl"))
+        {
             File.Copy(
                 file,
                 Path.Combine("en16931/resources/xrechnung", Path.GetFileName(file)),
@@ -119,7 +120,8 @@ async Task DownloadEn16931Schematron(ParseResult args)
 
     using HttpClient client = new();
 
-    foreach (string syntax in (string[])["cii", "ubl"]) {
+    foreach (string syntax in (string[])["cii", "ubl"])
+    {
         string url = $"https://github.com/ConnectingEurope/eInvoicing-EN16931/releases/download/validation-{schematronVersion}/en16931-{syntax}-{schematronVersion}.zip";
 
         using HttpResponseMessage response = await client.GetAsync(url);
@@ -129,7 +131,8 @@ async Task DownloadEn16931Schematron(ParseResult args)
         ZipFile.ExtractToDirectory(await response.Content.ReadAsStreamAsync(), temp.FullName);
     }
 
-    foreach (string file in Directory.GetFiles($"{temp.FullName}/xslt")) {
+    foreach (string file in Directory.GetFiles($"{temp.FullName}/xslt"))
+    {
         File.Copy(
             file,
             Path.Combine("en16931/resources/en16931", Path.GetFileName(file)),
@@ -156,7 +159,8 @@ async Task DownloadUblSchema(ParseResult args)
 
     ZipFile.ExtractToDirectory(await response.Content.ReadAsStreamAsync(), temp.FullName);
 
-    foreach (string file in Directory.GetFiles($"{temp.FullName}/xsd/common")) {
+    foreach (string file in Directory.GetFiles($"{temp.FullName}/xsd/common"))
+    {
         File.Copy(
             file,
             Path.Combine("en16931/resources/ubl/common", Path.GetFileName(file)),
@@ -218,7 +222,8 @@ void InstallCiiSchema(ParseResult args)
         "D16B SCRDM (Subset) CII uncoupled/uncoupled clm/CII/uncefact/data/standard"
     );
 
-    foreach (string file in Directory.GetFiles(schemaDir)) {
+    foreach (string file in Directory.GetFiles(schemaDir))
+    {
         File.Copy(
             file,
             Path.Combine("en16931/resources/cii", Path.GetFileName(file)),
