@@ -1,8 +1,12 @@
+using Dev.Fassbender.En16931.Collections.Immutable;
+using Dev.Fassbender.En16931.Model.Conversions;
 using Dev.Fassbender.En16931.Model.Immutable.Primitives;
+
+using Mut = Dev.Fassbender.En16931.Model;
 
 namespace Dev.Fassbender.En16931.Model.Immutable;
 
-public readonly record struct Invoice
+public readonly record struct Invoice : IToMutable<Mut.Invoice>
 {
     // BT-1
     public required Identifier InvoiceNumber { get; init; }
@@ -109,36 +113,104 @@ public readonly record struct Invoice
 
     // BG-25
     public required NonEmptyArray<InvoiceLine> InvoiceLines { get; init; }
+
+    public Mut.Invoice ToMutable()
+    {
+        return new Mut.Invoice
+        {
+            InvoiceNumber = InvoiceNumber.ToMutable(),
+            InvoiceIssueDate = InvoiceIssueDate.ToMutable(),
+            InvoiceTypeCode = InvoiceTypeCode.ToMutable(),
+            InvoiceCurrencyCode = InvoiceCurrencyCode.ToMutable(),
+            VatAccountingCurrencyCode = VatAccountingCurrencyCode?.ToMutable(),
+            ValueAddedTaxPointDate = ValueAddedTaxPointDate?.ToMutable(),
+            ValueAddedTaxPointDateCode = ValueAddedTaxPointDateCode?.ToMutable(),
+            PaymentDueDate = PaymentDueDate?.ToMutable(),
+            BuyerReference = BuyerReference.ToMutable(),
+            ProjectReference = ProjectReference?.ToMutable(),
+            ContractReference = ContractReference?.ToMutable(),
+            PurchaseOrderReference = PurchaseOrderReference?.ToMutable(),
+            SalesOrderReference = SalesOrderReference?.ToMutable(),
+            ReceivingAdviceReference = ReceivingAdviceReference?.ToMutable(),
+            DespatchAdviceReference = DespatchAdviceReference?.ToMutable(),
+            TenderOrLotReference = TenderOrLotReference?.ToMutable(),
+            InvoicedObjectIdentifier = InvoicedObjectIdentifier?.ToMutable(),
+            BuyerAccountingReference = BuyerAccountingReference?.ToMutable(),
+            PaymentTerms = PaymentTerms?.ToMutable(),
+            InvoiceNotes = InvoiceNotes.ToMutable<InvoiceNote, Mut.InvoiceNote>(),
+            ProcessControl = ProcessControl.ToMutable(),
+            PrecedingInvoiceReferences = PrecedingInvoiceReferences.ToMutable<PrecedingInvoiceReference, Mut.PrecedingInvoiceReference>(),
+            Seller = Seller.ToMutable(),
+            Buyer = Buyer.ToMutable(),
+            Payee = Payee?.ToMutable(),
+            SellerTaxRepresentativeParty = SellerTaxRepresentativeParty?.ToMutable(),
+            DeliveryInformation = DeliveryInformation?.ToMutable(),
+            PaymentInstructions = PaymentInstructions.ToMutable(),
+            DocumentLevelAllowances = DocumentLevelAllowances.ToMutable<DocumentLevelAllowance, Mut.DocumentLevelAllowance>(),
+            DocumentLevelCharges = DocumentLevelCharges.ToMutable<DocumentLevelCharge, Mut.DocumentLevelCharge>(),
+            DocumentTotals = DocumentTotals.ToMutable(),
+            VatBreakdown = VatBreakdown.ToMutable<VatBreakdown, Mut.VatBreakdown>(),
+            AdditionalSupportingDocuments = AdditionalSupportingDocuments.ToMutable<AdditionalSupportingDocument, Mut.AdditionalSupportingDocument>(),
+            InvoiceLines = InvoiceLines.ToMutable<InvoiceLine, Mut.InvoiceLine>(),
+        };
+    }
 }
 
-public readonly record struct InvoiceNote
+public readonly record struct InvoiceNote : IToMutable<Mut.InvoiceNote>
 {
     // BT-21
     public required Code? InvoiceNoteSubjectCode { get; init; }
 
     // BT-22
     public required Text Note { get; init; }
+
+    public Mut.InvoiceNote ToMutable()
+    {
+        return new Mut.InvoiceNote
+        {
+            InvoiceNoteSubjectCode = InvoiceNoteSubjectCode?.ToMutable(),
+            Note = Note.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct ProcessControl
+public readonly record struct ProcessControl : IToMutable<Mut.ProcessControl>
 {
     // BT-23
     public required Text BusinessProcessType { get; init; }
 
     // BT-24
     public required Identifier SpecificationIdentifier { get; init; }
+
+    public Mut.ProcessControl ToMutable()
+    {
+        return new Mut.ProcessControl
+        {
+            BusinessProcessType = BusinessProcessType.ToMutable(),
+            SpecificationIdentifier = SpecificationIdentifier.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct PrecedingInvoiceReference
+public readonly record struct PrecedingInvoiceReference : IToMutable<Mut.PrecedingInvoiceReference>
 {
     // BT-25
     public required DocumentReference Reference { get; init; }
 
     // BT-26
     public required Date? PrecedingInvoiceIssueDate { get; init; }
+
+    public Mut.PrecedingInvoiceReference ToMutable()
+    {
+        return new Mut.PrecedingInvoiceReference
+        {
+            Reference = Reference.ToMutable(),
+            PrecedingInvoiceIssueDate = PrecedingInvoiceIssueDate?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct Seller
+public readonly record struct Seller : IToMutable<Mut.Seller>
 {
     // BT-27
     public required Text SellerName { get; init; }
@@ -170,9 +242,26 @@ public readonly record struct Seller
     // BG-6
     public required SellerContact SellerContact { get; init; }
 
+    public Mut.Seller ToMutable()
+    {
+        return new Mut.Seller
+        {
+            SellerName = SellerName.ToMutable(),
+            SellerTradingName = SellerTradingName?.ToMutable(),
+            SellerIdentifiers = SellerIdentifiers.ToMutable<Identifier, Mut.Primitives.Identifier>(),
+            SellerLegalRegistrationIdentifier = SellerLegalRegistrationIdentifier?.ToMutable(),
+            SellerVatIdentifier = SellerVatIdentifier?.ToMutable(),
+            SellerTaxRegistrationIdentifier = SellerTaxRegistrationIdentifier?.ToMutable(),
+            SellerAdditionalLegalInformation = SellerAdditionalLegalInformation?.ToMutable(),
+            SellerElectronicAddress = SellerElectronicAddress.ToMutable(),
+            SellerPostalAddress = SellerPostalAddress.ToMutable(),
+            SellerContact = SellerContact.ToMutable(),
+        };
+    }
+
 }
 
-public readonly record struct SellerPostalAddress
+public readonly record struct SellerPostalAddress : IToMutable<Mut.SellerPostalAddress>
 {
     // BT-35
     public required Text? SellerAddressLine1 { get; init; }
@@ -195,9 +284,23 @@ public readonly record struct SellerPostalAddress
     // BT-40
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code SellerCountryCode { get; init; }
+
+    public Mut.SellerPostalAddress ToMutable()
+    {
+        return new Mut.SellerPostalAddress
+        {
+            SellerAddressLine1 = SellerAddressLine1?.ToMutable(),
+            SellerAddressLine2 = SellerAddressLine2?.ToMutable(),
+            SellerAddressLine3 = SellerAddressLine3?.ToMutable(),
+            SellerCity = SellerCity.ToMutable(),
+            SellerPostCode = SellerPostCode.ToMutable(),
+            SellerCountrySubdivision = SellerCountrySubdivision?.ToMutable(),
+            SellerCountryCode = SellerCountryCode.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct SellerContact
+public readonly record struct SellerContact : IToMutable<Mut.SellerContact>
 {
     // BT-41
     public required Text SellerContactPoint { get; init; }
@@ -207,9 +310,19 @@ public readonly record struct SellerContact
 
     // BT-43
     public required Text SellerContactEmailAddress { get; init; }
+
+    public Mut.SellerContact ToMutable()
+    {
+        return new Mut.SellerContact
+        {
+            SellerContactPoint = SellerContactPoint.ToMutable(),
+            SellerContactTelephoneNumber = SellerContactTelephoneNumber.ToMutable(),
+            SellerContactEmailAddress = SellerContactEmailAddress.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct Buyer
+public readonly record struct Buyer : IToMutable<Mut.Buyer>
 {
     // BT-44
     public required Text BuyerName { get; init; }
@@ -234,9 +347,24 @@ public readonly record struct Buyer
 
     // BG-9
     public required BuyerContact? BuyerContact { get; init; }
+
+    public Mut.Buyer ToMutable()
+    {
+        return new Mut.Buyer
+        {
+            BuyerName = BuyerName.ToMutable(),
+            BuyerTradingName = BuyerTradingName?.ToMutable(),
+            BuyerIdentifier = BuyerIdentifier?.ToMutable(),
+            BuyerLegalRegistrationIdentifier = BuyerLegalRegistrationIdentifier?.ToMutable(),
+            BuyerVatIdentifier = BuyerVatIdentifier?.ToMutable(),
+            BuyerElectronicAddress = BuyerElectronicAddress?.ToMutable(),
+            BuyerPostalAddress = BuyerPostalAddress.ToMutable(),
+            BuyerContact = BuyerContact?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct BuyerPostalAddress
+public readonly record struct BuyerPostalAddress : IToMutable<Mut.BuyerPostalAddress>
 {
     // BT-50
     public required Text? BuyerAddressLine1 { get; init; }
@@ -259,9 +387,23 @@ public readonly record struct BuyerPostalAddress
     // BT-55
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code BuyerCountryCode { get; init; }
+
+    public Mut.BuyerPostalAddress ToMutable()
+    {
+        return new Mut.BuyerPostalAddress
+        {
+            BuyerAddressLine1 = BuyerAddressLine1?.ToMutable(),
+            BuyerAddressLine2 = BuyerAddressLine2?.ToMutable(),
+            BuyerAddressLine3 = BuyerAddressLine3?.ToMutable(),
+            BuyerCity = BuyerCity.ToMutable(),
+            BuyerPostCode = BuyerPostCode.ToMutable(),
+            BuyerCountrySubdivision = BuyerCountrySubdivision?.ToMutable(),
+            BuyerCountryCode = BuyerCountryCode.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct BuyerContact
+public readonly record struct BuyerContact : IToMutable<Mut.BuyerContact>
 {
     // BT-56
     public required Text? ContactPoint { get; init; }
@@ -271,9 +413,19 @@ public readonly record struct BuyerContact
 
     // BT-58
     public required Text? EmailAddress { get; init; }
+
+    public Mut.BuyerContact ToMutable()
+    {
+        return new Mut.BuyerContact
+        {
+            ContactPoint = ContactPoint?.ToMutable(),
+            PhoneNumber = PhoneNumber?.ToMutable(),
+            EmailAddress = EmailAddress?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct Payee
+public readonly record struct Payee : IToMutable<Mut.Payee>
 {
     // BT-59
     public required Text PayeeName { get; init; }
@@ -283,9 +435,19 @@ public readonly record struct Payee
 
     // BT-61
     public required Identifier? PayeeLegalRegistrationIdentifier { get; init; }
+
+    public Mut.Payee ToMutable()
+    {
+        return new Mut.Payee
+        {
+            PayeeName = PayeeName.ToMutable(),
+            PayeeIdentifier = PayeeIdentifier?.ToMutable(),
+            PayeeLegalRegistrationIdentifier = PayeeLegalRegistrationIdentifier?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct SellerTaxRepresentativeParty
+public readonly record struct SellerTaxRepresentativeParty : IToMutable<Mut.SellerTaxRepresentativeParty>
 {
     // BT-62
     public required Text SellerTaxRepresentativeName { get; init; }
@@ -295,9 +457,19 @@ public readonly record struct SellerTaxRepresentativeParty
 
     // BG-12
     public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress { get; init; }
+
+    public Mut.SellerTaxRepresentativeParty ToMutable()
+    {
+        return new Mut.SellerTaxRepresentativeParty
+        {
+            SellerTaxRepresentativeName = SellerTaxRepresentativeName.ToMutable(),
+            SellerTaxRepresentativeVatIdentifier = SellerTaxRepresentativeVatIdentifier.ToMutable(),
+            SellerTaxRepresentativePostalAddress = SellerTaxRepresentativePostalAddress.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct SellerTaxRepresentativePostalAddress
+public readonly record struct SellerTaxRepresentativePostalAddress : IToMutable<Mut.SellerTaxRepresentativePostalAddress>
 {
     // BT-64
     public required Text? TaxRepresentativeAddressLine1 { get; init; }
@@ -320,9 +492,23 @@ public readonly record struct SellerTaxRepresentativePostalAddress
     // BT-69
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code TaxRepresentativeCountryCode { get; init; }
+
+    public Mut.SellerTaxRepresentativePostalAddress ToMutable()
+    {
+        return new Mut.SellerTaxRepresentativePostalAddress
+        {
+            TaxRepresentativeAddressLine1 = TaxRepresentativeAddressLine1?.ToMutable(),
+            TaxRepresentativeAddressLine2 = TaxRepresentativeAddressLine2?.ToMutable(),
+            TaxRepresentativeAddressLine3 = TaxRepresentativeAddressLine3?.ToMutable(),
+            TaxRepresentativeCity = TaxRepresentativeCity.ToMutable(),
+            TaxRepresentativePostCode = TaxRepresentativePostCode.ToMutable(),
+            TaxRepresentativeCountrySubdivision = TaxRepresentativeCountrySubdivision?.ToMutable(),
+            TaxRepresentativeCountryCode = TaxRepresentativeCountryCode.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct DeliveryInformation
+public readonly record struct DeliveryInformation : IToMutable<Mut.DeliveryInformation>
 {
     // BT-70
     public required Text? DeliverToPartyName { get; init; }
@@ -338,18 +524,39 @@ public readonly record struct DeliveryInformation
 
     // BG-15
     public required DeliverToAddress? DeliverToAddress { get; init; }
+
+    public Mut.DeliveryInformation ToMutable()
+    {
+        return new Mut.DeliveryInformation
+        {
+            DeliverToPartyName = DeliverToPartyName?.ToMutable(),
+            DeliverToLocationIdentifier = DeliverToLocationIdentifier?.ToMutable(),
+            ActualDeliveryDate = ActualDeliveryDate?.ToMutable(),
+            InvoicingPeriod = InvoicingPeriod?.ToMutable(),
+            DeliverToAddress = DeliverToAddress?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct InvoicingPeriod
+public readonly record struct InvoicingPeriod : IToMutable<Mut.InvoicingPeriod>
 {
     // BT-73
     public required Date? InvoicingPeriodStartDate { get; init; }
 
     // BT-74
     public required Date? InvoicingPeriodEndDate { get; init; }
+
+    public Mut.InvoicingPeriod ToMutable()
+    {
+        return new Mut.InvoicingPeriod
+        {
+            InvoicingPeriodStartDate = InvoicingPeriodStartDate?.ToMutable(),
+            InvoicingPeriodEndDate = InvoicingPeriodEndDate?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct DeliverToAddress
+public readonly record struct DeliverToAddress : IToMutable<Mut.DeliverToAddress>
 {
     // BT-75
     public required Text? DeliverToAddressLine1 { get; init; }
@@ -372,9 +579,23 @@ public readonly record struct DeliverToAddress
     // BT-80
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code DeliverToCountryCode { get; init; }
+
+    public Mut.DeliverToAddress ToMutable()
+    {
+        return new Mut.DeliverToAddress
+        {
+            DeliverToAddressLine1 = DeliverToAddressLine1?.ToMutable(),
+            DeliverToAddressLine2 = DeliverToAddressLine2?.ToMutable(),
+            DeliverToAddressLine3 = DeliverToAddressLine3?.ToMutable(),
+            DeliverToCity = DeliverToCity.ToMutable(),
+            DeliverToPostCode = DeliverToPostCode.ToMutable(),
+            DeliverToCountrySubdivision = DeliverToCountrySubdivision?.ToMutable(),
+            DeliverToCountryCode = DeliverToCountryCode.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct PaymentInstructions
+public readonly record struct PaymentInstructions : IToMutable<Mut.PaymentInstructions>
 {
     // BT-81
     // UNTDID-4461
@@ -394,9 +615,22 @@ public readonly record struct PaymentInstructions
 
     // BG-19
     public required DirectDebit? DirectDebit { get; init; }
+
+    public Mut.PaymentInstructions ToMutable()
+    {
+        return new Mut.PaymentInstructions
+        {
+            PaymentMeansTypeCode = PaymentMeansTypeCode.ToMutable(),
+            PaymentMeansText = PaymentMeansText?.ToMutable(),
+            RemittanceInformation = RemittanceInformation?.ToMutable(),
+            CreditTransfers = CreditTransfers.ToMutable<CreditTransfer, Mut.CreditTransfer>(),
+            PaymentCardInformation = PaymentCardInformation?.ToMutable(),
+            DirectDebit = DirectDebit?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct CreditTransfer
+public readonly record struct CreditTransfer : IToMutable<Mut.CreditTransfer>
 {
     // BT-84
     public required Identifier PaymentAccountIdentifier { get; init; }
@@ -406,18 +640,37 @@ public readonly record struct CreditTransfer
 
     // BT-86
     public required Identifier? PaymentServiceProviderIdentifier { get; init; }
+
+    public Mut.CreditTransfer ToMutable()
+    {
+        return new Mut.CreditTransfer
+        {
+            PaymentAccountIdentifier = PaymentAccountIdentifier.ToMutable(),
+            PaymentAccountName = PaymentAccountName?.ToMutable(),
+            PaymentServiceProviderIdentifier = PaymentServiceProviderIdentifier?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct PaymentCardInformation
+public readonly record struct PaymentCardInformation : IToMutable<Mut.PaymentCardInformation>
 {
     // BT-87
     public required Text PaymentCardPrimaryAccountNumber { get; init; }
 
     // BT-88
     public required Text? PaymentCardHolderName { get; init; }
+
+    public Mut.PaymentCardInformation ToMutable()
+    {
+        return new Mut.PaymentCardInformation
+        {
+            PaymentCardPrimaryAccountNumber = PaymentCardPrimaryAccountNumber.ToMutable(),
+            PaymentCardHolderName = PaymentCardHolderName?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct DirectDebit
+public readonly record struct DirectDebit : IToMutable<Mut.DirectDebit>
 {
     // BT-89
     public required Identifier MandateReferenceIdentifier { get; init; }
@@ -427,9 +680,19 @@ public readonly record struct DirectDebit
 
     // BT-91
     public required Identifier DebitedAccountIdentifier { get; init; }
+
+    public Mut.DirectDebit ToMutable()
+    {
+        return new Mut.DirectDebit
+        {
+            MandateReferenceIdentifier = MandateReferenceIdentifier.ToMutable(),
+            BankAssignedCreditorIdentifier = BankAssignedCreditorIdentifier.ToMutable(),
+            DebitedAccountIdentifier = DebitedAccountIdentifier.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct DocumentLevelAllowance
+public readonly record struct DocumentLevelAllowance : IToMutable<Mut.DocumentLevelAllowance>
 {
     // BT-92
     public required Amount DocumentLevelAllowanceAmount { get; init; }
@@ -451,9 +714,23 @@ public readonly record struct DocumentLevelAllowance
 
     // BT-98
     public required Code? DocumentLevelAllowanceReasonCode { get; init; }
+
+    public Mut.DocumentLevelAllowance ToMutable()
+    {
+        return new Mut.DocumentLevelAllowance
+        {
+            DocumentLevelAllowanceAmount = DocumentLevelAllowanceAmount.ToMutable(),
+            DocumentLevelAllowanceBaseAmount = DocumentLevelAllowanceBaseAmount?.ToMutable(),
+            DocumentLevelAllowancePercentage = DocumentLevelAllowancePercentage?.ToMutable(),
+            DocumentLevelAllowanceVatCategoryCode = DocumentLevelAllowanceVatCategoryCode.ToMutable(),
+            DocumentLevelAllowanceVatRate = DocumentLevelAllowanceVatRate?.ToMutable(),
+            DocumentLevelAllowanceReason = DocumentLevelAllowanceReason?.ToMutable(),
+            DocumentLevelAllowanceReasonCode = DocumentLevelAllowanceReasonCode?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct DocumentLevelCharge
+public readonly record struct DocumentLevelCharge : IToMutable<Mut.DocumentLevelCharge>
 {
     // BT-99
     public required Amount DocumentLevelChargeAmount { get; init; }
@@ -475,9 +752,23 @@ public readonly record struct DocumentLevelCharge
 
     // BT-105
     public required Code? DocumentLevelChargeReasonCode { get; init; }
+
+    public Mut.DocumentLevelCharge ToMutable()
+    {
+        return new Mut.DocumentLevelCharge
+        {
+            DocumentLevelChargeAmount = DocumentLevelChargeAmount.ToMutable(),
+            DocumentLevelChargeBaseAmount = DocumentLevelChargeBaseAmount?.ToMutable(),
+            DocumentLevelChargePercentage = DocumentLevelChargePercentage?.ToMutable(),
+            DocumentLevelChargeVatCategoryCode = DocumentLevelChargeVatCategoryCode.ToMutable(),
+            DocumentLevelChargeVatRate = DocumentLevelChargeVatRate?.ToMutable(),
+            DocumentLevelChargeReason = DocumentLevelChargeReason?.ToMutable(),
+            DocumentLevelChargeReasonCode = DocumentLevelChargeReasonCode?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct DocumentTotals
+public readonly record struct DocumentTotals : IToMutable<Mut.DocumentTotals>
 {
     // BT-106
     public required Amount SumOfInvoiceLineNetAmount { get; init; }
@@ -508,9 +799,26 @@ public readonly record struct DocumentTotals
 
     // BT-115
     public required Amount AmountDueForPayment { get; init; }
+
+    public Mut.DocumentTotals ToMutable()
+    {
+        return new Mut.DocumentTotals
+        {
+            SumOfInvoiceLineNetAmount = SumOfInvoiceLineNetAmount.ToMutable(),
+            SumOfAllowancesOnDocumentLevel = SumOfAllowancesOnDocumentLevel?.ToMutable(),
+            SumOfChargesOnDocumentLevel = SumOfChargesOnDocumentLevel?.ToMutable(),
+            InvoiceTotalAmountWithoutVat = InvoiceTotalAmountWithoutVat.ToMutable(),
+            InvoiceTotalVatAmount = InvoiceTotalVatAmount?.ToMutable(),
+            InvoiceTotalVatAmountInAccountingCurrency = InvoiceTotalVatAmountInAccountingCurrency?.ToMutable(),
+            InvoiceTotalAmountWithVat = InvoiceTotalAmountWithVat.ToMutable(),
+            PaidAmount = PaidAmount?.ToMutable(),
+            RoundingAmount = RoundingAmount?.ToMutable(),
+            AmountDueForPayment = AmountDueForPayment.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct VatBreakdown
+public readonly record struct VatBreakdown : IToMutable<Mut.VatBreakdown>
 {
     // BT-116
     public required Amount VatCategoryTaxableAmount { get; init; }
@@ -531,9 +839,22 @@ public readonly record struct VatBreakdown
     // BT-121
     // VATEX Vat exemption reason code list
     public required Code? VatExemptionReasonCode { get; init; }
+
+    public Mut.VatBreakdown ToMutable()
+    {
+        return new Mut.VatBreakdown
+        {
+            VatCategoryTaxableAmount = VatCategoryTaxableAmount.ToMutable(),
+            VatCategoryTaxAmount = VatCategoryTaxAmount.ToMutable(),
+            VatCategoryCode = VatCategoryCode.ToMutable(),
+            VatCategoryRate = VatCategoryRate.ToMutable(),
+            VatExemptionReasonText = VatExemptionReasonText?.ToMutable(),
+            VatExemptionReasonCode = VatExemptionReasonCode?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct AdditionalSupportingDocument
+public readonly record struct AdditionalSupportingDocument : IToMutable<Mut.AdditionalSupportingDocument>
 {
     // BT-122
     public required DocumentReference SupportingDocumentReference { get; init; }
@@ -546,9 +867,20 @@ public readonly record struct AdditionalSupportingDocument
 
     // BT-125
     public required BinaryObject? AttachedDocument { get; init; }
+
+    public Mut.AdditionalSupportingDocument ToMutable()
+    {
+        return new Mut.AdditionalSupportingDocument
+        {
+            SupportingDocumentReference = SupportingDocumentReference.ToMutable(),
+            SupportingDocumentDescription = SupportingDocumentDescription?.ToMutable(),
+            ExternalDocumentLocation = ExternalDocumentLocation?.ToMutable(),
+            AttachedDocument = AttachedDocument?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct InvoiceLine
+public readonly record struct InvoiceLine : IToMutable<Mut.InvoiceLine>
 {
     // BT-126
     public required Identifier InvoiceLineIdentifier { get; init; }
@@ -591,18 +923,48 @@ public readonly record struct InvoiceLine
 
     // BG-31
     public required ItemInformation ItemInformation { get; init; }
+
+    public Mut.InvoiceLine ToMutable()
+    {
+        return new Mut.InvoiceLine
+        {
+            InvoiceLineIdentifier = InvoiceLineIdentifier.ToMutable(),
+            InvoiceLineNote = InvoiceLineNote?.ToMutable(),
+            InvoiceLineObjectIdentifier = InvoiceLineObjectIdentifier?.ToMutable(),
+            InvoicedQuantity = InvoicedQuantity.ToMutable(),
+            InvoicedQuantityUnitOfMeasureCode = InvoicedQuantityUnitOfMeasureCode.ToMutable(),
+            InvoiceLineNetAmount = InvoiceLineNetAmount.ToMutable(),
+            ReferencedPurchaseOrderLineReference = ReferencedPurchaseOrderLineReference?.ToMutable(),
+            InvoiceLineBuyerAccountingReference = InvoiceLineBuyerAccountingReference?.ToMutable(),
+            InvoiceLinePeriod = InvoiceLinePeriod?.ToMutable(),
+            InvoiceLineAllowances = InvoiceLineAllowances.ToMutable<InvoiceLineAllowance, Mut.InvoiceLineAllowance>(),
+            InvoiceLineCharges = InvoiceLineCharges.ToMutable<InvoiceLineCharge, Mut.InvoiceLineCharge>(),
+            PriceDetails = PriceDetails.ToMutable(),
+            LineVatInformation = LineVatInformation.ToMutable(),
+            ItemInformation = ItemInformation.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct InvoiceLinePeriod
+public readonly record struct InvoiceLinePeriod : IToMutable<Mut.InvoiceLinePeriod>
 {
     // BT-134
     public required Date? InvoiceLinePeriodStartDate { get; init; }
 
     // BT-135
     public required Date? InvoiceLinePeriodEndDate { get; init; }
+
+    public Mut.InvoiceLinePeriod ToMutable()
+    {
+        return new Mut.InvoiceLinePeriod
+        {
+            InvoiceLinePeriodStartDate = InvoiceLinePeriodStartDate?.ToMutable(),
+            InvoiceLinePeriodEndDate = InvoiceLinePeriodEndDate?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct InvoiceLineAllowance
+public readonly record struct InvoiceLineAllowance : IToMutable<Mut.InvoiceLineAllowance>
 {
     // BT-136
     public required Amount InvoiceLineAllowanceAmount { get; init; }
@@ -618,9 +980,21 @@ public readonly record struct InvoiceLineAllowance
 
     // BT-140
     public required Code? InvoiceLineAllowanceReasonCode { get; init; }
+
+    public Mut.InvoiceLineAllowance ToMutable()
+    {
+        return new Mut.InvoiceLineAllowance
+        {
+            InvoiceLineAllowanceAmount = InvoiceLineAllowanceAmount.ToMutable(),
+            InvoiceLineAllowanceBaseAmount = InvoiceLineAllowanceBaseAmount?.ToMutable(),
+            InvoiceLineAllowancePercentage = InvoiceLineAllowancePercentage?.ToMutable(),
+            InvoiceLineAllowanceReason = InvoiceLineAllowanceReason?.ToMutable(),
+            InvoiceLineAllowanceReasonCode = InvoiceLineAllowanceReasonCode?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct InvoiceLineCharge
+public readonly record struct InvoiceLineCharge : IToMutable<Mut.InvoiceLineCharge>
 {
     // BT-141
     public required Amount InvoiceLineChargeAmount { get; init; }
@@ -636,9 +1010,21 @@ public readonly record struct InvoiceLineCharge
 
     // BT-145
     public required Code? InvoiceLineChargeReasonCode { get; init; }
+
+    public Mut.InvoiceLineCharge ToMutable()
+    {
+        return new Mut.InvoiceLineCharge
+        {
+            InvoiceLineChargeAmount = InvoiceLineChargeAmount.ToMutable(),
+            InvoiceLineChargeBaseAmount = InvoiceLineChargeBaseAmount?.ToMutable(),
+            InvoiceLineChargePercentage = InvoiceLineChargePercentage?.ToMutable(),
+            InvoiceLineChargeReason = InvoiceLineChargeReason?.ToMutable(),
+            InvoiceLineChargeReasonCode = InvoiceLineChargeReasonCode?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct PriceDetails
+public readonly record struct PriceDetails : IToMutable<Mut.PriceDetails>
 {
     // BT-146
     public required UnitPriceAmount ItemNetPrice { get; init; }
@@ -655,9 +1041,21 @@ public readonly record struct PriceDetails
     // BT-150
     // UN/ECE Rec No 20,21
     public required Code? ItemPriceBaseQuantityUnitOfMeasureCode { get; init; }
+
+    public Mut.PriceDetails ToMutable()
+    {
+        return new Mut.PriceDetails
+        {
+            ItemNetPrice = ItemNetPrice.ToMutable(),
+            ItemPriceDiscount = ItemPriceDiscount?.ToMutable(),
+            ItemGrossPrice = ItemGrossPrice?.ToMutable(),
+            ItemPriceBaseQuantity = ItemPriceBaseQuantity?.ToMutable(),
+            ItemPriceBaseQuantityUnitOfMeasureCode = ItemPriceBaseQuantityUnitOfMeasureCode?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct LineVatInformation
+public readonly record struct LineVatInformation : IToMutable<Mut.LineVatInformation>
 {
     // BT-151
     // UNTDID 5305
@@ -665,9 +1063,18 @@ public readonly record struct LineVatInformation
 
     // BT-152
     public required Percentage? InvoicedItemVatRate { get; init; }
+
+    public Mut.LineVatInformation ToMutable()
+    {
+        return new Mut.LineVatInformation
+        {
+            InvoicedItemVatCategoryCode = InvoicedItemVatCategoryCode.ToMutable(),
+            InvoicedItemVatRate = InvoicedItemVatRate?.ToMutable(),
+        };
+    }
 }
 
-public readonly record struct ItemInformation
+public readonly record struct ItemInformation : IToMutable<Mut.ItemInformation>
 {
     // BT-153
     public required Text ItemName { get; init; }
@@ -694,13 +1101,37 @@ public readonly record struct ItemInformation
 
     // BG-32
     public required Array<ItemAttribute> ItemAttributes { get; init; }
+
+    public Mut.ItemInformation ToMutable()
+    {
+        return new Mut.ItemInformation
+        {
+            ItemName = ItemName.ToMutable(),
+            ItemDescription = ItemDescription?.ToMutable(),
+            ItemSellersIdentifier = ItemSellersIdentifier?.ToMutable(),
+            ItemBuyersIdentifier = ItemBuyersIdentifier?.ToMutable(),
+            ItemStandardIdentifier = ItemStandardIdentifier?.ToMutable(),
+            ItemClassificationIdentifiers = ItemClassificationIdentifiers.ToMutable<Identifier, Mut.Primitives.Identifier>(),
+            ItemCountryOfOrigin = ItemCountryOfOrigin?.ToMutable(),
+            ItemAttributes = ItemAttributes.ToMutable<ItemAttribute, Mut.ItemAttribute>(),
+        };
+    }
 }
 
-public readonly record struct ItemAttribute
+public readonly record struct ItemAttribute : IToMutable<Mut.ItemAttribute>
 {
     // BT-160
     public required Text ItemAttributeName { get; init; }
 
     // BT-161
     public required Text ItemAttributeValue { get; init; }
+
+    public Mut.ItemAttribute ToMutable()
+    {
+        return new Mut.ItemAttribute
+        {
+            ItemAttributeName = ItemAttributeName.ToMutable(),
+            ItemAttributeValue = ItemAttributeValue.ToMutable(),
+        };
+    }
 }

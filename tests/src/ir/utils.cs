@@ -69,9 +69,9 @@ public static class Utils
         Assert.Equal(expected.VatBreakdown, invoice.VatBreakdown);
         Assert.Equal(expected.AdditionalSupportingDocuments, invoice.AdditionalSupportingDocuments);
 
-        Assert.Equal(expected.InvoiceLines.Value.Length, invoice.InvoiceLines.Value.Length);
+        Assert.Equal(expected.InvoiceLines.Values.Length, invoice.InvoiceLines.Values.Length);
 
-        foreach ((InvoiceLine expectedLine, InvoiceLine invoiceLine) in expected.InvoiceLines.Value.Zip(invoice.InvoiceLines.Value))
+        foreach ((InvoiceLine expectedLine, InvoiceLine invoiceLine) in expected.InvoiceLines.Values.Zip(invoice.InvoiceLines.Values))
         {
             Assert.Equal(expectedLine.InvoiceLineIdentifier, invoiceLine.InvoiceLineIdentifier);
             Assert.Equal(expectedLine.InvoiceLineNote, invoiceLine.InvoiceLineNote);

@@ -6,22 +6,24 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
+using Dev.Fassbender.En16931.Collections.Immutable;
+using Dev.Fassbender.En16931.Model.Conversions;
 using Dev.Fassbender.En16931.Utils;
 
-using Im = Dev.Fassbender.En16931.Model.Immutable.Primitives;
+using Im = Dev.Fassbender.En16931.Model.Immutable;
 
 namespace Dev.Fassbender.En16931.Model.Primitives;
 
-public struct Amount : IToImmutable<Im.Amount>, IXmlSerializable
+public struct Amount : IToImmutable<Im.Primitives.Amount>, IXmlSerializable
 {
     public required decimal Value { get; set; }
 
     [SetsRequiredMembers]
     public Amount(decimal v) => Value = v;
 
-    public Im.Amount ToImmutable()
+    public Im.Primitives.Amount ToImmutable()
     {
-        return new Im.Amount(Value);
+        return new Im.Primitives.Amount(Value);
     }
 
     public void ReadXml(XmlReader reader)
@@ -40,16 +42,16 @@ public struct Amount : IToImmutable<Im.Amount>, IXmlSerializable
     }
 }
 
-public struct Percentage : IToImmutable<Im.Percentage>, IXmlSerializable
+public struct Percentage : IToImmutable<Im.Primitives.Percentage>, IXmlSerializable
 {
     public required decimal Value { get; set; }
 
     [SetsRequiredMembers]
     public Percentage(decimal v) => Value = v;
 
-    public Im.Percentage ToImmutable()
+    public Im.Primitives.Percentage ToImmutable()
     {
-        return new Im.Percentage(Value);
+        return new Im.Primitives.Percentage(Value);
     }
 
     public void ReadXml(XmlReader reader)
@@ -68,16 +70,16 @@ public struct Percentage : IToImmutable<Im.Percentage>, IXmlSerializable
     }
 }
 
-public struct Quantity : IToImmutable<Im.Quantity>, IXmlSerializable
+public struct Quantity : IToImmutable<Im.Primitives.Quantity>, IXmlSerializable
 {
     public required decimal Value { get; set; }
 
     [SetsRequiredMembers]
     public Quantity(decimal v) => Value = v;
 
-    public Im.Quantity ToImmutable()
+    public Im.Primitives.Quantity ToImmutable()
     {
-        return new Im.Quantity(Value);
+        return new Im.Primitives.Quantity(Value);
     }
 
     public void ReadXml(XmlReader reader)
@@ -96,16 +98,16 @@ public struct Quantity : IToImmutable<Im.Quantity>, IXmlSerializable
     }
 }
 
-public struct UnitPriceAmount : IToImmutable<Im.UnitPriceAmount>, IXmlSerializable
+public struct UnitPriceAmount : IToImmutable<Im.Primitives.UnitPriceAmount>, IXmlSerializable
 {
     public required decimal Value { get; set; }
 
     [SetsRequiredMembers]
     public UnitPriceAmount(decimal v) => Value = v;
 
-    public Im.UnitPriceAmount ToImmutable()
+    public Im.Primitives.UnitPriceAmount ToImmutable()
     {
-        return new Im.UnitPriceAmount(Value);
+        return new Im.Primitives.UnitPriceAmount(Value);
     }
 
     public void ReadXml(XmlReader reader)
@@ -124,16 +126,16 @@ public struct UnitPriceAmount : IToImmutable<Im.UnitPriceAmount>, IXmlSerializab
     }
 }
 
-public struct Date : IToImmutable<Im.Date>, IXmlSerializable
+public struct Date : IToImmutable<Im.Primitives.Date>, IXmlSerializable
 {
     public required DateTime Value { get; set; }
 
     [SetsRequiredMembers]
     public Date(DateTime v) => Value = v;
 
-    public Im.Date ToImmutable()
+    public Im.Primitives.Date ToImmutable()
     {
-        return new Im.Date(Value);
+        return new Im.Primitives.Date(Value);
     }
 
     public void ReadXml(XmlReader reader)
@@ -152,7 +154,7 @@ public struct Date : IToImmutable<Im.Date>, IXmlSerializable
     }
 }
 
-public struct Code : IToImmutable<Im.Code>, IXmlSerializable
+public struct Code : IToImmutable<Im.Primitives.Code>, IXmlSerializable
 {
     public required string Value
     {
@@ -171,9 +173,9 @@ public struct Code : IToImmutable<Im.Code>, IXmlSerializable
     [SetsRequiredMembers]
     public Code(string v) => Value = v;
 
-    public Im.Code ToImmutable()
+    public Im.Primitives.Code ToImmutable()
     {
-        return new Im.Code(Value);
+        return new Im.Primitives.Code(Value);
     }
 
     public void ReadXml(XmlReader reader)
@@ -192,7 +194,7 @@ public struct Code : IToImmutable<Im.Code>, IXmlSerializable
     }
 }
 
-public struct DocumentReference : IToImmutable<Im.DocumentReference>, IXmlSerializable
+public struct DocumentReference : IToImmutable<Im.Primitives.DocumentReference>, IXmlSerializable
 {
     public required string Value
     {
@@ -211,9 +213,9 @@ public struct DocumentReference : IToImmutable<Im.DocumentReference>, IXmlSerial
     [SetsRequiredMembers]
     public DocumentReference(string v) => Value = v;
 
-    public Im.DocumentReference ToImmutable()
+    public Im.Primitives.DocumentReference ToImmutable()
     {
-        return new Im.DocumentReference(Value);
+        return new Im.Primitives.DocumentReference(Value);
     }
 
     public void ReadXml(XmlReader reader)
@@ -232,7 +234,7 @@ public struct DocumentReference : IToImmutable<Im.DocumentReference>, IXmlSerial
     }
 }
 
-public struct Text : IToImmutable<Im.Text>, IXmlSerializable
+public struct Text : IToImmutable<Im.Primitives.Text>, IXmlSerializable
 {
     public required string Value
     {
@@ -251,9 +253,9 @@ public struct Text : IToImmutable<Im.Text>, IXmlSerializable
     [SetsRequiredMembers]
     public Text(string v) => Value = v;
 
-    public Im.Text ToImmutable()
+    public Im.Primitives.Text ToImmutable()
     {
-        return new Im.Text(Value);
+        return new Im.Primitives.Text(Value);
     }
 
     public void ReadXml(XmlReader reader)
@@ -272,7 +274,7 @@ public struct Text : IToImmutable<Im.Text>, IXmlSerializable
     }
 }
 
-public struct BinaryObject : IToImmutable<Im.BinaryObject>
+public struct BinaryObject : IToImmutable<Im.Primitives.BinaryObject>
 {
     [XmlElement(ElementName = "content")]
     public required byte[] Content
@@ -327,13 +329,13 @@ public struct BinaryObject : IToImmutable<Im.BinaryObject>
         Filename = filename;
     }
 
-    public Im.BinaryObject ToImmutable()
+    public Im.Primitives.BinaryObject ToImmutable()
     {
-        return new Im.BinaryObject(new Im.Array<byte>(Content), MimeCode, Filename);
+        return new Im.Primitives.BinaryObject(new Array<byte>(Content), MimeCode, Filename);
     }
 }
 
-public struct Identifier : IToImmutable<Im.Identifier>
+public struct Identifier : IToImmutable<Im.Primitives.Identifier>
 {
     [XmlElement(ElementName = "content")]
     public required string Content
@@ -380,33 +382,8 @@ public struct Identifier : IToImmutable<Im.Identifier>
         SchemeVersionIdentifier = schemeVersionIdentifier;
     }
 
-    public Im.Identifier ToImmutable()
+    public Im.Primitives.Identifier ToImmutable()
     {
-        return new Im.Identifier(Content, SchemeIdentifier, SchemeVersionIdentifier);
-    }
-}
-
-// TODO: To own module?
-
-public interface IToImmutable<T> where T : struct
-{
-    public T ToImmutable();
-}
-
-public static class ArrayToImmutableExt
-{
-    public static Im.Array<TResult> ToImmutable<T, TResult>(this IEnumerable<T> self)
-    where T : IToImmutable<TResult> where TResult : struct
-    {
-        return new Im.Array<TResult>(self.Select(x => x.ToImmutable()));
-    }
-}
-
-public static class ArrayToNonEmptyImmutableExt
-{
-    public static Im.NonEmptyArray<TResult> ToNonEmptyImmutable<T, TResult>(this IEnumerable<T> self)
-    where T : IToImmutable<TResult> where TResult : struct
-    {
-        return new Im.NonEmptyArray<TResult>(self.Select(x => x.ToImmutable()));
+        return new Im.Primitives.Identifier(Content, SchemeIdentifier, SchemeVersionIdentifier);
     }
 }
