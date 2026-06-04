@@ -94,10 +94,13 @@ public class Parser
 
     private XmlDocument ParseFileToIR(string filepath)
     {
-        DocumentType docType = ValidateSchema(filepath);
-
         using StreamReader reader = new(filepath);
-        XdmNode doc = _docBuilder.Build(reader);
+
+        XmlDocument xmlDoc = GetSchemaValidatedDocument(reader);
+
+        DocumentType docType = GetDocumentType(xmlDoc);
+
+        XdmNode doc = _docBuilder.Build(xmlDoc);
 
         try
         {
@@ -155,20 +158,6 @@ public class Parser
         return destination.XmlDocument;
     }
 
-    private DocumentType ValidateSchema(string filepath)
-    {
-        XmlDocument doc = new XmlDocument()
-        {
-            Schemas = _schemaSet,
-        };
-
-        doc.Load(filepath);
-
-        doc.Validate(null);
-
-        return GetDocumentType(doc);
-    }
-
     private void ValidateEn16931(XdmNode doc, DocumentType docType)
     {
         XsltExecutable validator = docType.Schema switch
@@ -186,8 +175,10 @@ public class Parser
         List<string> warnings = [];
         List<string> errors = [];
 
-        foreach (XdmNode node in result.Children("failed-assert")) {
-            List<string> list = node.GetAttributeValue("flag") switch {
+        foreach (XdmNode node in result.Children("failed-assert"))
+        {
+            List<string> list = node.GetAttributeValue("flag") switch
+            {
                 "information" => infos,
                 "warning" => warnings,
                 "fatal" => errors,
@@ -223,8 +214,10 @@ public class Parser
         List<string> warnings = [];
         List<string> errors = [];
 
-        foreach (XdmNode node in result.Children("failed-assert")) {
-            List<string> list = node.GetAttributeValue("flag") switch {
+        foreach (XdmNode node in result.Children("failed-assert"))
+        {
+            List<string> list = node.GetAttributeValue("flag") switch
+            {
                 "information" => infos,
                 "warning" => warnings,
                 "fatal" => errors,
@@ -243,24 +236,41 @@ public class Parser
         }
     }
 
+    private XmlDocument GetSchemaValidatedDocument(TextReader reader)
+    {
+        XmlDocument doc = new XmlDocument()
+        {
+            Schemas = _schemaSet,
+        };
+
+        doc.Load(reader);
+
+        doc.Validate(null);
+
+        return doc;
+    }
+
     private DocumentType GetDocumentType(XmlDocument doc)
     {
         XmlNode root = doc.DocumentElement ?? throw new Exception("Could not find root node.");
 
-        Schema schema = (root.NamespaceURI, root.LocalName) switch {
+        Schema schema = (root.NamespaceURI, root.LocalName) switch
+        {
             (string namespaceUri, "Invoice") when namespaceUri == _namespaces.LookupNamespace("invoice") => Schema.UblInvoice,
             (string namespaceUri, "CreditNote") when namespaceUri == _namespaces.LookupNamespace("credit-note") => Schema.UblCreditNote,
             (string namespaceUri, "CrossIndustryInvoice") when namespaceUri == _namespaces.LookupNamespace("rsm") => Schema.CiiCrossIndustryInvoice,
             (_, _) => throw new Exception($"Unknown root node: {root.Name}."),
         };
 
-        string specificationIdentifier = schema switch {
+        string specificationIdentifier = schema switch
+        {
             Schema.UblInvoice or Schema.UblCreditNote => root.SelectSingleNode("cbc:CustomizationID", _namespaces)?.InnerText ?? throw new Exception("Could not find specification identifier node."),
             Schema.CiiCrossIndustryInvoice => root.SelectSingleNode("rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID", _namespaces)?.InnerText ?? throw new Exception("Could not find specification identifier node."),
             _ => throw new UnreachableException(),
         };
 
-        Standard standard = specificationIdentifier switch {
+        Standard standard = specificationIdentifier switch
+        {
             "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0" => Standard.XRechnungCius,
             "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0" => Standard.XRechnungExtension,
             _ => throw new Exception($"Uncompatible specification identifier: {specificationIdentifier}."),
