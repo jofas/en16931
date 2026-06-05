@@ -163,7 +163,7 @@ public class Parser
         XsltExecutable validator = docType.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => _en16931UblValidator,
-            Schema.CiiCrossIndustryInvoice => _en16931CiiValidator,
+            Schema.Cii => _en16931CiiValidator,
             _ => throw new UnreachableException(),
         };
 
@@ -202,7 +202,7 @@ public class Parser
         XsltExecutable validator = docType.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => _xRechnungUblValidator,
-            Schema.CiiCrossIndustryInvoice => _xRechnungCiiValidator,
+            Schema.Cii => _xRechnungCiiValidator,
             _ => throw new UnreachableException(),
         };
 
@@ -258,14 +258,14 @@ public class Parser
         {
             (string namespaceUri, "Invoice") when namespaceUri == _namespaces.LookupNamespace("invoice") => Schema.UblInvoice,
             (string namespaceUri, "CreditNote") when namespaceUri == _namespaces.LookupNamespace("credit-note") => Schema.UblCreditNote,
-            (string namespaceUri, "CrossIndustryInvoice") when namespaceUri == _namespaces.LookupNamespace("rsm") => Schema.CiiCrossIndustryInvoice,
+            (string namespaceUri, "CrossIndustryInvoice") when namespaceUri == _namespaces.LookupNamespace("rsm") => Schema.Cii,
             (_, _) => throw new Exception($"Unknown root node: {root.Name}."),
         };
 
         string specificationIdentifier = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => root.SelectSingleNode("cbc:CustomizationID", _namespaces)?.InnerText ?? throw new Exception("Could not find specification identifier node."),
-            Schema.CiiCrossIndustryInvoice => root.SelectSingleNode("rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID", _namespaces)?.InnerText ?? throw new Exception("Could not find specification identifier node."),
+            Schema.Cii => root.SelectSingleNode("rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID", _namespaces)?.InnerText ?? throw new Exception("Could not find specification identifier node."),
             _ => throw new UnreachableException(),
         };
 
@@ -288,7 +288,7 @@ enum Schema
 {
     UblInvoice,
     UblCreditNote,
-    CiiCrossIndustryInvoice,
+    Cii,
 }
 
 enum Standard
@@ -308,7 +308,7 @@ readonly ref struct DocumentType
         {
             Schema.UblInvoice => "resources/ubl/2.1/maindoc/UBL-Invoice-2.1.xsd",
             Schema.UblCreditNote => "resources/ubl/2.1/maindoc/UBL-CreditNote-2.1.xsd",
-            Schema.CiiCrossIndustryInvoice => "resources/cii/d16b/CrossIndustryInvoice_100pD16B.xsd",
+            Schema.Cii => "resources/cii/d16b/CrossIndustryInvoice_100pD16B.xsd",
             _ => throw new UnreachableException(),
         };
     }
