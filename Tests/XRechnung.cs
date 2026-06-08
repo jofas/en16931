@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Xml.Schema;
 using En16931;
+using En16931.Model.Immutable;
 using Xunit;
 
 namespace Tests;
@@ -10,24 +11,8 @@ public class XRechnung
 {
     [Theory]
     [InlineData("Resources/Ubl-Invoice/Failure")]
-    public void SchemaViolationUblInvoice(string testsLocation)
-    {
-        Parser parser = new Parser();
-
-        string[] testFiles = Directory.GetFiles(testsLocation);
-
-        foreach (string test in testFiles)
-        {
-            Assert.Throws<XmlSchemaValidationException>(() =>
-            {
-                parser.ParseFile(test);
-            });
-        }
-    }
-
-    [Theory]
     [InlineData("Resources/Cii/Failure")]
-    public void SchemaViolationCii(string testsLocation)
+    public void SchemaViolations(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -35,33 +20,21 @@ public class XRechnung
 
         foreach (string test in testFiles)
         {
-            Assert.Throws<XmlSchemaValidationException>(() =>
-            {
-                parser.ParseFile(test);
-            });
+            Result<Invoice> result = parser.ParseFileToImmutable(test);
+
+            Assert.True(result.HasErrors());
+            Assert.True(result.Report.SchemaViolation is not null);
         }
     }
 
     [Theory]
     [InlineData("Resources/En16931/Ubl-Invoice/Failure")]
-    public void SchematronViolationEn16931UblInvoice(string testsLocation)
-    {
-        Parser parser = new Parser();
-
-        string[] testFiles = Directory.GetFiles(testsLocation);
-
-        foreach (string test in testFiles)
-        {
-            Assert.Throws<En16931SchematronException>(() =>
-            {
-                parser.ParseFile(test);
-            });
-        }
-    }
-
-    [Theory]
     [InlineData("Resources/En16931/Cii/Failure")]
-    public void SchematronViolationEn16931Cii(string testsLocation)
+    [InlineData("Resources/XRechnung-Cius/Ubl-Invoice/Failure")]
+    [InlineData("Resources/XRechnung-Cius/Cii/Failure")]
+    [InlineData("Resources/XRechnung-Extension/Ubl-Invoice/Failure")]
+    [InlineData("Resources/XRechnung-Extension/Cii/Failure")]
+    public void SchematronViolations(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -69,47 +42,17 @@ public class XRechnung
 
         foreach (string test in testFiles)
         {
-            Assert.Throws<En16931SchematronException>(() =>
-            {
-                parser.ParseFile(test);
-            });
+            Result<Invoice> result = parser.ParseFileToImmutable(test);
+
+            Assert.True(result.HasErrors());
+            Assert.True(result.Report.Errors.Count > 0);
         }
     }
 
     [Theory]
     [InlineData("Resources/XRechnung-Cius/Ubl-Invoice/Success")]
-    public void SuccessfulXRechnungCiusUblInvoice(string testsLocation)
-    {
-        Parser parser = new Parser();
-
-        string[] testFiles = Directory.GetFiles(testsLocation);
-
-        foreach (string test in testFiles)
-        {
-            parser.ParseFile(test);
-        }
-    }
-
-    [Theory]
-    [InlineData("Resources/XRechnung-Cius/Ubl-Invoice/Failure")]
-    public void SchematronViolationXRechnungCiusUblInvoice(string testsLocation)
-    {
-        Parser parser = new Parser();
-
-        string[] testFiles = Directory.GetFiles(testsLocation);
-
-        foreach (string test in testFiles)
-        {
-            Assert.Throws<XRechnungSchematronException>(() =>
-            {
-                parser.ParseFile(test);
-            });
-        }
-    }
-
-    [Theory]
     [InlineData("Resources/XRechnung-Cius/Ubl-Credit-Note/Success")]
-    public void SuccessfulXRechnungCiusUblCreditNote(string testsLocation)
+    public void NoViolations(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -117,58 +60,10 @@ public class XRechnung
 
         foreach (string test in testFiles)
         {
-            parser.ParseFile(test);
-        }
-    }
+            Result<Invoice> result = parser.ParseFileToImmutable(test);
 
-    [Theory]
-    [InlineData("Resources/XRechnung-Cius/Cii/Failure")]
-    public void SchematronViolationXRechnungCiusCii(string testsLocation)
-    {
-        Parser parser = new Parser();
-
-        string[] testFiles = Directory.GetFiles(testsLocation);
-
-        foreach (string test in testFiles)
-        {
-            Assert.Throws<XRechnungSchematronException>(() =>
-            {
-                parser.ParseFile(test);
-            });
-        }
-    }
-
-    [Theory]
-    [InlineData("Resources/XRechnung-Extension/Ubl-Invoice/Failure")]
-    public void SchematronViolationXRechnungExtensionUblInvoice(string testsLocation)
-    {
-        Parser parser = new Parser();
-
-        string[] testFiles = Directory.GetFiles(testsLocation);
-
-        foreach (string test in testFiles)
-        {
-            Assert.Throws<XRechnungSchematronException>(() =>
-            {
-                parser.ParseFile(test);
-            });
-        }
-    }
-
-    [Theory]
-    [InlineData("Resources/XRechnung-Extension/Cii/Failure")]
-    public void SchematronViolationXRechnungExtensionCii(string testsLocation)
-    {
-        Parser parser = new Parser();
-
-        string[] testFiles = Directory.GetFiles(testsLocation);
-
-        foreach (string test in testFiles)
-        {
-            Assert.Throws<XRechnungSchematronException>(() =>
-            {
-                parser.ParseFile(test);
-            });
+            Assert.True(result.IsOk());
+            Assert.True(result.Value is not null);
         }
     }
 
@@ -180,11 +75,14 @@ public class XRechnung
     {
         Parser parser = new Parser();
 
-        string[] standardTests = Directory.GetFiles(testDirectory);
+        string[] testFiles = Directory.GetFiles(testDirectory);
 
-        foreach (string standardTest in standardTests)
+        foreach (string test in testFiles)
         {
-            parser.ParseFile(standardTest);
+            Result<Invoice> result = parser.ParseFileToImmutable(test);
+
+            Assert.True(result.IsOk());
+            Assert.True(result.Value is not null);
         }
     }
 }

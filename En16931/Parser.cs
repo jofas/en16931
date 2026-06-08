@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -22,13 +23,13 @@ public class Parser
 
     DocumentBuilder _docBuilder;
 
-    XsltExecutable _en16931UblValidator;
-    XsltExecutable _en16931CiiValidator;
+    Validator _en16931UblValidator;
+    Validator _en16931CiiValidator;
 
-    XsltExecutable _xRechnungUblValidator;
-    XsltExecutable _xRechnungCiiValidator;
+    Validator _xRechnungUblValidator;
+    Validator _xRechnungCiiValidator;
 
-    XsltExecutable _irTransformer;
+    Transformer _irTransformer;
 
     public Parser()
     {
@@ -66,177 +67,132 @@ public class Parser
         XsltCompiler xsltCompiler = processor.NewXsltCompiler();
 
         Uri en16931UblUri = new Uri(new FileInfo("Resources/En16931/EN16931-UBL-validation.xslt").FullName);
-        _en16931UblValidator = xsltCompiler.Compile(en16931UblUri);
+        _en16931UblValidator = new Validator(xsltCompiler.Compile(en16931UblUri));
 
         Uri en16931CiiUri = new Uri(new FileInfo("Resources/En16931/EN16931-CII-validation.xslt").FullName);
-        _en16931CiiValidator = xsltCompiler.Compile(en16931CiiUri);
+        _en16931CiiValidator = new Validator(xsltCompiler.Compile(en16931CiiUri));
 
         Uri xRechnungUblUri = new Uri(new FileInfo("Resources/XRechnung/XRechnung-UBL-validation.xsl").FullName);
-        _xRechnungUblValidator = xsltCompiler.Compile(xRechnungUblUri);
+        _xRechnungUblValidator = new Validator(xsltCompiler.Compile(xRechnungUblUri));
 
         Uri xRechnungCiiUri = new Uri(new FileInfo("Resources/XRechnung/XRechnung-CII-validation.xsl").FullName);
-        _xRechnungCiiValidator = xsltCompiler.Compile(xRechnungCiiUri);
+        _xRechnungCiiValidator = new Validator(xsltCompiler.Compile(xRechnungCiiUri));
 
         Uri irUri = new Uri(new FileInfo("Resources/IR/ir.xslt").FullName);
-        _irTransformer = xsltCompiler.Compile(irUri);
+        _irTransformer = new Transformer(xsltCompiler.Compile(irUri));
     }
 
-    public Mut.Invoice ParseFile(string filepath)
+    public Result<Im.Invoice> ParseFileToImmutable(string filepath)
     {
-        XmlDocument ir = ParseFileToIR(filepath);
+        RefResult<Mut.Invoice> mut = ParseFile(filepath);
 
-        XmlNodeReader reader = new(ir);
+        if (mut.HasErrors())
+        {
+            return mut.As<Im.Invoice>();
+        }
+
+        return mut.Map<Im.Invoice>(v => v!.ToImmutable());
+    }
+
+    public RefResult<Mut.Invoice> ParseFile(string filepath)
+    {
+        RefResult<XmlDocument> ir = ParseFileToIR(filepath);
+
+        if (ir.HasErrors())
+        {
+            return ir.AsRef<Mut.Invoice>();
+        }
+
+        XmlNodeReader reader = new(ir.Value!);
 
         Mut.Invoice invoice = (Mut.Invoice)_invoiceSerializer.Deserialize(reader)!;
 
-        return invoice;
+        return ir.WithRef(invoice);
     }
 
-    private XmlDocument ParseFileToIR(string filepath)
+    private RefResult<XmlDocument> ParseFileToIR(string filepath)
     {
         using StreamReader reader = new(filepath);
 
-        XmlDocument xmlDoc = GetSchemaValidatedDocument(reader);
+        RefResult<XmlDocument> validatedDocResult = GetSchemaValidatedDocument(reader);
 
-        DocumentType docType = GetDocumentType(xmlDoc);
-
-        XdmNode doc = _docBuilder.Build(xmlDoc);
-
-        try
+        if (validatedDocResult.HasErrors())
         {
-            ValidateEn16931(doc, docType);
-        }
-        catch (En16931SchematronException e)
-        {
-            if (docType.Standard == Standard.XRechnungExtension)
-            {
-                // Extensions can extend code listings and otherwise add elements
-                // or override rules of the EN16931 specification.
-                // These overridden rules of the EN16931 Schematron can fail early,
-                // even when the invoice is valid according to the extension.
-                // Here we remove these failed asserts from the query and continue
-                // executing the rules that override the code listings.
-                //
-                // The XRechnung Extension overrides the following rules:
-                //
-                // * BR-CL-10 => BR-DEX-04
-                // * BR-CL-11 => BR-DEX-05
-                // * BR-CL-21 => BR-DEX-06
-                // * BR-CL-25 => BR-DEX-07
-                // * BR-CL-26 => BR-DEX-08
-                // * BR-CO-16 => BR-DEX-09
-                //
-                if (!e.Errors.All(e =>
-                {
-                    return ((string[])[
-                        "BR-CL-10",
-                        "BR-CL-11",
-                        "BR-CL-21",
-                        "BR-CL-25",
-                        "BR-CL-26",
-                        "BR-CO-16",
-                    ]).Contains(e);
-                }))
-                {
-                    throw;
-                }
-            }
-            else
-            {
-                throw;
-            }
+            return validatedDocResult;
         }
 
-        ValidateXRechnung(doc, docType);
+        XmlDocument validatedDoc = validatedDocResult.Unwrap();
 
-        DomDestination destination = new();
+        Result<DocumentType> docTypeResult = GetDocumentType(validatedDoc);
 
-        Xslt30Transformer transformer = _irTransformer.Load30();
-        transformer.GlobalContextItem = doc;
-        transformer.ApplyTemplates(doc, destination);
+        if (docTypeResult.HasErrors())
+        {
+            return docTypeResult.AsRef<XmlDocument>();
+        }
 
-        return destination.XmlDocument;
-    }
+        DocumentType docType = docTypeResult.Unwrap();
 
-    private void ValidateEn16931(XdmNode doc, DocumentType docType)
-    {
-        XsltExecutable validator = docType.Schema switch
+        XdmNode doc = _docBuilder.Build(validatedDoc);
+
+        Validator en16931Validator = docType.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => _en16931UblValidator,
             Schema.Cii => _en16931CiiValidator,
             _ => throw new UnreachableException(),
         };
 
-        Xslt30Transformer transformer = validator.Load30();
-        transformer.GlobalContextItem = doc;
-        XdmNode result = (XdmNode)transformer.ApplyTemplates(doc);
-
-        List<string> infos = [];
-        List<string> warnings = [];
-        List<string> errors = [];
-
-        foreach (XdmNode node in result.Children("failed-assert"))
-        {
-            List<string> list = node.GetAttributeValue("flag") switch
-            {
-                "information" => infos,
-                "warning" => warnings,
-                "fatal" => errors,
-                _ => throw new UnreachableException(),
-            };
-
-            list.Add(node.GetAttributeValue("id"));
-        }
-
-        if (errors.Count > 0)
-        {
-            throw new En16931SchematronException
-            {
-                Errors = errors.ToArray(),
-            };
-        }
-    }
-
-    private void ValidateXRechnung(XdmNode doc, DocumentType docType)
-    {
-        XsltExecutable validator = docType.Schema switch
+        Validator xRechnungValidator = docType.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => _xRechnungUblValidator,
             Schema.Cii => _xRechnungCiiValidator,
             _ => throw new UnreachableException(),
         };
 
-        Xslt30Transformer transformer = validator.Load30();
-        transformer.GlobalContextItem = doc;
-        XdmNode result = (XdmNode)transformer.ApplyTemplates(doc);
+        Report en16931Report = en16931Validator.Validate(doc);
+        Report xRechnungReport = xRechnungValidator.Validate(doc);
 
-        List<string> infos = [];
-        List<string> warnings = [];
-        List<string> errors = [];
-
-        foreach (XdmNode node in result.Children("failed-assert"))
+        if (docType.Standard == Standard.XRechnungExtension)
         {
-            List<string> list = node.GetAttributeValue("flag") switch
+            // Extensions can extend code listings and otherwise add elements
+            // or override rules of the EN16931 specification.
+            // These overridden rules of the EN16931 Schematron can fail early,
+            // even when the invoice is valid according to the extension.
+            // Here we remove these failed asserts from the query and continue
+            // executing the rules that override the code listings.
+            //
+            // The XRechnung Extension overrides the following rules:
+            //
+            // * BR-CL-10 => BR-DEX-04
+            // * BR-CL-11 => BR-DEX-05
+            // * BR-CL-21 => BR-DEX-06
+            // * BR-CL-25 => BR-DEX-07
+            // * BR-CL-26 => BR-DEX-08
+            // * BR-CO-16 => BR-DEX-09
+            //
+            en16931Report.Errors.RemoveAll(e =>
             {
-                "information" => infos,
-                "warning" => warnings,
-                "fatal" => errors,
-                _ => throw new UnreachableException(),
-            };
-
-            list.Add(node.GetAttributeValue("id"));
+                return ((string[])[
+                    "BR-CL-10",
+                    "BR-CL-11",
+                    "BR-CL-21",
+                    "BR-CL-25",
+                    "BR-CL-26",
+                    "BR-CO-16",
+                ]).Contains(e);
+            });
         }
 
-        if (errors.Count > 0)
+        Report finalReport = en16931Report.Merge(xRechnungReport);
+
+        if (finalReport.HasErrors())
         {
-            throw new XRechnungSchematronException
-            {
-                Errors = errors.ToArray(),
-            };
+            return finalReport.AsRefResult<XmlDocument>();
         }
+
+        return finalReport.AsRefResult<XmlDocument>(_irTransformer.Transform(doc));
     }
 
-    private XmlDocument GetSchemaValidatedDocument(TextReader reader)
+    private RefResult<XmlDocument> GetSchemaValidatedDocument(TextReader reader)
     {
         XmlDocument doc = new XmlDocument()
         {
@@ -245,21 +201,28 @@ public class Parser
 
         doc.Load(reader);
 
-        doc.Validate(null);
+        try
+        {
+            doc.Validate(null);
+        }
+        catch (XmlSchemaValidationException e)
+        {
+            return Report.FromSchemaViolation(e).AsRefResult<XmlDocument>();
+        }
 
-        return doc;
+        return Report.Ok.AsRefResult<XmlDocument>(doc);
     }
 
-    private DocumentType GetDocumentType(XmlDocument doc)
+    private Result<DocumentType> GetDocumentType(XmlDocument doc)
     {
-        XmlNode root = doc.DocumentElement ?? throw new Exception("Could not find root node.");
+        XmlNode root = doc.DocumentElement ?? throw new UnreachableException();
 
         Schema schema = (root.NamespaceURI, root.LocalName) switch
         {
             (string namespaceUri, "Invoice") when namespaceUri == _namespaces.LookupNamespace("invoice") => Schema.UblInvoice,
             (string namespaceUri, "CreditNote") when namespaceUri == _namespaces.LookupNamespace("credit-note") => Schema.UblCreditNote,
             (string namespaceUri, "CrossIndustryInvoice") when namespaceUri == _namespaces.LookupNamespace("rsm") => Schema.Cii,
-            (_, _) => throw new Exception($"Unknown root node: {root.Name}."),
+            (_, _) => throw new UnreachableException(),
         };
 
         string specificationIdentifier = schema switch
@@ -269,18 +232,265 @@ public class Parser
             _ => throw new UnreachableException(),
         };
 
-        Standard standard = specificationIdentifier switch
+        Result<Standard> standardResult = specificationIdentifier switch
         {
-            "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0" => Standard.XRechnungCius,
-            "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0" => Standard.XRechnungExtension,
-            _ => throw new Exception($"Uncompatible specification identifier: {specificationIdentifier}."),
+            "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0" => Report.Ok.AsResult<Standard>(Standard.XRechnungCius),
+            "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0" => Report.Ok.AsResult<Standard>(Standard.XRechnungExtension),
+            string unknown => Report.FromUnknownSpecificationIdentifier(unknown).AsResult<Standard>(),
         };
 
-        return new DocumentType
+        // TODO: XRechnungExtension is incompatible with CII
+
+        if (standardResult.HasErrors())
         {
-            Schema = schema,
-            Standard = standard,
+            return standardResult.As<DocumentType>();
+        }
+
+        return standardResult.Map<DocumentType>(s => new DocumentType(schema, s!.Value));
+    }
+}
+
+public readonly record struct Result<T> where T : struct
+{
+    public required Report Report { get; init; }
+    public required T? Value { get => HasErrors() ? null : field; init; }
+
+    [SetsRequiredMembers]
+    public Result(Report report, T? value)
+    {
+        Report = report;
+        Value = value;
+    }
+
+    public bool IsOk() => Report.IsOk();
+
+    public bool HasErrors() => Report.HasErrors();
+
+    public T Unwrap()
+    {
+        return Value!.Value;
+    }
+
+    public Result<U> Map<U>(Func<T?, U?> map) where U : struct
+    {
+        return new Result<U>(Report, map(Value));
+    }
+
+    public RefResult<U> MapRef<U>(Func<T?, U?> map) where U : class
+    {
+        return new RefResult<U>(Report, map(Value));
+    }
+
+    public Result<U> With<U>(U? value) where U : struct
+    {
+        return new Result<U>(Report, value);
+    }
+
+    public RefResult<U> WithRef<U>(U? value) where U : class
+    {
+        return new RefResult<U>(Report, value);
+    }
+
+    public Result<U> As<U>() where U : struct
+    {
+        return new Result<U>(Report, Value as U?);
+    }
+
+    public RefResult<U> AsRef<U>() where U : class
+    {
+        return new RefResult<U>(Report, Value as U);
+    }
+}
+
+public readonly record struct RefResult<T> where T : class
+{
+    public required Report Report { get; init; }
+    public required T? Value { get => HasErrors() ? null : field; init; }
+
+    [SetsRequiredMembers]
+    public RefResult(Report report, T? value)
+    {
+        Report = report;
+        Value = value;
+    }
+
+    public bool IsOk() => Report.IsOk();
+
+    public bool HasErrors() => Report.HasErrors();
+
+    public T Unwrap()
+    {
+        if (Value is null)
+        {
+            throw new InvalidOperationException("Nullable object must have a value.");
+        }
+
+        return Value;
+    }
+
+    public Result<U> Map<U>(Func<T?, U?> map) where U : struct
+    {
+        return new Result<U>(Report, map(Value));
+    }
+
+    public RefResult<U> MapRef<U>(Func<T?, U?> map) where U : class
+    {
+        return new RefResult<U>(Report, map(Value));
+    }
+
+    public Result<U> With<U>(U? value) where U : struct
+    {
+        return new Result<U>(Report, value);
+    }
+
+    public RefResult<U> WithRef<U>(U? value) where U : class
+    {
+        return new RefResult<U>(Report, value);
+    }
+
+    public Result<U> As<U>() where U : struct
+    {
+        return new Result<U>(Report, Value as U?);
+    }
+
+    public RefResult<U> AsRef<U>() where U : class
+    {
+        return new RefResult<U>(Report, Value as U);
+    }
+}
+
+// TODO: proper value type semantics
+public readonly record struct Report
+{
+    public static Report Ok = new Report
+    {
+        SchemaViolation = null,
+        UnknownSpecificationIdentifier = null,
+        Infos = [],
+        Warnings = [],
+        Errors = [],
+    };
+
+    public required XmlSchemaValidationException? SchemaViolation { get; init; }
+
+    public required string? UnknownSpecificationIdentifier { get; init; }
+
+    // TODO: infos and warnings are only relevant on the success path
+    // TODO: Result<Report<T>>(Report<T>, Error) throw Exception if Error is not null
+    // TODO: Report<T>(Infos, Warnings, T)
+    //
+    public required List<string> Infos { get; init; }
+    public required List<string> Warnings { get; init; }
+    public required List<string> Errors { get; init; }
+
+    public bool IsOk()
+    {
+        return SchemaViolation is null
+            && UnknownSpecificationIdentifier is null
+            && Errors.Count == 0;
+    }
+
+    public bool HasErrors() => !IsOk();
+
+    public Report Merge(Report other)
+    {
+        return new Report
+        {
+            SchemaViolation = SchemaViolation ?? other.SchemaViolation,
+            UnknownSpecificationIdentifier = UnknownSpecificationIdentifier ?? other.UnknownSpecificationIdentifier,
+            Infos = Infos.Concat(other.Infos).ToList(),
+            Warnings = Warnings.Concat(other.Warnings).ToList(),
+            Errors = Errors.Concat(other.Errors).ToList(),
         };
+    }
+
+    public Result<T> AsResult<T>(T? value = null) where T : struct
+    {
+        return new Result<T>(this, value);
+    }
+
+    public RefResult<T> AsRefResult<T>(T? value = null) where T : class
+    {
+        return new RefResult<T>(this, value);
+    }
+
+    public static Report FromSchemaViolation(XmlSchemaValidationException schemaViolation)
+    {
+        return new Report
+        {
+            SchemaViolation = schemaViolation,
+            UnknownSpecificationIdentifier = null,
+            Infos = [],
+            Warnings = [],
+            Errors = [],
+        };
+    }
+
+    public static Report FromUnknownSpecificationIdentifier(string unknownSpecificationIdentifier)
+    {
+        return new Report
+        {
+            SchemaViolation = null,
+            UnknownSpecificationIdentifier = unknownSpecificationIdentifier,
+            Infos = [],
+            Warnings = [],
+            Errors = [],
+        };
+    }
+
+    public static Report FromSchematronOutput(List<string> infos, List<string> warnings, List<string> errors)
+    {
+        return new Report
+        {
+            SchemaViolation = null,
+            UnknownSpecificationIdentifier = null,
+            Infos = infos,
+            Warnings = warnings,
+            Errors = errors,
+        };
+    }
+}
+
+readonly record struct Validator(XsltExecutable Executable)
+{
+    public Report Validate(XdmNode doc)
+    {
+        Xslt30Transformer transformer = Executable.Load30();
+        transformer.GlobalContextItem = doc;
+        XdmNode result = (XdmNode)transformer.ApplyTemplates(doc);
+
+        List<string> infos = [];
+        List<string> warnings = [];
+        List<string> errors = [];
+
+        foreach (XdmNode node in result.Children("failed-assert"))
+        {
+            List<string> list = node.GetAttributeValue("flag") switch
+            {
+                "information" => infos,
+                "warning" => warnings,
+                "fatal" => errors,
+                _ => throw new UnreachableException(),
+            };
+
+            list.Add(node.GetAttributeValue("id"));
+        }
+
+        return Report.FromSchematronOutput(infos, warnings, errors);
+    }
+}
+
+readonly record struct Transformer(XsltExecutable Executable)
+{
+    public XmlDocument Transform(XdmNode doc)
+    {
+        DomDestination destination = new();
+
+        Xslt30Transformer transformer = Executable.Load30();
+        transformer.GlobalContextItem = doc;
+        transformer.ApplyTemplates(doc, destination);
+
+        return destination.XmlDocument;
     }
 }
 
@@ -297,28 +507,4 @@ enum Standard
     XRechnungExtension,
 }
 
-readonly ref struct DocumentType
-{
-    public required Schema Schema { get; init; }
-    public required Standard Standard { get; init; }
-
-    public string SchemaFilePath()
-    {
-        return Schema switch
-        {
-            Schema.UblInvoice => "resources/ubl/2.1/maindoc/UBL-Invoice-2.1.xsd",
-            Schema.UblCreditNote => "resources/ubl/2.1/maindoc/UBL-CreditNote-2.1.xsd",
-            Schema.Cii => "resources/cii/d16b/CrossIndustryInvoice_100pD16B.xsd",
-            _ => throw new UnreachableException(),
-        };
-    }
-}
-
-public class SchematronException : Exception
-{
-    public required string[] Errors { get; init; }
-}
-
-public class En16931SchematronException : SchematronException { }
-
-public class XRechnungSchematronException : SchematronException { }
+readonly record struct DocumentType(Schema Schema, Standard Standard);

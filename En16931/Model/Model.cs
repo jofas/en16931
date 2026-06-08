@@ -796,11 +796,11 @@ public class SellerTaxRepresentativePostalAddress : IToImmutable<Im.SellerTaxRep
 
     // BT-66
     [XmlElement(ElementName = "tax-representative-city")]
-    public required Text TaxRepresentativeCity { get; set; }
+    public required Text? TaxRepresentativeCity { get; set; }
 
     // BT-67
     [XmlElement(ElementName = "tax-representative-post-code")]
-    public required Text TaxRepresentativePostCode { get; set; }
+    public required Text? TaxRepresentativePostCode { get; set; }
 
     // BT-68
     [XmlElement(ElementName = "tax-representative-country-subdivision")]
@@ -818,8 +818,8 @@ public class SellerTaxRepresentativePostalAddress : IToImmutable<Im.SellerTaxRep
             TaxRepresentativeAddressLine1 = TaxRepresentativeAddressLine1?.ToImmutable(),
             TaxRepresentativeAddressLine2 = TaxRepresentativeAddressLine2?.ToImmutable(),
             TaxRepresentativeAddressLine3 = TaxRepresentativeAddressLine3?.ToImmutable(),
-            TaxRepresentativeCity = TaxRepresentativeCity.ToImmutable(),
-            TaxRepresentativePostCode = TaxRepresentativePostCode.ToImmutable(),
+            TaxRepresentativeCity = TaxRepresentativeCity?.ToImmutable(),
+            TaxRepresentativePostCode = TaxRepresentativePostCode?.ToImmutable(),
             TaxRepresentativeCountrySubdivision = TaxRepresentativeCountrySubdivision?.ToImmutable(),
             TaxRepresentativeCountryCode = TaxRepresentativeCountryCode.ToImmutable(),
         };

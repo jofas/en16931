@@ -481,10 +481,10 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IToMutable<
     public required Text? TaxRepresentativeAddressLine3 { get; init; }
 
     // BT-66
-    public required Text TaxRepresentativeCity { get; init; }
+    public required Text? TaxRepresentativeCity { get; init; }
 
     // BT-67
-    public required Text TaxRepresentativePostCode { get; init; }
+    public required Text? TaxRepresentativePostCode { get; init; }
 
     // BT-68
     public required Text? TaxRepresentativeCountrySubdivision { get; init; }
@@ -500,8 +500,8 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IToMutable<
             TaxRepresentativeAddressLine1 = TaxRepresentativeAddressLine1?.ToMutable(),
             TaxRepresentativeAddressLine2 = TaxRepresentativeAddressLine2?.ToMutable(),
             TaxRepresentativeAddressLine3 = TaxRepresentativeAddressLine3?.ToMutable(),
-            TaxRepresentativeCity = TaxRepresentativeCity.ToMutable(),
-            TaxRepresentativePostCode = TaxRepresentativePostCode.ToMutable(),
+            TaxRepresentativeCity = TaxRepresentativeCity?.ToMutable(),
+            TaxRepresentativePostCode = TaxRepresentativePostCode?.ToMutable(),
             TaxRepresentativeCountrySubdivision = TaxRepresentativeCountrySubdivision?.ToMutable(),
             TaxRepresentativeCountryCode = TaxRepresentativeCountryCode.ToMutable(),
         };
