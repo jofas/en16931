@@ -1,4 +1,3 @@
-<!-- TODO: dynamically generated -->
 <xsl:stylesheet
     xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
     xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
@@ -8,6 +7,7 @@
     xmlns="urn:todo"
     exclude-result-prefixes="rsm ram qdt udt xsl"
     version="1.0">
-  <xsl:import href="cii-invoice.xslt"/>
-  <xsl:import href="cii-extension.xslt"/>
+  <xsl:template match="/rsm:CrossIndustryInvoice" mode="extension">
+    <foo>foo</foo>
+  </xsl:template>
 </xsl:stylesheet>

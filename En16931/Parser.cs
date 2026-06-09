@@ -12,23 +12,57 @@ using Mut = En16931.Model;
 
 namespace En16931;
 
+// TODO: private global XSLT cache and compiler, serving multiple specifications
+//       and Parsers
+
+public class Specification {
+    public string Name { get; init; }
+    public string Identifier { get; init; }
+
+    public Specification? Base { get; init; }
+
+    public SyntaxSpecification? Ubl { get; init; }
+    public SyntaxSpecification? Cii { get; init; }
+
+    public Type InvoiceType { get; init; }
+    public Type ImmutableInvoiceType { get; init; }
+
+    // TODO: Compile method creating XsltExecutables in global cache
+}
+
+public class SyntaxSpecification {
+    public string ValidatorFile { get; init; }
+    public string? IRExtensionTransformer { get; init; }
+}
+
+// TODO: how to specify extension invoice types, such that they can be
+//       generated?
+//
+//       Via incremental generator? Using attributes?
+//       Or maybe a file would be better? Maybe an XSD file? That would
+//       allow me to use inheritance there, which I can't do in C# as
+//       structs do not support it.
+//
+
 public class Parser
 {
-    XmlNamespaceManager _namespaces;
+    private static Processor _processor = CreateProcessor();
 
-    XmlSchemaSet _schemaSet;
+    internal static XmlSchemaSet SchemaSet = CreateSchemaSet();
 
-    XmlSerializer _invoiceSerializer;
+    private XmlNamespaceManager _namespaces;
 
-    DocumentBuilder _docBuilder;
+    private XmlSerializer _invoiceSerializer;
 
-    XsltExecutable _en16931UblValidator;
-    XsltExecutable _en16931CiiValidator;
+    private DocumentBuilder _docBuilder;
 
-    XsltExecutable _xRechnungUblValidator;
-    XsltExecutable _xRechnungCiiValidator;
+    private XsltExecutable _en16931UblValidator;
+    private XsltExecutable _en16931CiiValidator;
 
-    XsltExecutable _irTransformer;
+    private XsltExecutable _xRechnungUblValidator;
+    private XsltExecutable _xRechnungCiiValidator;
+
+    private XsltExecutable _irTransformer;
 
     public Parser()
     {
@@ -43,27 +77,11 @@ public class Parser
         _namespaces.AddNamespace("rsm", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100");
         _namespaces.AddNamespace("ram", "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100");
 
-        // Schema is DTD annotated, which is why we have to add it like this,
-        // instead of adding the file directly with `_schemaSet.Add`
-        FileStream w3XmlSigSchemaFile = File.OpenRead("Resources/W3/xmldsig-core-schema.xsd");
-        XmlSchema w3XmlSigSchema = XmlSchema.Read(w3XmlSigSchemaFile, null)!;
-
-        _schemaSet = new XmlSchemaSet();
-        _schemaSet.XmlResolver = new XmlUrlResolver();
-        _schemaSet.Add(null, "Resources/Ubl/maindoc/UBL-Invoice-2.1.xsd");
-        _schemaSet.Add(null, "Resources/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
-        _schemaSet.Add(null, "Resources/Cii/CrossIndustryInvoice_100pD16B.xsd");
-        _schemaSet.Add(w3XmlSigSchema);
-        _schemaSet.Compile();
-
         _invoiceSerializer = new XmlSerializer(typeof(Mut.Invoice));
 
-        Processor processor = new Processor(false);
-        processor.ErrorWriter = TextWriter.Null;
+        _docBuilder = _processor.NewDocumentBuilder();
 
-        _docBuilder = processor.NewDocumentBuilder();
-
-        XsltCompiler xsltCompiler = processor.NewXsltCompiler();
+        XsltCompiler xsltCompiler = _processor.NewXsltCompiler();
 
         Uri en16931UblUri = new Uri(new FileInfo("Resources/En16931/EN16931-UBL-validation.xslt").FullName);
         _en16931UblValidator = xsltCompiler.Compile(en16931UblUri);
@@ -92,7 +110,7 @@ public class Parser
         return invoice;
     }
 
-    private XmlDocument ParseFileToIR(string filepath)
+    internal XmlDocument ParseFileToIR(string filepath)
     {
         using StreamReader reader = new(filepath);
 
@@ -240,7 +258,7 @@ public class Parser
     {
         XmlDocument doc = new XmlDocument()
         {
-            Schemas = _schemaSet,
+            Schemas = SchemaSet,
         };
 
         doc.Load(reader);
@@ -281,6 +299,30 @@ public class Parser
             Schema = schema,
             Standard = standard,
         };
+    }
+
+    private static Processor CreateProcessor() {
+        Processor processor = new(false);
+        processor.ErrorWriter = TextWriter.Null;
+        return processor;
+    }
+
+    private static XmlSchemaSet CreateSchemaSet() {
+        // Schema is DTD annotated, which is why we have to add it like this,
+        // instead of adding the file directly with `SchemaSet.Add`
+        FileStream w3XmlSigSchemaFile = File.OpenRead("Resources/W3/xmldsig-core-schema.xsd");
+        XmlSchema w3XmlSigSchema = XmlSchema.Read(w3XmlSigSchemaFile, null)!;
+
+        XmlSchemaSet schemaSet = new XmlSchemaSet();
+        schemaSet.XmlResolver = new XmlUrlResolver();
+        schemaSet.Add(null, "Resources/Ubl/maindoc/UBL-Invoice-2.1.xsd");
+        schemaSet.Add(null, "Resources/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
+        schemaSet.Add(null, "Resources/Cii/CrossIndustryInvoice_100pD16B.xsd");
+        schemaSet.Add(null, "Resources/IR/ir-extension.xsd");
+        schemaSet.Add(w3XmlSigSchema);
+        schemaSet.Compile();
+
+        return schemaSet;
     }
 }
 

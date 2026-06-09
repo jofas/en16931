@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+    xmlns="urn:todo"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:todo"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    version="2.1">
+  <xsd:redefine schemaLocation="ir.xsd">
+
+    <xsd:complexType name="invoice">
+      <xsd:complexContent>
+        <xsd:extension base="invoice">
+          <xsd:sequence>
+            <xsd:element name="invoice-extension">
+              <xsd:complexType>
+                <xsd:simpleContent>
+                  <xsd:extension base="text">
+                    <xsd:attribute name="id" type="xsd:string" fixed="bt-167"/>
+                  </xsd:extension>
+                </xsd:simpleContent>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="invoice-note">
+      <xsd:complexContent>
+        <xsd:extension base="invoice-note">
+          <xsd:sequence>
+            <xsd:element name="invoice-note-extension" minOccurs="0">
+              <xsd:complexType>
+                <xsd:simpleContent>
+                  <xsd:extension base="text">
+                    <xsd:attribute name="id" type="xsd:string" fixed="bt-166"/>
+                  </xsd:extension>
+                </xsd:simpleContent>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+  </xsd:redefine>
+</xsd:schema>

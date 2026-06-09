@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+    xmlns="urn:todo"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:todo"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    version="2.1">
+  <xsd:element name="invoice" type="invoice"/>
+
+  <xsd:complexType name="invoice">
+    <xsd:sequence>
+      <xsd:element name="invoice-number">
+        <xsd:complexType>
+          <xsd:complexContent>
+            <xsd:extension base="identifier">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-1"/>
+            </xsd:extension>
+          </xsd:complexContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="invoice-issue-date">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="date">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-2"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="invoice-type-code">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="code">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-3"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="invoice-currency-code">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="code">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-5"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="vat-accounting-currency-code" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="code">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-6"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="value-added-tax-point-date" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="date">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-7"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="value-added-tax-point-date-code" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="code">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-8"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="payment-due-date" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="date">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-9"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="buyer-reference">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="text">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-10"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="project-reference" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="document-reference">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-11"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="contract-reference" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="document-reference">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-12"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="purchase-order-reference" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="document-reference">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-13"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="sales-order-reference" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="document-reference">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-14"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="receiving-advice-reference" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="document-reference">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-15"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="despatch-advice-reference" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="document-reference">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-16"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="tender-or-lot-reference" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="document-reference">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-17"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="invoiced-object-identifier" minOccurs="0">
+        <xsd:complexType>
+          <xsd:complexContent>
+            <xsd:extension base="identifier">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-18"/>
+            </xsd:extension>
+          </xsd:complexContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="buyer-accounting-reference" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="text">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-19"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="payment-terms" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="text">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-20"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="invoice-notes">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="invoice-note" type="invoice-note" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+          <xsd:attribute name="id" type="xsd:string" fixed="bg-1"/>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="invoice-note">
+    <xsd:sequence>
+      <xsd:element name="invoice-note-subject-code" minOccurs="0">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="code">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-21"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="invoice-note">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="text">
+              <xsd:attribute name="id" type="xsd:string" fixed="bt-22"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" fixed="bg-1"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="amount">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:decimal"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="percentage">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:decimal"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="quantity">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:decimal"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="unit-price-amount">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:decimal"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="date">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:date"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="code">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="document-reference">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="text">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="binary-object">
+    <xsd:sequence>
+      <xsd:element name="content" type="xsd:base64Binary"/>
+      <xsd:element name="mime-code" type="xsd:string"/>
+      <xsd:element name="filename" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="identifier">
+    <xsd:sequence>
+      <xsd:element name="content" type="xsd:string"/>
+      <xsd:element name="scheme-identifier" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="scheme-version-identifier" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>
