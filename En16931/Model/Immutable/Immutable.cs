@@ -8,7 +8,7 @@ using Mut = En16931.Model;
 
 namespace En16931.Model.Immutable;
 
-public readonly record struct Invoice : IToMutable<Mut.Invoice>
+public readonly record struct Invoice : IIRDeserializable<Invoice>, IToMutable<Mut.Invoice>
 {
     // BT-1
     public required Identifier InvoiceNumber { get; init; }
@@ -116,6 +116,11 @@ public readonly record struct Invoice : IToMutable<Mut.Invoice>
     // BG-25
     public required NonEmptyArray<InvoiceLine> InvoiceLines { get; init; }
 
+    public static Invoice Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.Invoice ToMutable()
     {
         return new Mut.Invoice
@@ -158,13 +163,18 @@ public readonly record struct Invoice : IToMutable<Mut.Invoice>
     }
 }
 
-public readonly record struct InvoiceNote : IToMutable<Mut.InvoiceNote>
+public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>, IToMutable<Mut.InvoiceNote>
 {
     // BT-21
     public required Code? InvoiceNoteSubjectCode { get; init; }
 
     // BT-22
     public required Text Note { get; init; }
+
+    public static InvoiceNote Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.InvoiceNote ToMutable()
     {
@@ -176,13 +186,18 @@ public readonly record struct InvoiceNote : IToMutable<Mut.InvoiceNote>
     }
 }
 
-public readonly record struct ProcessControl : IToMutable<Mut.ProcessControl>
+public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>, IToMutable<Mut.ProcessControl>
 {
     // BT-23
     public required Text BusinessProcessType { get; init; }
 
     // BT-24
     public required Identifier SpecificationIdentifier { get; init; }
+
+    public static ProcessControl Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.ProcessControl ToMutable()
     {
@@ -194,13 +209,18 @@ public readonly record struct ProcessControl : IToMutable<Mut.ProcessControl>
     }
 }
 
-public readonly record struct PrecedingInvoiceReference : IToMutable<Mut.PrecedingInvoiceReference>
+public readonly record struct PrecedingInvoiceReference : IIRDeserializable<PrecedingInvoiceReference>, IToMutable<Mut.PrecedingInvoiceReference>
 {
     // BT-25
     public required DocumentReference Reference { get; init; }
 
     // BT-26
     public required Date? PrecedingInvoiceIssueDate { get; init; }
+
+    public static PrecedingInvoiceReference Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.PrecedingInvoiceReference ToMutable()
     {
@@ -212,7 +232,7 @@ public readonly record struct PrecedingInvoiceReference : IToMutable<Mut.Precedi
     }
 }
 
-public readonly record struct Seller : IToMutable<Mut.Seller>
+public readonly record struct Seller : IIRDeserializable<Seller>, IToMutable<Mut.Seller>
 {
     // BT-27
     public required Text SellerName { get; init; }
@@ -244,6 +264,11 @@ public readonly record struct Seller : IToMutable<Mut.Seller>
     // BG-6
     public required SellerContact SellerContact { get; init; }
 
+    public static Seller Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.Seller ToMutable()
     {
         return new Mut.Seller
@@ -263,7 +288,7 @@ public readonly record struct Seller : IToMutable<Mut.Seller>
 
 }
 
-public readonly record struct SellerPostalAddress : IToMutable<Mut.SellerPostalAddress>
+public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPostalAddress>, IToMutable<Mut.SellerPostalAddress>
 {
     // BT-35
     public required Text? SellerAddressLine1 { get; init; }
@@ -287,6 +312,11 @@ public readonly record struct SellerPostalAddress : IToMutable<Mut.SellerPostalA
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code SellerCountryCode { get; init; }
 
+    public static SellerPostalAddress Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.SellerPostalAddress ToMutable()
     {
         return new Mut.SellerPostalAddress
@@ -302,7 +332,7 @@ public readonly record struct SellerPostalAddress : IToMutable<Mut.SellerPostalA
     }
 }
 
-public readonly record struct SellerContact : IToMutable<Mut.SellerContact>
+public readonly record struct SellerContact : IIRDeserializable<SellerContact>, IToMutable<Mut.SellerContact>
 {
     // BT-41
     public required Text SellerContactPoint { get; init; }
@@ -312,6 +342,11 @@ public readonly record struct SellerContact : IToMutable<Mut.SellerContact>
 
     // BT-43
     public required Text SellerContactEmailAddress { get; init; }
+
+    public static SellerContact Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.SellerContact ToMutable()
     {
@@ -324,7 +359,7 @@ public readonly record struct SellerContact : IToMutable<Mut.SellerContact>
     }
 }
 
-public readonly record struct Buyer : IToMutable<Mut.Buyer>
+public readonly record struct Buyer : IIRDeserializable<Buyer>, IToMutable<Mut.Buyer>
 {
     // BT-44
     public required Text BuyerName { get; init; }
@@ -350,6 +385,11 @@ public readonly record struct Buyer : IToMutable<Mut.Buyer>
     // BG-9
     public required BuyerContact? BuyerContact { get; init; }
 
+    public static Buyer Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.Buyer ToMutable()
     {
         return new Mut.Buyer
@@ -366,7 +406,7 @@ public readonly record struct Buyer : IToMutable<Mut.Buyer>
     }
 }
 
-public readonly record struct BuyerPostalAddress : IToMutable<Mut.BuyerPostalAddress>
+public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostalAddress>, IToMutable<Mut.BuyerPostalAddress>
 {
     // BT-50
     public required Text? BuyerAddressLine1 { get; init; }
@@ -390,6 +430,11 @@ public readonly record struct BuyerPostalAddress : IToMutable<Mut.BuyerPostalAdd
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code BuyerCountryCode { get; init; }
 
+    public static BuyerPostalAddress Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.BuyerPostalAddress ToMutable()
     {
         return new Mut.BuyerPostalAddress
@@ -405,7 +450,7 @@ public readonly record struct BuyerPostalAddress : IToMutable<Mut.BuyerPostalAdd
     }
 }
 
-public readonly record struct BuyerContact : IToMutable<Mut.BuyerContact>
+public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>, IToMutable<Mut.BuyerContact>
 {
     // BT-56
     public required Text? ContactPoint { get; init; }
@@ -415,6 +460,11 @@ public readonly record struct BuyerContact : IToMutable<Mut.BuyerContact>
 
     // BT-58
     public required Text? EmailAddress { get; init; }
+
+    public static BuyerContact Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.BuyerContact ToMutable()
     {
@@ -427,7 +477,7 @@ public readonly record struct BuyerContact : IToMutable<Mut.BuyerContact>
     }
 }
 
-public readonly record struct Payee : IToMutable<Mut.Payee>
+public readonly record struct Payee : IIRDeserializable<Payee>, IToMutable<Mut.Payee>
 {
     // BT-59
     public required Text PayeeName { get; init; }
@@ -437,6 +487,11 @@ public readonly record struct Payee : IToMutable<Mut.Payee>
 
     // BT-61
     public required Identifier? PayeeLegalRegistrationIdentifier { get; init; }
+
+    public static Payee Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.Payee ToMutable()
     {
@@ -449,7 +504,7 @@ public readonly record struct Payee : IToMutable<Mut.Payee>
     }
 }
 
-public readonly record struct SellerTaxRepresentativeParty : IToMutable<Mut.SellerTaxRepresentativeParty>
+public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<SellerTaxRepresentativeParty>, IToMutable<Mut.SellerTaxRepresentativeParty>
 {
     // BT-62
     public required Text SellerTaxRepresentativeName { get; init; }
@@ -459,6 +514,11 @@ public readonly record struct SellerTaxRepresentativeParty : IToMutable<Mut.Sell
 
     // BG-12
     public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress { get; init; }
+
+    public static SellerTaxRepresentativeParty Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.SellerTaxRepresentativeParty ToMutable()
     {
@@ -471,7 +531,7 @@ public readonly record struct SellerTaxRepresentativeParty : IToMutable<Mut.Sell
     }
 }
 
-public readonly record struct SellerTaxRepresentativePostalAddress : IToMutable<Mut.SellerTaxRepresentativePostalAddress>
+public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserializable<SellerTaxRepresentativePostalAddress>, IToMutable<Mut.SellerTaxRepresentativePostalAddress>
 {
     // BT-64
     public required Text? TaxRepresentativeAddressLine1 { get; init; }
@@ -495,6 +555,11 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IToMutable<
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code TaxRepresentativeCountryCode { get; init; }
 
+    public static SellerTaxRepresentativePostalAddress Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.SellerTaxRepresentativePostalAddress ToMutable()
     {
         return new Mut.SellerTaxRepresentativePostalAddress
@@ -510,7 +575,7 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IToMutable<
     }
 }
 
-public readonly record struct DeliveryInformation : IToMutable<Mut.DeliveryInformation>
+public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryInformation>, IToMutable<Mut.DeliveryInformation>
 {
     // BT-70
     public required Text? DeliverToPartyName { get; init; }
@@ -527,6 +592,11 @@ public readonly record struct DeliveryInformation : IToMutable<Mut.DeliveryInfor
     // BG-15
     public required DeliverToAddress? DeliverToAddress { get; init; }
 
+    public static DeliveryInformation Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.DeliveryInformation ToMutable()
     {
         return new Mut.DeliveryInformation
@@ -540,13 +610,18 @@ public readonly record struct DeliveryInformation : IToMutable<Mut.DeliveryInfor
     }
 }
 
-public readonly record struct InvoicingPeriod : IToMutable<Mut.InvoicingPeriod>
+public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPeriod>, IToMutable<Mut.InvoicingPeriod>
 {
     // BT-73
     public required Date? InvoicingPeriodStartDate { get; init; }
 
     // BT-74
     public required Date? InvoicingPeriodEndDate { get; init; }
+
+    public static InvoicingPeriod Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.InvoicingPeriod ToMutable()
     {
@@ -558,7 +633,7 @@ public readonly record struct InvoicingPeriod : IToMutable<Mut.InvoicingPeriod>
     }
 }
 
-public readonly record struct DeliverToAddress : IToMutable<Mut.DeliverToAddress>
+public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddress>, IToMutable<Mut.DeliverToAddress>
 {
     // BT-75
     public required Text? DeliverToAddressLine1 { get; init; }
@@ -582,6 +657,11 @@ public readonly record struct DeliverToAddress : IToMutable<Mut.DeliverToAddress
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code DeliverToCountryCode { get; init; }
 
+    public static DeliverToAddress Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.DeliverToAddress ToMutable()
     {
         return new Mut.DeliverToAddress
@@ -597,7 +677,7 @@ public readonly record struct DeliverToAddress : IToMutable<Mut.DeliverToAddress
     }
 }
 
-public readonly record struct PaymentInstructions : IToMutable<Mut.PaymentInstructions>
+public readonly record struct PaymentInstructions : IIRDeserializable<PaymentInstructions>, IToMutable<Mut.PaymentInstructions>
 {
     // BT-81
     // UNTDID-4461
@@ -618,6 +698,11 @@ public readonly record struct PaymentInstructions : IToMutable<Mut.PaymentInstru
     // BG-19
     public required DirectDebit? DirectDebit { get; init; }
 
+    public static PaymentInstructions Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.PaymentInstructions ToMutable()
     {
         return new Mut.PaymentInstructions
@@ -632,7 +717,7 @@ public readonly record struct PaymentInstructions : IToMutable<Mut.PaymentInstru
     }
 }
 
-public readonly record struct CreditTransfer : IToMutable<Mut.CreditTransfer>
+public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>, IToMutable<Mut.CreditTransfer>
 {
     // BT-84
     public required Identifier PaymentAccountIdentifier { get; init; }
@@ -642,6 +727,11 @@ public readonly record struct CreditTransfer : IToMutable<Mut.CreditTransfer>
 
     // BT-86
     public required Identifier? PaymentServiceProviderIdentifier { get; init; }
+
+    public static CreditTransfer Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.CreditTransfer ToMutable()
     {
@@ -654,13 +744,18 @@ public readonly record struct CreditTransfer : IToMutable<Mut.CreditTransfer>
     }
 }
 
-public readonly record struct PaymentCardInformation : IToMutable<Mut.PaymentCardInformation>
+public readonly record struct PaymentCardInformation : IIRDeserializable<PaymentCardInformation>, IToMutable<Mut.PaymentCardInformation>
 {
     // BT-87
     public required Text PaymentCardPrimaryAccountNumber { get; init; }
 
     // BT-88
     public required Text? PaymentCardHolderName { get; init; }
+
+    public static PaymentCardInformation Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.PaymentCardInformation ToMutable()
     {
@@ -672,7 +767,7 @@ public readonly record struct PaymentCardInformation : IToMutable<Mut.PaymentCar
     }
 }
 
-public readonly record struct DirectDebit : IToMutable<Mut.DirectDebit>
+public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>, IToMutable<Mut.DirectDebit>
 {
     // BT-89
     public required Identifier MandateReferenceIdentifier { get; init; }
@@ -682,6 +777,11 @@ public readonly record struct DirectDebit : IToMutable<Mut.DirectDebit>
 
     // BT-91
     public required Identifier DebitedAccountIdentifier { get; init; }
+
+    public static DirectDebit Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.DirectDebit ToMutable()
     {
@@ -694,7 +794,7 @@ public readonly record struct DirectDebit : IToMutable<Mut.DirectDebit>
     }
 }
 
-public readonly record struct DocumentLevelAllowance : IToMutable<Mut.DocumentLevelAllowance>
+public readonly record struct DocumentLevelAllowance : IIRDeserializable<DocumentLevelAllowance>, IToMutable<Mut.DocumentLevelAllowance>
 {
     // BT-92
     public required Amount DocumentLevelAllowanceAmount { get; init; }
@@ -717,6 +817,11 @@ public readonly record struct DocumentLevelAllowance : IToMutable<Mut.DocumentLe
     // BT-98
     public required Code? DocumentLevelAllowanceReasonCode { get; init; }
 
+    public static DocumentLevelAllowance Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.DocumentLevelAllowance ToMutable()
     {
         return new Mut.DocumentLevelAllowance
@@ -732,7 +837,7 @@ public readonly record struct DocumentLevelAllowance : IToMutable<Mut.DocumentLe
     }
 }
 
-public readonly record struct DocumentLevelCharge : IToMutable<Mut.DocumentLevelCharge>
+public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLevelCharge>, IToMutable<Mut.DocumentLevelCharge>
 {
     // BT-99
     public required Amount DocumentLevelChargeAmount { get; init; }
@@ -755,6 +860,11 @@ public readonly record struct DocumentLevelCharge : IToMutable<Mut.DocumentLevel
     // BT-105
     public required Code? DocumentLevelChargeReasonCode { get; init; }
 
+    public static DocumentLevelCharge Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.DocumentLevelCharge ToMutable()
     {
         return new Mut.DocumentLevelCharge
@@ -770,7 +880,7 @@ public readonly record struct DocumentLevelCharge : IToMutable<Mut.DocumentLevel
     }
 }
 
-public readonly record struct DocumentTotals : IToMutable<Mut.DocumentTotals>
+public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>, IToMutable<Mut.DocumentTotals>
 {
     // BT-106
     public required Amount SumOfInvoiceLineNetAmount { get; init; }
@@ -802,6 +912,11 @@ public readonly record struct DocumentTotals : IToMutable<Mut.DocumentTotals>
     // BT-115
     public required Amount AmountDueForPayment { get; init; }
 
+    public static DocumentTotals Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.DocumentTotals ToMutable()
     {
         return new Mut.DocumentTotals
@@ -820,7 +935,7 @@ public readonly record struct DocumentTotals : IToMutable<Mut.DocumentTotals>
     }
 }
 
-public readonly record struct VatBreakdown : IToMutable<Mut.VatBreakdown>
+public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>, IToMutable<Mut.VatBreakdown>
 {
     // BT-116
     public required Amount VatCategoryTaxableAmount { get; init; }
@@ -842,6 +957,11 @@ public readonly record struct VatBreakdown : IToMutable<Mut.VatBreakdown>
     // VATEX Vat exemption reason code list
     public required Code? VatExemptionReasonCode { get; init; }
 
+    public static VatBreakdown Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Mut.VatBreakdown ToMutable()
     {
         return new Mut.VatBreakdown
@@ -856,7 +976,7 @@ public readonly record struct VatBreakdown : IToMutable<Mut.VatBreakdown>
     }
 }
 
-public readonly record struct AdditionalSupportingDocument : IToMutable<Mut.AdditionalSupportingDocument>
+public readonly record struct AdditionalSupportingDocument : IIRDeserializable<AdditionalSupportingDocument>, IToMutable<Mut.AdditionalSupportingDocument>
 {
     // BT-122
     public required DocumentReference SupportingDocumentReference { get; init; }
@@ -869,6 +989,11 @@ public readonly record struct AdditionalSupportingDocument : IToMutable<Mut.Addi
 
     // BT-125
     public required BinaryObject? AttachedDocument { get; init; }
+
+    public static AdditionalSupportingDocument Deserialize(XmlReader reader)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public Mut.AdditionalSupportingDocument ToMutable()
     {
