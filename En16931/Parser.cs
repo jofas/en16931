@@ -92,7 +92,7 @@ public class Parser
         return invoice;
     }
 
-    private XmlDocument ParseFileToIR(string filepath)
+    internal XmlDocument ParseFileToIR(string filepath)
     {
         using StreamReader reader = new(filepath);
 

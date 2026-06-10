@@ -1,7 +1,9 @@
+using System.Collections.Generic;
+using System.Xml;
 using En16931.Collections.Immutable;
+using En16931.IR;
 using En16931.Model.Conversions;
 using En16931.Model.Immutable.Primitives;
-
 using Mut = En16931.Model;
 
 namespace En16931.Model.Immutable;
@@ -1074,7 +1076,7 @@ public readonly record struct LineVatInformation : IToMutable<Mut.LineVatInforma
     }
 }
 
-public readonly record struct ItemInformation : IToMutable<Mut.ItemInformation>
+public readonly record struct ItemInformation : IIRDeserializable<ItemInformation>, IToMutable<Mut.ItemInformation>
 {
     // BT-153
     public required Text ItemName { get; init; }
@@ -1102,6 +1104,148 @@ public readonly record struct ItemInformation : IToMutable<Mut.ItemInformation>
     // BG-32
     public required Array<ItemAttribute> ItemAttributes { get; init; }
 
+    public static ItemInformation Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("item-information", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text itemName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? itemDescription = null;
+
+        if (reader.IsStartElement("item-description", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemDescription = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? itemSellersIdentifier = null;
+
+        if (reader.IsStartElement("item-sellers-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemSellersIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? itemBuyersIdentifier = null;
+
+        if (reader.IsStartElement("item-buyers-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemBuyersIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? itemStandardIdentifier = null;
+
+        if (reader.IsStartElement("item-standard-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemStandardIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<Identifier> itemClassificationIdentifiers = Array<Identifier>.Empty;
+
+        if (reader.IsStartElement("item-classification-identifiers", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<Identifier> builder = [];
+            while (reader.IsStartElement("item-classification-identifier", IRConfig.NS))
+            {
+                reader.ReadStartElement();
+                reader.MoveToContent();
+
+                builder.Add(Identifier.Deserialize(reader));
+
+                reader.ReadEndElement();
+                reader.MoveToContent();
+            }
+
+            itemClassificationIdentifiers = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? itemCountryOfOrigin = null;
+
+        if (reader.IsStartElement("item-country-of-origin", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemCountryOfOrigin = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+
+        Array<ItemAttribute> itemAttributes = Array<ItemAttribute>.Empty;
+
+        if (reader.IsStartElement("item-attributes", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<ItemAttribute> builder = [];
+            while (reader.IsStartElement("item-attribute", IRConfig.NS))
+            {
+                builder.Add(ItemAttribute.Deserialize(reader));
+            }
+
+            itemAttributes = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        System.Console.WriteLine(itemAttributes);
+        System.Console.WriteLine(reader.Name);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new ItemInformation
+        {
+            ItemName = itemName,
+            ItemDescription = itemDescription,
+            ItemSellersIdentifier = itemSellersIdentifier,
+            ItemBuyersIdentifier = itemBuyersIdentifier,
+            ItemStandardIdentifier = itemStandardIdentifier,
+            ItemClassificationIdentifiers = itemClassificationIdentifiers,
+            ItemCountryOfOrigin = itemCountryOfOrigin,
+            ItemAttributes = itemAttributes,
+        };
+    }
+
     public Mut.ItemInformation ToMutable()
     {
         return new Mut.ItemInformation
@@ -1118,13 +1262,44 @@ public readonly record struct ItemInformation : IToMutable<Mut.ItemInformation>
     }
 }
 
-public readonly record struct ItemAttribute : IToMutable<Mut.ItemAttribute>
+public readonly record struct ItemAttribute : IIRDeserializable<ItemAttribute>, IToMutable<Mut.ItemAttribute>
 {
     // BT-160
     public required Text ItemAttributeName { get; init; }
 
     // BT-161
     public required Text ItemAttributeValue { get; init; }
+
+    public static ItemAttribute Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("item-attribute", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-attribute-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text itemAttributeName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-attribute-value", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text itemAttributeValue = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new ItemAttribute
+        {
+            ItemAttributeName = itemAttributeName,
+            ItemAttributeValue = itemAttributeValue,
+        };
+    }
 
     public Mut.ItemAttribute ToMutable()
     {
