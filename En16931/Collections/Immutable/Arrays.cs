@@ -26,6 +26,9 @@ public readonly struct Array<T> : IEquatable<Array<T>>, IEnumerable<T> where T :
     }
 
     [SetsRequiredMembers]
+    public Array(ImmutableArray<T> v) => _values = v;
+
+    [SetsRequiredMembers]
     public Array(IEnumerable<T> v) => _values = ImmutableArray.CreateRange(v);
 
     public int Length => _values.Length;
@@ -104,6 +107,9 @@ public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>>, IEnumera
             field = value;
         }
     }
+
+    [SetsRequiredMembers]
+    public NonEmptyArray(ImmutableArray<T> v) => _values = v;
 
     [SetsRequiredMembers]
     public NonEmptyArray(IEnumerable<T> v) => _values = ImmutableArray.CreateRange(v);
