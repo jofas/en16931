@@ -17,7 +17,7 @@ public class Deserialize
         Blob content1 = new("hello world 1");
         Blob content2 = new("hello world 2");
 
-        string invoiceXml = $"""
+        string xml = $"""
             <?xml version="1.0" encoding="utf-16"?>
             <invoice xmlns="urn:todo">
               <invoice-number id="bt-1">
@@ -783,34 +783,259 @@ public class Deserialize
             ],
         };
 
-        using StringReader reader = new(invoiceXml);
+        using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
-        Invoice invoice = Invoice.Deserialize(xmlReader);
+        var actual = Invoice.Deserialize(xmlReader);
 
-        Assert.Equal(expected, invoice);
+        Assert.Equal(expected, actual);
     }
 
-    // TODO: TDD: test for types still left to do
-    //
-    // DeserializeInvoiceNote
-    // DeserializePrecedingInvoiceReference
-    // DserializeSeller
-    // DserializeBuyer
-    // DeserializePayee
-    // DeserializeSellerTaxRepresentativeParty
-    // DeserializePaymentInstructions
-    // DeserializeDocumentLevelAllowance
-    // DeserializeDocumentLevelCharge
-    // DeserializeDocumentTotals
-    // DeserializeVatBreakdown
+    // TODO: fill out test stubs
+    // TODO: implement interfaces
+
+    [Fact]
+    public void DeserializeInvoiceNote() {
+        string xml = """
+
+            """;
+
+        InvoiceNote expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = InvoiceNote.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializePrecedingInvoiceReference() {
+        string xml = """
+
+            """;
+
+        PrecedingInvoiceReference expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = PrecedingInvoiceReference.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializeSeller() {
+        string xml = """
+
+            """;
+
+        Seller expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = Seller.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializeBuyer() {
+        string xml = """
+
+            """;
+
+        Buyer expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = Buyer.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializePayee() {
+        string xml = """
+
+            """;
+
+        Payee expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = Payee.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializeSellerTaxRepresentativeParty() {
+        string xml = """
+
+            """;
+
+        SellerTaxRepresentativeParty expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = SellerTaxRepresentativeParty.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializePaymentInstructions() {
+        string xml = """
+
+            """;
+
+        PaymentInstructions expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = PaymentInstructions.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializeCreditTransfer() {
+        string xml = """
+
+            """;
+
+        CreditTransfer expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = CreditTransfer.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializePaymentCardInformation() {
+        string xml = """
+
+            """;
+
+        PaymentCardInformation expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = PaymentCardInformation.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializeDirectDebit() {
+        string xml = """
+
+            """;
+
+        DirectDebit expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = DirectDebit.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializeDocumentLevelAllowance() {
+        string xml = """
+
+            """;
+
+        DocumentLevelAllowance expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = DocumentLevelAllowance.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializeDocumentLevelCharge() {
+        string xml = """
+
+            """;
+
+        DocumentLevelCharge expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = DocumentLevelCharge.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializeDocumentTotals() {
+        string xml = """
+
+            """;
+
+        DocumentTotals expected = default;
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = DocumentTotals.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializeVatBreakdown() {
+        string xml = """
+            <vat-breakdown id="bg-23" xmlns="urn:todo">
+              <vat-category-taxable-amount id="bt-116">10781.25</vat-category-taxable-amount>
+              <vat-category-tax-amount id="bt-117">2048.44</vat-category-tax-amount>
+              <vat-category-code id="bt-118">S</vat-category-code>
+              <vat-category-rate id="bt-119">19</vat-category-rate>
+            </vat-breakdown>
+            """;
+
+        VatBreakdown expected = new VatBreakdown {
+            VatCategoryTaxableAmount = new Amount(10781.25m),
+            VatCategoryTaxAmount = new Amount(2048.44m),
+            VatCategoryCode = new Code("S"),
+            VatCategoryRate = new Percentage(19m),
+            VatExemptionReasonText = null,
+            VatExemptionReasonCode = null,
+        };
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = VatBreakdown.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
 
     [Fact]
     public void DeserializeAdditionalSupportingDocument()
     {
         Blob content = new("hello world");
 
-        string additionalSupportingDocumentXml = $"""
+        string xml = $"""
             <additional-supporting-document id="bg-24" xmlns="urn:todo">
               <supporting-document-reference id="bt-122">01_15_Anhang_01.pdf</supporting-document-reference>
               <supporting-document-description id="bt-123">Aufschlüsselung der einzelnen Leistungspositionen</supporting-document-description>
@@ -835,18 +1060,18 @@ public class Deserialize
             ),
         };
 
-        using StringReader reader = new(additionalSupportingDocumentXml);
+        using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
-        AdditionalSupportingDocument additionalSupportingDocument = AdditionalSupportingDocument.Deserialize(xmlReader);
+        var actual = AdditionalSupportingDocument.Deserialize(xmlReader);
 
-        Assert.Equal(expected, additionalSupportingDocument);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
     public void DeserializeInvoiceLine()
     {
-        string invoiceLineXml = """
+        string xml = """
             <invoice-line id="bg-25" xmlns="urn:todo">
               <invoice-line-identifier id="bt-126">
                 <content>1</content>
@@ -1033,18 +1258,18 @@ public class Deserialize
             },
         };
 
-        using StringReader reader = new(invoiceLineXml);
+        using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
-        InvoiceLine invoiceLine = InvoiceLine.Deserialize(xmlReader);
+        var actual = InvoiceLine.Deserialize(xmlReader);
 
-        Assert.Equal(expected, invoiceLine);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
     public void DeserializeItemInformation()
     {
-        string itemInformationXml = """
+        string xml = """
             <item-information id="bg-31" xmlns="urn:todo">
               <item-name id="bt-153">Beratung</item-name>
               <item-description id="bt-154">Anforderungsmanagement</item-description>
@@ -1108,12 +1333,12 @@ public class Deserialize
             ],
         };
 
-        using StringReader reader = new(itemInformationXml);
+        using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
-        ItemInformation itemInformation = ItemInformation.Deserialize(xmlReader);
+        var actual = ItemInformation.Deserialize(xmlReader);
 
-        Assert.Equal(expected, itemInformation);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
@@ -1121,7 +1346,7 @@ public class Deserialize
     {
         Blob content = new("hello world");
 
-        string binaryObjectXml = $"""
+        string xml = $"""
             <binary-object xmlns="urn:todo">
                 <content>{content.Base64Content}</content>
                 <mime-code>text/utf-8</mime-code>
@@ -1136,14 +1361,14 @@ public class Deserialize
             Filename = "hello.txt",
         };
 
-        using StringReader reader = new(binaryObjectXml);
+        using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
         xmlReader.ReadStartElement("binary-object");
         xmlReader.MoveToContent();
 
-        BinaryObject binaryObject = BinaryObject.Deserialize(xmlReader);
+        var actual = BinaryObject.Deserialize(xmlReader);
 
-        Assert.Equal(expected, binaryObject);
+        Assert.Equal(expected, actual);
     }
 }
