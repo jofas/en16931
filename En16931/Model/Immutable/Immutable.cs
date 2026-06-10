@@ -882,7 +882,7 @@ public readonly record struct AdditionalSupportingDocument : IToMutable<Mut.Addi
     }
 }
 
-public readonly record struct InvoiceLine : IToMutable<Mut.InvoiceLine>
+public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>, IToMutable<Mut.InvoiceLine>
 {
     // BT-126
     public required Identifier InvoiceLineIdentifier { get; init; }
@@ -926,6 +926,165 @@ public readonly record struct InvoiceLine : IToMutable<Mut.InvoiceLine>
     // BG-31
     public required ItemInformation ItemInformation { get; init; }
 
+    public static InvoiceLine Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("invoice-line", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier invoiceLineIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? invoiceLineNote = null;
+
+        if (reader.IsStartElement("invoice-line-note", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineNote = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? invoiceLineObjectIdentifier = null;
+
+        if (reader.IsStartElement("invoice-line-object-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineObjectIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoiced-quantity", IRConfig.NS);
+        reader.MoveToContent();
+
+        Quantity invoicedQuantity = Quantity.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoiced-quantity-unit-of-measure-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code invoicedQuantityUnitOfMeasureCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-net-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceLineNetAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        DocumentReference? referencedPurchaseOrderLineReference = null;
+
+        if (reader.IsStartElement("referenced-purchase-order-line-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            referencedPurchaseOrderLineReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? invoiceLineBuyerAccountingReference = null;
+
+        if (reader.IsStartElement("invoice-line-buyer-accounting-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineBuyerAccountingReference = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        InvoiceLinePeriod? invoiceLinePeriod = null;
+
+        if (reader.IsStartElement("invoice-line-period", IRConfig.NS))
+        {
+            invoiceLinePeriod = Immutable.InvoiceLinePeriod.Deserialize(reader);
+        }
+
+        Array<InvoiceLineAllowance> invoiceLineAllowances = Array<InvoiceLineAllowance>.Empty;
+
+        if (reader.IsStartElement("invoice-line-allowances", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<InvoiceLineAllowance> builder = [];
+            while (reader.IsStartElement("invoice-line-allowance", IRConfig.NS))
+            {
+                builder.Add(InvoiceLineAllowance.Deserialize(reader));
+            }
+
+            invoiceLineAllowances = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<InvoiceLineCharge> invoiceLineCharges = Array<InvoiceLineCharge>.Empty;
+
+        if (reader.IsStartElement("invoice-line-charges", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<InvoiceLineCharge> builder = [];
+            while (reader.IsStartElement("invoice-line-charge", IRConfig.NS))
+            {
+                builder.Add(InvoiceLineCharge.Deserialize(reader));
+            }
+
+            invoiceLineCharges = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        PriceDetails priceDetails = PriceDetails.Deserialize(reader);
+
+        LineVatInformation lineVatInformation = LineVatInformation.Deserialize(reader);
+
+        ItemInformation itemInformation = ItemInformation.Deserialize(reader);
+
+        return new InvoiceLine
+        {
+            InvoiceLineIdentifier = invoiceLineIdentifier,
+            InvoiceLineNote = invoiceLineNote,
+            InvoiceLineObjectIdentifier = invoiceLineObjectIdentifier,
+            InvoicedQuantity = invoicedQuantity,
+            InvoicedQuantityUnitOfMeasureCode = invoicedQuantityUnitOfMeasureCode,
+            InvoiceLineNetAmount = invoiceLineNetAmount,
+            ReferencedPurchaseOrderLineReference = referencedPurchaseOrderLineReference,
+            InvoiceLineBuyerAccountingReference = invoiceLineBuyerAccountingReference,
+            InvoiceLinePeriod = invoiceLinePeriod,
+            InvoiceLineAllowances = invoiceLineAllowances,
+            InvoiceLineCharges = invoiceLineCharges,
+            PriceDetails = priceDetails,
+            LineVatInformation = lineVatInformation,
+            ItemInformation = itemInformation,
+        };
+    }
+
     public Mut.InvoiceLine ToMutable()
     {
         return new Mut.InvoiceLine
@@ -948,13 +1107,54 @@ public readonly record struct InvoiceLine : IToMutable<Mut.InvoiceLine>
     }
 }
 
-public readonly record struct InvoiceLinePeriod : IToMutable<Mut.InvoiceLinePeriod>
+public readonly record struct InvoiceLinePeriod : IIRDeserializable<InvoiceLinePeriod>, IToMutable<Mut.InvoiceLinePeriod>
 {
     // BT-134
     public required Date? InvoiceLinePeriodStartDate { get; init; }
 
     // BT-135
     public required Date? InvoiceLinePeriodEndDate { get; init; }
+
+    public static InvoiceLinePeriod Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("invoice-line-period", IRConfig.NS);
+        reader.MoveToContent();
+
+        Date? invoiceLinePeriodStartDate = null;
+
+        if (reader.IsStartElement("invoice-line-period-start-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLinePeriodStartDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Date? invoiceLinePeriodEndDate = null;
+
+        if (reader.IsStartElement("invoice-line-period-end-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLinePeriodEndDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new InvoiceLinePeriod
+        {
+            InvoiceLinePeriodStartDate = invoiceLinePeriodStartDate,
+            InvoiceLinePeriodEndDate = invoiceLinePeriodEndDate,
+        };
+    }
 
     public Mut.InvoiceLinePeriod ToMutable()
     {
@@ -966,7 +1166,7 @@ public readonly record struct InvoiceLinePeriod : IToMutable<Mut.InvoiceLinePeri
     }
 }
 
-public readonly record struct InvoiceLineAllowance : IToMutable<Mut.InvoiceLineAllowance>
+public readonly record struct InvoiceLineAllowance : IIRDeserializable<InvoiceLineAllowance>, IToMutable<Mut.InvoiceLineAllowance>
 {
     // BT-136
     public required Amount InvoiceLineAllowanceAmount { get; init; }
@@ -983,6 +1183,84 @@ public readonly record struct InvoiceLineAllowance : IToMutable<Mut.InvoiceLineA
     // BT-140
     public required Code? InvoiceLineAllowanceReasonCode { get; init; }
 
+    public static InvoiceLineAllowance Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("invoice-line-allowance", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-allowance-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceLineAllowanceAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? invoiceLineAllowanceBaseAmount = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-base-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowanceBaseAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Percentage? invoiceLineAllowancePercentage = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-percentage", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowancePercentage = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? invoiceLineAllowanceReason = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-reason", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowanceReason = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? invoiceLineAllowanceReasonCode = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowanceReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new InvoiceLineAllowance
+        {
+            InvoiceLineAllowanceAmount = invoiceLineAllowanceAmount,
+            InvoiceLineAllowanceBaseAmount = invoiceLineAllowanceBaseAmount,
+            InvoiceLineAllowancePercentage = invoiceLineAllowancePercentage,
+            InvoiceLineAllowanceReason = invoiceLineAllowanceReason,
+            InvoiceLineAllowanceReasonCode = invoiceLineAllowanceReasonCode,
+        };
+    }
+
     public Mut.InvoiceLineAllowance ToMutable()
     {
         return new Mut.InvoiceLineAllowance
@@ -996,7 +1274,7 @@ public readonly record struct InvoiceLineAllowance : IToMutable<Mut.InvoiceLineA
     }
 }
 
-public readonly record struct InvoiceLineCharge : IToMutable<Mut.InvoiceLineCharge>
+public readonly record struct InvoiceLineCharge : IIRDeserializable<InvoiceLineCharge>, IToMutable<Mut.InvoiceLineCharge>
 {
     // BT-141
     public required Amount InvoiceLineChargeAmount { get; init; }
@@ -1013,6 +1291,84 @@ public readonly record struct InvoiceLineCharge : IToMutable<Mut.InvoiceLineChar
     // BT-145
     public required Code? InvoiceLineChargeReasonCode { get; init; }
 
+    public static InvoiceLineCharge Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("invoice-line-charge", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-charge-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceLineChargeAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? invoiceLineChargeBaseAmount = null;
+
+        if (reader.IsStartElement("invoice-line-charge-base-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargeBaseAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Percentage? invoiceLineChargePercentage = null;
+
+        if (reader.IsStartElement("invoice-line-charge-percentage", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargePercentage = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? invoiceLineChargeReason = null;
+
+        if (reader.IsStartElement("invoice-line-charge-reason", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargeReason = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? invoiceLineChargeReasonCode = null;
+
+        if (reader.IsStartElement("invoice-line-charge-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargeReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new InvoiceLineCharge
+        {
+            InvoiceLineChargeAmount = invoiceLineChargeAmount,
+            InvoiceLineChargeBaseAmount = invoiceLineChargeBaseAmount,
+            InvoiceLineChargePercentage = invoiceLineChargePercentage,
+            InvoiceLineChargeReason = invoiceLineChargeReason,
+            InvoiceLineChargeReasonCode = invoiceLineChargeReasonCode,
+        };
+    }
+
     public Mut.InvoiceLineCharge ToMutable()
     {
         return new Mut.InvoiceLineCharge
@@ -1026,7 +1382,7 @@ public readonly record struct InvoiceLineCharge : IToMutable<Mut.InvoiceLineChar
     }
 }
 
-public readonly record struct PriceDetails : IToMutable<Mut.PriceDetails>
+public readonly record struct PriceDetails : IIRDeserializable<PriceDetails>, IToMutable<Mut.PriceDetails>
 {
     // BT-146
     public required UnitPriceAmount ItemNetPrice { get; init; }
@@ -1044,6 +1400,84 @@ public readonly record struct PriceDetails : IToMutable<Mut.PriceDetails>
     // UN/ECE Rec No 20,21
     public required Code? ItemPriceBaseQuantityUnitOfMeasureCode { get; init; }
 
+    public static PriceDetails Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("price-details", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-net-price", IRConfig.NS);
+        reader.MoveToContent();
+
+        UnitPriceAmount itemNetPrice = UnitPriceAmount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        UnitPriceAmount? itemPriceDiscount = null;
+
+        if (reader.IsStartElement("item-price-discount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemPriceDiscount = UnitPriceAmount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        UnitPriceAmount? itemGrossPrice = null;
+
+        if (reader.IsStartElement("item-gross-price", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemGrossPrice = UnitPriceAmount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Quantity? itemPriceBaseQuantity = null;
+
+        if (reader.IsStartElement("item-price-base-quantity", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemPriceBaseQuantity = Quantity.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? itemPriceBaseQuantityUnitOfMeasureCode = null;
+
+        if (reader.IsStartElement("item-price-base-quantity-unit-of-measure-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemPriceBaseQuantityUnitOfMeasureCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new PriceDetails
+        {
+            ItemNetPrice = itemNetPrice,
+            ItemPriceDiscount = itemPriceDiscount,
+            ItemGrossPrice = itemGrossPrice,
+            ItemPriceBaseQuantity = itemPriceBaseQuantity,
+            ItemPriceBaseQuantityUnitOfMeasureCode = itemPriceBaseQuantityUnitOfMeasureCode,
+        };
+    }
+
     public Mut.PriceDetails ToMutable()
     {
         return new Mut.PriceDetails
@@ -1057,7 +1491,7 @@ public readonly record struct PriceDetails : IToMutable<Mut.PriceDetails>
     }
 }
 
-public readonly record struct LineVatInformation : IToMutable<Mut.LineVatInformation>
+public readonly record struct LineVatInformation : IIRDeserializable<LineVatInformation>, IToMutable<Mut.LineVatInformation>
 {
     // BT-151
     // UNTDID 5305
@@ -1065,6 +1499,42 @@ public readonly record struct LineVatInformation : IToMutable<Mut.LineVatInforma
 
     // BT-152
     public required Percentage? InvoicedItemVatRate { get; init; }
+
+    public static LineVatInformation Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("line-vat-information", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoiced-item-vat-category-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code invoicedItemVatCategoryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Percentage? invoicedItemVatRate = null;
+
+        if (reader.IsStartElement("invoiced-item-vat-rate", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoicedItemVatRate = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new LineVatInformation
+        {
+            InvoicedItemVatCategoryCode = invoicedItemVatCategoryCode,
+            InvoicedItemVatRate = invoicedItemVatRate,
+        };
+    }
 
     public Mut.LineVatInformation ToMutable()
     {
@@ -1207,7 +1677,6 @@ public readonly record struct ItemInformation : IIRDeserializable<ItemInformatio
             reader.MoveToContent();
         }
 
-
         Array<ItemAttribute> itemAttributes = Array<ItemAttribute>.Empty;
 
         if (reader.IsStartElement("item-attributes", IRConfig.NS))
@@ -1226,9 +1695,6 @@ public readonly record struct ItemInformation : IIRDeserializable<ItemInformatio
             reader.ReadEndElement();
             reader.MoveToContent();
         }
-
-        System.Console.WriteLine(itemAttributes);
-        System.Console.WriteLine(reader.Name);
 
         reader.ReadEndElement();
         reader.MoveToContent();
