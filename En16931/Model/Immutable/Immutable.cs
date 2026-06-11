@@ -819,7 +819,103 @@ public readonly record struct DocumentLevelAllowance : IIRDeserializable<Documen
 
     public static DocumentLevelAllowance Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("document-level-allowance", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("document-level-allowance-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount documentLevelAllowanceAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? documentLevelAllowanceBaseAmount = null;
+
+        if (reader.IsStartElement("document-level-allowance-base-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelAllowanceBaseAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Percentage? documentLevelAllowancePercentage = null;
+
+        if (reader.IsStartElement("document-level-allowance-percentage", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelAllowancePercentage = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("document-level-allowance-vat-category-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code documentLevelAllowanceVatCategoryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Percentage? documentLevelAllowanceVatRate = null;
+
+        if (reader.IsStartElement("document-level-allowance-vat-rate", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelAllowanceVatRate = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? documentLevelAllowanceReason = null;
+
+        if (reader.IsStartElement("document-level-allowance-reason", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelAllowanceReason = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? documentLevelAllowanceReasonCode = null;
+
+        if (reader.IsStartElement("document-level-allowance-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelAllowanceReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DocumentLevelAllowance
+        {
+            DocumentLevelAllowanceAmount = documentLevelAllowanceAmount,
+            DocumentLevelAllowanceBaseAmount = documentLevelAllowanceBaseAmount,
+            DocumentLevelAllowancePercentage = documentLevelAllowancePercentage,
+            DocumentLevelAllowanceVatCategoryCode = documentLevelAllowanceVatCategoryCode,
+            DocumentLevelAllowanceVatRate = documentLevelAllowanceVatRate,
+            DocumentLevelAllowanceReason = documentLevelAllowanceReason,
+            DocumentLevelAllowanceReasonCode = documentLevelAllowanceReasonCode,
+        };
     }
 
     public Mut.DocumentLevelAllowance ToMutable()
@@ -862,7 +958,103 @@ public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLe
 
     public static DocumentLevelCharge Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("document-level-charge", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("document-level-charge-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount documentLevelChargeAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? documentLevelChargeBaseAmount = null;
+
+        if (reader.IsStartElement("document-level-charge-base-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelChargeBaseAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Percentage? documentLevelChargePercentage = null;
+
+        if (reader.IsStartElement("document-level-charge-percentage", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelChargePercentage = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("document-level-charge-vat-category-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code documentLevelChargeVatCategoryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Percentage? documentLevelChargeVatRate = null;
+
+        if (reader.IsStartElement("document-level-charge-vat-rate", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelChargeVatRate = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? documentLevelChargeReason = null;
+
+        if (reader.IsStartElement("document-level-charge-reason", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelChargeReason = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? documentLevelChargeReasonCode = null;
+
+        if (reader.IsStartElement("document-level-charge-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelChargeReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DocumentLevelCharge
+        {
+            DocumentLevelChargeAmount = documentLevelChargeAmount,
+            DocumentLevelChargeBaseAmount = documentLevelChargeBaseAmount,
+            DocumentLevelChargePercentage = documentLevelChargePercentage,
+            DocumentLevelChargeVatCategoryCode = documentLevelChargeVatCategoryCode,
+            DocumentLevelChargeVatRate = documentLevelChargeVatRate,
+            DocumentLevelChargeReason = documentLevelChargeReason,
+            DocumentLevelChargeReasonCode = documentLevelChargeReasonCode,
+        };
     }
 
     public Mut.DocumentLevelCharge ToMutable()
@@ -914,7 +1106,136 @@ public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>
 
     public static DocumentTotals Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+
+        reader.ReadStartElement("document-totals", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("sum-of-invoice-line-net-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount sumOfInvoiceLineNetAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? sumOfAllowancesOnDocumentLevel = null;
+
+        if (reader.IsStartElement("sum-of-allowances-on-document-level", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sumOfAllowancesOnDocumentLevel = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Amount? sumOfChargesOnDocumentLevel = null;
+
+        if (reader.IsStartElement("sum-of-charges-on-document-level", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sumOfChargesOnDocumentLevel = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoice-total-amount-without-vat", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceTotalAmountWithoutVat = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? invoiceTotalVatAmount = null;
+
+        if (reader.IsStartElement("invoice-total-vat-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceTotalVatAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Amount? invoiceTotalVatAmountInAccountingCurrency = null;
+
+        if (reader.IsStartElement("invoice-total-vat-amount-in-accounting-currency", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceTotalVatAmountInAccountingCurrency = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoice-total-amount-with-vat", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceTotalAmountWithVat = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? paidAmount = null;
+
+        if (reader.IsStartElement("paid-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paidAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Amount? roundingAmount = null;
+
+        if (reader.IsStartElement("rounding-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            roundingAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("amount-due-for-payment", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount amountDueForPayment = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DocumentTotals
+        {
+            SumOfInvoiceLineNetAmount = sumOfInvoiceLineNetAmount,
+            SumOfAllowancesOnDocumentLevel = sumOfAllowancesOnDocumentLevel,
+            SumOfChargesOnDocumentLevel = sumOfChargesOnDocumentLevel,
+            InvoiceTotalAmountWithoutVat = invoiceTotalAmountWithoutVat,
+            InvoiceTotalVatAmount = invoiceTotalVatAmount,
+            InvoiceTotalVatAmountInAccountingCurrency = invoiceTotalVatAmountInAccountingCurrency,
+            InvoiceTotalAmountWithVat = invoiceTotalAmountWithVat,
+            PaidAmount = paidAmount,
+            RoundingAmount = roundingAmount,
+            AmountDueForPayment = amountDueForPayment,
+        };
     }
 
     public Mut.DocumentTotals ToMutable()
@@ -959,7 +1280,79 @@ public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>, IT
 
     public static VatBreakdown Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("vat-breakdown", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("vat-category-taxable-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount vatCategoryTaxableAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("vat-category-tax-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount vatCategoryTaxAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("vat-category-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code vatCategoryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("vat-category-rate", IRConfig.NS);
+        reader.MoveToContent();
+
+        Percentage vatCategoryRate = Percentage.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? vatExemptionReasonText = null;
+
+        if (reader.IsStartElement("vat-exemption-reason-text", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            vatExemptionReasonText = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? vatExemptionReasonCode = null;
+
+        if (reader.IsStartElement("vat-exemption-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            vatExemptionReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new VatBreakdown
+        {
+            VatCategoryTaxableAmount = vatCategoryTaxableAmount,
+            VatCategoryTaxAmount = vatCategoryTaxAmount,
+            VatCategoryCode = vatCategoryCode,
+            VatCategoryRate = vatCategoryRate,
+            VatExemptionReasonText = vatExemptionReasonText,
+            VatExemptionReasonCode = vatExemptionReasonCode,
+        };
     }
 
     public Mut.VatBreakdown ToMutable()
@@ -992,7 +1385,66 @@ public readonly record struct AdditionalSupportingDocument : IIRDeserializable<A
 
     public static AdditionalSupportingDocument Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("additional-supporting-document", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("supporting-document-reference", IRConfig.NS);
+        reader.MoveToContent();
+
+        DocumentReference supportingDocumentReference = DocumentReference.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? supportingDocumentDescription = null;
+
+        if (reader.IsStartElement("supporting-document-description", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            supportingDocumentDescription = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? externalDocumentLocation = null;
+
+        if (reader.IsStartElement("external-document-location", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            externalDocumentLocation = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        BinaryObject? attachedDocument = null;
+
+        if (reader.IsStartElement("attached-document", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            attachedDocument = BinaryObject.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new AdditionalSupportingDocument
+        {
+            SupportingDocumentReference = supportingDocumentReference,
+            SupportingDocumentDescription = supportingDocumentDescription,
+            ExternalDocumentLocation = externalDocumentLocation,
+            AttachedDocument = attachedDocument,
+        };
     }
 
     public Mut.AdditionalSupportingDocument ToMutable()
@@ -1190,6 +1642,9 @@ public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>, IToM
         LineVatInformation lineVatInformation = LineVatInformation.Deserialize(reader);
 
         ItemInformation itemInformation = ItemInformation.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
 
         return new InvoiceLine
         {
