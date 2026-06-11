@@ -5,10 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
-using System.Xml.Serialization;
+using En16931.Model;
 using Saxon.Api;
-using Im = En16931.Model.Immutable;
-using Mut = En16931.Model;
 
 namespace En16931;
 
@@ -17,8 +15,6 @@ public class Parser
     XmlNamespaceManager _namespaces;
 
     XmlSchemaSet _schemaSet;
-
-    XmlSerializer _invoiceSerializer;
 
     DocumentBuilder _docBuilder;
 
@@ -56,8 +52,6 @@ public class Parser
         _schemaSet.Add(w3XmlSigSchema);
         _schemaSet.Compile();
 
-        _invoiceSerializer = new XmlSerializer(typeof(Mut.Invoice));
-
         Processor processor = new Processor(false);
         processor.ErrorWriter = TextWriter.Null;
 
@@ -81,18 +75,18 @@ public class Parser
         _irTransformer = xsltCompiler.Compile(irUri);
     }
 
-    public Mut.Invoice ParseFile(string filepath)
+    public Invoice ParseFile(string filepath)
     {
         XmlDocument ir = ParseFileToIR(filepath);
 
-        XmlNodeReader reader = new(ir);
+        using XmlNodeReader reader = new(ir);
 
-        Mut.Invoice invoice = (Mut.Invoice)_invoiceSerializer.Deserialize(reader)!;
+        Invoice invoice = Invoice.Deserialize(reader);
 
         return invoice;
     }
 
-    private XmlDocument ParseFileToIR(string filepath)
+    internal XmlDocument ParseFileToIR(string filepath)
     {
         using StreamReader reader = new(filepath);
 

@@ -1,1665 +1,3487 @@
-using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-
-using En16931.Model.Conversions;
+using En16931.Collections.Immutable;
+using En16931.IR;
 using En16931.Model.Primitives;
-using En16931.Utils;
-
-using Im = En16931.Model.Immutable;
 
 namespace En16931.Model;
 
-[XmlRoot(ElementName = "invoice", Namespace = "urn:todo")]
-public class Invoice : IToImmutable<Im.Invoice>
+public readonly record struct Invoice : IIRDeserializable<Invoice>
 {
     // BT-1
-    [XmlElement(ElementName = "invoice-number")]
-    public required Identifier InvoiceNumber { get; set; }
+    public required Identifier InvoiceNumber { get; init; }
 
     // BT-2
-    [XmlElement(ElementName = "invoice-issue-date")]
-    public required Date InvoiceIssueDate { get; set; }
+    public required Date InvoiceIssueDate { get; init; }
 
     // BT-3
     // UNTDID 1001
-    [XmlElement(ElementName = "invoice-type-code")]
-    public required Code InvoiceTypeCode { get; set; }
+    public required Code InvoiceTypeCode { get; init; }
 
     // BT-5
     // ISO 4217 - Codes for the representation of currencies and funds - Alpha-3 representation
-    [XmlElement(ElementName = "invoice-currency-code")]
-    public required Code InvoiceCurrencyCode { get; set; }
+    public required Code InvoiceCurrencyCode { get; init; }
 
     // BT-6
     // ISO 4217 - Codes for the representation of currencies and funds - Alpha-3 representation
-    [XmlElement(ElementName = "vat-accounting-currency-code")]
-    public Code? VatAccountingCurrencyCode { get; set; }
+    public required Code? VatAccountingCurrencyCode { get; init; }
 
     // BT-7
-    [XmlElement(ElementName = "value-added-tax-point-date")]
-    public Date? ValueAddedTaxPointDate { get; set; }
+    public required Date? ValueAddedTaxPointDate { get; init; }
 
     // BT-8
     // UNTDID 2005
-    [XmlElement(ElementName = "value-added-tax-point-date-code")]
-    public Code? ValueAddedTaxPointDateCode { get; set; }
+    public required Code? ValueAddedTaxPointDateCode { get; init; }
 
     // BT-9
-    [XmlElement(ElementName = "payment-due-date")]
-    public Date? PaymentDueDate { get; set; }
+    public required Date? PaymentDueDate { get; init; }
 
     // BT-10
-    [XmlElement(ElementName = "buyer-reference")]
-    public required Text BuyerReference { get; set; }
+    public required Text BuyerReference { get; init; }
 
     // BT-11
-    [XmlElement(ElementName = "project-reference")]
-    public DocumentReference? ProjectReference { get; set; }
+    public required DocumentReference? ProjectReference { get; init; }
 
     // BT-12
-    [XmlElement(ElementName = "contract-reference")]
-    public DocumentReference? ContractReference { get; set; }
+    public required DocumentReference? ContractReference { get; init; }
 
     // BT-13
-    [XmlElement(ElementName = "purchase-order-reference")]
-    public DocumentReference? PurchaseOrderReference { get; set; }
+    public required DocumentReference? PurchaseOrderReference { get; init; }
 
     // BT-14
-    [XmlElement(ElementName = "sales-order-reference")]
-    public DocumentReference? SalesOrderReference { get; set; }
+    public required DocumentReference? SalesOrderReference { get; init; }
 
     // BT-15
-    [XmlElement(ElementName = "receiving-advice-reference")]
-    public DocumentReference? ReceivingAdviceReference { get; set; }
+    public required DocumentReference? ReceivingAdviceReference { get; init; }
 
     // BT-16
-    [XmlElement(ElementName = "despatch-advice-reference")]
-    public DocumentReference? DespatchAdviceReference { get; set; }
+    public required DocumentReference? DespatchAdviceReference { get; init; }
 
     // BT-17
-    [XmlElement(ElementName = "tender-or-lot-reference")]
-    public DocumentReference? TenderOrLotReference { get; set; }
+    public required DocumentReference? TenderOrLotReference { get; init; }
 
     // BT-18
-    [XmlElement(ElementName = "invoiced-object-identifier")]
-    public Identifier? InvoicedObjectIdentifier { get; set; }
+    public required Identifier? InvoicedObjectIdentifier { get; init; }
 
     // BT-19
-    [XmlElement(ElementName = "buyer-accounting-reference")]
-    public Text? BuyerAccountingReference { get; set; }
+    public required Text? BuyerAccountingReference { get; init; }
 
     // BT-20
-    [XmlElement(ElementName = "payment-terms")]
-    public Text? PaymentTerms { get; set; }
+    public required Text? PaymentTerms { get; init; }
 
     // BG-1
-    [XmlArray(ElementName = "invoice-notes")]
-    [XmlArrayItem(ElementName = "invoice-note")]
-    public InvoiceNote[] InvoiceNotes
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            Assert.ArgContainsNoNullValues(value, "InvoiceNotes can't contain null values");
-            field = value;
-        }
-    } = [];
+    public required Array<InvoiceNote> InvoiceNotes { get; init; }
 
     // BG-2
-    [XmlElement(ElementName = "process-control")]
-    public required ProcessControl ProcessControl
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required ProcessControl ProcessControl { get; init; }
 
     // BG-3
-    [XmlArray(ElementName = "preceding-invoice-references")]
-    [XmlArrayItem(ElementName = "preceding-invoice-reference")]
-    public PrecedingInvoiceReference[] PrecedingInvoiceReferences
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            Assert.ArgContainsNoNullValues(value, "PrecedingInvoiceReferences can't contain null values");
-            field = value;
-        }
-    } = [];
+    public required Array<PrecedingInvoiceReference> PrecedingInvoiceReferences { get; init; }
 
     // BG-4
-    [XmlElement(ElementName = "seller")]
-    public required Seller Seller
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required Seller Seller { get; init; }
 
     // BG-7
-    [XmlElement(ElementName = "buyer")]
-    public required Buyer Buyer
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required Buyer Buyer { get; init; }
 
     // BG-10
-    [XmlElement(ElementName = "payee")]
-    public Payee? Payee { get; set; }
+    public required Payee? Payee { get; init; }
 
     // BG-11
-    [XmlElement(ElementName = "seller-tax-representative-party")]
-    public SellerTaxRepresentativeParty? SellerTaxRepresentativeParty { get; set; }
+    public required SellerTaxRepresentativeParty? SellerTaxRepresentativeParty { get; init; }
 
     // BG-13
-    [XmlElement(ElementName = "delivery-information")]
-    public DeliveryInformation? DeliveryInformation { get; set; }
+    public required DeliveryInformation? DeliveryInformation { get; init; }
 
     // BG-16
-    [XmlElement(ElementName = "payment-instructions")]
-    public required PaymentInstructions PaymentInstructions
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required PaymentInstructions PaymentInstructions { get; init; }
 
     // BG-20
-    [XmlArray(ElementName = "document-level-allowances")]
-    [XmlArrayItem(ElementName = "document-level-allowance")]
-    public DocumentLevelAllowance[] DocumentLevelAllowances
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            Assert.ArgContainsNoNullValues(value, "DocumentLevelAllowances can't contain null values");
-            field = value;
-        }
-    } = [];
+    public required Array<DocumentLevelAllowance> DocumentLevelAllowances { get; init; }
 
     // BG-21
-    [XmlArray(ElementName = "document-level-charges")]
-    [XmlArrayItem(ElementName = "document-level-charge")]
-    public DocumentLevelCharge[] DocumentLevelCharges
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            Assert.ArgContainsNoNullValues(value, "DocumentLevelCharges can't contain null values");
-            field = value;
-        }
-    } = [];
+    public required Array<DocumentLevelCharge> DocumentLevelCharges { get; init; }
 
     // BG-22
-    [XmlElement(ElementName = "document-totals")]
-    public required DocumentTotals DocumentTotals
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required DocumentTotals DocumentTotals { get; init; }
 
     // BG-23
-    [XmlArray(ElementName = "vat-breakdown")]
-    [XmlArrayItem(ElementName = "vat-breakdown")]
-    public required VatBreakdown[] VatBreakdown
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            Assert.ArgIsNotEmpty(value, "VatBreakdown can't be empty");
-            Assert.ArgContainsNoNullValues(value, "VatBreakdown can't contain null values");
-            field = value;
-        }
-    }
+    public required NonEmptyArray<VatBreakdown> VatBreakdown { get; init; }
 
     // BG-24
-    [XmlArray(ElementName = "additional-supporting-documents")]
-    [XmlArrayItem(ElementName = "additional-supporting-document")]
-    public AdditionalSupportingDocument[] AdditionalSupportingDocuments
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            Assert.ArgContainsNoNullValues(value, "AdditionalSupportingDocuments can't contain null values");
-            field = value;
-        }
-    } = [];
+    public required Array<AdditionalSupportingDocument> AdditionalSupportingDocuments { get; init; }
 
     // BG-25
-    [XmlArray(ElementName = "invoice-lines")]
-    [XmlArrayItem(ElementName = "invoice-line")]
-    public required InvoiceLine[] InvoiceLines
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            Assert.ArgIsNotEmpty(value, "InvoiceLines can't be empty");
-            Assert.ArgContainsNoNullValues(value, "InvoiceLines can't contain null values");
-            field = value;
-        }
-    }
+    public required NonEmptyArray<InvoiceLine> InvoiceLines { get; init; }
 
-    public Im.Invoice ToImmutable()
+    public static Invoice Deserialize(XmlReader reader)
     {
-        return new Im.Invoice
+        reader.ReadStartElement("invoice", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-number", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier invoiceNumber = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-issue-date", IRConfig.NS);
+        reader.MoveToContent();
+
+        Date invoiceIssueDate = Date.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-type-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code invoiceTypeCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-currency-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code invoiceCurrencyCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Code? vatAccountingCurrencyCode = null;
+
+        if (reader.IsStartElement("vat-accounting-currency-code", IRConfig.NS))
         {
-            InvoiceNumber = InvoiceNumber.ToImmutable(),
-            InvoiceIssueDate = InvoiceIssueDate.ToImmutable(),
-            InvoiceTypeCode = InvoiceTypeCode.ToImmutable(),
-            InvoiceCurrencyCode = InvoiceCurrencyCode.ToImmutable(),
-            VatAccountingCurrencyCode = VatAccountingCurrencyCode?.ToImmutable(),
-            ValueAddedTaxPointDate = ValueAddedTaxPointDate?.ToImmutable(),
-            ValueAddedTaxPointDateCode = ValueAddedTaxPointDateCode?.ToImmutable(),
-            PaymentDueDate = PaymentDueDate?.ToImmutable(),
-            BuyerReference = BuyerReference.ToImmutable(),
-            ProjectReference = ProjectReference?.ToImmutable(),
-            ContractReference = ContractReference?.ToImmutable(),
-            PurchaseOrderReference = PurchaseOrderReference?.ToImmutable(),
-            SalesOrderReference = SalesOrderReference?.ToImmutable(),
-            ReceivingAdviceReference = ReceivingAdviceReference?.ToImmutable(),
-            DespatchAdviceReference = DespatchAdviceReference?.ToImmutable(),
-            TenderOrLotReference = TenderOrLotReference?.ToImmutable(),
-            InvoicedObjectIdentifier = InvoicedObjectIdentifier?.ToImmutable(),
-            BuyerAccountingReference = BuyerAccountingReference?.ToImmutable(),
-            PaymentTerms = PaymentTerms?.ToImmutable(),
-            InvoiceNotes = InvoiceNotes.ToImmutable<InvoiceNote, Im.InvoiceNote>(),
-            ProcessControl = ProcessControl.ToImmutable(),
-            PrecedingInvoiceReferences = PrecedingInvoiceReferences.ToImmutable<PrecedingInvoiceReference, Im.PrecedingInvoiceReference>(),
-            Seller = Seller.ToImmutable(),
-            Buyer = Buyer.ToImmutable(),
-            Payee = Payee?.ToImmutable(),
-            SellerTaxRepresentativeParty = SellerTaxRepresentativeParty?.ToImmutable(),
-            DeliveryInformation = DeliveryInformation?.ToImmutable(),
-            PaymentInstructions = PaymentInstructions.ToImmutable(),
-            DocumentLevelAllowances = DocumentLevelAllowances.ToImmutable<DocumentLevelAllowance, Im.DocumentLevelAllowance>(),
-            DocumentLevelCharges = DocumentLevelCharges.ToImmutable<DocumentLevelCharge, Im.DocumentLevelCharge>(),
-            DocumentTotals = DocumentTotals.ToImmutable(),
-            VatBreakdown = VatBreakdown.ToNonEmptyImmutable<VatBreakdown, Im.VatBreakdown>(),
-            AdditionalSupportingDocuments = AdditionalSupportingDocuments.ToImmutable<AdditionalSupportingDocument, Im.AdditionalSupportingDocument>(),
-            InvoiceLines = InvoiceLines.ToNonEmptyImmutable<InvoiceLine, Im.InvoiceLine>(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            vatAccountingCurrencyCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Date? valueAddedTaxPointDate = null;
+
+        if (reader.IsStartElement("value-added-tax-point-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            valueAddedTaxPointDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? valueAddedTaxPointDateCode = null;
+
+        if (reader.IsStartElement("value-added-tax-point-date-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            valueAddedTaxPointDateCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Date? paymentDueDate = null;
+
+        if (reader.IsStartElement("payment-due-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentDueDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("buyer-reference", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text buyerReference = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        DocumentReference? projectReference = null;
+
+        if (reader.IsStartElement("project-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            projectReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? contractReference = null;
+
+        if (reader.IsStartElement("contract-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            contractReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? purchaseOrderReference = null;
+
+        if (reader.IsStartElement("purchase-order-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            purchaseOrderReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? salesOrderReference = null;
+
+        if (reader.IsStartElement("sales-order-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            salesOrderReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? receivingAdviceReference = null;
+
+        if (reader.IsStartElement("receiving-advice-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            receivingAdviceReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? despatchAdviceReference = null;
+
+        if (reader.IsStartElement("despatch-advice-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            despatchAdviceReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? tenderOrLotReference = null;
+
+        if (reader.IsStartElement("tender-or-lot-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            tenderOrLotReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? invoicedObjectIdentifier = null;
+
+        if (reader.IsStartElement("invoiced-object-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoicedObjectIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? buyerAccountingReference = null;
+
+        if (reader.IsStartElement("buyer-accounting-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerAccountingReference = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? paymentTerms = null;
+
+        if (reader.IsStartElement("payment-terms", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentTerms = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<InvoiceNote> invoiceNotes = Array<InvoiceNote>.Empty;
+
+        if (reader.IsStartElement("invoice-notes", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<InvoiceNote> invoiceNotesBuilder = [];
+            while (reader.IsStartElement("invoice-note", IRConfig.NS))
+            {
+                invoiceNotesBuilder.Add(InvoiceNote.Deserialize(reader));
+            }
+
+            invoiceNotes = new(invoiceNotesBuilder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        ProcessControl processControl = ProcessControl.Deserialize(reader);
+
+        Array<PrecedingInvoiceReference> precedingInvoiceReferences = Array<PrecedingInvoiceReference>.Empty;
+
+        if (reader.IsStartElement("preceding-invoice-references", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<PrecedingInvoiceReference> precedingInvoiceReferencesBuilder = [];
+            while (reader.IsStartElement("preceding-invoice-reference", IRConfig.NS))
+            {
+                precedingInvoiceReferencesBuilder.Add(PrecedingInvoiceReference.Deserialize(reader));
+            }
+
+            precedingInvoiceReferences = new(precedingInvoiceReferencesBuilder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Seller seller = Seller.Deserialize(reader);
+
+        Buyer buyer = Buyer.Deserialize(reader);
+
+        Payee? payee = null;
+
+        if (reader.IsStartElement("payee", IRConfig.NS))
+        {
+            payee = Model.Payee.Deserialize(reader);
+        }
+
+        SellerTaxRepresentativeParty? sellerTaxRepresentativeParty = null;
+
+        if (reader.IsStartElement("seller-tax-representative-party", IRConfig.NS))
+        {
+            sellerTaxRepresentativeParty = Model.SellerTaxRepresentativeParty.Deserialize(reader);
+        }
+
+        DeliveryInformation? deliveryInformation = null;
+
+        if (reader.IsStartElement("delivery-information", IRConfig.NS))
+        {
+            deliveryInformation = Model.DeliveryInformation.Deserialize(reader);
+        }
+
+        PaymentInstructions paymentInstructions = PaymentInstructions.Deserialize(reader);
+
+        Array<DocumentLevelAllowance> documentLevelAllowances = Array<DocumentLevelAllowance>.Empty;
+
+        if (reader.IsStartElement("document-level-allowances", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<DocumentLevelAllowance> documentLevelAllowancesBuilder = [];
+            while (reader.IsStartElement("document-level-allowance", IRConfig.NS))
+            {
+                documentLevelAllowancesBuilder.Add(DocumentLevelAllowance.Deserialize(reader));
+            }
+
+            documentLevelAllowances = new(documentLevelAllowancesBuilder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<DocumentLevelCharge> documentLevelCharges = Array<DocumentLevelCharge>.Empty;
+
+        if (reader.IsStartElement("document-level-charges", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<DocumentLevelCharge> documentLevelChargesBuilder = [];
+            while (reader.IsStartElement("document-level-charge", IRConfig.NS))
+            {
+                documentLevelChargesBuilder.Add(DocumentLevelCharge.Deserialize(reader));
+            }
+
+            documentLevelCharges = new(documentLevelChargesBuilder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentTotals documentTotals = DocumentTotals.Deserialize(reader);
+
+        reader.ReadStartElement("vat-breakdown", IRConfig.NS);
+        reader.MoveToContent();
+
+        List<VatBreakdown> vatBreadownBuilder = [];
+        while (reader.IsStartElement("vat-breakdown", IRConfig.NS))
+        {
+            vatBreadownBuilder.Add(Model.VatBreakdown.Deserialize(reader));
+        }
+
+        NonEmptyArray<VatBreakdown> vatBreakdown = new(vatBreadownBuilder);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Array<AdditionalSupportingDocument> additionalSupportingDocuments = Array<AdditionalSupportingDocument>.Empty;
+
+        if (reader.IsStartElement("additional-supporting-documents", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<AdditionalSupportingDocument> additionalSupportingDocumentsBuilder = [];
+            while (reader.IsStartElement("additional-supporting-document", IRConfig.NS))
+            {
+                additionalSupportingDocumentsBuilder.Add(AdditionalSupportingDocument.Deserialize(reader));
+            }
+
+            additionalSupportingDocuments = new(additionalSupportingDocumentsBuilder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoice-lines", IRConfig.NS);
+        reader.MoveToContent();
+
+        List<InvoiceLine> invoiceLinesBuilder = [];
+        while (reader.IsStartElement("invoice-line", IRConfig.NS))
+        {
+            invoiceLinesBuilder.Add(InvoiceLine.Deserialize(reader));
+        }
+
+        NonEmptyArray<InvoiceLine> invoiceLines = new(invoiceLinesBuilder);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new Invoice
+        {
+            InvoiceNumber = invoiceNumber,
+            InvoiceIssueDate = invoiceIssueDate,
+            InvoiceTypeCode = invoiceTypeCode,
+            InvoiceCurrencyCode = invoiceCurrencyCode,
+            VatAccountingCurrencyCode = vatAccountingCurrencyCode,
+            ValueAddedTaxPointDate = valueAddedTaxPointDate,
+            ValueAddedTaxPointDateCode = valueAddedTaxPointDateCode,
+            PaymentDueDate = paymentDueDate,
+            BuyerReference = buyerReference,
+            ProjectReference = projectReference,
+            ContractReference = contractReference,
+            PurchaseOrderReference = purchaseOrderReference,
+            SalesOrderReference = salesOrderReference,
+            ReceivingAdviceReference = receivingAdviceReference,
+            DespatchAdviceReference = despatchAdviceReference,
+            TenderOrLotReference = tenderOrLotReference,
+            InvoicedObjectIdentifier = invoicedObjectIdentifier,
+            BuyerAccountingReference = buyerAccountingReference,
+            PaymentTerms = paymentTerms,
+            InvoiceNotes = invoiceNotes,
+            ProcessControl = processControl,
+            PrecedingInvoiceReferences = precedingInvoiceReferences,
+            Seller = seller,
+            Buyer = buyer,
+            Payee = payee,
+            SellerTaxRepresentativeParty = sellerTaxRepresentativeParty,
+            DeliveryInformation = deliveryInformation,
+            PaymentInstructions = paymentInstructions,
+            DocumentLevelAllowances = documentLevelAllowances,
+            DocumentLevelCharges = documentLevelCharges,
+            DocumentTotals = documentTotals,
+            VatBreakdown = vatBreakdown,
+            AdditionalSupportingDocuments = additionalSupportingDocuments,
+            InvoiceLines = invoiceLines,
         };
     }
 }
 
-public class InvoiceNote : IToImmutable<Im.InvoiceNote>
+public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>
 {
     // BT-21
-    [XmlElement(ElementName = "invoice-note-subject-code")]
-    public Code? InvoiceNoteSubjectCode { get; set; }
+    public required Code? InvoiceNoteSubjectCode { get; init; }
 
     // BT-22
-    [XmlElement(ElementName = "invoice-note")]
-    public required Text Note { get; set; }
+    public required Text Note { get; init; }
 
-    public Im.InvoiceNote ToImmutable()
+    public static InvoiceNote Deserialize(XmlReader reader)
     {
-        return new Im.InvoiceNote
+        reader.ReadStartElement("invoice-note", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code? invoiceNoteSubjectCode = null;
+
+        if (reader.IsStartElement("invoice-note-subject-code", IRConfig.NS))
         {
-            InvoiceNoteSubjectCode = InvoiceNoteSubjectCode?.ToImmutable(),
-            Note = Note.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceNoteSubjectCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoice-note", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text note = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new InvoiceNote
+        {
+            InvoiceNoteSubjectCode = invoiceNoteSubjectCode,
+            Note = note,
         };
     }
 }
 
-public class ProcessControl : IToImmutable<Im.ProcessControl>
+public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>
 {
     // BT-23
-    [XmlElement(ElementName = "business-process-type")]
-    public required Text BusinessProcessType { get; set; }
+    public required Text BusinessProcessType { get; init; }
 
     // BT-24
-    [XmlElement(ElementName = "specification-identifier")]
-    public required Identifier SpecificationIdentifier { get; set; }
+    public required Identifier SpecificationIdentifier { get; init; }
 
-    public Im.ProcessControl ToImmutable()
+    public static ProcessControl Deserialize(XmlReader reader)
     {
-        return new Im.ProcessControl
+        reader.ReadStartElement("process-control", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("business-process-type", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text businessProcessType = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("specification-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier specificationIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new ProcessControl
         {
-            BusinessProcessType = BusinessProcessType.ToImmutable(),
-            SpecificationIdentifier = SpecificationIdentifier.ToImmutable(),
+            BusinessProcessType = businessProcessType,
+            SpecificationIdentifier = specificationIdentifier,
         };
     }
 }
 
-public class PrecedingInvoiceReference : IToImmutable<Im.PrecedingInvoiceReference>
+public readonly record struct PrecedingInvoiceReference : IIRDeserializable<PrecedingInvoiceReference>
 {
     // BT-25
-    [XmlElement(ElementName = "preceding-invoice-reference")]
-    public required DocumentReference Reference { get; set; }
+    public required DocumentReference Reference { get; init; }
 
     // BT-26
-    [XmlElement(ElementName = "preceding-invoice-issue-date")]
-    public Date? PrecedingInvoiceIssueDate { get; set; }
+    public required Date? PrecedingInvoiceIssueDate { get; init; }
 
-    public Im.PrecedingInvoiceReference ToImmutable()
+    public static PrecedingInvoiceReference Deserialize(XmlReader reader)
     {
-        return new Im.PrecedingInvoiceReference
+        reader.ReadStartElement("preceding-invoice-reference", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("preceding-invoice-reference", IRConfig.NS);
+        reader.MoveToContent();
+
+        DocumentReference reference = DocumentReference.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Date? precedingInvoiceIssueDate = null;
+
+        if (reader.IsStartElement("preceding-invoice-issue-date", IRConfig.NS))
         {
-            Reference = Reference.ToImmutable(),
-            PrecedingInvoiceIssueDate = PrecedingInvoiceIssueDate?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            precedingInvoiceIssueDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new PrecedingInvoiceReference
+        {
+            Reference = reference,
+            PrecedingInvoiceIssueDate = precedingInvoiceIssueDate,
         };
     }
 }
 
-public class Seller : IToImmutable<Im.Seller>
+public readonly record struct Seller : IIRDeserializable<Seller>
 {
     // BT-27
-    [XmlElement(ElementName = "seller-name")]
-    public required Text SellerName { get; set; }
+    public required Text SellerName { get; init; }
 
     // BT-28
-    [XmlElement(ElementName = "seller-trading-name")]
-    public Text? SellerTradingName { get; set; }
+    public required Text? SellerTradingName { get; init; }
 
     // BT-29
-    [XmlArray(ElementName = "seller-identifiers")]
-    [XmlArrayItem(ElementName = "seller-identifier")]
-    public Identifier[] SellerIdentifiers
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    } = [];
+    public required Array<Identifier> SellerIdentifiers { get; init; }
 
     // BT-30
-    [XmlElement(ElementName = "seller-legal-registration-identifier")]
-    public Identifier? SellerLegalRegistrationIdentifier { get; set; }
+    public required Identifier? SellerLegalRegistrationIdentifier { get; init; }
 
     // BT-31
-    [XmlElement(ElementName = "seller-vat-identifier")]
-    public Identifier? SellerVatIdentifier { get; set; }
+    public required Identifier? SellerVatIdentifier { get; init; }
 
     // BT-32
-    [XmlElement(ElementName = "seller-tax-registration-identifier")]
-    public Identifier? SellerTaxRegistrationIdentifier { get; set; }
+    public required Identifier? SellerTaxRegistrationIdentifier { get; init; }
 
     // BT-33
-    [XmlElement(ElementName = "seller-additional-legal-information")]
-    public Text? SellerAdditionalLegalInformation { get; set; }
+    public required Text? SellerAdditionalLegalInformation { get; init; }
 
     // BT-34
-    [XmlElement(ElementName = "seller-electronic-address")]
-    public required Identifier SellerElectronicAddress { get; set; }
+    public required Identifier SellerElectronicAddress { get; init; }
 
     // BG-5
-    [XmlElement(ElementName = "seller-postal-address")]
-    public required SellerPostalAddress SellerPostalAddress
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required SellerPostalAddress SellerPostalAddress { get; init; }
 
     // BG-6
-    [XmlElement(ElementName = "seller-contact")]
-    public required SellerContact SellerContact
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required SellerContact SellerContact { get; init; }
 
-    public Im.Seller ToImmutable()
+    public static Seller Deserialize(XmlReader reader)
     {
-        return new Im.Seller
+        reader.ReadStartElement("seller", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? sellerTradingName = null;
+
+        if (reader.IsStartElement("seller-trading-name", IRConfig.NS))
         {
-            SellerName = SellerName.ToImmutable(),
-            SellerTradingName = SellerTradingName?.ToImmutable(),
-            SellerIdentifiers = SellerIdentifiers.ToImmutable<Identifier, Im.Primitives.Identifier>(),
-            SellerLegalRegistrationIdentifier = SellerLegalRegistrationIdentifier?.ToImmutable(),
-            SellerVatIdentifier = SellerVatIdentifier?.ToImmutable(),
-            SellerTaxRegistrationIdentifier = SellerTaxRegistrationIdentifier?.ToImmutable(),
-            SellerAdditionalLegalInformation = SellerAdditionalLegalInformation?.ToImmutable(),
-            SellerElectronicAddress = SellerElectronicAddress.ToImmutable(),
-            SellerPostalAddress = SellerPostalAddress.ToImmutable(),
-            SellerContact = SellerContact.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerTradingName = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<Identifier> sellerIdentifiers = Array<Identifier>.Empty;
+
+        if (reader.IsStartElement("seller-identifiers", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<Identifier> builder = [];
+            while (reader.IsStartElement("seller-identifier", IRConfig.NS))
+            {
+                reader.ReadStartElement();
+                reader.MoveToContent();
+
+                builder.Add(Identifier.Deserialize(reader));
+
+                reader.ReadEndElement();
+                reader.MoveToContent();
+            }
+
+            sellerIdentifiers = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? sellerLegalRegistrationIdentifier = null;
+
+        if (reader.IsStartElement("seller-legal-registration-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerLegalRegistrationIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? sellerVatIdentifier = null;
+
+        if (reader.IsStartElement("seller-vat-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerVatIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? sellerTaxRegistrationIdentifier = null;
+
+        if (reader.IsStartElement("seller-tax-registration-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerTaxRegistrationIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? sellerAdditionalLegalInformation = null;
+
+        if (reader.IsStartElement("seller-additional-legal-information", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerAdditionalLegalInformation = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("seller-electronic-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier sellerElectronicAddress = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        SellerPostalAddress sellerPostalAddress = SellerPostalAddress.Deserialize(reader);
+
+        SellerContact sellerContact = SellerContact.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new Seller
+        {
+            SellerName = sellerName,
+            SellerTradingName = sellerTradingName,
+            SellerIdentifiers = sellerIdentifiers,
+            SellerLegalRegistrationIdentifier = sellerLegalRegistrationIdentifier,
+            SellerVatIdentifier = sellerVatIdentifier,
+            SellerTaxRegistrationIdentifier = sellerTaxRegistrationIdentifier,
+            SellerAdditionalLegalInformation = sellerAdditionalLegalInformation,
+            SellerElectronicAddress = sellerElectronicAddress,
+            SellerPostalAddress = sellerPostalAddress,
+            SellerContact = sellerContact,
         };
     }
 }
 
-public class SellerPostalAddress : IToImmutable<Im.SellerPostalAddress>
+public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPostalAddress>
 {
     // BT-35
-    [XmlElement(ElementName = "seller-address-line-1")]
-    public Text? SellerAddressLine1 { get; set; }
+    public required Text? SellerAddressLine1 { get; init; }
 
     // BT-36
-    [XmlElement(ElementName = "seller-address-line-2")]
-    public Text? SellerAddressLine2 { get; set; }
+    public required Text? SellerAddressLine2 { get; init; }
 
     // BT-162
-    [XmlElement(ElementName = "seller-address-line-3")]
-    public Text? SellerAddressLine3 { get; set; }
+    public required Text? SellerAddressLine3 { get; init; }
 
     // BT-37
-    [XmlElement(ElementName = "seller-city")]
-    public required Text SellerCity { get; set; }
+    public required Text SellerCity { get; init; }
 
     // BT-38
-    [XmlElement(ElementName = "seller-post-code")]
-    public required Text SellerPostCode { get; set; }
+    public required Text SellerPostCode { get; init; }
 
     // BT-39
-    [XmlElement(ElementName = "seller-country-subdivision")]
-    public Text? SellerCountrySubdivision { get; set; }
+    public required Text? SellerCountrySubdivision { get; init; }
 
     // BT-40
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
-    [XmlElement(ElementName = "seller-country-code")]
-    public required Code SellerCountryCode { get; set; }
+    public required Code SellerCountryCode { get; init; }
 
-    public Im.SellerPostalAddress ToImmutable()
+    public static SellerPostalAddress Deserialize(XmlReader reader)
     {
-        return new Im.SellerPostalAddress
+        reader.ReadStartElement("seller-postal-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? sellerAddressLine1 = null;
+
+        if (reader.IsStartElement("seller-address-line-1", IRConfig.NS))
         {
-            SellerAddressLine1 = SellerAddressLine1?.ToImmutable(),
-            SellerAddressLine2 = SellerAddressLine2?.ToImmutable(),
-            SellerAddressLine3 = SellerAddressLine3?.ToImmutable(),
-            SellerCity = SellerCity.ToImmutable(),
-            SellerPostCode = SellerPostCode.ToImmutable(),
-            SellerCountrySubdivision = SellerCountrySubdivision?.ToImmutable(),
-            SellerCountryCode = SellerCountryCode.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerAddressLine1 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? sellerAddressLine2 = null;
+
+        if (reader.IsStartElement("seller-address-line-2", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerAddressLine2 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? sellerAddressLine3 = null;
+
+        if (reader.IsStartElement("seller-address-line-3", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerAddressLine3 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("seller-city", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerCity = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-post-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerPostCode = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? sellerCountrySubdivision = null;
+
+        if (reader.IsStartElement("seller-country-subdivision", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerCountrySubdivision = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("seller-country-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code sellerCountryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new SellerPostalAddress
+        {
+            SellerAddressLine1 = sellerAddressLine1,
+            SellerAddressLine2 = sellerAddressLine2,
+            SellerAddressLine3 = sellerAddressLine3,
+            SellerCity = sellerCity,
+            SellerPostCode = sellerPostCode,
+            SellerCountrySubdivision = sellerCountrySubdivision,
+            SellerCountryCode = sellerCountryCode,
         };
     }
 }
 
-public class SellerContact : IToImmutable<Im.SellerContact>
+public readonly record struct SellerContact : IIRDeserializable<SellerContact>
 {
     // BT-41
-    [XmlElement(ElementName = "seller-contact-point")]
-    public required Text SellerContactPoint { get; set; }
+    public required Text SellerContactPoint { get; init; }
 
     // BT-42
-    [XmlElement(ElementName = "seller-contact-telephone-number")]
-    public required Text SellerContactTelephoneNumber { get; set; }
+    public required Text SellerContactTelephoneNumber { get; init; }
 
     // BT-43
-    [XmlElement(ElementName = "seller-contact-email-address")]
-    public required Text SellerContactEmailAddress { get; set; }
+    public required Text SellerContactEmailAddress { get; init; }
 
-    public Im.SellerContact ToImmutable()
+    public static SellerContact Deserialize(XmlReader reader)
     {
-        return new Im.SellerContact
+        reader.ReadStartElement("seller-contact", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-contact-point", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerContactPoint = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-contact-telephone-number", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerContactTelephoneNumber = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-contact-email-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerContactEmailAddress = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new SellerContact
         {
-            SellerContactPoint = SellerContactPoint.ToImmutable(),
-            SellerContactTelephoneNumber = SellerContactTelephoneNumber.ToImmutable(),
-            SellerContactEmailAddress = SellerContactEmailAddress.ToImmutable(),
+            SellerContactPoint = sellerContactPoint,
+            SellerContactTelephoneNumber = sellerContactTelephoneNumber,
+            SellerContactEmailAddress = sellerContactEmailAddress,
         };
     }
 }
 
-public class Buyer : IToImmutable<Im.Buyer>
+public readonly record struct Buyer : IIRDeserializable<Buyer>
 {
     // BT-44
-    [XmlElement(ElementName = "buyer-name")]
-    public required Text BuyerName { get; set; }
+    public required Text BuyerName { get; init; }
 
     // BT-45
-    [XmlElement(ElementName = "buyer-trading-name")]
-    public Text? BuyerTradingName { get; set; }
+    public required Text? BuyerTradingName { get; init; }
 
     // BT-46
-    [XmlElement(ElementName = "buyer-identifier")]
-    public Identifier? BuyerIdentifier { get; set; }
+    public required Identifier? BuyerIdentifier { get; init; }
 
     // BT-47
-    [XmlElement(ElementName = "buyer-legal-registration-identifier")]
-    public Identifier? BuyerLegalRegistrationIdentifier { get; set; }
+    public required Identifier? BuyerLegalRegistrationIdentifier { get; init; }
 
     // BT-48
-    [XmlElement(ElementName = "buyer-vat-identifier")]
-    public Identifier? BuyerVatIdentifier { get; set; }
+    public required Identifier? BuyerVatIdentifier { get; init; }
 
     // BT-49
-    [XmlElement(ElementName = "buyer-electronic-address")]
-    public Identifier? BuyerElectronicAddress { get; set; }
+    public required Identifier? BuyerElectronicAddress { get; init; }
 
     // BG-8
-    [XmlElement(ElementName = "buyer-postal-address")]
-    public required BuyerPostalAddress BuyerPostalAddress
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required BuyerPostalAddress BuyerPostalAddress { get; init; }
 
     // BG-9
-    [XmlElement(ElementName = "buyer-contact")]
-    public BuyerContact? BuyerContact { get; set; }
+    public required BuyerContact? BuyerContact { get; init; }
 
-    public Im.Buyer ToImmutable()
+    public static Buyer Deserialize(XmlReader reader)
     {
-        return new Im.Buyer
+        reader.ReadStartElement("buyer", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("buyer-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text buyerName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? buyerTradingName = null;
+
+        if (reader.IsStartElement("buyer-trading-name", IRConfig.NS))
         {
-            BuyerName = BuyerName.ToImmutable(),
-            BuyerTradingName = BuyerTradingName?.ToImmutable(),
-            BuyerIdentifier = BuyerIdentifier?.ToImmutable(),
-            BuyerLegalRegistrationIdentifier = BuyerLegalRegistrationIdentifier?.ToImmutable(),
-            BuyerVatIdentifier = BuyerVatIdentifier?.ToImmutable(),
-            BuyerElectronicAddress = BuyerElectronicAddress?.ToImmutable(),
-            BuyerPostalAddress = BuyerPostalAddress.ToImmutable(),
-            BuyerContact = BuyerContact?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerTradingName = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? buyerIdentifier = null;
+
+        if (reader.IsStartElement("buyer-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? buyerLegalRegistrationIdentifier = null;
+
+        if (reader.IsStartElement("buyer-legal-registration-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerLegalRegistrationIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? buyerVatIdentifier = null;
+
+        if (reader.IsStartElement("buyer-vat-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerVatIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? buyerElectronicAddress = null;
+
+        if (reader.IsStartElement("buyer-electronic-address", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerElectronicAddress = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        BuyerPostalAddress buyerPostalAddress = BuyerPostalAddress.Deserialize(reader);
+
+        BuyerContact? buyerContact = null;
+
+        if (reader.IsStartElement("buyer-contact", IRConfig.NS))
+        {
+            buyerContact = Model.BuyerContact.Deserialize(reader);
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new Buyer
+        {
+            BuyerName = buyerName,
+            BuyerTradingName = buyerTradingName,
+            BuyerIdentifier = buyerIdentifier,
+            BuyerLegalRegistrationIdentifier = buyerLegalRegistrationIdentifier,
+            BuyerVatIdentifier = buyerVatIdentifier,
+            BuyerElectronicAddress = buyerElectronicAddress,
+            BuyerPostalAddress = buyerPostalAddress,
+            BuyerContact = buyerContact,
         };
     }
 }
 
-public class BuyerPostalAddress : IToImmutable<Im.BuyerPostalAddress>
+public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostalAddress>
 {
     // BT-50
-    [XmlElement(ElementName = "buyer-address-line-1")]
-    public Text? BuyerAddressLine1 { get; set; }
+    public required Text? BuyerAddressLine1 { get; init; }
 
     // BT-51
-    [XmlElement(ElementName = "buyer-address-line-2")]
-    public Text? BuyerAddressLine2 { get; set; }
+    public required Text? BuyerAddressLine2 { get; init; }
 
     // BT-163
-    [XmlElement(ElementName = "buyer-address-line-3")]
-    public Text? BuyerAddressLine3 { get; set; }
+    public required Text? BuyerAddressLine3 { get; init; }
 
     // BT-52
-    [XmlElement(ElementName = "buyer-city")]
-    public required Text BuyerCity { get; set; }
+    public required Text BuyerCity { get; init; }
 
     // BT-53
-    [XmlElement(ElementName = "buyer-post-code")]
-    public required Text BuyerPostCode { get; set; }
+    public required Text BuyerPostCode { get; init; }
 
     // BT-54
-    [XmlElement(ElementName = "buyer-country-subdivision")]
-    public Text? BuyerCountrySubdivision { get; set; }
+    public required Text? BuyerCountrySubdivision { get; init; }
 
     // BT-55
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
-    [XmlElement(ElementName = "buyer-country-code")]
-    public required Code BuyerCountryCode { get; set; }
+    public required Code BuyerCountryCode { get; init; }
 
-    public Im.BuyerPostalAddress ToImmutable()
+    public static BuyerPostalAddress Deserialize(XmlReader reader)
     {
-        return new Im.BuyerPostalAddress
+        reader.ReadStartElement("buyer-postal-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? buyerAddressLine1 = null;
+
+        if (reader.IsStartElement("buyer-address-line-1", IRConfig.NS))
         {
-            BuyerAddressLine1 = BuyerAddressLine1?.ToImmutable(),
-            BuyerAddressLine2 = BuyerAddressLine2?.ToImmutable(),
-            BuyerAddressLine3 = BuyerAddressLine3?.ToImmutable(),
-            BuyerCity = BuyerCity.ToImmutable(),
-            BuyerPostCode = BuyerPostCode.ToImmutable(),
-            BuyerCountrySubdivision = BuyerCountrySubdivision?.ToImmutable(),
-            BuyerCountryCode = BuyerCountryCode.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerAddressLine1 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? buyerAddressLine2 = null;
+
+        if (reader.IsStartElement("buyer-address-line-2", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerAddressLine2 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? buyerAddressLine3 = null;
+
+        if (reader.IsStartElement("buyer-address-line-3", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerAddressLine3 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("buyer-city", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text buyerCity = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("buyer-post-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text buyerPostCode = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? buyerCountrySubdivision = null;
+
+        if (reader.IsStartElement("buyer-country-subdivision", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerCountrySubdivision = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("buyer-country-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code buyerCountryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new BuyerPostalAddress
+        {
+            BuyerAddressLine1 = buyerAddressLine1,
+            BuyerAddressLine2 = buyerAddressLine2,
+            BuyerAddressLine3 = buyerAddressLine3,
+            BuyerCity = buyerCity,
+            BuyerPostCode = buyerPostCode,
+            BuyerCountrySubdivision = buyerCountrySubdivision,
+            BuyerCountryCode = buyerCountryCode,
         };
     }
 }
 
-public class BuyerContact : IToImmutable<Im.BuyerContact>
+public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>
 {
     // BT-56
-    [XmlElement(ElementName = "buyer-contact-point")]
-    public Text? ContactPoint { get; set; }
+    public required Text? BuyerContactPoint { get; init; }
 
     // BT-57
-    [XmlElement(ElementName = "buyer-contact-telephone-number")]
-    public Text? PhoneNumber { get; set; }
+    public required Text? BuyerContactTelephoneNumber { get; init; }
 
     // BT-58
-    [XmlElement(ElementName = "buyer-contact-email-address")]
-    public Text? EmailAddress { get; set; }
+    public required Text? BuyerContactEmailAddress { get; init; }
 
-    public Im.BuyerContact ToImmutable()
+    public static BuyerContact Deserialize(XmlReader reader)
     {
-        return new Im.BuyerContact
+        reader.ReadStartElement("buyer-contact", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? buyerContactPoint = null;
+
+        if (reader.IsStartElement("buyer-contact-point", IRConfig.NS))
         {
-            ContactPoint = ContactPoint?.ToImmutable(),
-            PhoneNumber = PhoneNumber?.ToImmutable(),
-            EmailAddress = EmailAddress?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerContactPoint = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? buyerContactTelephoneNumber = null;
+
+        if (reader.IsStartElement("buyer-contact-telephone-number", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerContactTelephoneNumber = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? buyerContactEmailAddress = null;
+
+        if (reader.IsStartElement("buyer-contact-email-address", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerContactEmailAddress = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new BuyerContact
+        {
+            BuyerContactPoint = buyerContactPoint,
+            BuyerContactTelephoneNumber = buyerContactTelephoneNumber,
+            BuyerContactEmailAddress = buyerContactEmailAddress,
         };
     }
 }
 
-public class Payee : IToImmutable<Im.Payee>
+public readonly record struct Payee : IIRDeserializable<Payee>
 {
     // BT-59
-    [XmlElement(ElementName = "payee-name")]
-    public required Text PayeeName { get; set; }
+    public required Text PayeeName { get; init; }
 
     // BT-60
-    [XmlElement(ElementName = "payee-identifier")]
-    public Identifier? PayeeIdentifier { get; set; }
+    public required Identifier? PayeeIdentifier { get; init; }
 
     // BT-61
-    [XmlElement(ElementName = "payee-legal-registration-identifier")]
-    public Identifier? PayeeLegalRegistrationIdentifier { get; set; }
+    public required Identifier? PayeeLegalRegistrationIdentifier { get; init; }
 
-    public Im.Payee ToImmutable()
+    public static Payee Deserialize(XmlReader reader)
     {
-        return new Im.Payee
+        reader.ReadStartElement("payee", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("payee-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text payeeName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Identifier? payeeIdentifier = null;
+
+        if (reader.IsStartElement("payee-identifier", IRConfig.NS))
         {
-            PayeeName = PayeeName.ToImmutable(),
-            PayeeIdentifier = PayeeIdentifier?.ToImmutable(),
-            PayeeLegalRegistrationIdentifier = PayeeLegalRegistrationIdentifier?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            payeeIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? payeeLegalRegistrationIdentifier = null;
+
+        if (reader.IsStartElement("payee-legal-registration-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            payeeLegalRegistrationIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new Payee
+        {
+            PayeeName = payeeName,
+            PayeeIdentifier = payeeIdentifier,
+            PayeeLegalRegistrationIdentifier = payeeLegalRegistrationIdentifier,
         };
     }
 }
 
-public class SellerTaxRepresentativeParty : IToImmutable<Im.SellerTaxRepresentativeParty>
+public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<SellerTaxRepresentativeParty>
 {
     // BT-62
-    [XmlElement(ElementName = "seller-tax-representative-name")]
-    public required Text SellerTaxRepresentativeName { get; set; }
+    public required Text SellerTaxRepresentativeName { get; init; }
 
     // BT-63
-    [XmlElement(ElementName = "seller-tax-representative-vat-identifier")]
-    public required Identifier SellerTaxRepresentativeVatIdentifier { get; set; }
+    public required Identifier SellerTaxRepresentativeVatIdentifier { get; init; }
 
     // BG-12
-    [XmlElement(ElementName = "seller-tax-representative-postal-address")]
-    public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress { get; init; }
 
-    public Im.SellerTaxRepresentativeParty ToImmutable()
+    public static SellerTaxRepresentativeParty Deserialize(XmlReader reader)
     {
-        return new Im.SellerTaxRepresentativeParty
+        reader.ReadStartElement("seller-tax-representative-party", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-tax-representative-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerTaxRepresentativeName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-tax-representative-vat-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier sellerTaxRepresentativeVatIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        SellerTaxRepresentativePostalAddress sellerTaxRepresentativePostalAddress = SellerTaxRepresentativePostalAddress.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new SellerTaxRepresentativeParty
         {
-            SellerTaxRepresentativeName = SellerTaxRepresentativeName.ToImmutable(),
-            SellerTaxRepresentativeVatIdentifier = SellerTaxRepresentativeVatIdentifier.ToImmutable(),
-            SellerTaxRepresentativePostalAddress = SellerTaxRepresentativePostalAddress.ToImmutable(),
+            SellerTaxRepresentativeName = sellerTaxRepresentativeName,
+            SellerTaxRepresentativeVatIdentifier = sellerTaxRepresentativeVatIdentifier,
+            SellerTaxRepresentativePostalAddress = sellerTaxRepresentativePostalAddress,
         };
     }
 }
 
-public class SellerTaxRepresentativePostalAddress : IToImmutable<Im.SellerTaxRepresentativePostalAddress>
+public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserializable<SellerTaxRepresentativePostalAddress>
 {
     // BT-64
-    [XmlElement(ElementName = "tax-representative-address-line-1")]
-    public Text? TaxRepresentativeAddressLine1 { get; set; }
+    public required Text? TaxRepresentativeAddressLine1 { get; init; }
 
     // BT-65
-    [XmlElement(ElementName = "tax-representative-address-line-2")]
-    public Text? TaxRepresentativeAddressLine2 { get; set; }
+    public required Text? TaxRepresentativeAddressLine2 { get; init; }
 
     // BT-164
-    [XmlElement(ElementName = "tax-representative-address-line-3")]
-    public Text? TaxRepresentativeAddressLine3 { get; set; }
+    public required Text? TaxRepresentativeAddressLine3 { get; init; }
 
     // BT-66
-    [XmlElement(ElementName = "tax-representative-city")]
-    public required Text TaxRepresentativeCity { get; set; }
+    public required Text? TaxRepresentativeCity { get; init; }
 
     // BT-67
-    [XmlElement(ElementName = "tax-representative-post-code")]
-    public required Text TaxRepresentativePostCode { get; set; }
+    public required Text? TaxRepresentativePostCode { get; init; }
 
     // BT-68
-    [XmlElement(ElementName = "tax-representative-country-subdivision")]
-    public Text? TaxRepresentativeCountrySubdivision { get; set; }
+    public required Text? TaxRepresentativeCountrySubdivision { get; init; }
 
     // BT-69
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
-    [XmlElement(ElementName = "tax-representative-country-code")]
-    public required Code TaxRepresentativeCountryCode { get; set; }
+    public required Code TaxRepresentativeCountryCode { get; init; }
 
-    public Im.SellerTaxRepresentativePostalAddress ToImmutable()
+    public static SellerTaxRepresentativePostalAddress Deserialize(XmlReader reader)
     {
-        return new Im.SellerTaxRepresentativePostalAddress
+        reader.ReadStartElement("seller-tax-representative-postal-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? taxRepresentativeAddressLine1 = null;
+
+        if (reader.IsStartElement("tax-representative-address-line-1", IRConfig.NS))
         {
-            TaxRepresentativeAddressLine1 = TaxRepresentativeAddressLine1?.ToImmutable(),
-            TaxRepresentativeAddressLine2 = TaxRepresentativeAddressLine2?.ToImmutable(),
-            TaxRepresentativeAddressLine3 = TaxRepresentativeAddressLine3?.ToImmutable(),
-            TaxRepresentativeCity = TaxRepresentativeCity.ToImmutable(),
-            TaxRepresentativePostCode = TaxRepresentativePostCode.ToImmutable(),
-            TaxRepresentativeCountrySubdivision = TaxRepresentativeCountrySubdivision?.ToImmutable(),
-            TaxRepresentativeCountryCode = TaxRepresentativeCountryCode.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativeAddressLine1 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? taxRepresentativeAddressLine2 = null;
+
+        if (reader.IsStartElement("tax-representative-address-line-2", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativeAddressLine2 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? taxRepresentativeAddressLine3 = null;
+
+        if (reader.IsStartElement("tax-representative-address-line-3", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativeAddressLine3 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? taxRepresentativeCity = null;
+
+        if (reader.IsStartElement("tax-representative-city", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativeCity = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? taxRepresentativePostCode = null;
+
+        if (reader.IsStartElement("tax-representative-post-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativePostCode = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? taxRepresentativeCountrySubdivision = null;
+
+        if (reader.IsStartElement("tax-representative-country-subdivision", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativeCountrySubdivision = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("tax-representative-country-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code taxRepresentativeCountryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new SellerTaxRepresentativePostalAddress
+        {
+            TaxRepresentativeAddressLine1 = taxRepresentativeAddressLine1,
+            TaxRepresentativeAddressLine2 = taxRepresentativeAddressLine2,
+            TaxRepresentativeAddressLine3 = taxRepresentativeAddressLine3,
+            TaxRepresentativeCity = taxRepresentativeCity,
+            TaxRepresentativePostCode = taxRepresentativePostCode,
+            TaxRepresentativeCountrySubdivision = taxRepresentativeCountrySubdivision,
+            TaxRepresentativeCountryCode = taxRepresentativeCountryCode,
         };
     }
 }
 
-public class DeliveryInformation : IToImmutable<Im.DeliveryInformation>
+public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryInformation>
 {
     // BT-70
-    [XmlElement(ElementName = "deliver-to-party-name")]
-    public Text? DeliverToPartyName { get; set; }
+    public required Text? DeliverToPartyName { get; init; }
 
     // BT-71
-    [XmlElement(ElementName = "deliver-to-location-identifier")]
-    public Identifier? DeliverToLocationIdentifier { get; set; }
+    public required Identifier? DeliverToLocationIdentifier { get; init; }
 
     // BT-72
-    [XmlElement(ElementName = "actual-delivery-date")]
-    public Date? ActualDeliveryDate { get; set; }
+    public required Date? ActualDeliveryDate { get; init; }
 
     // BG-14
-    [XmlElement(ElementName = "invoicing-period")]
-    public InvoicingPeriod? InvoicingPeriod { get; set; }
+    public required InvoicingPeriod? InvoicingPeriod { get; init; }
 
     // BG-15
-    [XmlElement(ElementName = "deliver-to-address")]
-    public DeliverToAddress? DeliverToAddress { get; set; }
+    public required DeliverToAddress? DeliverToAddress { get; init; }
 
-    public Im.DeliveryInformation ToImmutable()
+    public static DeliveryInformation Deserialize(XmlReader reader)
     {
-        return new Im.DeliveryInformation
+        reader.ReadStartElement("delivery-information", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? deliverToPartyName = null;
+
+        if (reader.IsStartElement("deliver-to-party-name", IRConfig.NS))
         {
-            DeliverToPartyName = DeliverToPartyName?.ToImmutable(),
-            DeliverToLocationIdentifier = DeliverToLocationIdentifier?.ToImmutable(),
-            ActualDeliveryDate = ActualDeliveryDate?.ToImmutable(),
-            InvoicingPeriod = InvoicingPeriod?.ToImmutable(),
-            DeliverToAddress = DeliverToAddress?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToPartyName = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? deliverToLocationIdentifier = null;
+
+        if (reader.IsStartElement("deliver-to-location-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToLocationIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Date? actualDeliverDate = null;
+
+        if (reader.IsStartElement("actual-delivery-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            actualDeliverDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        InvoicingPeriod? invoicingPeriod = null;
+
+        if (reader.IsStartElement("invoicing-period", IRConfig.NS))
+        {
+            invoicingPeriod = Model.InvoicingPeriod.Deserialize(reader);
+        }
+
+        DeliverToAddress? deliverToAddress = null;
+
+        if (reader.IsStartElement("deliver-to-address", IRConfig.NS))
+        {
+            deliverToAddress = Model.DeliverToAddress.Deserialize(reader);
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DeliveryInformation
+        {
+            DeliverToPartyName = deliverToPartyName,
+            DeliverToLocationIdentifier = deliverToLocationIdentifier,
+            ActualDeliveryDate = actualDeliverDate,
+            InvoicingPeriod = invoicingPeriod,
+            DeliverToAddress = deliverToAddress,
         };
     }
 }
 
-public class InvoicingPeriod : IToImmutable<Im.InvoicingPeriod>
+public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPeriod>
 {
     // BT-73
-    [XmlElement(ElementName = "invoicing-period-start-date")]
-    public Date? InvoicingPeriodStartDate { get; set; }
+    public required Date? InvoicingPeriodStartDate { get; init; }
 
     // BT-74
-    [XmlElement(ElementName = "invoicing-period-end-date")]
-    public Date? InvoicingPeriodEndDate { get; set; }
+    public required Date? InvoicingPeriodEndDate { get; init; }
 
-    public Im.InvoicingPeriod ToImmutable()
+    public static InvoicingPeriod Deserialize(XmlReader reader)
     {
-        return new Im.InvoicingPeriod
+        reader.ReadStartElement("invoicing-period", IRConfig.NS);
+        reader.MoveToContent();
+
+        Date? invoicingPeriodStartDate = null;
+
+        if (reader.IsStartElement("invoicing-period-start-date", IRConfig.NS))
         {
-            InvoicingPeriodStartDate = InvoicingPeriodStartDate?.ToImmutable(),
-            InvoicingPeriodEndDate = InvoicingPeriodEndDate?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoicingPeriodStartDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Date? invoicingPeriodEndDate = null;
+
+        if (reader.IsStartElement("invoicing-period-end-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoicingPeriodEndDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new InvoicingPeriod
+        {
+            InvoicingPeriodStartDate = invoicingPeriodStartDate,
+            InvoicingPeriodEndDate = invoicingPeriodEndDate,
         };
     }
 }
 
-public class DeliverToAddress : IToImmutable<Im.DeliverToAddress>
+public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddress>
 {
     // BT-75
-    [XmlElement(ElementName = "deliver-to-address-line-1")]
-    public Text? DeliverToAddressLine1 { get; set; }
+    public required Text? DeliverToAddressLine1 { get; init; }
 
     // BT-76
-    [XmlElement(ElementName = "deliver-to-address-line-2")]
-    public Text? DeliverToAddressLine2 { get; set; }
+    public required Text? DeliverToAddressLine2 { get; init; }
 
     // BT-165
-    [XmlElement(ElementName = "deliver-to-address-line-3")]
-    public Text? DeliverToAddressLine3 { get; set; }
+    public required Text? DeliverToAddressLine3 { get; init; }
 
     // BT-77
-    [XmlElement(ElementName = "deliver-to-city")]
-    public required Text DeliverToCity { get; set; }
+    public required Text DeliverToCity { get; init; }
 
     // BT-78
-    [XmlElement(ElementName = "deliver-to-post-code")]
-    public required Text DeliverToPostCode { get; set; }
+    public required Text DeliverToPostCode { get; init; }
 
     // BT-79
-    [XmlElement(ElementName = "deliver-to-country-subdivision")]
-    public Text? DeliverToCountrySubdivision { get; set; }
+    public required Text? DeliverToCountrySubdivision { get; init; }
 
     // BT-80
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
-    [XmlElement(ElementName = "deliver-to-country-code")]
-    public required Code DeliverToCountryCode { get; set; }
+    public required Code DeliverToCountryCode { get; init; }
 
-    public Im.DeliverToAddress ToImmutable()
+    public static DeliverToAddress Deserialize(XmlReader reader)
     {
-        return new Im.DeliverToAddress
+        reader.ReadStartElement("deliver-to-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? deliverToAddressLine1 = null;
+
+        if (reader.IsStartElement("deliver-to-address-line-1", IRConfig.NS))
         {
-            DeliverToAddressLine1 = DeliverToAddressLine1?.ToImmutable(),
-            DeliverToAddressLine2 = DeliverToAddressLine2?.ToImmutable(),
-            DeliverToAddressLine3 = DeliverToAddressLine3?.ToImmutable(),
-            DeliverToCity = DeliverToCity.ToImmutable(),
-            DeliverToPostCode = DeliverToPostCode.ToImmutable(),
-            DeliverToCountrySubdivision = DeliverToCountrySubdivision?.ToImmutable(),
-            DeliverToCountryCode = DeliverToCountryCode.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToAddressLine1 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? deliverToAddressLine2 = null;
+
+        if (reader.IsStartElement("deliver-to-address-line-2", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToAddressLine2 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? deliverToAddressLine3 = null;
+
+        if (reader.IsStartElement("deliver-to-address-line-3", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToAddressLine3 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("deliver-to-city", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text deliverToCity = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("deliver-to-post-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text deliverToPostCode = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? deliverToCountrySubdivision = null;
+
+        if (reader.IsStartElement("deliver-to-country-subdivision", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToCountrySubdivision = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("deliver-to-country-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code deliverToCountryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DeliverToAddress
+        {
+            DeliverToAddressLine1 = deliverToAddressLine1,
+            DeliverToAddressLine2 = deliverToAddressLine2,
+            DeliverToAddressLine3 = deliverToAddressLine3,
+            DeliverToCity = deliverToCity,
+            DeliverToPostCode = deliverToPostCode,
+            DeliverToCountrySubdivision = deliverToCountrySubdivision,
+            DeliverToCountryCode = deliverToCountryCode,
         };
     }
 }
 
-public class PaymentInstructions : IToImmutable<Im.PaymentInstructions>
+public readonly record struct PaymentInstructions : IIRDeserializable<PaymentInstructions>
 {
     // BT-81
     // UNTDID-4461
-    [XmlElement(ElementName = "payment-means-type-code")]
-    public required Code PaymentMeansTypeCode { get; set; }
+    public required Code PaymentMeansTypeCode { get; init; }
 
     // BT-82
-    [XmlElement(ElementName = "payment-means-text")]
-    public Text? PaymentMeansText { get; set; }
+    public required Text? PaymentMeansText { get; init; }
 
     // BT-83
-    [XmlElement(ElementName = "remittance-information")]
-    public Text? RemittanceInformation { get; set; }
+    public required Text? RemittanceInformation { get; init; }
 
     // BG-17
-    [XmlArray(ElementName = "credit-transfers")]
-    [XmlArrayItem(ElementName = "credit-transfer")]
-    public CreditTransfer[] CreditTransfers
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            Assert.ArgContainsNoNullValues(value, "CreditTransfers can't contain null values");
-            field = value;
-        }
-    } = [];
+    public required Array<CreditTransfer> CreditTransfers { get; init; }
 
     // BG-18
-    [XmlElement(ElementName = "payment-card-information")]
-    public PaymentCardInformation? PaymentCardInformation { get; set; }
+    public required PaymentCardInformation? PaymentCardInformation { get; init; }
 
     // BG-19
-    [XmlElement(ElementName = "direct-debit")]
-    public DirectDebit? DirectDebit { get; set; }
+    public required DirectDebit? DirectDebit { get; init; }
 
-    public Im.PaymentInstructions ToImmutable()
+    public static PaymentInstructions Deserialize(XmlReader reader)
     {
-        return new Im.PaymentInstructions
+        reader.ReadStartElement("payment-instructions", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("payment-means-type-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code paymentMeansTypeCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? paymentMeansText = null;
+
+        if (reader.IsStartElement("payment-means-text", IRConfig.NS))
         {
-            PaymentMeansTypeCode = PaymentMeansTypeCode.ToImmutable(),
-            PaymentMeansText = PaymentMeansText?.ToImmutable(),
-            RemittanceInformation = RemittanceInformation?.ToImmutable(),
-            CreditTransfers = CreditTransfers.ToImmutable<CreditTransfer, Im.CreditTransfer>(),
-            PaymentCardInformation = PaymentCardInformation?.ToImmutable(),
-            DirectDebit = DirectDebit?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentMeansText = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? remittanceInformation = null;
+
+        if (reader.IsStartElement("remittance-information", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            remittanceInformation = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<CreditTransfer> creditTransfers = Array<CreditTransfer>.Empty;
+
+        if (reader.IsStartElement("credit-transfers", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<CreditTransfer> builder = [];
+            while (reader.IsStartElement("credit-transfer", IRConfig.NS))
+            {
+                builder.Add(CreditTransfer.Deserialize(reader));
+            }
+
+            creditTransfers = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        PaymentCardInformation? paymentCardInformation = null;
+
+        if (reader.IsStartElement("payment-card-information", IRConfig.NS))
+        {
+            paymentCardInformation = Model.PaymentCardInformation.Deserialize(reader);
+        }
+
+        DirectDebit? directDebit = null;
+
+        if (reader.IsStartElement("direct-debit", IRConfig.NS))
+        {
+            directDebit = Model.DirectDebit.Deserialize(reader);
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new PaymentInstructions
+        {
+            PaymentMeansTypeCode = paymentMeansTypeCode,
+            PaymentMeansText = paymentMeansText,
+            RemittanceInformation = remittanceInformation,
+            CreditTransfers = creditTransfers,
+            PaymentCardInformation = paymentCardInformation,
+            DirectDebit = directDebit,
         };
     }
 }
 
-public class CreditTransfer : IToImmutable<Im.CreditTransfer>
+public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>
 {
     // BT-84
-    [XmlElement(ElementName = "payment-account-identifier")]
-    public required Identifier PaymentAccountIdentifier { get; set; }
+    public required Identifier PaymentAccountIdentifier { get; init; }
 
     // BT-85
-    [XmlElement(ElementName = "payment-account-name")]
-    public Text? PaymentAccountName { get; set; }
+    public required Text? PaymentAccountName { get; init; }
 
     // BT-86
-    [XmlElement(ElementName = "payment-service-provider-identifier")]
-    public Identifier? PaymentServiceProviderIdentifier { get; set; }
+    public required Identifier? PaymentServiceProviderIdentifier { get; init; }
 
-    public Im.CreditTransfer ToImmutable()
+    public static CreditTransfer Deserialize(XmlReader reader)
     {
-        return new Im.CreditTransfer
+        reader.ReadStartElement("credit-transfer", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("payment-account-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier paymentAccountIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? paymentAccountName = null;
+
+        if (reader.IsStartElement("payment-account-name", IRConfig.NS))
         {
-            PaymentAccountIdentifier = PaymentAccountIdentifier.ToImmutable(),
-            PaymentAccountName = PaymentAccountName?.ToImmutable(),
-            PaymentServiceProviderIdentifier = PaymentServiceProviderIdentifier?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentAccountName = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? paymentServiceProviderIdentifier = null;
+
+        if (reader.IsStartElement("payment-service-provider-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentServiceProviderIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new CreditTransfer
+        {
+            PaymentAccountIdentifier = paymentAccountIdentifier,
+            PaymentAccountName = paymentAccountName,
+            PaymentServiceProviderIdentifier = paymentServiceProviderIdentifier,
         };
     }
 }
 
-public class PaymentCardInformation : IToImmutable<Im.PaymentCardInformation>
+public readonly record struct PaymentCardInformation : IIRDeserializable<PaymentCardInformation>
 {
     // BT-87
-    [XmlElement(ElementName = "payment-card-primary-account-number")]
-    public required Text PaymentCardPrimaryAccountNumber { get; set; }
+    public required Text PaymentCardPrimaryAccountNumber { get; init; }
 
     // BT-88
-    [XmlElement(ElementName = "payment-card-holder-name")]
-    public Text? PaymentCardHolderName { get; set; }
+    public required Text? PaymentCardHolderName { get; init; }
 
-    public Im.PaymentCardInformation ToImmutable()
+    public static PaymentCardInformation Deserialize(XmlReader reader)
     {
-        return new Im.PaymentCardInformation
+        reader.ReadStartElement("payment-card-information", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("payment-card-primary-account-number", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text paymentCardPrimaryAccountNumber = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? paymentCardHolderName = null;
+
+        if (reader.IsStartElement("payment-card-holder-name", IRConfig.NS))
         {
-            PaymentCardPrimaryAccountNumber = PaymentCardPrimaryAccountNumber.ToImmutable(),
-            PaymentCardHolderName = PaymentCardHolderName?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentCardHolderName = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new PaymentCardInformation
+        {
+            PaymentCardPrimaryAccountNumber = paymentCardPrimaryAccountNumber,
+            PaymentCardHolderName = paymentCardHolderName,
         };
     }
 }
 
-public class DirectDebit : IToImmutable<Im.DirectDebit>
+public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>
 {
     // BT-89
-    [XmlElement(ElementName = "mandate-reference-identifier")]
-    public required Identifier MandateReferenceIdentifier { get; set; }
+    public required Identifier MandateReferenceIdentifier { get; init; }
 
     // BT-90
-    [XmlElement(ElementName = "bank-assigned-creditor-identifier")]
-    public required Identifier BankAssignedCreditorIdentifier { get; set; }
+    public required Identifier BankAssignedCreditorIdentifier { get; init; }
 
     // BT-91
-    [XmlElement(ElementName = "debited-account-identifier")]
-    public required Identifier DebitedAccountIdentifier { get; set; }
+    public required Identifier DebitedAccountIdentifier { get; init; }
 
-    public Im.DirectDebit ToImmutable()
+    public static DirectDebit Deserialize(XmlReader reader)
     {
-        return new Im.DirectDebit
+        reader.ReadStartElement("direct-debit", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("mandate-reference-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier mandateReferenceIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("bank-assigned-creditor-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier bankAssignedCreditorIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("debited-account-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier debitedAccountIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DirectDebit
         {
-            MandateReferenceIdentifier = MandateReferenceIdentifier.ToImmutable(),
-            BankAssignedCreditorIdentifier = BankAssignedCreditorIdentifier.ToImmutable(),
-            DebitedAccountIdentifier = DebitedAccountIdentifier.ToImmutable(),
+            MandateReferenceIdentifier = mandateReferenceIdentifier,
+            BankAssignedCreditorIdentifier = bankAssignedCreditorIdentifier,
+            DebitedAccountIdentifier = debitedAccountIdentifier,
         };
     }
 }
 
-public class DocumentLevelAllowance : IToImmutable<Im.DocumentLevelAllowance>
+public readonly record struct DocumentLevelAllowance : IIRDeserializable<DocumentLevelAllowance>
 {
     // BT-92
-    [XmlElement(ElementName = "document-level-allowance-amount")]
-    public required Amount DocumentLevelAllowanceAmount { get; set; }
+    public required Amount DocumentLevelAllowanceAmount { get; init; }
 
     // BT-93
-    [XmlElement(ElementName = "document-level-allowance-base-amount")]
-    public Amount? DocumentLevelAllowanceBaseAmount { get; set; }
+    public required Amount? DocumentLevelAllowanceBaseAmount { get; init; }
 
     // BT-94
-    [XmlElement(ElementName = "document-level-allowance-percentage")]
-    public Percentage? DocumentLevelAllowancePercentage { get; set; }
+    public required Percentage? DocumentLevelAllowancePercentage { get; init; }
 
     // BT-95
-    [XmlElement(ElementName = "document-level-allowance-vat-category-code")]
-    public required Code DocumentLevelAllowanceVatCategoryCode { get; set; }
+    public required Code DocumentLevelAllowanceVatCategoryCode { get; init; }
 
     // BT-96
-    [XmlElement(ElementName = "document-level-allowance-vat-rate")]
-    public Percentage? DocumentLevelAllowanceVatRate { get; set; }
+    public required Percentage? DocumentLevelAllowanceVatRate { get; init; }
 
     // BT-97
-    [XmlElement(ElementName = "document-level-allowance-reason")]
-    public Text? DocumentLevelAllowanceReason { get; set; }
+    public required Text? DocumentLevelAllowanceReason { get; init; }
 
     // BT-98
-    [XmlElement(ElementName = "document-level-allowance-reason-code")]
-    public Code? DocumentLevelAllowanceReasonCode { get; set; }
+    public required Code? DocumentLevelAllowanceReasonCode { get; init; }
 
-    public Im.DocumentLevelAllowance ToImmutable()
+    public static DocumentLevelAllowance Deserialize(XmlReader reader)
     {
-        return new Im.DocumentLevelAllowance
+        reader.ReadStartElement("document-level-allowance", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("document-level-allowance-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount documentLevelAllowanceAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? documentLevelAllowanceBaseAmount = null;
+
+        if (reader.IsStartElement("document-level-allowance-base-amount", IRConfig.NS))
         {
-            DocumentLevelAllowanceAmount = DocumentLevelAllowanceAmount.ToImmutable(),
-            DocumentLevelAllowanceBaseAmount = DocumentLevelAllowanceBaseAmount?.ToImmutable(),
-            DocumentLevelAllowancePercentage = DocumentLevelAllowancePercentage?.ToImmutable(),
-            DocumentLevelAllowanceVatCategoryCode = DocumentLevelAllowanceVatCategoryCode.ToImmutable(),
-            DocumentLevelAllowanceVatRate = DocumentLevelAllowanceVatRate?.ToImmutable(),
-            DocumentLevelAllowanceReason = DocumentLevelAllowanceReason?.ToImmutable(),
-            DocumentLevelAllowanceReasonCode = DocumentLevelAllowanceReasonCode?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelAllowanceBaseAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Percentage? documentLevelAllowancePercentage = null;
+
+        if (reader.IsStartElement("document-level-allowance-percentage", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelAllowancePercentage = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("document-level-allowance-vat-category-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code documentLevelAllowanceVatCategoryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Percentage? documentLevelAllowanceVatRate = null;
+
+        if (reader.IsStartElement("document-level-allowance-vat-rate", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelAllowanceVatRate = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? documentLevelAllowanceReason = null;
+
+        if (reader.IsStartElement("document-level-allowance-reason", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelAllowanceReason = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? documentLevelAllowanceReasonCode = null;
+
+        if (reader.IsStartElement("document-level-allowance-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelAllowanceReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DocumentLevelAllowance
+        {
+            DocumentLevelAllowanceAmount = documentLevelAllowanceAmount,
+            DocumentLevelAllowanceBaseAmount = documentLevelAllowanceBaseAmount,
+            DocumentLevelAllowancePercentage = documentLevelAllowancePercentage,
+            DocumentLevelAllowanceVatCategoryCode = documentLevelAllowanceVatCategoryCode,
+            DocumentLevelAllowanceVatRate = documentLevelAllowanceVatRate,
+            DocumentLevelAllowanceReason = documentLevelAllowanceReason,
+            DocumentLevelAllowanceReasonCode = documentLevelAllowanceReasonCode,
         };
     }
 }
 
-public class DocumentLevelCharge : IToImmutable<Im.DocumentLevelCharge>
+public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLevelCharge>
 {
     // BT-99
-    [XmlElement(ElementName = "document-level-charge-amount")]
-    public required Amount DocumentLevelChargeAmount { get; set; }
+    public required Amount DocumentLevelChargeAmount { get; init; }
 
     // BT-100
-    [XmlElement(ElementName = "document-level-charge-base-amount")]
-    public Amount? DocumentLevelChargeBaseAmount { get; set; }
+    public required Amount? DocumentLevelChargeBaseAmount { get; init; }
 
     // BT-101
-    [XmlElement(ElementName = "document-level-charge-percentage")]
-    public Percentage? DocumentLevelChargePercentage { get; set; }
+    public required Percentage? DocumentLevelChargePercentage { get; init; }
 
     // BT-102
-    [XmlElement(ElementName = "document-level-charge-vat-category-code")]
-    public required Code DocumentLevelChargeVatCategoryCode { get; set; }
+    public required Code DocumentLevelChargeVatCategoryCode { get; init; }
 
     // BT-103
-    [XmlElement(ElementName = "document-level-charge-vat-rate")]
-    public Percentage? DocumentLevelChargeVatRate { get; set; }
+    public required Percentage? DocumentLevelChargeVatRate { get; init; }
 
     // BT-104
-    [XmlElement(ElementName = "document-level-charge-reason")]
-    public Text? DocumentLevelChargeReason { get; set; }
+    public required Text? DocumentLevelChargeReason { get; init; }
 
     // BT-105
-    [XmlElement(ElementName = "document-level-charge-reason-code")]
-    public Code? DocumentLevelChargeReasonCode { get; set; }
+    public required Code? DocumentLevelChargeReasonCode { get; init; }
 
-    public Im.DocumentLevelCharge ToImmutable()
+    public static DocumentLevelCharge Deserialize(XmlReader reader)
     {
-        return new Im.DocumentLevelCharge
+        reader.ReadStartElement("document-level-charge", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("document-level-charge-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount documentLevelChargeAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? documentLevelChargeBaseAmount = null;
+
+        if (reader.IsStartElement("document-level-charge-base-amount", IRConfig.NS))
         {
-            DocumentLevelChargeAmount = DocumentLevelChargeAmount.ToImmutable(),
-            DocumentLevelChargeBaseAmount = DocumentLevelChargeBaseAmount?.ToImmutable(),
-            DocumentLevelChargePercentage = DocumentLevelChargePercentage?.ToImmutable(),
-            DocumentLevelChargeVatCategoryCode = DocumentLevelChargeVatCategoryCode.ToImmutable(),
-            DocumentLevelChargeVatRate = DocumentLevelChargeVatRate?.ToImmutable(),
-            DocumentLevelChargeReason = DocumentLevelChargeReason?.ToImmutable(),
-            DocumentLevelChargeReasonCode = DocumentLevelChargeReasonCode?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelChargeBaseAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Percentage? documentLevelChargePercentage = null;
+
+        if (reader.IsStartElement("document-level-charge-percentage", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelChargePercentage = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("document-level-charge-vat-category-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code documentLevelChargeVatCategoryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Percentage? documentLevelChargeVatRate = null;
+
+        if (reader.IsStartElement("document-level-charge-vat-rate", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelChargeVatRate = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? documentLevelChargeReason = null;
+
+        if (reader.IsStartElement("document-level-charge-reason", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelChargeReason = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? documentLevelChargeReasonCode = null;
+
+        if (reader.IsStartElement("document-level-charge-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            documentLevelChargeReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DocumentLevelCharge
+        {
+            DocumentLevelChargeAmount = documentLevelChargeAmount,
+            DocumentLevelChargeBaseAmount = documentLevelChargeBaseAmount,
+            DocumentLevelChargePercentage = documentLevelChargePercentage,
+            DocumentLevelChargeVatCategoryCode = documentLevelChargeVatCategoryCode,
+            DocumentLevelChargeVatRate = documentLevelChargeVatRate,
+            DocumentLevelChargeReason = documentLevelChargeReason,
+            DocumentLevelChargeReasonCode = documentLevelChargeReasonCode,
         };
     }
 }
 
-public class DocumentTotals : IToImmutable<Im.DocumentTotals>
+public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>
 {
     // BT-106
-    [XmlElement(ElementName = "sum-of-invoice-line-net-amount")]
-    public required Amount SumOfInvoiceLineNetAmount { get; set; }
+    public required Amount SumOfInvoiceLineNetAmount { get; init; }
 
     // BT-107
-    [XmlElement(ElementName = "sum-of-allowances-on-document-level")]
-    public Amount? SumOfAllowancesOnDocumentLevel { get; set; }
+    public required Amount? SumOfAllowancesOnDocumentLevel { get; init; }
 
     // BT-108
-    [XmlElement(ElementName = "sum-of-charges-on-document-level")]
-    public Amount? SumOfChargesOnDocumentLevel { get; set; }
+    public required Amount? SumOfChargesOnDocumentLevel { get; init; }
 
     // BT-109
-    [XmlElement(ElementName = "invoice-total-amount-without-vat")]
-    public required Amount InvoiceTotalAmountWithoutVat { get; set; }
+    public required Amount InvoiceTotalAmountWithoutVat { get; init; }
 
     // BT-110
-    [XmlElement(ElementName = "invoice-total-vat-amount")]
-    public Amount? InvoiceTotalVatAmount { get; set; }
+    public required Amount? InvoiceTotalVatAmount { get; init; }
 
     // BT-111
-    [XmlElement(ElementName = "invoice-total-vat-amount-in-accounting-currency")]
-    public Amount? InvoiceTotalVatAmountInAccountingCurrency { get; set; }
+    public required Amount? InvoiceTotalVatAmountInAccountingCurrency { get; init; }
 
     // BT-112
-    [XmlElement(ElementName = "invoice-total-amount-with-vat")]
-    public required Amount InvoiceTotalAmountWithVat { get; set; }
+    public required Amount InvoiceTotalAmountWithVat { get; init; }
 
     // BT-113
-    [XmlElement(ElementName = "paid-amount")]
-    public Amount? PaidAmount { get; set; }
+    public required Amount? PaidAmount { get; init; }
 
     // BT-114
-    [XmlElement(ElementName = "rounding-amount")]
-    public Amount? RoundingAmount { get; set; }
+    public required Amount? RoundingAmount { get; init; }
 
     // BT-115
-    [XmlElement(ElementName = "amount-due-for-payment")]
-    public required Amount AmountDueForPayment { get; set; }
+    public required Amount AmountDueForPayment { get; init; }
 
-    public Im.DocumentTotals ToImmutable()
+    public static DocumentTotals Deserialize(XmlReader reader)
     {
-        return new Im.DocumentTotals
+
+        reader.ReadStartElement("document-totals", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("sum-of-invoice-line-net-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount sumOfInvoiceLineNetAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? sumOfAllowancesOnDocumentLevel = null;
+
+        if (reader.IsStartElement("sum-of-allowances-on-document-level", IRConfig.NS))
         {
-            SumOfInvoiceLineNetAmount = SumOfInvoiceLineNetAmount.ToImmutable(),
-            SumOfAllowancesOnDocumentLevel = SumOfAllowancesOnDocumentLevel?.ToImmutable(),
-            SumOfChargesOnDocumentLevel = SumOfChargesOnDocumentLevel?.ToImmutable(),
-            InvoiceTotalAmountWithoutVat = InvoiceTotalAmountWithoutVat.ToImmutable(),
-            InvoiceTotalVatAmount = InvoiceTotalVatAmount?.ToImmutable(),
-            InvoiceTotalVatAmountInAccountingCurrency = InvoiceTotalVatAmountInAccountingCurrency?.ToImmutable(),
-            InvoiceTotalAmountWithVat = InvoiceTotalAmountWithVat.ToImmutable(),
-            PaidAmount = PaidAmount?.ToImmutable(),
-            RoundingAmount = RoundingAmount?.ToImmutable(),
-            AmountDueForPayment = AmountDueForPayment.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sumOfAllowancesOnDocumentLevel = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Amount? sumOfChargesOnDocumentLevel = null;
+
+        if (reader.IsStartElement("sum-of-charges-on-document-level", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sumOfChargesOnDocumentLevel = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoice-total-amount-without-vat", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceTotalAmountWithoutVat = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? invoiceTotalVatAmount = null;
+
+        if (reader.IsStartElement("invoice-total-vat-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceTotalVatAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Amount? invoiceTotalVatAmountInAccountingCurrency = null;
+
+        if (reader.IsStartElement("invoice-total-vat-amount-in-accounting-currency", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceTotalVatAmountInAccountingCurrency = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoice-total-amount-with-vat", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceTotalAmountWithVat = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? paidAmount = null;
+
+        if (reader.IsStartElement("paid-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paidAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Amount? roundingAmount = null;
+
+        if (reader.IsStartElement("rounding-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            roundingAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("amount-due-for-payment", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount amountDueForPayment = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DocumentTotals
+        {
+            SumOfInvoiceLineNetAmount = sumOfInvoiceLineNetAmount,
+            SumOfAllowancesOnDocumentLevel = sumOfAllowancesOnDocumentLevel,
+            SumOfChargesOnDocumentLevel = sumOfChargesOnDocumentLevel,
+            InvoiceTotalAmountWithoutVat = invoiceTotalAmountWithoutVat,
+            InvoiceTotalVatAmount = invoiceTotalVatAmount,
+            InvoiceTotalVatAmountInAccountingCurrency = invoiceTotalVatAmountInAccountingCurrency,
+            InvoiceTotalAmountWithVat = invoiceTotalAmountWithVat,
+            PaidAmount = paidAmount,
+            RoundingAmount = roundingAmount,
+            AmountDueForPayment = amountDueForPayment,
         };
     }
 }
 
-public class VatBreakdown : IToImmutable<Im.VatBreakdown>
+public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>
 {
     // BT-116
-    [XmlElement(ElementName = "vat-category-taxable-amount")]
-    public required Amount VatCategoryTaxableAmount { get; set; }
+    public required Amount VatCategoryTaxableAmount { get; init; }
 
     // BT-117
-    [XmlElement(ElementName = "vat-category-tax-amount")]
-    public required Amount VatCategoryTaxAmount { get; set; }
+    public required Amount VatCategoryTaxAmount { get; init; }
 
     // BT-118
     // UNTDID 5305
-    [XmlElement(ElementName = "vat-category-code")]
-    public required Code VatCategoryCode { get; set; }
+    public required Code VatCategoryCode { get; init; }
 
     // BT-119
-    [XmlElement(ElementName = "vat-category-rate")]
-    public required Percentage VatCategoryRate { get; set; }
+    public required Percentage VatCategoryRate { get; init; }
 
     // BT-120
-    [XmlElement(ElementName = "vat-exemption-reason-text")]
-    public Text? VatExemptionReasonText { get; set; }
+    public required Text? VatExemptionReasonText { get; init; }
 
     // BT-121
     // VATEX Vat exemption reason code list
-    [XmlElement(ElementName = "vat-exemption-reason-code")]
-    public Code? VatExemptionReasonCode { get; set; }
+    public required Code? VatExemptionReasonCode { get; init; }
 
-    public Im.VatBreakdown ToImmutable()
+    public static VatBreakdown Deserialize(XmlReader reader)
     {
-        return new Im.VatBreakdown
+        reader.ReadStartElement("vat-breakdown", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("vat-category-taxable-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount vatCategoryTaxableAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("vat-category-tax-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount vatCategoryTaxAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("vat-category-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code vatCategoryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("vat-category-rate", IRConfig.NS);
+        reader.MoveToContent();
+
+        Percentage vatCategoryRate = Percentage.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? vatExemptionReasonText = null;
+
+        if (reader.IsStartElement("vat-exemption-reason-text", IRConfig.NS))
         {
-            VatCategoryTaxableAmount = VatCategoryTaxableAmount.ToImmutable(),
-            VatCategoryTaxAmount = VatCategoryTaxAmount.ToImmutable(),
-            VatCategoryCode = VatCategoryCode.ToImmutable(),
-            VatCategoryRate = VatCategoryRate.ToImmutable(),
-            VatExemptionReasonText = VatExemptionReasonText?.ToImmutable(),
-            VatExemptionReasonCode = VatExemptionReasonCode?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            vatExemptionReasonText = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? vatExemptionReasonCode = null;
+
+        if (reader.IsStartElement("vat-exemption-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            vatExemptionReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new VatBreakdown
+        {
+            VatCategoryTaxableAmount = vatCategoryTaxableAmount,
+            VatCategoryTaxAmount = vatCategoryTaxAmount,
+            VatCategoryCode = vatCategoryCode,
+            VatCategoryRate = vatCategoryRate,
+            VatExemptionReasonText = vatExemptionReasonText,
+            VatExemptionReasonCode = vatExemptionReasonCode,
         };
     }
 }
 
-public class AdditionalSupportingDocument : IToImmutable<Im.AdditionalSupportingDocument>
+public readonly record struct AdditionalSupportingDocument : IIRDeserializable<AdditionalSupportingDocument>
 {
     // BT-122
-    [XmlElement(ElementName = "supporting-document-reference")]
-    public required DocumentReference SupportingDocumentReference { get; set; }
+    public required DocumentReference SupportingDocumentReference { get; init; }
 
     // BT-123
-    [XmlElement(ElementName = "supporting-document-description")]
-    public Text? SupportingDocumentDescription { get; set; }
+    public required Text? SupportingDocumentDescription { get; init; }
 
     // BT-124
-    [XmlElement(ElementName = "external-document-location")]
-    public Text? ExternalDocumentLocation { get; set; }
+    public required Text? ExternalDocumentLocation { get; init; }
 
     // BT-125
-    [XmlElement(ElementName = "attached-document")]
-    public BinaryObject? AttachedDocument { get; set; }
+    public required BinaryObject? AttachedDocument { get; init; }
 
-    public Im.AdditionalSupportingDocument ToImmutable()
+    public static AdditionalSupportingDocument Deserialize(XmlReader reader)
     {
-        return new Im.AdditionalSupportingDocument
+        reader.ReadStartElement("additional-supporting-document", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("supporting-document-reference", IRConfig.NS);
+        reader.MoveToContent();
+
+        DocumentReference supportingDocumentReference = DocumentReference.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? supportingDocumentDescription = null;
+
+        if (reader.IsStartElement("supporting-document-description", IRConfig.NS))
         {
-            SupportingDocumentReference = SupportingDocumentReference.ToImmutable(),
-            SupportingDocumentDescription = SupportingDocumentDescription?.ToImmutable(),
-            ExternalDocumentLocation = ExternalDocumentLocation?.ToImmutable(),
-            AttachedDocument = AttachedDocument?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            supportingDocumentDescription = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? externalDocumentLocation = null;
+
+        if (reader.IsStartElement("external-document-location", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            externalDocumentLocation = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        BinaryObject? attachedDocument = null;
+
+        if (reader.IsStartElement("attached-document", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            attachedDocument = BinaryObject.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new AdditionalSupportingDocument
+        {
+            SupportingDocumentReference = supportingDocumentReference,
+            SupportingDocumentDescription = supportingDocumentDescription,
+            ExternalDocumentLocation = externalDocumentLocation,
+            AttachedDocument = attachedDocument,
         };
     }
 }
 
-public class InvoiceLine : IToImmutable<Im.InvoiceLine>
+public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>
 {
     // BT-126
-    [XmlElement(ElementName = "invoice-line-identifier")]
-    public required Identifier InvoiceLineIdentifier { get; set; }
+    public required Identifier InvoiceLineIdentifier { get; init; }
 
     // BT-127
-    [XmlElement(ElementName = "invoice-line-note")]
-    public Text? InvoiceLineNote { get; set; }
+    public required Text? InvoiceLineNote { get; init; }
 
     // BT-128
-    [XmlElement(ElementName = "invoice-line-object-identifier")]
-    public Identifier? InvoiceLineObjectIdentifier { get; set; }
+    public required Identifier? InvoiceLineObjectIdentifier { get; init; }
 
     // BT-129
-    [XmlElement(ElementName = "invoiced-quantity")]
-    public required Quantity InvoicedQuantity { get; set; }
+    public required Quantity InvoicedQuantity { get; init; }
 
     // BT-130
-    [XmlElement(ElementName = "invoiced-quantity-unit-of-measure-code")]
-    public required Code InvoicedQuantityUnitOfMeasureCode { get; set; }
+    public required Code InvoicedQuantityUnitOfMeasureCode { get; init; }
 
     // BT-131
-    [XmlElement(ElementName = "invoice-line-net-amount")]
-    public required Amount InvoiceLineNetAmount { get; set; }
+    public required Amount InvoiceLineNetAmount { get; init; }
 
     // BT-132
-    [XmlElement(ElementName = "referenced-purchase-order-line-reference")]
-    public DocumentReference? ReferencedPurchaseOrderLineReference { get; set; }
+    public required DocumentReference? ReferencedPurchaseOrderLineReference { get; init; }
 
     // BT-133
-    [XmlElement(ElementName = "invoice-line-buyer-accounting-reference")]
-    public Text? InvoiceLineBuyerAccountingReference { get; set; }
+    public required Text? InvoiceLineBuyerAccountingReference { get; init; }
 
     // BG-26
-    [XmlElement(ElementName = "invoice-line-period")]
-    public InvoiceLinePeriod? InvoiceLinePeriod { get; set; }
+    public required InvoiceLinePeriod? InvoiceLinePeriod { get; init; }
 
     // BG-27
-    [XmlArray(ElementName = "invoice-line-allowances")]
-    [XmlArrayItem(ElementName = "invoice-line-allowance")]
-    public InvoiceLineAllowance[] InvoiceLineAllowances
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            Assert.ArgContainsNoNullValues(value, "InvoiceLineAllowances can't contain null values");
-            field = value;
-        }
-    } = [];
+    public required Array<InvoiceLineAllowance> InvoiceLineAllowances { get; init; }
 
     // BG-28
-    [XmlArray(ElementName = "invoice-line-charges")]
-    [XmlArrayItem(ElementName = "invoice-line-charge")]
-    public InvoiceLineCharge[] InvoiceLineCharges
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            Assert.ArgContainsNoNullValues(value, "InvoiceLineCharges can't contain null values");
-            field = value;
-        }
-    } = [];
+    public required Array<InvoiceLineCharge> InvoiceLineCharges { get; init; }
 
     // BG-29
-    [XmlElement(ElementName = "price-details")]
-    public required PriceDetails PriceDetails
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required PriceDetails PriceDetails { get; init; }
 
     // BG-30
-    [XmlElement(ElementName = "line-vat-information")]
-    public required LineVatInformation LineVatInformation
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required LineVatInformation LineVatInformation { get; init; }
 
     // BG-31
-    [XmlElement(ElementName = "item-information")]
-    public required ItemInformation ItemInformation
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required ItemInformation ItemInformation { get; init; }
 
-    public Im.InvoiceLine ToImmutable()
+    public static InvoiceLine Deserialize(XmlReader reader)
     {
-        return new Im.InvoiceLine
+        reader.ReadStartElement("invoice-line", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier invoiceLineIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? invoiceLineNote = null;
+
+        if (reader.IsStartElement("invoice-line-note", IRConfig.NS))
         {
-            InvoiceLineIdentifier = InvoiceLineIdentifier.ToImmutable(),
-            InvoiceLineNote = InvoiceLineNote?.ToImmutable(),
-            InvoiceLineObjectIdentifier = InvoiceLineObjectIdentifier?.ToImmutable(),
-            InvoicedQuantity = InvoicedQuantity.ToImmutable(),
-            InvoicedQuantityUnitOfMeasureCode = InvoicedQuantityUnitOfMeasureCode.ToImmutable(),
-            InvoiceLineNetAmount = InvoiceLineNetAmount.ToImmutable(),
-            ReferencedPurchaseOrderLineReference = ReferencedPurchaseOrderLineReference?.ToImmutable(),
-            InvoiceLineBuyerAccountingReference = InvoiceLineBuyerAccountingReference?.ToImmutable(),
-            InvoiceLinePeriod = InvoiceLinePeriod?.ToImmutable(),
-            InvoiceLineAllowances = InvoiceLineAllowances.ToImmutable<InvoiceLineAllowance, Im.InvoiceLineAllowance>(),
-            InvoiceLineCharges = InvoiceLineCharges.ToImmutable<InvoiceLineCharge, Im.InvoiceLineCharge>(),
-            PriceDetails = PriceDetails.ToImmutable(),
-            LineVatInformation = LineVatInformation.ToImmutable(),
-            ItemInformation = ItemInformation.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineNote = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? invoiceLineObjectIdentifier = null;
+
+        if (reader.IsStartElement("invoice-line-object-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineObjectIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoiced-quantity", IRConfig.NS);
+        reader.MoveToContent();
+
+        Quantity invoicedQuantity = Quantity.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoiced-quantity-unit-of-measure-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code invoicedQuantityUnitOfMeasureCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-net-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceLineNetAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        DocumentReference? referencedPurchaseOrderLineReference = null;
+
+        if (reader.IsStartElement("referenced-purchase-order-line-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            referencedPurchaseOrderLineReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? invoiceLineBuyerAccountingReference = null;
+
+        if (reader.IsStartElement("invoice-line-buyer-accounting-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineBuyerAccountingReference = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        InvoiceLinePeriod? invoiceLinePeriod = null;
+
+        if (reader.IsStartElement("invoice-line-period", IRConfig.NS))
+        {
+            invoiceLinePeriod = Model.InvoiceLinePeriod.Deserialize(reader);
+        }
+
+        Array<InvoiceLineAllowance> invoiceLineAllowances = Array<InvoiceLineAllowance>.Empty;
+
+        if (reader.IsStartElement("invoice-line-allowances", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<InvoiceLineAllowance> builder = [];
+            while (reader.IsStartElement("invoice-line-allowance", IRConfig.NS))
+            {
+                builder.Add(InvoiceLineAllowance.Deserialize(reader));
+            }
+
+            invoiceLineAllowances = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<InvoiceLineCharge> invoiceLineCharges = Array<InvoiceLineCharge>.Empty;
+
+        if (reader.IsStartElement("invoice-line-charges", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<InvoiceLineCharge> builder = [];
+            while (reader.IsStartElement("invoice-line-charge", IRConfig.NS))
+            {
+                builder.Add(InvoiceLineCharge.Deserialize(reader));
+            }
+
+            invoiceLineCharges = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        PriceDetails priceDetails = PriceDetails.Deserialize(reader);
+
+        LineVatInformation lineVatInformation = LineVatInformation.Deserialize(reader);
+
+        ItemInformation itemInformation = ItemInformation.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new InvoiceLine
+        {
+            InvoiceLineIdentifier = invoiceLineIdentifier,
+            InvoiceLineNote = invoiceLineNote,
+            InvoiceLineObjectIdentifier = invoiceLineObjectIdentifier,
+            InvoicedQuantity = invoicedQuantity,
+            InvoicedQuantityUnitOfMeasureCode = invoicedQuantityUnitOfMeasureCode,
+            InvoiceLineNetAmount = invoiceLineNetAmount,
+            ReferencedPurchaseOrderLineReference = referencedPurchaseOrderLineReference,
+            InvoiceLineBuyerAccountingReference = invoiceLineBuyerAccountingReference,
+            InvoiceLinePeriod = invoiceLinePeriod,
+            InvoiceLineAllowances = invoiceLineAllowances,
+            InvoiceLineCharges = invoiceLineCharges,
+            PriceDetails = priceDetails,
+            LineVatInformation = lineVatInformation,
+            ItemInformation = itemInformation,
         };
     }
 }
 
-public class InvoiceLinePeriod : IToImmutable<Im.InvoiceLinePeriod>
+public readonly record struct InvoiceLinePeriod : IIRDeserializable<InvoiceLinePeriod>
 {
     // BT-134
-    [XmlElement(ElementName = "invoice-line-period-start-date")]
-    public Date? InvoiceLinePeriodStartDate { get; set; }
+    public required Date? InvoiceLinePeriodStartDate { get; init; }
 
     // BT-135
-    [XmlElement(ElementName = "invoice-line-period-end-date")]
-    public Date? InvoiceLinePeriodEndDate { get; set; }
+    public required Date? InvoiceLinePeriodEndDate { get; init; }
 
-    public Im.InvoiceLinePeriod ToImmutable()
+    public static InvoiceLinePeriod Deserialize(XmlReader reader)
     {
-        return new Im.InvoiceLinePeriod
+        reader.ReadStartElement("invoice-line-period", IRConfig.NS);
+        reader.MoveToContent();
+
+        Date? invoiceLinePeriodStartDate = null;
+
+        if (reader.IsStartElement("invoice-line-period-start-date", IRConfig.NS))
         {
-            InvoiceLinePeriodStartDate = InvoiceLinePeriodStartDate?.ToImmutable(),
-            InvoiceLinePeriodEndDate = InvoiceLinePeriodEndDate?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLinePeriodStartDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Date? invoiceLinePeriodEndDate = null;
+
+        if (reader.IsStartElement("invoice-line-period-end-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLinePeriodEndDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new InvoiceLinePeriod
+        {
+            InvoiceLinePeriodStartDate = invoiceLinePeriodStartDate,
+            InvoiceLinePeriodEndDate = invoiceLinePeriodEndDate,
         };
     }
 }
 
-public class InvoiceLineAllowance : IToImmutable<Im.InvoiceLineAllowance>
+public readonly record struct InvoiceLineAllowance : IIRDeserializable<InvoiceLineAllowance>
 {
     // BT-136
-    [XmlElement(ElementName = "invoice-line-allowance-amount")]
-    public required Amount InvoiceLineAllowanceAmount { get; set; }
+    public required Amount InvoiceLineAllowanceAmount { get; init; }
 
     // BT-137
-    [XmlElement(ElementName = "invoice-line-allowance-base-amount")]
-    public Amount? InvoiceLineAllowanceBaseAmount { get; set; }
+    public required Amount? InvoiceLineAllowanceBaseAmount { get; init; }
 
     // BT-138
-    [XmlElement(ElementName = "invoice-line-allowance-percentage")]
-    public Percentage? InvoiceLineAllowancePercentage { get; set; }
+    public required Percentage? InvoiceLineAllowancePercentage { get; init; }
 
     // BT-139
-    [XmlElement(ElementName = "invoice-line-allowance-reason")]
-    public Text? InvoiceLineAllowanceReason { get; set; }
+    public required Text? InvoiceLineAllowanceReason { get; init; }
 
     // BT-140
-    [XmlElement(ElementName = "invoice-line-allowance-reason-code")]
-    public Code? InvoiceLineAllowanceReasonCode { get; set; }
+    public required Code? InvoiceLineAllowanceReasonCode { get; init; }
 
-    public Im.InvoiceLineAllowance ToImmutable()
+    public static InvoiceLineAllowance Deserialize(XmlReader reader)
     {
-        return new Im.InvoiceLineAllowance
+        reader.ReadStartElement("invoice-line-allowance", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-allowance-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceLineAllowanceAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? invoiceLineAllowanceBaseAmount = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-base-amount", IRConfig.NS))
         {
-            InvoiceLineAllowanceAmount = InvoiceLineAllowanceAmount.ToImmutable(),
-            InvoiceLineAllowanceBaseAmount = InvoiceLineAllowanceBaseAmount?.ToImmutable(),
-            InvoiceLineAllowancePercentage = InvoiceLineAllowancePercentage?.ToImmutable(),
-            InvoiceLineAllowanceReason = InvoiceLineAllowanceReason?.ToImmutable(),
-            InvoiceLineAllowanceReasonCode = InvoiceLineAllowanceReasonCode?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowanceBaseAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Percentage? invoiceLineAllowancePercentage = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-percentage", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowancePercentage = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? invoiceLineAllowanceReason = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-reason", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowanceReason = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? invoiceLineAllowanceReasonCode = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowanceReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new InvoiceLineAllowance
+        {
+            InvoiceLineAllowanceAmount = invoiceLineAllowanceAmount,
+            InvoiceLineAllowanceBaseAmount = invoiceLineAllowanceBaseAmount,
+            InvoiceLineAllowancePercentage = invoiceLineAllowancePercentage,
+            InvoiceLineAllowanceReason = invoiceLineAllowanceReason,
+            InvoiceLineAllowanceReasonCode = invoiceLineAllowanceReasonCode,
         };
     }
 }
 
-public class InvoiceLineCharge : IToImmutable<Im.InvoiceLineCharge>
+public readonly record struct InvoiceLineCharge : IIRDeserializable<InvoiceLineCharge>
 {
     // BT-141
-    [XmlElement(ElementName = "invoice-line-charge-amount")]
-    public required Amount InvoiceLineChargeAmount { get; set; }
+    public required Amount InvoiceLineChargeAmount { get; init; }
 
     // BT-142
-    [XmlElement(ElementName = "invoice-line-charge-base-amount")]
-    public Amount? InvoiceLineChargeBaseAmount { get; set; }
+    public required Amount? InvoiceLineChargeBaseAmount { get; init; }
 
     // BT-143
-    [XmlElement(ElementName = "invoice-line-charge-percentage")]
-    public Percentage? InvoiceLineChargePercentage { get; set; }
+    public required Percentage? InvoiceLineChargePercentage { get; init; }
 
     // BT-144
-    [XmlElement(ElementName = "invoice-line-charge-reason")]
-    public Text? InvoiceLineChargeReason { get; set; }
+    public required Text? InvoiceLineChargeReason { get; init; }
 
     // BT-145
-    [XmlElement(ElementName = "invoice-line-charge-reason-code")]
-    public Code? InvoiceLineChargeReasonCode { get; set; }
+    public required Code? InvoiceLineChargeReasonCode { get; init; }
 
-    public Im.InvoiceLineCharge ToImmutable()
+    public static InvoiceLineCharge Deserialize(XmlReader reader)
     {
-        return new Im.InvoiceLineCharge
+        reader.ReadStartElement("invoice-line-charge", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-charge-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceLineChargeAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? invoiceLineChargeBaseAmount = null;
+
+        if (reader.IsStartElement("invoice-line-charge-base-amount", IRConfig.NS))
         {
-            InvoiceLineChargeAmount = InvoiceLineChargeAmount.ToImmutable(),
-            InvoiceLineChargeBaseAmount = InvoiceLineChargeBaseAmount?.ToImmutable(),
-            InvoiceLineChargePercentage = InvoiceLineChargePercentage?.ToImmutable(),
-            InvoiceLineChargeReason = InvoiceLineChargeReason?.ToImmutable(),
-            InvoiceLineChargeReasonCode = InvoiceLineChargeReasonCode?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargeBaseAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Percentage? invoiceLineChargePercentage = null;
+
+        if (reader.IsStartElement("invoice-line-charge-percentage", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargePercentage = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? invoiceLineChargeReason = null;
+
+        if (reader.IsStartElement("invoice-line-charge-reason", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargeReason = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? invoiceLineChargeReasonCode = null;
+
+        if (reader.IsStartElement("invoice-line-charge-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargeReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new InvoiceLineCharge
+        {
+            InvoiceLineChargeAmount = invoiceLineChargeAmount,
+            InvoiceLineChargeBaseAmount = invoiceLineChargeBaseAmount,
+            InvoiceLineChargePercentage = invoiceLineChargePercentage,
+            InvoiceLineChargeReason = invoiceLineChargeReason,
+            InvoiceLineChargeReasonCode = invoiceLineChargeReasonCode,
         };
     }
 }
 
-public class PriceDetails : IToImmutable<Im.PriceDetails>
+public readonly record struct PriceDetails : IIRDeserializable<PriceDetails>
 {
     // BT-146
-    [XmlElement(ElementName = "item-net-price")]
-    public required UnitPriceAmount ItemNetPrice { get; set; }
+    public required UnitPriceAmount ItemNetPrice { get; init; }
 
     // BT-147
-    [XmlElement(ElementName = "item-price-discount")]
-    public UnitPriceAmount? ItemPriceDiscount { get; set; }
+    public required UnitPriceAmount? ItemPriceDiscount { get; init; }
 
     // BT-148
-    [XmlElement(ElementName = "item-gross-price")]
-    public UnitPriceAmount? ItemGrossPrice { get; set; }
+    public required UnitPriceAmount? ItemGrossPrice { get; init; }
 
     // BT-149
-    [XmlElement(ElementName = "item-price-base-quantity")]
-    public Quantity? ItemPriceBaseQuantity { get; set; }
+    public required Quantity? ItemPriceBaseQuantity { get; init; }
 
     // BT-150
     // UN/ECE Rec No 20,21
-    [XmlElement(ElementName = "item-price-base-quantity-unit-of-measure-code")]
-    public Code? ItemPriceBaseQuantityUnitOfMeasureCode { get; set; }
+    public required Code? ItemPriceBaseQuantityUnitOfMeasureCode { get; init; }
 
-    public Im.PriceDetails ToImmutable()
+    public static PriceDetails Deserialize(XmlReader reader)
     {
-        return new Im.PriceDetails
+        reader.ReadStartElement("price-details", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-net-price", IRConfig.NS);
+        reader.MoveToContent();
+
+        UnitPriceAmount itemNetPrice = UnitPriceAmount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        UnitPriceAmount? itemPriceDiscount = null;
+
+        if (reader.IsStartElement("item-price-discount", IRConfig.NS))
         {
-            ItemNetPrice = ItemNetPrice.ToImmutable(),
-            ItemPriceDiscount = ItemPriceDiscount?.ToImmutable(),
-            ItemGrossPrice = ItemGrossPrice?.ToImmutable(),
-            ItemPriceBaseQuantity = ItemPriceBaseQuantity?.ToImmutable(),
-            ItemPriceBaseQuantityUnitOfMeasureCode = ItemPriceBaseQuantityUnitOfMeasureCode?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemPriceDiscount = UnitPriceAmount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        UnitPriceAmount? itemGrossPrice = null;
+
+        if (reader.IsStartElement("item-gross-price", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemGrossPrice = UnitPriceAmount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Quantity? itemPriceBaseQuantity = null;
+
+        if (reader.IsStartElement("item-price-base-quantity", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemPriceBaseQuantity = Quantity.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? itemPriceBaseQuantityUnitOfMeasureCode = null;
+
+        if (reader.IsStartElement("item-price-base-quantity-unit-of-measure-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemPriceBaseQuantityUnitOfMeasureCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new PriceDetails
+        {
+            ItemNetPrice = itemNetPrice,
+            ItemPriceDiscount = itemPriceDiscount,
+            ItemGrossPrice = itemGrossPrice,
+            ItemPriceBaseQuantity = itemPriceBaseQuantity,
+            ItemPriceBaseQuantityUnitOfMeasureCode = itemPriceBaseQuantityUnitOfMeasureCode,
         };
     }
 }
 
-public class LineVatInformation : IToImmutable<Im.LineVatInformation>
+public readonly record struct LineVatInformation : IIRDeserializable<LineVatInformation>
 {
     // BT-151
     // UNTDID 5305
-    [XmlElement(ElementName = "invoiced-item-vat-category-code")]
-    public required Code InvoicedItemVatCategoryCode { get; set; }
+    public required Code InvoicedItemVatCategoryCode { get; init; }
 
     // BT-152
-    [XmlElement(ElementName = "invoiced-item-vat-rate")]
-    public Percentage? InvoicedItemVatRate { get; set; }
+    public required Percentage? InvoicedItemVatRate { get; init; }
 
-    public Im.LineVatInformation ToImmutable()
+    public static LineVatInformation Deserialize(XmlReader reader)
     {
-        return new Im.LineVatInformation
+        reader.ReadStartElement("line-vat-information", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoiced-item-vat-category-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code invoicedItemVatCategoryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Percentage? invoicedItemVatRate = null;
+
+        if (reader.IsStartElement("invoiced-item-vat-rate", IRConfig.NS))
         {
-            InvoicedItemVatCategoryCode = InvoicedItemVatCategoryCode.ToImmutable(),
-            InvoicedItemVatRate = InvoicedItemVatRate?.ToImmutable(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoicedItemVatRate = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new LineVatInformation
+        {
+            InvoicedItemVatCategoryCode = invoicedItemVatCategoryCode,
+            InvoicedItemVatRate = invoicedItemVatRate,
         };
     }
 }
 
-public class ItemInformation : IToImmutable<Im.ItemInformation>
+public readonly record struct ItemInformation : IIRDeserializable<ItemInformation>
 {
     // BT-153
-    [XmlElement(ElementName = "item-name")]
-    public required Text ItemName { get; set; }
+    public required Text ItemName { get; init; }
 
     // BT-154
-    [XmlElement(ElementName = "item-description")]
-    public Text? ItemDescription { get; set; }
+    public required Text? ItemDescription { get; init; }
 
     // BT-155
-    [XmlElement(ElementName = "item-sellers-identifier")]
-    public Identifier? ItemSellersIdentifier { get; set; }
+    public required Identifier? ItemSellersIdentifier { get; init; }
 
     // BT-156
-    [XmlElement(ElementName = "item-buyers-identifier")]
-    public Identifier? ItemBuyersIdentifier { get; set; }
+    public required Identifier? ItemBuyersIdentifier { get; init; }
 
     // BT-157
-    [XmlElement(ElementName = "item-standard-identifier")]
-    public Identifier? ItemStandardIdentifier { get; set; }
+    public required Identifier? ItemStandardIdentifier { get; init; }
 
     // BT-158
     // UNTDID 7143
-    [XmlArray(ElementName = "item-classification-identifiers")]
-    [XmlArrayItem(ElementName = "item-classification-identifier")]
-    public Identifier[] ItemClassificationIdentifiers
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    } = [];
+    public required Array<Identifier> ItemClassificationIdentifiers { get; init; }
 
     // BT-159
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2 representation
-    [XmlElement(ElementName = "item-country-of-origin")]
-    public Code? ItemCountryOfOrigin { get; set; }
+    public required Code? ItemCountryOfOrigin { get; init; }
 
     // BG-32
-    [XmlArray(ElementName = "item-attributes")]
-    [XmlArrayItem(ElementName = "item-attribute")]
-    public ItemAttribute[] ItemAttributes
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            Assert.ArgContainsNoNullValues(value, "ItemAttributes can't contain null values");
-            field = value;
-        }
-    } = [];
+    public required Array<ItemAttribute> ItemAttributes { get; init; }
 
-    public Im.ItemInformation ToImmutable()
+    public static ItemInformation Deserialize(XmlReader reader)
     {
-        return new Im.ItemInformation
+        reader.ReadStartElement("item-information", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text itemName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? itemDescription = null;
+
+        if (reader.IsStartElement("item-description", IRConfig.NS))
         {
-            ItemName = ItemName.ToImmutable(),
-            ItemDescription = ItemDescription?.ToImmutable(),
-            ItemSellersIdentifier = ItemSellersIdentifier?.ToImmutable(),
-            ItemBuyersIdentifier = ItemBuyersIdentifier?.ToImmutable(),
-            ItemStandardIdentifier = ItemStandardIdentifier?.ToImmutable(),
-            ItemClassificationIdentifiers = ItemClassificationIdentifiers.ToImmutable<Identifier, Im.Primitives.Identifier>(),
-            ItemCountryOfOrigin = ItemCountryOfOrigin?.ToImmutable(),
-            ItemAttributes = ItemAttributes.ToImmutable<ItemAttribute, Im.ItemAttribute>(),
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemDescription = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? itemSellersIdentifier = null;
+
+        if (reader.IsStartElement("item-sellers-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemSellersIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? itemBuyersIdentifier = null;
+
+        if (reader.IsStartElement("item-buyers-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemBuyersIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? itemStandardIdentifier = null;
+
+        if (reader.IsStartElement("item-standard-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemStandardIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<Identifier> itemClassificationIdentifiers = Array<Identifier>.Empty;
+
+        if (reader.IsStartElement("item-classification-identifiers", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<Identifier> builder = [];
+            while (reader.IsStartElement("item-classification-identifier", IRConfig.NS))
+            {
+                reader.ReadStartElement();
+                reader.MoveToContent();
+
+                builder.Add(Identifier.Deserialize(reader));
+
+                reader.ReadEndElement();
+                reader.MoveToContent();
+            }
+
+            itemClassificationIdentifiers = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? itemCountryOfOrigin = null;
+
+        if (reader.IsStartElement("item-country-of-origin", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemCountryOfOrigin = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<ItemAttribute> itemAttributes = Array<ItemAttribute>.Empty;
+
+        if (reader.IsStartElement("item-attributes", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<ItemAttribute> builder = [];
+            while (reader.IsStartElement("item-attribute", IRConfig.NS))
+            {
+                builder.Add(ItemAttribute.Deserialize(reader));
+            }
+
+            itemAttributes = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new ItemInformation
+        {
+            ItemName = itemName,
+            ItemDescription = itemDescription,
+            ItemSellersIdentifier = itemSellersIdentifier,
+            ItemBuyersIdentifier = itemBuyersIdentifier,
+            ItemStandardIdentifier = itemStandardIdentifier,
+            ItemClassificationIdentifiers = itemClassificationIdentifiers,
+            ItemCountryOfOrigin = itemCountryOfOrigin,
+            ItemAttributes = itemAttributes,
         };
     }
 }
 
-public class ItemAttribute : IToImmutable<Im.ItemAttribute>
+public readonly record struct ItemAttribute : IIRDeserializable<ItemAttribute>
 {
     // BT-160
-    [XmlElement(ElementName = "item-attribute-name")]
-    public required Text ItemAttributeName { get; set; }
+    public required Text ItemAttributeName { get; init; }
 
     // BT-161
-    [XmlElement(ElementName = "item-attribute-value")]
-    public required Text ItemAttributeValue { get; set; }
+    public required Text ItemAttributeValue { get; init; }
 
-    public Im.ItemAttribute ToImmutable()
+    public static ItemAttribute Deserialize(XmlReader reader)
     {
-        return new Im.ItemAttribute
+        reader.ReadStartElement("item-attribute", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-attribute-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text itemAttributeName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-attribute-value", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text itemAttributeValue = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new ItemAttribute
         {
-            ItemAttributeName = ItemAttributeName.ToImmutable(),
-            ItemAttributeValue = ItemAttributeValue.ToImmutable(),
+            ItemAttributeName = itemAttributeName,
+            ItemAttributeValue = itemAttributeValue,
         };
     }
 }

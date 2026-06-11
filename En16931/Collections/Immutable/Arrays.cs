@@ -4,13 +4,25 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 using En16931.Utils;
 
 namespace En16931.Collections.Immutable;
 
-public readonly struct Array<T> : IEquatable<Array<T>>, IEnumerable<T> where T : struct
+public static class ArrayBuilder
 {
+    public static Array<T> Create<T>(ReadOnlySpan<T> values) where T : struct
+    {
+        return new(ImmutableArray.Create<T>(values));
+    }
+}
+
+[CollectionBuilder(typeof(ArrayBuilder), "Create")]
+public readonly struct Array<T> : IEquatable<Array<T>>, IEnumerable<T>, IReadOnlyCollection<T> where T : struct
+{
+    public static Array<T> Empty = new(ImmutableArray<T>.Empty);
+
     private ImmutableArray<T> _values
     {
         get
@@ -26,9 +38,14 @@ public readonly struct Array<T> : IEquatable<Array<T>>, IEnumerable<T> where T :
     }
 
     [SetsRequiredMembers]
+    public Array(ImmutableArray<T> v) => _values = v;
+
+    [SetsRequiredMembers]
     public Array(IEnumerable<T> v) => _values = ImmutableArray.CreateRange(v);
 
     public int Length => _values.Length;
+
+    public int Count => Length;
 
     public T this[int index] { get => _values[index]; }
 
@@ -89,8 +106,19 @@ public readonly struct Array<T> : IEquatable<Array<T>>, IEnumerable<T> where T :
     }
 }
 
-public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>>, IEnumerable<T> where T : struct
+public static class NonEmptyArrayBuilder
 {
+    public static NonEmptyArray<T> Create<T>(ReadOnlySpan<T> values) where T : struct
+    {
+        return new(ImmutableArray.Create<T>(values));
+    }
+}
+
+[CollectionBuilder(typeof(NonEmptyArrayBuilder), "Create")]
+public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>>, IEnumerable<T>, IReadOnlyCollection<T> where T : struct
+{
+    public static NonEmptyArray<T> Empty = new(ImmutableArray<T>.Empty);
+
     private ImmutableArray<T> _values
     {
         get
@@ -106,9 +134,14 @@ public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>>, IEnumera
     }
 
     [SetsRequiredMembers]
+    public NonEmptyArray(ImmutableArray<T> v) => _values = v;
+
+    [SetsRequiredMembers]
     public NonEmptyArray(IEnumerable<T> v) => _values = ImmutableArray.CreateRange(v);
 
     public int Length => _values.Length;
+
+    public int Count => Length;
 
     public T this[int index] { get => _values[index]; }
 

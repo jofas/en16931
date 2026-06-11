@@ -1,160 +1,55 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-
 using En16931.Collections.Immutable;
-using En16931.Model.Conversions;
+using En16931.IR;
 using En16931.Utils;
-
-using Im = En16931.Model.Immutable;
 
 namespace En16931.Model.Primitives;
 
-public struct Amount : IToImmutable<Im.Primitives.Amount>, IXmlSerializable
+public readonly record struct Amount(decimal Value) : IIRDeserializable<Amount>
 {
-    public required decimal Value { get; set; }
-
-    [SetsRequiredMembers]
-    public Amount(decimal v) => Value = v;
-
-    public Im.Primitives.Amount ToImmutable()
+    public static Amount Deserialize(XmlReader reader)
     {
-        return new Im.Primitives.Amount(Value);
-    }
-
-    public void ReadXml(XmlReader reader)
-    {
-        Value = reader.ReadElementContentAsDecimal();
-    }
-
-    public void WriteXml(XmlWriter writer)
-    {
-        ThrowHelper.ThrowNotImplementedException();
-    }
-
-    public XmlSchema? GetSchema()
-    {
-        return null;
+        return new Amount(reader.ReadContentAsDecimal());
     }
 }
 
-public struct Percentage : IToImmutable<Im.Primitives.Percentage>, IXmlSerializable
+public readonly record struct Percentage(decimal Value) : IIRDeserializable<Percentage>
 {
-    public required decimal Value { get; set; }
-
-    [SetsRequiredMembers]
-    public Percentage(decimal v) => Value = v;
-
-    public Im.Primitives.Percentage ToImmutable()
+    public static Percentage Deserialize(XmlReader reader)
     {
-        return new Im.Primitives.Percentage(Value);
-    }
-
-    public void ReadXml(XmlReader reader)
-    {
-        Value = reader.ReadElementContentAsDecimal();
-    }
-
-    public void WriteXml(XmlWriter writer)
-    {
-        ThrowHelper.ThrowNotImplementedException();
-    }
-
-    public XmlSchema? GetSchema()
-    {
-        return null;
+        return new Percentage(reader.ReadContentAsDecimal());
     }
 }
 
-public struct Quantity : IToImmutable<Im.Primitives.Quantity>, IXmlSerializable
+public readonly record struct Quantity(decimal Value) : IIRDeserializable<Quantity>
 {
-    public required decimal Value { get; set; }
-
-    [SetsRequiredMembers]
-    public Quantity(decimal v) => Value = v;
-
-    public Im.Primitives.Quantity ToImmutable()
+    public static Quantity Deserialize(XmlReader reader)
     {
-        return new Im.Primitives.Quantity(Value);
-    }
-
-    public void ReadXml(XmlReader reader)
-    {
-        Value = reader.ReadElementContentAsDecimal();
-    }
-
-    public void WriteXml(XmlWriter writer)
-    {
-        ThrowHelper.ThrowNotImplementedException();
-    }
-
-    public XmlSchema? GetSchema()
-    {
-        return null;
+        return new Quantity(reader.ReadContentAsDecimal());
     }
 }
 
-public struct UnitPriceAmount : IToImmutable<Im.Primitives.UnitPriceAmount>, IXmlSerializable
+public readonly record struct UnitPriceAmount(decimal Value) : IIRDeserializable<UnitPriceAmount>
 {
-    public required decimal Value { get; set; }
-
-    [SetsRequiredMembers]
-    public UnitPriceAmount(decimal v) => Value = v;
-
-    public Im.Primitives.UnitPriceAmount ToImmutable()
+    public static UnitPriceAmount Deserialize(XmlReader reader)
     {
-        return new Im.Primitives.UnitPriceAmount(Value);
-    }
-
-    public void ReadXml(XmlReader reader)
-    {
-        Value = reader.ReadElementContentAsDecimal();
-    }
-
-    public void WriteXml(XmlWriter writer)
-    {
-        ThrowHelper.ThrowNotImplementedException();
-    }
-
-    public XmlSchema? GetSchema()
-    {
-        return null;
+        return new UnitPriceAmount(reader.ReadContentAsDecimal());
     }
 }
 
-public struct Date : IToImmutable<Im.Primitives.Date>, IXmlSerializable
+public readonly record struct Date(DateTime Value) : IIRDeserializable<Date>
 {
-    public required DateTime Value { get; set; }
-
-    [SetsRequiredMembers]
-    public Date(DateTime v) => Value = v;
-
-    public Im.Primitives.Date ToImmutable()
+    public static Date Deserialize(XmlReader reader)
     {
-        return new Im.Primitives.Date(Value);
-    }
-
-    public void ReadXml(XmlReader reader)
-    {
-        Value = reader.ReadElementContentAsDateTime();
-    }
-
-    public void WriteXml(XmlWriter writer)
-    {
-        ThrowHelper.ThrowNotImplementedException();
-    }
-
-    public XmlSchema? GetSchema()
-    {
-        return null;
+        return new Date(reader.ReadContentAsDateTime());
     }
 }
 
-public struct Code : IToImmutable<Im.Primitives.Code>, IXmlSerializable
+public readonly record struct Code : IIRDeserializable<Code>
 {
     public required string Value
     {
@@ -163,7 +58,7 @@ public struct Code : IToImmutable<Im.Primitives.Code>, IXmlSerializable
             Assert.IsNotNull(field);
             return field;
         }
-        set
+        init
         {
             Assert.ArgIsNotNull(value);
             field = value;
@@ -171,30 +66,18 @@ public struct Code : IToImmutable<Im.Primitives.Code>, IXmlSerializable
     }
 
     [SetsRequiredMembers]
-    public Code(string v) => Value = v;
-
-    public Im.Primitives.Code ToImmutable()
+    public Code(string value)
     {
-        return new Im.Primitives.Code(Value);
+        Value = value;
     }
 
-    public void ReadXml(XmlReader reader)
+    public static Code Deserialize(XmlReader reader)
     {
-        Value = reader.ReadElementContentAsString();
-    }
-
-    public void WriteXml(XmlWriter writer)
-    {
-        ThrowHelper.ThrowNotImplementedException();
-    }
-
-    public XmlSchema? GetSchema()
-    {
-        return null;
+        return new Code(reader.ReadContentAsString());
     }
 }
 
-public struct DocumentReference : IToImmutable<Im.Primitives.DocumentReference>, IXmlSerializable
+public readonly record struct DocumentReference : IIRDeserializable<DocumentReference>
 {
     public required string Value
     {
@@ -203,7 +86,7 @@ public struct DocumentReference : IToImmutable<Im.Primitives.DocumentReference>,
             Assert.IsNotNull(field);
             return field;
         }
-        set
+        init
         {
             Assert.ArgIsNotNull(value);
             field = value;
@@ -211,30 +94,18 @@ public struct DocumentReference : IToImmutable<Im.Primitives.DocumentReference>,
     }
 
     [SetsRequiredMembers]
-    public DocumentReference(string v) => Value = v;
-
-    public Im.Primitives.DocumentReference ToImmutable()
+    public DocumentReference(string value)
     {
-        return new Im.Primitives.DocumentReference(Value);
+        Value = value;
     }
 
-    public void ReadXml(XmlReader reader)
+    public static DocumentReference Deserialize(XmlReader reader)
     {
-        Value = reader.ReadElementContentAsString();
-    }
-
-    public void WriteXml(XmlWriter writer)
-    {
-        ThrowHelper.ThrowNotImplementedException();
-    }
-
-    public XmlSchema? GetSchema()
-    {
-        return null;
+        return new DocumentReference(reader.ReadContentAsString());
     }
 }
 
-public struct Text : IToImmutable<Im.Primitives.Text>, IXmlSerializable
+public readonly record struct Text : IIRDeserializable<Text>
 {
     public required string Value
     {
@@ -243,7 +114,7 @@ public struct Text : IToImmutable<Im.Primitives.Text>, IXmlSerializable
             Assert.IsNotNull(field);
             return field;
         }
-        set
+        init
         {
             Assert.ArgIsNotNull(value);
             field = value;
@@ -251,47 +122,21 @@ public struct Text : IToImmutable<Im.Primitives.Text>, IXmlSerializable
     }
 
     [SetsRequiredMembers]
-    public Text(string v) => Value = v;
-
-    public Im.Primitives.Text ToImmutable()
+    public Text(string value)
     {
-        return new Im.Primitives.Text(Value);
+        Value = value;
     }
 
-    public void ReadXml(XmlReader reader)
+    public static Text Deserialize(XmlReader reader)
     {
-        Value = reader.ReadElementContentAsString();
-    }
-
-    public void WriteXml(XmlWriter writer)
-    {
-        ThrowHelper.ThrowNotImplementedException();
-    }
-
-    public XmlSchema? GetSchema()
-    {
-        return null;
+        return new Text(reader.ReadContentAsString());
     }
 }
 
-public struct BinaryObject : IToImmutable<Im.Primitives.BinaryObject>
+public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>
 {
-    [XmlElement(ElementName = "content")]
-    public required byte[] Content
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        set
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
+    public required Array<byte> Content { get; init; }
 
-    [XmlElement(ElementName = "mime-code")]
     public required string MimeCode
     {
         get
@@ -299,14 +144,13 @@ public struct BinaryObject : IToImmutable<Im.Primitives.BinaryObject>
             Assert.IsNotNull(field);
             return field;
         }
-        set
+        init
         {
             Assert.ArgIsNotNull(value);
             field = value;
         }
     }
 
-    [XmlElement(ElementName = "filename")]
     public required string Filename
     {
         get
@@ -314,7 +158,7 @@ public struct BinaryObject : IToImmutable<Im.Primitives.BinaryObject>
             Assert.IsNotNull(field);
             return field;
         }
-        set
+        init
         {
             Assert.ArgIsNotNull(value);
             field = value;
@@ -322,22 +166,59 @@ public struct BinaryObject : IToImmutable<Im.Primitives.BinaryObject>
     }
 
     [SetsRequiredMembers]
-    public BinaryObject(byte[] content, string mimeCode, string filename)
+    public BinaryObject(Array<byte> content, string mimeCode, string filename)
     {
         Content = content;
         MimeCode = mimeCode;
         Filename = filename;
     }
 
-    public Im.Primitives.BinaryObject ToImmutable()
+    public static BinaryObject Deserialize(XmlReader reader)
     {
-        return new Im.Primitives.BinaryObject(new Array<byte>(Content), MimeCode, Filename);
+        reader.ReadStartElement("content", IRConfig.NS);
+        reader.MoveToContent();
+
+        const int size = 4096;
+
+        var result = ImmutableArray.CreateBuilder<byte>();
+
+        byte[] buffer = new byte[size];
+
+        int bytesRead = -1;
+
+        while (bytesRead != 0)
+        {
+            bytesRead = reader.ReadContentAsBase64(buffer, 0, size);
+            result.AddRange(buffer, bytesRead);
+        }
+
+        Array<byte> content = new(result.ToImmutable());
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("mime-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        string mimeCode = reader.ReadContentAsString();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("filename", IRConfig.NS);
+        reader.MoveToContent();
+
+        string filename = reader.ReadContentAsString();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new BinaryObject(content, mimeCode, filename);
     }
 }
 
-public struct Identifier : IToImmutable<Im.Primitives.Identifier>
+public readonly record struct Identifier : IIRDeserializable<Identifier>
 {
-    [XmlElement(ElementName = "content")]
     public required string Content
     {
         get
@@ -345,18 +226,16 @@ public struct Identifier : IToImmutable<Im.Primitives.Identifier>
             Assert.IsNotNull(field);
             return field;
         }
-        set
+        init
         {
             Assert.ArgIsNotNull(value);
             field = value;
         }
     }
 
-    [XmlElement(ElementName = "scheme-identifier")]
-    public required string? SchemeIdentifier { get; set; }
+    public required string? SchemeIdentifier { get; init; }
 
-    [XmlElement(ElementName = "scheme-version-identifier")]
-    public required string? SchemeVersionIdentifier { get; set; }
+    public required string? SchemeVersionIdentifier { get; init; }
 
     [SetsRequiredMembers]
     public Identifier(string content)
@@ -382,8 +261,42 @@ public struct Identifier : IToImmutable<Im.Primitives.Identifier>
         SchemeVersionIdentifier = schemeVersionIdentifier;
     }
 
-    public Im.Primitives.Identifier ToImmutable()
+    public static Identifier Deserialize(XmlReader reader)
     {
-        return new Im.Primitives.Identifier(Content, SchemeIdentifier, SchemeVersionIdentifier);
+        reader.ReadStartElement("content", IRConfig.NS);
+        reader.MoveToContent();
+
+        string content = reader.ReadContentAsString();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        string? schemeIdentifier = null;
+
+        if (reader.IsStartElement("scheme-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            schemeIdentifier = reader.ReadContentAsString();
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        string? schemeVersionIdentifier = null;
+
+        if (reader.IsStartElement("scheme-version-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            schemeVersionIdentifier = reader.ReadContentAsString();
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        return new Identifier(content, schemeIdentifier, schemeVersionIdentifier);
     }
 }
