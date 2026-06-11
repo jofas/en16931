@@ -455,10 +455,6 @@ public class Deserialize
                     Reference = new DocumentReference("PIR1234567890"),
                     PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 2, 4)),
                 },
-                new PrecedingInvoiceReference {
-                    Reference = new DocumentReference("PIR0987654321"),
-                    PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 3, 5)),
-                },
             ],
             Seller = new Seller
             {
@@ -791,16 +787,21 @@ public class Deserialize
         Assert.Equal(expected, actual);
     }
 
-    // TODO: fill out test stubs
-    // TODO: implement interfaces
-
     [Fact]
-    public void DeserializeInvoiceNote() {
+    public void DeserializeInvoiceNote()
+    {
         string xml = """
-
+            <invoice-note id="bg-1" xmlns="urn:todo">
+              <invoice-note-subject-code id="bt-21">AAC</invoice-note-subject-code>
+              <invoice-note id="bt-22">Invoice Note Description</invoice-note>
+            </invoice-note>
             """;
 
-        InvoiceNote expected = default;
+        InvoiceNote expected = new InvoiceNote
+        {
+            InvoiceNoteSubjectCode = new Code("AAC"),
+            Note = new Text("Invoice Note Description"),
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -811,12 +812,46 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializePrecedingInvoiceReference() {
+    public void DeserializeProcessControl()
+    {
         string xml = """
-
+            <process-control id="bg-2" xmlns="urn:todo">
+              <business-process-type id="bt-23">urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</business-process-type>
+              <specification-identifier id="bt-24">
+                <content>urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0</content>
+              </specification-identifier>
+            </process-control>
             """;
 
-        PrecedingInvoiceReference expected = default;
+        ProcessControl expected = new ProcessControl
+        {
+            BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
+            SpecificationIdentifier = new Identifier("urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"),
+        };
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = ProcessControl.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializePrecedingInvoiceReference()
+    {
+        string xml = """
+            <preceding-invoice-reference id="bg-3" xmlns="urn:todo">
+              <preceding-invoice-reference id="bt-25">PIR1234567890</preceding-invoice-reference>
+              <preceding-invoice-issue-date id="bt-26">2018-02-04</preceding-invoice-issue-date>
+            </preceding-invoice-reference>
+            """;
+
+        PrecedingInvoiceReference expected = new PrecedingInvoiceReference
+        {
+            Reference = new DocumentReference("PIR1234567890"),
+            PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 2, 4)),
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -827,12 +862,87 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeSeller() {
+    public void DeserializeSeller()
+    {
         string xml = """
-
+            <seller id="bg-4" xmlns="urn:todo">
+              <seller-name id="bt-27">[Seller name]</seller-name>
+              <seller-trading-name id="bt-28">[Seller trading name]</seller-trading-name>
+              <seller-identifiers id="bt-29">
+                <seller-identifier id="bt-29">
+                  <content>9876543217894897438</content>
+                </seller-identifier>
+                <seller-identifier id="bt-29">
+                  <content>748387437438</content>
+                </seller-identifier>
+                <seller-identifier id="bt-29">
+                  <content>987654321</content>
+                  <scheme-identifier>0088</scheme-identifier>
+                </seller-identifier>
+              </seller-identifiers>
+              <seller-legal-registration-identifier id="bt-30">
+                <content>123456789</content>
+                <scheme-identifier>0088</scheme-identifier>
+              </seller-legal-registration-identifier>
+              <seller-vat-identifier id="bt-31">
+                <content>ATU123456789</content>
+              </seller-vat-identifier>
+              <seller-tax-registration-identifier id="bt-32">
+                <content>123/456/789</content>
+              </seller-tax-registration-identifier>
+              <seller-additional-legal-information id="bt-33">Amtsgericht […], Geschäftsführer: […], Sitz der Gesellschaft […], Aufsichtsratvorsitzender: […]</seller-additional-legal-information>
+              <seller-electronic-address id="bt-34">
+                <content>rechnungsausgang@test.com</content>
+                <scheme-identifier>EM</scheme-identifier>
+              </seller-electronic-address>
+              <seller-postal-address id="bg-5">
+                <seller-address-line-1 id="bt-35">[Seller address line 1]</seller-address-line-1>
+                <seller-address-line-2 id="bt-36">[Seller address line 2]</seller-address-line-2>
+                <seller-address-line-3 id="bt-162">[Seller address line 3]</seller-address-line-3>
+                <seller-city id="bt-37">[Seller city]</seller-city>
+                <seller-post-code id="bt-38">12345</seller-post-code>
+                <seller-country-subdivision id="bt-39">Bayern</seller-country-subdivision>
+                <seller-country-code id="bt-40">DE</seller-country-code>
+              </seller-postal-address>
+              <seller-contact id="bg-6">
+                <seller-contact-point id="bt-41">Tim Tester</seller-contact-point>
+                <seller-contact-telephone-number id="bt-42">012 3456789</seller-contact-telephone-number>
+                <seller-contact-email-address id="bt-43">tim.tester@test.com</seller-contact-email-address>
+              </seller-contact>
+            </seller>
             """;
 
-        Seller expected = default;
+        Seller expected = new Seller
+        {
+            SellerName = new Text("[Seller name]"),
+            SellerTradingName = new Text("[Seller trading name]"),
+            SellerIdentifiers = [
+                new Identifier("9876543217894897438"),
+                new Identifier("748387437438"),
+                new Identifier("987654321", "0088")
+            ],
+            SellerLegalRegistrationIdentifier = new Identifier("123456789", "0088"),
+            SellerVatIdentifier = new Identifier("ATU123456789"),
+            SellerTaxRegistrationIdentifier = new Identifier("123/456/789"),
+            SellerAdditionalLegalInformation = new Text("Amtsgericht […], Geschäftsführer: […], Sitz der Gesellschaft […], Aufsichtsratvorsitzender: […]"),
+            SellerElectronicAddress = new Identifier("rechnungsausgang@test.com", "EM"),
+            SellerPostalAddress = new SellerPostalAddress
+            {
+                SellerAddressLine1 = new Text("[Seller address line 1]"),
+                SellerAddressLine2 = new Text("[Seller address line 2]"),
+                SellerAddressLine3 = new Text("[Seller address line 3]"),
+                SellerCity = new Text("[Seller city]"),
+                SellerPostCode = new Text("12345"),
+                SellerCountrySubdivision = new Text("Bayern"),
+                SellerCountryCode = new Code("DE"),
+            },
+            SellerContact = new SellerContact
+            {
+                SellerContactPoint = new Text("Tim Tester"),
+                SellerContactTelephoneNumber = new Text("012 3456789"),
+                SellerContactEmailAddress = new Text("tim.tester@test.com"),
+            },
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -843,12 +953,68 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeBuyer() {
+    public void DeserializeBuyer()
+    {
         string xml = """
-
+            <buyer id="bg-7" xmlns="urn:todo">
+              <buyer-name id="bt-44">[Buyer name]</buyer-name>
+              <buyer-trading-name id="bt-45">[Buyer trading name]</buyer-trading-name>
+              <buyer-identifier id="bt-46">
+                <content>138</content>
+              </buyer-identifier>
+              <buyer-legal-registration-identifier id="bt-47">
+                <content>90000000-03083-72</content>
+                <scheme-identifier>0204</scheme-identifier>
+              </buyer-legal-registration-identifier>
+              <buyer-vat-identifier id="bt-48">
+                <content>DE12345ABC</content>
+              </buyer-vat-identifier>
+              <buyer-electronic-address id="bt-49">
+                <content>rechnungseingang@test.de</content>
+                <scheme-identifier>EM</scheme-identifier>
+              </buyer-electronic-address>
+              <buyer-postal-address id="bg-8">
+                <buyer-address-line-1 id="bt-50">[Buyer address line 1]</buyer-address-line-1>
+                <buyer-address-line-2 id="bt-51">[Buyer address line 2]</buyer-address-line-2>
+                <buyer-address-line-3 id="bt-163">[Buyer address line 3]</buyer-address-line-3>
+                <buyer-city id="bt-52">[Buyer city]</buyer-city>
+                <buyer-post-code id="bt-53">98765</buyer-post-code>
+                <buyer-country-subdivision id="bt-54">Bayern</buyer-country-subdivision>
+                <buyer-country-code id="bt-55">DE</buyer-country-code>
+              </buyer-postal-address>
+              <buyer-contact id="bg-9">
+                <buyer-contact-point id="bt-56">Tina Tester</buyer-contact-point>
+                <buyer-contact-telephone-number id="bt-57">0800 123456</buyer-contact-telephone-number>
+                <buyer-contact-email-address id="bt-58">tester@test.de</buyer-contact-email-address>
+              </buyer-contact>
+            </buyer>
             """;
 
-        Buyer expected = default;
+        Buyer expected = new Buyer
+        {
+            BuyerName = new Text("[Buyer name]"),
+            BuyerTradingName = new Text("[Buyer trading name]"),
+            BuyerIdentifier = new Identifier("138"),
+            BuyerLegalRegistrationIdentifier = new Identifier("90000000-03083-72", "0204"),
+            BuyerVatIdentifier = new Identifier("DE12345ABC"),
+            BuyerElectronicAddress = new Identifier("rechnungseingang@test.de", "EM"),
+            BuyerPostalAddress = new BuyerPostalAddress
+            {
+                BuyerAddressLine1 = new Text("[Buyer address line 1]"),
+                BuyerAddressLine2 = new Text("[Buyer address line 2]"),
+                BuyerAddressLine3 = new Text("[Buyer address line 3]"),
+                BuyerCity = new Text("[Buyer city]"),
+                BuyerPostCode = new Text("98765"),
+                BuyerCountrySubdivision = new Text("Bayern"),
+                BuyerCountryCode = new Code("DE"),
+            },
+            BuyerContact = new BuyerContact
+            {
+                ContactPoint = new Text("Tina Tester"),
+                PhoneNumber = new Text("0800 123456"),
+                EmailAddress = new Text("tester@test.de"),
+            },
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -859,12 +1025,27 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializePayee() {
+    public void DeserializePayee()
+    {
         string xml = """
-
+            <payee id="bg-10" xmlns="urn:todo">
+              <payee-name id="bt-59">[Payee name]</payee-name>
+              <payee-identifier id="bt-60">
+                <content>74</content>
+              </payee-identifier>
+              <payee-legal-registration-identifier id="bt-61">
+                <content>90000000-03083-72</content>
+                <scheme-identifier>0204</scheme-identifier>
+              </payee-legal-registration-identifier>
+            </payee>
             """;
 
-        Payee expected = default;
+        Payee expected = new Payee
+        {
+            PayeeName = new Text("[Payee name]"),
+            PayeeIdentifier = new Identifier("74"),
+            PayeeLegalRegistrationIdentifier = new Identifier("90000000-03083-72", "0204"),
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -875,12 +1056,41 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeSellerTaxRepresentativeParty() {
+    public void DeserializeSellerTaxRepresentativeParty()
+    {
         string xml = """
-
+            <seller-tax-representative-party id="bg-11" xmlns="urn:todo">
+              <seller-tax-representative-name id="bt-62">[Seller tax representative name]</seller-tax-representative-name>
+              <seller-tax-representative-vat-identifier id="bt-63">
+                <content>DE124567</content>
+              </seller-tax-representative-vat-identifier>
+              <seller-tax-representative-postal-address id="bg-12">
+                <tax-representative-address-line-1 id="bt-64">[Seller tax representative address line 1]</tax-representative-address-line-1>
+                <tax-representative-address-line-2 id="bt-65">[Seller tax representative address line 2]</tax-representative-address-line-2>
+                <tax-representative-address-line-3 id="bt-164">[Seller tax representative address line 3]</tax-representative-address-line-3>
+                <tax-representative-city id="bt-66">[Seller tax representative city]</tax-representative-city>
+                <tax-representative-post-code id="bt-67">12345</tax-representative-post-code>
+                <tax-representative-country-subdivision id="bt-68">Bayern</tax-representative-country-subdivision>
+                <tax-representative-country-code id="bt-69">DE</tax-representative-country-code>
+              </seller-tax-representative-postal-address>
+            </seller-tax-representative-party>
             """;
 
-        SellerTaxRepresentativeParty expected = default;
+        SellerTaxRepresentativeParty expected = new SellerTaxRepresentativeParty
+        {
+            SellerTaxRepresentativeName = new Text("[Seller tax representative name]"),
+            SellerTaxRepresentativeVatIdentifier = new Identifier("DE124567"),
+            SellerTaxRepresentativePostalAddress = new SellerTaxRepresentativePostalAddress
+            {
+                TaxRepresentativeAddressLine1 = new Text("[Seller tax representative address line 1]"),
+                TaxRepresentativeAddressLine2 = new Text("[Seller tax representative address line 2]"),
+                TaxRepresentativeAddressLine3 = new Text("[Seller tax representative address line 3]"),
+                TaxRepresentativeCity = new Text("[Seller tax representative city]"),
+                TaxRepresentativePostCode = new Text("12345"),
+                TaxRepresentativeCountrySubdivision = new Text("Bayern"),
+                TaxRepresentativeCountryCode = new Code("DE"),
+            },
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -891,12 +1101,98 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializePaymentInstructions() {
+    public void DeserializeDeliveryInformation()
+    {
         string xml = """
-
+            <delivery-information id="bg-13" xmlns="urn:todo">
+              <deliver-to-party-name id="bt-70">[Deliver to party name]</deliver-to-party-name>
+              <deliver-to-location-identifier id="bt-71">
+                <content>68</content>
+              </deliver-to-location-identifier>
+              <actual-delivery-date id="bt-72">2018-04-13</actual-delivery-date>
+              <invoicing-period id="bg-14">
+                <invoicing-period-start-date id="bt-73">2018-04-13</invoicing-period-start-date>
+                <invoicing-period-end-date id="bt-74">2018-04-13</invoicing-period-end-date>
+              </invoicing-period>
+              <deliver-to-address id="bg-15">
+                <deliver-to-address-line-1 id="bt-75">[Deliver to street]</deliver-to-address-line-1>
+                <deliver-to-address-line-2 id="bt-76">4. OG</deliver-to-address-line-2>
+                <deliver-to-address-line-3 id="bt-165">More Details</deliver-to-address-line-3>
+                <deliver-to-city id="bt-77">[Deliver to city]</deliver-to-city>
+                <deliver-to-post-code id="bt-78">98765</deliver-to-post-code>
+                <deliver-to-country-subdivision id="bt-79">Bayern</deliver-to-country-subdivision>
+                <deliver-to-country-code id="bt-80">DE</deliver-to-country-code>
+              </deliver-to-address>
+            </delivery-information>
             """;
 
-        PaymentInstructions expected = default;
+        DeliveryInformation expected = new DeliveryInformation
+        {
+            DeliverToPartyName = new Text("[Deliver to party name]"),
+            DeliverToLocationIdentifier = new Identifier("68"),
+            ActualDeliveryDate = new Date(new DateTime(2018, 4, 13)),
+            InvoicingPeriod = new InvoicingPeriod
+            {
+                InvoicingPeriodStartDate = new Date(new DateTime(2018, 4, 13)),
+                InvoicingPeriodEndDate = new Date(new DateTime(2018, 4, 13)),
+            },
+            DeliverToAddress = new DeliverToAddress
+            {
+                DeliverToAddressLine1 = new Text("[Deliver to street]"),
+                DeliverToAddressLine2 = new Text("4. OG"),
+                DeliverToAddressLine3 = new Text("More Details"),
+                DeliverToCity = new Text("[Deliver to city]"),
+                DeliverToPostCode = new Text("98765"),
+                DeliverToCountrySubdivision = new Text("Bayern"),
+                DeliverToCountryCode = new Code("DE"),
+            },
+        };
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        var actual = DeliveryInformation.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DeserializePaymentInstructions()
+    {
+        string xml = """
+            <payment-instructions id="bg-16" xmlns="urn:todo">
+              <payment-means-type-code id="bt-81">58</payment-means-type-code>
+              <payment-means-text id="bt-82">[Payment means text]</payment-means-text>
+              <remittance-information id="bt-83">Deb. 12345 / Fact. 9876543</remittance-information>
+              <credit-transfers id="bg-17">
+                <credit-transfer id="bg-17">
+                  <payment-account-identifier id="bt-84">
+                    <content>DE75512108001245126199</content>
+                  </payment-account-identifier>
+                  <payment-account-name id="bt-85">[Payment account name]</payment-account-name>
+                  <payment-service-provider-identifier id="bt-86">
+                    <content>[BIC]</content>
+                  </payment-service-provider-identifier>
+                </credit-transfer>
+              </credit-transfers>
+            </payment-instructions>
+            """;
+
+        PaymentInstructions expected = new PaymentInstructions
+        {
+            PaymentMeansTypeCode = new Code("58"),
+            PaymentMeansText = new Text("[Payment means text]"),
+            RemittanceInformation = new Text("Deb. 12345 / Fact. 9876543"),
+            CreditTransfers = [
+                new CreditTransfer {
+                    PaymentAccountIdentifier = new Identifier("DE75512108001245126199"),
+                    PaymentAccountName = new Text("[Payment account name]"),
+                    PaymentServiceProviderIdentifier = new Identifier("[BIC]"),
+                },
+            ],
+            PaymentCardInformation = null,
+            DirectDebit = null,
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -907,12 +1203,26 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeCreditTransfer() {
+    public void DeserializeCreditTransfer()
+    {
         string xml = """
-
+            <credit-transfer id="bg-17" xmlns="urn:todo">
+              <payment-account-identifier id="bt-84">
+                <content>DE75512108001245126199</content>
+              </payment-account-identifier>
+              <payment-account-name id="bt-85">[Payment account name]</payment-account-name>
+              <payment-service-provider-identifier id="bt-86">
+                <content>[BIC]</content>
+              </payment-service-provider-identifier>
+            </credit-transfer>
             """;
 
-        CreditTransfer expected = default;
+        CreditTransfer expected = new CreditTransfer
+        {
+            PaymentAccountIdentifier = new Identifier("DE75512108001245126199"),
+            PaymentAccountName = new Text("[Payment account name]"),
+            PaymentServiceProviderIdentifier = new Identifier("[BIC]"),
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -923,12 +1233,20 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializePaymentCardInformation() {
+    public void DeserializePaymentCardInformation()
+    {
         string xml = """
-
+            <payment-card-information id="bg-18" xmlns="urn:todo">
+              <payment-card-primary-account-number id="bt-87">6789</payment-card-primary-account-number>
+              <payment-card-holder-name id="bt-88">[Name cardholder]</payment-card-holder-name>
+            </payment-card-information>
             """;
 
-        PaymentCardInformation expected = default;
+        PaymentCardInformation expected = new PaymentCardInformation
+        {
+            PaymentCardPrimaryAccountNumber = new Text("6789"),
+            PaymentCardHolderName = new Text("[Name cardholder]"),
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -939,12 +1257,28 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeDirectDebit() {
+    public void DeserializeDirectDebit()
+    {
         string xml = """
-
+            <direct-debit id="bg-19" xmlns="urn:todo">
+              <mandate-reference-identifier id="bt-89">
+                <content>[Mandate Reference Identifier]</content>
+              </mandate-reference-identifier>
+              <bank-assigned-creditor-identifier id="bt-90">
+                <content>[Bank assigned creditor identifier]</content>
+              </bank-assigned-creditor-identifier>
+              <debited-account-identifier id="bt-91">
+                <content>DE75512108001245126199</content>
+              </debited-account-identifier>
+            </direct-debit>
             """;
 
-        DirectDebit expected = default;
+        DirectDebit expected = new DirectDebit
+        {
+            MandateReferenceIdentifier = new Identifier("[Mandate Reference Identifier]"),
+            BankAssignedCreditorIdentifier = new Identifier("[Bank assigned creditor identifier]"),
+            DebitedAccountIdentifier = new Identifier("DE75512108001245126199"),
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -955,12 +1289,30 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeDocumentLevelAllowance() {
+    public void DeserializeDocumentLevelAllowance()
+    {
         string xml = """
-
+            <document-level-allowance id="bg-20" xmlns="urn:todo">
+              <document-level-allowance-amount id="bt-92">10</document-level-allowance-amount>
+              <document-level-allowance-base-amount id="bt-93">100</document-level-allowance-base-amount>
+              <document-level-allowance-percentage id="bt-94">10</document-level-allowance-percentage>
+              <document-level-allowance-vat-category-code id="bt-95">E</document-level-allowance-vat-category-code>
+              <document-level-allowance-vat-rate id="bt-96">0</document-level-allowance-vat-rate>
+              <document-level-allowance-reason id="bt-97">Fixed long term</document-level-allowance-reason>
+              <document-level-allowance-reason-code id="bt-98">102</document-level-allowance-reason-code>
+            </document-level-allowance>
             """;
 
-        DocumentLevelAllowance expected = default;
+        DocumentLevelAllowance expected = new DocumentLevelAllowance
+        {
+            DocumentLevelAllowanceAmount = new Amount(10m),
+            DocumentLevelAllowanceBaseAmount = new Amount(100m),
+            DocumentLevelAllowancePercentage = new Percentage(10m),
+            DocumentLevelAllowanceVatCategoryCode = new Code("E"),
+            DocumentLevelAllowanceVatRate = new Percentage(0m),
+            DocumentLevelAllowanceReason = new Text("Fixed long term"),
+            DocumentLevelAllowanceReasonCode = new Code("102"),
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -971,12 +1323,30 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeDocumentLevelCharge() {
+    public void DeserializeDocumentLevelCharge()
+    {
         string xml = """
-
+            <document-level-charge id="bg-21" xmlns="urn:todo">
+              <document-level-charge-amount id="bt-99">10</document-level-charge-amount>
+              <document-level-charge-base-amount id="bt-100">100</document-level-charge-base-amount>
+              <document-level-charge-percentage id="bt-101">10</document-level-charge-percentage>
+              <document-level-charge-vat-category-code id="bt-102">E</document-level-charge-vat-category-code>
+              <document-level-charge-vat-rate id="bt-103">0</document-level-charge-vat-rate>
+              <document-level-charge-reason id="bt-104">Testing</document-level-charge-reason>
+              <document-level-charge-reason-code id="bt-105">TAC</document-level-charge-reason-code>
+            </document-level-charge>
             """;
 
-        DocumentLevelCharge expected = default;
+        DocumentLevelCharge expected = new DocumentLevelCharge
+        {
+            DocumentLevelChargeAmount = new Amount(10m),
+            DocumentLevelChargeBaseAmount = new Amount(100m),
+            DocumentLevelChargePercentage = new Percentage(10m),
+            DocumentLevelChargeVatCategoryCode = new Code("E"),
+            DocumentLevelChargeVatRate = new Percentage(0m),
+            DocumentLevelChargeReason = new Text("Testing"),
+            DocumentLevelChargeReasonCode = new Code("TAC"),
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -987,12 +1357,36 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeDocumentTotals() {
+    public void DeserializeDocumentTotals()
+    {
         string xml = """
-
+            <document-totals id="bg-22" xmlns="urn:todo">
+              <sum-of-invoice-line-net-amount id="bt-106">10781.25</sum-of-invoice-line-net-amount>
+              <sum-of-allowances-on-document-level id="bt-107">20</sum-of-allowances-on-document-level>
+              <sum-of-charges-on-document-level id="bt-108">20</sum-of-charges-on-document-level>
+              <invoice-total-amount-without-vat id="bt-109">10781.25</invoice-total-amount-without-vat>
+              <invoice-total-vat-amount id="bt-110">2048.44</invoice-total-vat-amount>
+              <invoice-total-vat-amount-in-accounting-currency id="bt-111">2048.44</invoice-total-vat-amount-in-accounting-currency>
+              <invoice-total-amount-with-vat id="bt-112">12829.69</invoice-total-amount-with-vat>
+              <paid-amount id="bt-113">0</paid-amount>
+              <rounding-amount id="bt-114">0</rounding-amount>
+              <amount-due-for-payment id="bt-115">12829.69</amount-due-for-payment>
+            </document-totals>
             """;
 
-        DocumentTotals expected = default;
+        DocumentTotals expected = new DocumentTotals
+        {
+            SumOfInvoiceLineNetAmount = new Amount(10781.25m),
+            SumOfAllowancesOnDocumentLevel = new Amount(20m),
+            SumOfChargesOnDocumentLevel = new Amount(20m),
+            InvoiceTotalAmountWithoutVat = new Amount(10781.25m),
+            InvoiceTotalVatAmount = new Amount(2048.44m),
+            InvoiceTotalVatAmountInAccountingCurrency = new Amount(2048.44m),
+            InvoiceTotalAmountWithVat = new Amount(12829.69m),
+            PaidAmount = new Amount(0),
+            RoundingAmount = new Amount(0),
+            AmountDueForPayment = new Amount(12829.69m),
+        };
 
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
@@ -1003,7 +1397,8 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeVatBreakdown() {
+    public void DeserializeVatBreakdown()
+    {
         string xml = """
             <vat-breakdown id="bg-23" xmlns="urn:todo">
               <vat-category-taxable-amount id="bt-116">10781.25</vat-category-taxable-amount>
@@ -1013,7 +1408,8 @@ public class Deserialize
             </vat-breakdown>
             """;
 
-        VatBreakdown expected = new VatBreakdown {
+        VatBreakdown expected = new VatBreakdown
+        {
             VatCategoryTaxableAmount = new Amount(10781.25m),
             VatCategoryTaxAmount = new Amount(2048.44m),
             VatCategoryCode = new Code("S"),
