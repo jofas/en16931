@@ -1,5 +1,5 @@
 using System.Linq;
-using En16931.Model.Immutable;
+using En16931.Model;
 using Xunit;
 
 namespace Tests.IR;

@@ -1,6 +1,6 @@
 using System;
-using En16931.Model.Immutable;
-using En16931.Model.Immutable.Primitives;
+using En16931.Model;
+using En16931.Model.Primitives;
 
 namespace Tests.IR;
 

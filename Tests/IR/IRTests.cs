@@ -1,8 +1,7 @@
 using System;
 using En16931;
-using En16931.Collections.Immutable;
-using En16931.Model.Immutable;
-using En16931.Model.Immutable.Primitives;
+using En16931.Model;
+using En16931.Model.Primitives;
 using Xunit;
 
 namespace Tests.IR;
@@ -15,7 +14,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         Assert.Equal(Data.Invoice1, invoice);
     }
@@ -26,7 +25,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         Invoice expected = Data.Invoice1 with
         {
@@ -42,12 +41,12 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         // CII only supports a single preceding invoice reference
         Invoice expected = Data.Invoice1 with
         {
-            PrecedingInvoiceReferences = new Array<PrecedingInvoiceReference>([Data.Invoice1.PrecedingInvoiceReferences[0]]),
+            PrecedingInvoiceReferences = [Data.Invoice1.PrecedingInvoiceReferences[0]],
         };
 
         Assert.Equal(expected, invoice);
@@ -59,7 +58,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         Assert.Equal(Data.Invoice2, invoice);
     }
@@ -70,7 +69,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         Invoice expected = Data.Invoice2 with
         {
@@ -86,7 +85,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         // BT-8 is mapped to different code lists in CII (UNTDID 2475) and UBL (UNTDID 2005)
         Invoice expected = Data.Invoice2 with
@@ -103,7 +102,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         Assert.Equal(Data.Invoice3, invoice);
     }
@@ -114,7 +113,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         Invoice expected = Data.Invoice3 with
         {
@@ -130,7 +129,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         Assert.Equal(Data.Invoice3, invoice);
     }
@@ -141,7 +140,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         Assert.Equal(Data.Invoice4, invoice);
     }
@@ -152,7 +151,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         Invoice expected = Data.Invoice4 with
         {
@@ -168,7 +167,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation).ToImmutable();
+        Invoice invoice = parser.ParseFile(invoiceLocation);
 
         Assert.Equal(Data.Invoice4, invoice);
     }

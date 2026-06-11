@@ -3,8 +3,8 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using En16931;
-using En16931.Model.Immutable;
-using En16931.Model.Immutable.Primitives;
+using En16931.Model;
+using En16931.Model.Primitives;
 using Xunit;
 
 namespace Tests.IR;
