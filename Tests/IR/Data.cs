@@ -103,9 +103,9 @@ public static class Data
             },
             BuyerContact = new BuyerContact
             {
-                ContactPoint = new Text("Tina Tester"),
-                PhoneNumber = new Text("0800 123456"),
-                EmailAddress = new Text("tester@test.de"),
+                BuyerContactPoint = new Text("Tina Tester"),
+                BuyerContactTelephoneNumber = new Text("0800 123456"),
+                BuyerContactEmailAddress = new Text("tester@test.de"),
             },
         },
         Payee = new Payee
@@ -462,9 +462,9 @@ public static class Data
             },
             BuyerContact = new BuyerContact
             {
-                ContactPoint = new Text("Tina Tester"),
-                PhoneNumber = new Text("0800 123456"),
-                EmailAddress = new Text("tester@test.de"),
+                BuyerContactPoint = new Text("Tina Tester"),
+                BuyerContactTelephoneNumber = new Text("0800 123456"),
+                BuyerContactEmailAddress = new Text("tester@test.de"),
             },
         },
         Payee = new Payee
@@ -774,9 +774,9 @@ public static class Data
             },
             BuyerContact = new BuyerContact
             {
-                ContactPoint = new Text("Tina Tester"),
-                PhoneNumber = new Text("0800 123456"),
-                EmailAddress = new Text("tester@test.de"),
+                BuyerContactPoint = new Text("Tina Tester"),
+                BuyerContactTelephoneNumber = new Text("0800 123456"),
+                BuyerContactEmailAddress = new Text("tester@test.de"),
             },
         },
         Payee = new Payee
@@ -1084,9 +1084,9 @@ public static class Data
             },
             BuyerContact = new BuyerContact
             {
-                ContactPoint = new Text("Tina Tester"),
-                PhoneNumber = new Text("0800 123456"),
-                EmailAddress = new Text("tester@test.de"),
+                BuyerContactPoint = new Text("Tina Tester"),
+                BuyerContactTelephoneNumber = new Text("0800 123456"),
+                BuyerContactEmailAddress = new Text("tester@test.de"),
             },
         },
         Payee = new Payee

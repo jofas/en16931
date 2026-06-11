@@ -277,7 +277,7 @@ public class Deserialize
                   <external-document-location id="bt-124">https://xeinkauf.de/xrechnung/</external-document-location>
                   <attached-document id="bt-125">
                     <content>{content1.Base64Content}</content>
-                    <mime-type>application/pdf</mime-type>
+                    <mime-code>application/pdf</mime-code>
                     <filename>01_15_Anhang_01.pdf</filename>
                   </attached-document>
                 </additional-supporting-document>
@@ -287,11 +287,11 @@ public class Deserialize
                   <external-document-location id="bt-124">https://xeinkauf.de/xrechnung/</external-document-location>
                   <attached-document id="bt-125">
                     <content>{content2.Base64Content}</content>
-                    <mime-type>application/pdf</mime-type>
+                    <mime-code>application/pdf</mime-code>
                     <filename>01_15_Anhang_02.pdf</filename>
                   </attached-document>
                 </additional-supporting-document>
-              </addditional-supporting-documents>
+              </additional-supporting-documents>
               <invoice-lines id="bg-25">
                 <invoice-line id="bg-25">
                   <invoice-line-identifier id="bt-126">
@@ -507,9 +507,9 @@ public class Deserialize
                 },
                 BuyerContact = new BuyerContact
                 {
-                    ContactPoint = new Text("Tina Tester"),
-                    PhoneNumber = new Text("0800 123456"),
-                    EmailAddress = new Text("tester@test.de"),
+                    BuyerContactPoint = new Text("Tina Tester"),
+                    BuyerContactTelephoneNumber = new Text("0800 123456"),
+                    BuyerContactEmailAddress = new Text("tester@test.de"),
                 },
             },
             Payee = new Payee
@@ -1010,9 +1010,9 @@ public class Deserialize
             },
             BuyerContact = new BuyerContact
             {
-                ContactPoint = new Text("Tina Tester"),
-                PhoneNumber = new Text("0800 123456"),
-                EmailAddress = new Text("tester@test.de"),
+                BuyerContactPoint = new Text("Tina Tester"),
+                BuyerContactTelephoneNumber = new Text("0800 123456"),
+                BuyerContactEmailAddress = new Text("tester@test.de"),
             },
         };
 

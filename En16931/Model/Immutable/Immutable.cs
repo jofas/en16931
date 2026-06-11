@@ -118,7 +118,425 @@ public readonly record struct Invoice : IIRDeserializable<Invoice>, IToMutable<M
 
     public static Invoice Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("invoice", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-number", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier invoiceNumber = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-issue-date", IRConfig.NS);
+        reader.MoveToContent();
+
+        Date invoiceIssueDate = Date.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-type-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code invoiceTypeCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-currency-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code invoiceCurrencyCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Code? vatAccountingCurrencyCode = null;
+
+        if (reader.IsStartElement("vat-accounting-currency-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            vatAccountingCurrencyCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Date? valueAddedTaxPointDate = null;
+
+        if (reader.IsStartElement("value-added-tax-point-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            valueAddedTaxPointDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? valueAddedTaxPointDateCode = null;
+
+        if (reader.IsStartElement("value-added-tax-point-date-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            valueAddedTaxPointDateCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Date? paymentDueDate = null;
+
+        if (reader.IsStartElement("payment-due-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentDueDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("buyer-reference", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text buyerReference = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        DocumentReference? projectReference = null;
+
+        if (reader.IsStartElement("project-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            projectReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? contractReference = null;
+
+        if (reader.IsStartElement("contract-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            contractReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? purchaseOrderReference = null;
+
+        if (reader.IsStartElement("purchase-order-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            purchaseOrderReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? salesOrderReference = null;
+
+        if (reader.IsStartElement("sales-order-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            salesOrderReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? receivingAdviceReference = null;
+
+        if (reader.IsStartElement("receiving-advice-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            receivingAdviceReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? despatchAdviceReference = null;
+
+        if (reader.IsStartElement("despatch-advice-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            despatchAdviceReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentReference? tenderOrLotReference = null;
+
+        if (reader.IsStartElement("tender-or-lot-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            tenderOrLotReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? invoicedObjectIdentifier = null;
+
+        if (reader.IsStartElement("invoiced-object-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoicedObjectIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? buyerAccountingReference = null;
+
+        if (reader.IsStartElement("buyer-accounting-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerAccountingReference = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? paymentTerms = null;
+
+        if (reader.IsStartElement("payment-terms", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentTerms = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<InvoiceNote> invoiceNotes = Array<InvoiceNote>.Empty;
+
+        if (reader.IsStartElement("invoice-notes", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<InvoiceNote> invoiceNotesBuilder = [];
+            while (reader.IsStartElement("invoice-note", IRConfig.NS))
+            {
+                invoiceNotesBuilder.Add(InvoiceNote.Deserialize(reader));
+            }
+
+            invoiceNotes = new(invoiceNotesBuilder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        ProcessControl processControl = ProcessControl.Deserialize(reader);
+
+        Array<PrecedingInvoiceReference> precedingInvoiceReferences = Array<PrecedingInvoiceReference>.Empty;
+
+        if (reader.IsStartElement("preceding-invoice-references", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<PrecedingInvoiceReference> precedingInvoiceReferencesBuilder = [];
+            while (reader.IsStartElement("preceding-invoice-reference", IRConfig.NS))
+            {
+                precedingInvoiceReferencesBuilder.Add(PrecedingInvoiceReference.Deserialize(reader));
+            }
+
+            precedingInvoiceReferences = new(precedingInvoiceReferencesBuilder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Seller seller = Seller.Deserialize(reader);
+
+        Buyer buyer = Buyer.Deserialize(reader);
+
+        Payee? payee = null;
+
+        if (reader.IsStartElement("payee", IRConfig.NS))
+        {
+            payee = Immutable.Payee.Deserialize(reader);
+        }
+
+        SellerTaxRepresentativeParty? sellerTaxRepresentativeParty = null;
+
+        if (reader.IsStartElement("seller-tax-representative-party", IRConfig.NS))
+        {
+            sellerTaxRepresentativeParty = Immutable.SellerTaxRepresentativeParty.Deserialize(reader);
+        }
+
+        DeliveryInformation? deliveryInformation = null;
+
+        if (reader.IsStartElement("delivery-information", IRConfig.NS))
+        {
+            deliveryInformation = Immutable.DeliveryInformation.Deserialize(reader);
+        }
+
+        PaymentInstructions paymentInstructions = PaymentInstructions.Deserialize(reader);
+
+        Array<DocumentLevelAllowance> documentLevelAllowances = Array<DocumentLevelAllowance>.Empty;
+
+        if (reader.IsStartElement("document-level-allowances", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<DocumentLevelAllowance> documentLevelAllowancesBuilder = [];
+            while (reader.IsStartElement("document-level-allowance", IRConfig.NS))
+            {
+                documentLevelAllowancesBuilder.Add(DocumentLevelAllowance.Deserialize(reader));
+            }
+
+            documentLevelAllowances = new(documentLevelAllowancesBuilder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<DocumentLevelCharge> documentLevelCharges = Array<DocumentLevelCharge>.Empty;
+
+        if (reader.IsStartElement("document-level-charges", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<DocumentLevelCharge> documentLevelChargesBuilder = [];
+            while (reader.IsStartElement("document-level-charge", IRConfig.NS))
+            {
+                documentLevelChargesBuilder.Add(DocumentLevelCharge.Deserialize(reader));
+            }
+
+            documentLevelCharges = new(documentLevelChargesBuilder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        DocumentTotals documentTotals = DocumentTotals.Deserialize(reader);
+
+        reader.ReadStartElement("vat-breakdown", IRConfig.NS);
+        reader.MoveToContent();
+
+        List<VatBreakdown> vatBreadownBuilder = [];
+        while (reader.IsStartElement("vat-breakdown", IRConfig.NS))
+        {
+            vatBreadownBuilder.Add(Immutable.VatBreakdown.Deserialize(reader));
+        }
+
+        NonEmptyArray<VatBreakdown> vatBreakdown = new(vatBreadownBuilder);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Array<AdditionalSupportingDocument> additionalSupportingDocuments = Array<AdditionalSupportingDocument>.Empty;
+
+        if (reader.IsStartElement("additional-supporting-documents", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<AdditionalSupportingDocument> additionalSupportingDocumentsBuilder = [];
+            while (reader.IsStartElement("additional-supporting-document", IRConfig.NS))
+            {
+                additionalSupportingDocumentsBuilder.Add(AdditionalSupportingDocument.Deserialize(reader));
+            }
+
+            additionalSupportingDocuments = new(additionalSupportingDocumentsBuilder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoice-lines", IRConfig.NS);
+        reader.MoveToContent();
+
+        List<InvoiceLine> invoiceLinesBuilder = [];
+        while (reader.IsStartElement("invoice-line", IRConfig.NS))
+        {
+            invoiceLinesBuilder.Add(InvoiceLine.Deserialize(reader));
+        }
+
+        NonEmptyArray<InvoiceLine> invoiceLines = new(invoiceLinesBuilder);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new Invoice
+        {
+            InvoiceNumber = invoiceNumber,
+            InvoiceIssueDate = invoiceIssueDate,
+            InvoiceTypeCode = invoiceTypeCode,
+            InvoiceCurrencyCode = invoiceCurrencyCode,
+            VatAccountingCurrencyCode = vatAccountingCurrencyCode,
+            ValueAddedTaxPointDate = valueAddedTaxPointDate,
+            ValueAddedTaxPointDateCode = valueAddedTaxPointDateCode,
+            PaymentDueDate = paymentDueDate,
+            BuyerReference = buyerReference,
+            ProjectReference = projectReference,
+            ContractReference = contractReference,
+            PurchaseOrderReference = purchaseOrderReference,
+            SalesOrderReference = salesOrderReference,
+            ReceivingAdviceReference = receivingAdviceReference,
+            DespatchAdviceReference = despatchAdviceReference,
+            TenderOrLotReference = tenderOrLotReference,
+            InvoicedObjectIdentifier = invoicedObjectIdentifier,
+            BuyerAccountingReference = buyerAccountingReference,
+            PaymentTerms = paymentTerms,
+            InvoiceNotes = invoiceNotes,
+            ProcessControl = processControl,
+            PrecedingInvoiceReferences = precedingInvoiceReferences,
+            Seller = seller,
+            Buyer = buyer,
+            Payee = payee,
+            SellerTaxRepresentativeParty = sellerTaxRepresentativeParty,
+            DeliveryInformation = deliveryInformation,
+            PaymentInstructions = paymentInstructions,
+            DocumentLevelAllowances = documentLevelAllowances,
+            DocumentLevelCharges = documentLevelCharges,
+            DocumentTotals = documentTotals,
+            VatBreakdown = vatBreakdown,
+            AdditionalSupportingDocuments = additionalSupportingDocuments,
+            InvoiceLines = invoiceLines,
+        };
     }
 
     public Mut.Invoice ToMutable()
@@ -173,7 +591,38 @@ public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>, IToM
 
     public static InvoiceNote Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("invoice-note", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code? invoiceNoteSubjectCode = null;
+
+        if (reader.IsStartElement("invoice-note-subject-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceNoteSubjectCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoice-note", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text note = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new InvoiceNote
+        {
+            InvoiceNoteSubjectCode = invoiceNoteSubjectCode,
+            Note = note,
+        };
     }
 
     public Mut.InvoiceNote ToMutable()
@@ -196,7 +645,33 @@ public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>
 
     public static ProcessControl Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("process-control", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("business-process-type", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text businessProcessType = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("specification-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier specificationIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new ProcessControl
+        {
+            BusinessProcessType = businessProcessType,
+            SpecificationIdentifier = specificationIdentifier,
+        };
     }
 
     public Mut.ProcessControl ToMutable()
@@ -219,7 +694,38 @@ public readonly record struct PrecedingInvoiceReference : IIRDeserializable<Prec
 
     public static PrecedingInvoiceReference Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("preceding-invoice-reference", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("preceding-invoice-reference", IRConfig.NS);
+        reader.MoveToContent();
+
+        DocumentReference reference = DocumentReference.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Date? precedingInvoiceIssueDate = null;
+
+        if (reader.IsStartElement("preceding-invoice-issue-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            precedingInvoiceIssueDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new PrecedingInvoiceReference
+        {
+            Reference = reference,
+            PrecedingInvoiceIssueDate = precedingInvoiceIssueDate,
+        };
     }
 
     public Mut.PrecedingInvoiceReference ToMutable()
@@ -266,7 +772,135 @@ public readonly record struct Seller : IIRDeserializable<Seller>, IToMutable<Mut
 
     public static Seller Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("seller", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? sellerTradingName = null;
+
+        if (reader.IsStartElement("seller-trading-name", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerTradingName = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<Identifier> sellerIdentifiers = Array<Identifier>.Empty;
+
+        if (reader.IsStartElement("seller-identifiers", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<Identifier> builder = [];
+            while (reader.IsStartElement("seller-identifier", IRConfig.NS))
+            {
+                reader.ReadStartElement();
+                reader.MoveToContent();
+
+                builder.Add(Identifier.Deserialize(reader));
+
+                reader.ReadEndElement();
+                reader.MoveToContent();
+            }
+
+            sellerIdentifiers = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? sellerLegalRegistrationIdentifier = null;
+
+        if (reader.IsStartElement("seller-legal-registration-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerLegalRegistrationIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? sellerVatIdentifier = null;
+
+        if (reader.IsStartElement("seller-vat-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerVatIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? sellerTaxRegistrationIdentifier = null;
+
+        if (reader.IsStartElement("seller-tax-registration-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerTaxRegistrationIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? sellerAdditionalLegalInformation = null;
+
+        if (reader.IsStartElement("seller-additional-legal-information", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerAdditionalLegalInformation = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("seller-electronic-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier sellerElectronicAddress = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        SellerPostalAddress sellerPostalAddress = SellerPostalAddress.Deserialize(reader);
+
+        SellerContact sellerContact = SellerContact.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new Seller
+        {
+            SellerName = sellerName,
+            SellerTradingName = sellerTradingName,
+            SellerIdentifiers = sellerIdentifiers,
+            SellerLegalRegistrationIdentifier = sellerLegalRegistrationIdentifier,
+            SellerVatIdentifier = sellerVatIdentifier,
+            SellerTaxRegistrationIdentifier = sellerTaxRegistrationIdentifier,
+            SellerAdditionalLegalInformation = sellerAdditionalLegalInformation,
+            SellerElectronicAddress = sellerElectronicAddress,
+            SellerPostalAddress = sellerPostalAddress,
+            SellerContact = sellerContact,
+        };
     }
 
     public Mut.Seller ToMutable()
@@ -314,7 +948,98 @@ public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPost
 
     public static SellerPostalAddress Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("seller-postal-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? sellerAddressLine1 = null;
+
+        if (reader.IsStartElement("seller-address-line-1", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerAddressLine1 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? sellerAddressLine2 = null;
+
+        if (reader.IsStartElement("seller-address-line-2", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerAddressLine2 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? sellerAddressLine3 = null;
+
+        if (reader.IsStartElement("seller-address-line-3", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerAddressLine3 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("seller-city", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerCity = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-post-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerPostCode = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? sellerCountrySubdivision = null;
+
+        if (reader.IsStartElement("seller-country-subdivision", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerCountrySubdivision = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("seller-country-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code sellerCountryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new SellerPostalAddress
+        {
+            SellerAddressLine1 = sellerAddressLine1,
+            SellerAddressLine2 = sellerAddressLine2,
+            SellerAddressLine3 = sellerAddressLine3,
+            SellerCity = sellerCity,
+            SellerPostCode = sellerPostCode,
+            SellerCountrySubdivision = sellerCountrySubdivision,
+            SellerCountryCode = sellerCountryCode,
+        };
     }
 
     public Mut.SellerPostalAddress ToMutable()
@@ -345,7 +1070,42 @@ public readonly record struct SellerContact : IIRDeserializable<SellerContact>, 
 
     public static SellerContact Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("seller-contact", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-contact-point", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerContactPoint = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-contact-telephone-number", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerContactTelephoneNumber = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-contact-email-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerContactEmailAddress = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new SellerContact
+        {
+            SellerContactPoint = sellerContactPoint,
+            SellerContactTelephoneNumber = sellerContactTelephoneNumber,
+            SellerContactEmailAddress = sellerContactEmailAddress,
+        };
     }
 
     public Mut.SellerContact ToMutable()
@@ -387,7 +1147,105 @@ public readonly record struct Buyer : IIRDeserializable<Buyer>, IToMutable<Mut.B
 
     public static Buyer Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("buyer", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("buyer-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text buyerName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? buyerTradingName = null;
+
+        if (reader.IsStartElement("buyer-trading-name", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerTradingName = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? buyerIdentifier = null;
+
+        if (reader.IsStartElement("buyer-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? buyerLegalRegistrationIdentifier = null;
+
+        if (reader.IsStartElement("buyer-legal-registration-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerLegalRegistrationIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? buyerVatIdentifier = null;
+
+        if (reader.IsStartElement("buyer-vat-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerVatIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? buyerElectronicAddress = null;
+
+        if (reader.IsStartElement("buyer-electronic-address", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerElectronicAddress = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        BuyerPostalAddress buyerPostalAddress = BuyerPostalAddress.Deserialize(reader);
+
+        BuyerContact? buyerContact = null;
+
+        if (reader.IsStartElement("buyer-contact", IRConfig.NS))
+        {
+            buyerContact = Immutable.BuyerContact.Deserialize(reader);
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new Buyer
+        {
+            BuyerName = buyerName,
+            BuyerTradingName = buyerTradingName,
+            BuyerIdentifier = buyerIdentifier,
+            BuyerLegalRegistrationIdentifier = buyerLegalRegistrationIdentifier,
+            BuyerVatIdentifier = buyerVatIdentifier,
+            BuyerElectronicAddress = buyerElectronicAddress,
+            BuyerPostalAddress = buyerPostalAddress,
+            BuyerContact = buyerContact,
+        };
     }
 
     public Mut.Buyer ToMutable()
@@ -432,7 +1290,98 @@ public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostal
 
     public static BuyerPostalAddress Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("buyer-postal-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? buyerAddressLine1 = null;
+
+        if (reader.IsStartElement("buyer-address-line-1", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerAddressLine1 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? buyerAddressLine2 = null;
+
+        if (reader.IsStartElement("buyer-address-line-2", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerAddressLine2 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? buyerAddressLine3 = null;
+
+        if (reader.IsStartElement("buyer-address-line-3", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerAddressLine3 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("buyer-city", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text buyerCity = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("buyer-post-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text buyerPostCode = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? buyerCountrySubdivision = null;
+
+        if (reader.IsStartElement("buyer-country-subdivision", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerCountrySubdivision = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("buyer-country-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code buyerCountryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new BuyerPostalAddress
+        {
+            BuyerAddressLine1 = buyerAddressLine1,
+            BuyerAddressLine2 = buyerAddressLine2,
+            BuyerAddressLine3 = buyerAddressLine3,
+            BuyerCity = buyerCity,
+            BuyerPostCode = buyerPostCode,
+            BuyerCountrySubdivision = buyerCountrySubdivision,
+            BuyerCountryCode = buyerCountryCode,
+        };
     }
 
     public Mut.BuyerPostalAddress ToMutable()
@@ -453,26 +1402,76 @@ public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostal
 public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>, IToMutable<Mut.BuyerContact>
 {
     // BT-56
-    public required Text? ContactPoint { get; init; }
+    public required Text? BuyerContactPoint { get; init; }
 
     // BT-57
-    public required Text? PhoneNumber { get; init; }
+    public required Text? BuyerContactTelephoneNumber { get; init; }
 
     // BT-58
-    public required Text? EmailAddress { get; init; }
+    public required Text? BuyerContactEmailAddress { get; init; }
 
     public static BuyerContact Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("buyer-contact", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? buyerContactPoint = null;
+
+        if (reader.IsStartElement("buyer-contact-point", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerContactPoint = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? buyerContactTelephoneNumber = null;
+
+        if (reader.IsStartElement("buyer-contact-telephone-number", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerContactTelephoneNumber = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? buyerContactEmailAddress = null;
+
+        if (reader.IsStartElement("buyer-contact-email-address", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            buyerContactEmailAddress = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new BuyerContact
+        {
+            BuyerContactPoint = buyerContactPoint,
+            BuyerContactTelephoneNumber = buyerContactTelephoneNumber,
+            BuyerContactEmailAddress = buyerContactEmailAddress,
+        };
     }
 
     public Mut.BuyerContact ToMutable()
     {
         return new Mut.BuyerContact
         {
-            ContactPoint = ContactPoint?.ToMutable(),
-            PhoneNumber = PhoneNumber?.ToMutable(),
-            EmailAddress = EmailAddress?.ToMutable(),
+            BuyerContactPoint = BuyerContactPoint?.ToMutable(),
+            BuyerContactTelephoneNumber = BuyerContactTelephoneNumber?.ToMutable(),
+            BuyerContactEmailAddress = BuyerContactEmailAddress?.ToMutable(),
         };
     }
 }
@@ -490,7 +1489,52 @@ public readonly record struct Payee : IIRDeserializable<Payee>, IToMutable<Mut.P
 
     public static Payee Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("payee", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("payee-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text payeeName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Identifier? payeeIdentifier = null;
+
+        if (reader.IsStartElement("payee-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            payeeIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? payeeLegalRegistrationIdentifier = null;
+
+        if (reader.IsStartElement("payee-legal-registration-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            payeeLegalRegistrationIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new Payee
+        {
+            PayeeName = payeeName,
+            PayeeIdentifier = payeeIdentifier,
+            PayeeLegalRegistrationIdentifier = payeeLegalRegistrationIdentifier,
+        };
     }
 
     public Mut.Payee ToMutable()
@@ -517,7 +1561,36 @@ public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<S
 
     public static SellerTaxRepresentativeParty Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("seller-tax-representative-party", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-tax-representative-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text sellerTaxRepresentativeName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("seller-tax-representative-vat-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier sellerTaxRepresentativeVatIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        SellerTaxRepresentativePostalAddress sellerTaxRepresentativePostalAddress = SellerTaxRepresentativePostalAddress.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new SellerTaxRepresentativeParty
+        {
+            SellerTaxRepresentativeName = sellerTaxRepresentativeName,
+            SellerTaxRepresentativeVatIdentifier = sellerTaxRepresentativeVatIdentifier,
+            SellerTaxRepresentativePostalAddress = sellerTaxRepresentativePostalAddress,
+        };
     }
 
     public Mut.SellerTaxRepresentativeParty ToMutable()
@@ -543,10 +1616,10 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserial
     public required Text? TaxRepresentativeAddressLine3 { get; init; }
 
     // BT-66
-    public required Text TaxRepresentativeCity { get; init; }
+    public required Text? TaxRepresentativeCity { get; init; }
 
     // BT-67
-    public required Text TaxRepresentativePostCode { get; init; }
+    public required Text? TaxRepresentativePostCode { get; init; }
 
     // BT-68
     public required Text? TaxRepresentativeCountrySubdivision { get; init; }
@@ -557,7 +1630,108 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserial
 
     public static SellerTaxRepresentativePostalAddress Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("seller-tax-representative-postal-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? taxRepresentativeAddressLine1 = null;
+
+        if (reader.IsStartElement("tax-representative-address-line-1", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativeAddressLine1 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? taxRepresentativeAddressLine2 = null;
+
+        if (reader.IsStartElement("tax-representative-address-line-2", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativeAddressLine2 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? taxRepresentativeAddressLine3 = null;
+
+        if (reader.IsStartElement("tax-representative-address-line-3", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativeAddressLine3 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? taxRepresentativeCity = null;
+
+        if (reader.IsStartElement("tax-representative-city", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativeCity = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? taxRepresentativePostCode = null;
+
+        if (reader.IsStartElement("tax-representative-post-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativePostCode = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? taxRepresentativeCountrySubdivision = null;
+
+        if (reader.IsStartElement("tax-representative-country-subdivision", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            taxRepresentativeCountrySubdivision = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("tax-representative-country-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code taxRepresentativeCountryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new SellerTaxRepresentativePostalAddress
+        {
+            TaxRepresentativeAddressLine1 = taxRepresentativeAddressLine1,
+            TaxRepresentativeAddressLine2 = taxRepresentativeAddressLine2,
+            TaxRepresentativeAddressLine3 = taxRepresentativeAddressLine3,
+            TaxRepresentativeCity = taxRepresentativeCity,
+            TaxRepresentativePostCode = taxRepresentativePostCode,
+            TaxRepresentativeCountrySubdivision = taxRepresentativeCountrySubdivision,
+            TaxRepresentativeCountryCode = taxRepresentativeCountryCode,
+        };
     }
 
     public Mut.SellerTaxRepresentativePostalAddress ToMutable()
@@ -567,8 +1741,8 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserial
             TaxRepresentativeAddressLine1 = TaxRepresentativeAddressLine1?.ToMutable(),
             TaxRepresentativeAddressLine2 = TaxRepresentativeAddressLine2?.ToMutable(),
             TaxRepresentativeAddressLine3 = TaxRepresentativeAddressLine3?.ToMutable(),
-            TaxRepresentativeCity = TaxRepresentativeCity.ToMutable(),
-            TaxRepresentativePostCode = TaxRepresentativePostCode.ToMutable(),
+            TaxRepresentativeCity = TaxRepresentativeCity?.ToMutable(),
+            TaxRepresentativePostCode = TaxRepresentativePostCode?.ToMutable(),
             TaxRepresentativeCountrySubdivision = TaxRepresentativeCountrySubdivision?.ToMutable(),
             TaxRepresentativeCountryCode = TaxRepresentativeCountryCode.ToMutable(),
         };
@@ -594,7 +1768,73 @@ public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryIn
 
     public static DeliveryInformation Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("delivery-information", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? deliverToPartyName = null;
+
+        if (reader.IsStartElement("deliver-to-party-name", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToPartyName = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? deliverToLocationIdentifier = null;
+
+        if (reader.IsStartElement("deliver-to-location-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToLocationIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Date? actualDeliverDate = null;
+
+        if (reader.IsStartElement("actual-delivery-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            actualDeliverDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        InvoicingPeriod? invoicingPeriod = null;
+
+        if (reader.IsStartElement("invoicing-period", IRConfig.NS))
+        {
+            invoicingPeriod = Immutable.InvoicingPeriod.Deserialize(reader);
+        }
+
+        DeliverToAddress? deliverToAddress = null;
+
+        if (reader.IsStartElement("deliver-to-address", IRConfig.NS))
+        {
+            deliverToAddress = Immutable.DeliverToAddress.Deserialize(reader);
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DeliveryInformation
+        {
+            DeliverToPartyName = deliverToPartyName,
+            DeliverToLocationIdentifier = deliverToLocationIdentifier,
+            ActualDeliveryDate = actualDeliverDate,
+            InvoicingPeriod = invoicingPeriod,
+            DeliverToAddress = deliverToAddress,
+        };
     }
 
     public Mut.DeliveryInformation ToMutable()
@@ -620,7 +1860,43 @@ public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPerio
 
     public static InvoicingPeriod Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("invoicing-period", IRConfig.NS);
+        reader.MoveToContent();
+
+        Date? invoicingPeriodStartDate = null;
+
+        if (reader.IsStartElement("invoicing-period-start-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoicingPeriodStartDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Date? invoicingPeriodEndDate = null;
+
+        if (reader.IsStartElement("invoicing-period-end-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoicingPeriodEndDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new InvoicingPeriod
+        {
+            InvoicingPeriodStartDate = invoicingPeriodStartDate,
+            InvoicingPeriodEndDate = invoicingPeriodEndDate,
+        };
     }
 
     public Mut.InvoicingPeriod ToMutable()
@@ -659,7 +1935,98 @@ public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddr
 
     public static DeliverToAddress Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("deliver-to-address", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text? deliverToAddressLine1 = null;
+
+        if (reader.IsStartElement("deliver-to-address-line-1", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToAddressLine1 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? deliverToAddressLine2 = null;
+
+        if (reader.IsStartElement("deliver-to-address-line-2", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToAddressLine2 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? deliverToAddressLine3 = null;
+
+        if (reader.IsStartElement("deliver-to-address-line-3", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToAddressLine3 = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("deliver-to-city", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text deliverToCity = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("deliver-to-post-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text deliverToPostCode = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? deliverToCountrySubdivision = null;
+
+        if (reader.IsStartElement("deliver-to-country-subdivision", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToCountrySubdivision = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("deliver-to-country-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code deliverToCountryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DeliverToAddress
+        {
+            DeliverToAddressLine1 = deliverToAddressLine1,
+            DeliverToAddressLine2 = deliverToAddressLine2,
+            DeliverToAddressLine3 = deliverToAddressLine3,
+            DeliverToCity = deliverToCity,
+            DeliverToPostCode = deliverToPostCode,
+            DeliverToCountrySubdivision = deliverToCountrySubdivision,
+            DeliverToCountryCode = deliverToCountryCode,
+        };
     }
 
     public Mut.DeliverToAddress ToMutable()
@@ -700,7 +2067,88 @@ public readonly record struct PaymentInstructions : IIRDeserializable<PaymentIns
 
     public static PaymentInstructions Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("payment-instructions", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("payment-means-type-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code paymentMeansTypeCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? paymentMeansText = null;
+
+        if (reader.IsStartElement("payment-means-text", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentMeansText = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? remittanceInformation = null;
+
+        if (reader.IsStartElement("remittance-information", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            remittanceInformation = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<CreditTransfer> creditTransfers = Array<CreditTransfer>.Empty;
+
+        if (reader.IsStartElement("credit-transfers", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<CreditTransfer> builder = [];
+            while (reader.IsStartElement("credit-transfer", IRConfig.NS))
+            {
+                builder.Add(CreditTransfer.Deserialize(reader));
+            }
+
+            creditTransfers = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        PaymentCardInformation? paymentCardInformation = null;
+
+        if (reader.IsStartElement("payment-card-information", IRConfig.NS))
+        {
+            paymentCardInformation = Immutable.PaymentCardInformation.Deserialize(reader);
+        }
+
+        DirectDebit? directDebit = null;
+
+        if (reader.IsStartElement("direct-debit", IRConfig.NS))
+        {
+            directDebit = Immutable.DirectDebit.Deserialize(reader);
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new PaymentInstructions
+        {
+            PaymentMeansTypeCode = paymentMeansTypeCode,
+            PaymentMeansText = paymentMeansText,
+            RemittanceInformation = remittanceInformation,
+            CreditTransfers = creditTransfers,
+            PaymentCardInformation = paymentCardInformation,
+            DirectDebit = directDebit,
+        };
     }
 
     public Mut.PaymentInstructions ToMutable()
@@ -730,7 +2178,52 @@ public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>
 
     public static CreditTransfer Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("credit-transfer", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("payment-account-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier paymentAccountIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? paymentAccountName = null;
+
+        if (reader.IsStartElement("payment-account-name", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentAccountName = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? paymentServiceProviderIdentifier = null;
+
+        if (reader.IsStartElement("payment-service-provider-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentServiceProviderIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new CreditTransfer
+        {
+            PaymentAccountIdentifier = paymentAccountIdentifier,
+            PaymentAccountName = paymentAccountName,
+            PaymentServiceProviderIdentifier = paymentServiceProviderIdentifier,
+        };
     }
 
     public Mut.CreditTransfer ToMutable()
@@ -754,7 +2247,38 @@ public readonly record struct PaymentCardInformation : IIRDeserializable<Payment
 
     public static PaymentCardInformation Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("payment-card-information", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("payment-card-primary-account-number", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text paymentCardPrimaryAccountNumber = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? paymentCardHolderName = null;
+
+        if (reader.IsStartElement("payment-card-holder-name", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            paymentCardHolderName = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new PaymentCardInformation
+        {
+            PaymentCardPrimaryAccountNumber = paymentCardPrimaryAccountNumber,
+            PaymentCardHolderName = paymentCardHolderName,
+        };
     }
 
     public Mut.PaymentCardInformation ToMutable()
@@ -780,7 +2304,42 @@ public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>, IToM
 
     public static DirectDebit Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("direct-debit", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("mandate-reference-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier mandateReferenceIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("bank-assigned-creditor-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier bankAssignedCreditorIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("debited-account-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier debitedAccountIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new DirectDebit
+        {
+            MandateReferenceIdentifier = mandateReferenceIdentifier,
+            BankAssignedCreditorIdentifier = bankAssignedCreditorIdentifier,
+            DebitedAccountIdentifier = debitedAccountIdentifier,
+        };
     }
 
     public Mut.DirectDebit ToMutable()
