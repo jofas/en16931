@@ -1744,9 +1744,9 @@ public class Deserialize
 
         string xml = $"""
             <binary-object xmlns="urn:todo">
-                <content>{content.Base64Content}</content>
-                <mime-code>text/utf-8</mime-code>
-                <filename>hello.txt</filename>
+              <content>{content.Base64Content}</content>
+              <mime-code>text/utf-8</mime-code>
+              <filename>hello.txt</filename>
             </binary-object>
             """;
 

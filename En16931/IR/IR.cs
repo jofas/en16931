@@ -11,3 +11,8 @@ public interface IIRDeserializable<TSelf>
 {
     public abstract static TSelf Deserialize(XmlReader reader);
 }
+
+public interface IIRSerializable
+{
+    public void Serialize(XmlWriter writer);
+}

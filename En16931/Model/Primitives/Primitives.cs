@@ -133,7 +133,7 @@ public readonly record struct Text : IIRDeserializable<Text>
     }
 }
 
-public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>
+public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>, IIRSerializable
 {
     public required Array<byte> Content { get; init; }
 
@@ -171,6 +171,21 @@ public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>
         Content = content;
         MimeCode = mimeCode;
         Filename = filename;
+    }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("content", IRConfig.NS);
+        writer.WriteBase64(Content.ToMutable(), 0, Content.Length);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("mime-code", IRConfig.NS);
+        writer.WriteString(MimeCode);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("filename", IRConfig.NS);
+        writer.WriteString(Filename);
+        writer.WriteEndElement();
     }
 
     public static BinaryObject Deserialize(XmlReader reader)
