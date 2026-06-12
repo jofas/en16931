@@ -885,7 +885,57 @@ public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPost
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("seller-postal-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-5");
+
+        if (SellerAddressLine1 is not null)
+        {
+            writer.WriteStartElement("seller-address-line-1", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-35");
+            SellerAddressLine1.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerAddressLine2 is not null)
+        {
+            writer.WriteStartElement("seller-address-line-2", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-36");
+            SellerAddressLine2.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerAddressLine3 is not null)
+        {
+            writer.WriteStartElement("seller-address-line-3", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-162");
+            SellerAddressLine3.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("seller-city", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-37");
+        SellerCity.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("seller-post-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-38");
+        SellerPostCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (SellerCountrySubdivision is not null)
+        {
+            writer.WriteStartElement("seller-country-subdivision", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-39");
+            SellerCountrySubdivision.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("seller-country-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-40");
+        SellerCountryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
     }
 
     public static SellerPostalAddress Deserialize(XmlReader reader)
@@ -1203,7 +1253,57 @@ public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostal
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("buyer-postal-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-8");
+
+        if (BuyerAddressLine1 is not null)
+        {
+            writer.WriteStartElement("buyer-address-line-1", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-50");
+            BuyerAddressLine1.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerAddressLine2 is not null)
+        {
+            writer.WriteStartElement("buyer-address-line-2", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-51");
+            BuyerAddressLine2.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerAddressLine3 is not null)
+        {
+            writer.WriteStartElement("buyer-address-line-3", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-163");
+            BuyerAddressLine3.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("buyer-city", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-52");
+        BuyerCity.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("buyer-post-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-53");
+        BuyerPostCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (BuyerCountrySubdivision is not null)
+        {
+            writer.WriteStartElement("buyer-country-subdivision", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-54");
+            BuyerCountrySubdivision.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("buyer-country-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-55");
+        BuyerCountryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
     }
 
     public static BuyerPostalAddress Deserialize(XmlReader reader)
@@ -1519,7 +1619,61 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserial
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("seller-tax-representative-postal-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-12");
+
+        if (TaxRepresentativeAddressLine1 is not null)
+        {
+            writer.WriteStartElement("tax-representative-address-line-1", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-64");
+            TaxRepresentativeAddressLine1.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TaxRepresentativeAddressLine2 is not null)
+        {
+            writer.WriteStartElement("tax-representative-address-line-2", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-65");
+            TaxRepresentativeAddressLine2.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TaxRepresentativeAddressLine3 is not null)
+        {
+            writer.WriteStartElement("tax-representative-address-line-3", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-164");
+            TaxRepresentativeAddressLine3.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TaxRepresentativeCity is not null) {
+            writer.WriteStartElement("tax-representative-city", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-66");
+            TaxRepresentativeCity.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TaxRepresentativePostCode is not null) {
+            writer.WriteStartElement("tax-representative-post-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-67");
+            TaxRepresentativePostCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TaxRepresentativeCountrySubdivision is not null)
+        {
+            writer.WriteStartElement("tax-representative-country-subdivision", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-68");
+            TaxRepresentativeCountrySubdivision.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("tax-representative-country-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-69");
+        TaxRepresentativeCountryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
     }
 
     public static SellerTaxRepresentativePostalAddress Deserialize(XmlReader reader)
@@ -1804,7 +1958,57 @@ public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddr
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("deliver-to-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-15");
+
+        if (DeliverToAddressLine1 is not null)
+        {
+            writer.WriteStartElement("deliver-to-address-line-1", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-75");
+            DeliverToAddressLine1.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DeliverToAddressLine2 is not null)
+        {
+            writer.WriteStartElement("deliver-to-address-line-2", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-76");
+            DeliverToAddressLine2.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DeliverToAddressLine3 is not null)
+        {
+            writer.WriteStartElement("deliver-to-address-line-3", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-165");
+            DeliverToAddressLine3.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("deliver-to-city", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-77");
+        DeliverToCity.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("deliver-to-post-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-78");
+        DeliverToPostCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (DeliverToCountrySubdivision is not null)
+        {
+            writer.WriteStartElement("deliver-to-country-subdivision", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-79");
+            DeliverToCountrySubdivision.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("deliver-to-country-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-80");
+        DeliverToCountryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
     }
 
     public static DeliverToAddress Deserialize(XmlReader reader)
@@ -1964,15 +2168,9 @@ public readonly record struct PaymentInstructions : IIRDeserializable<PaymentIns
             writer.WriteEndElement();
         }
 
-        if (PaymentCardInformation is not null)
-        {
-            PaymentCardInformation.Value.Serialize(writer);
-        }
+        PaymentCardInformation?.Serialize(writer);
 
-        if (DirectDebit is not null)
-        {
-            DirectDebit.Value.Serialize(writer);
-        }
+        DirectDebit?.Serialize(writer);
 
         writer.WriteEndElement();
     }
