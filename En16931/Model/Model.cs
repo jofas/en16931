@@ -1646,14 +1646,16 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserial
             writer.WriteEndElement();
         }
 
-        if (TaxRepresentativeCity is not null) {
+        if (TaxRepresentativeCity is not null)
+        {
             writer.WriteStartElement("tax-representative-city", IRConfig.NS);
             writer.WriteAttributeString("id", "bt-66");
             TaxRepresentativeCity.Value.Serialize(writer);
             writer.WriteEndElement();
         }
 
-        if (TaxRepresentativePostCode is not null) {
+        if (TaxRepresentativePostCode is not null)
+        {
             writer.WriteStartElement("tax-representative-post-code", IRConfig.NS);
             writer.WriteAttributeString("id", "bt-67");
             TaxRepresentativePostCode.Value.Serialize(writer);
