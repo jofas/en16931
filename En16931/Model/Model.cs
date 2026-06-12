@@ -2591,7 +2591,78 @@ public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("document-totals", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-22");
+
+        writer.WriteStartElement("sum-of-invoice-line-net-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-106");
+        SumOfInvoiceLineNetAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (SumOfAllowancesOnDocumentLevel is not null)
+        {
+            writer.WriteStartElement("sum-of-allowances-on-document-level", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-107");
+            SumOfAllowancesOnDocumentLevel.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SumOfChargesOnDocumentLevel is not null)
+        {
+            writer.WriteStartElement("sum-of-charges-on-document-level", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-108");
+            SumOfChargesOnDocumentLevel.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("invoice-total-amount-without-vat", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-109");
+        InvoiceTotalAmountWithoutVat.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (InvoiceTotalVatAmount is not null)
+        {
+            writer.WriteStartElement("invoice-total-vat-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-110");
+            InvoiceTotalVatAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceTotalVatAmountInAccountingCurrency is not null)
+        {
+            writer.WriteStartElement("invoice-total-vat-amount-in-accounting-currency", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-111");
+            InvoiceTotalVatAmountInAccountingCurrency.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("invoice-total-amount-with-vat", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-112");
+        InvoiceTotalAmountWithVat.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PaidAmount is not null)
+        {
+            writer.WriteStartElement("paid-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-113");
+            PaidAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (RoundingAmount is not null)
+        {
+            writer.WriteStartElement("rounding-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-114");
+            RoundingAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("amount-due-for-payment", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-115");
+        AmountDueForPayment.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
     }
 
     public static DocumentTotals Deserialize(XmlReader reader)
@@ -2753,7 +2824,46 @@ public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>, II
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("vat-breakdown", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-23");
+
+        writer.WriteStartElement("vat-category-taxable-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-116");
+        VatCategoryTaxableAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("vat-category-tax-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-117");
+        VatCategoryTaxAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("vat-category-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-118");
+        VatCategoryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("vat-category-rate", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-119");
+        VatCategoryRate.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (VatExemptionReasonText is not null)
+        {
+            writer.WriteStartElement("vat-exemption-reason-text", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-120");
+            VatExemptionReasonText.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (VatExemptionReasonCode is not null)
+        {
+            writer.WriteStartElement("vat-exemption-reason-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-121");
+            VatExemptionReasonCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
     }
 
     public static VatBreakdown Deserialize(XmlReader reader)
@@ -2850,7 +2960,39 @@ public readonly record struct AdditionalSupportingDocument : IIRDeserializable<A
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("additional-supporting-document", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-24");
+
+        writer.WriteStartElement("supporting-document-reference", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-122");
+        SupportingDocumentReference.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (SupportingDocumentDescription is not null)
+        {
+            writer.WriteStartElement("supporting-document-description", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-123");
+            SupportingDocumentDescription.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ExternalDocumentLocation is not null)
+        {
+            writer.WriteStartElement("external-document-location", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-124");
+            ExternalDocumentLocation.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (AttachedDocument is not null)
+        {
+            writer.WriteStartElement("attached-document", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-125");
+            AttachedDocument.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
     }
 
     public static AdditionalSupportingDocument Deserialize(XmlReader reader)
