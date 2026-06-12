@@ -1927,7 +1927,54 @@ public readonly record struct PaymentInstructions : IIRDeserializable<PaymentIns
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("payment-instructions", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-16");
+
+        writer.WriteStartElement("payment-means-type-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-81");
+        PaymentMeansTypeCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PaymentMeansText is not null)
+        {
+            writer.WriteStartElement("payment-means-text", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-82");
+            PaymentMeansText.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (RemittanceInformation is not null)
+        {
+            writer.WriteStartElement("remittance-information", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-83");
+            RemittanceInformation.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (CreditTransfers.Length > 0)
+        {
+            writer.WriteStartElement("credit-transfers", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-17");
+
+            foreach (CreditTransfer ct in CreditTransfers)
+            {
+                ct.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (PaymentCardInformation is not null)
+        {
+            PaymentCardInformation.Value.Serialize(writer);
+        }
+
+        if (DirectDebit is not null)
+        {
+            DirectDebit.Value.Serialize(writer);
+        }
+
+        writer.WriteEndElement();
     }
 
     public static PaymentInstructions Deserialize(XmlReader reader)
@@ -2030,7 +2077,31 @@ public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("credit-transfer", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-17");
+
+        writer.WriteStartElement("payment-account-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-84");
+        PaymentAccountIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PaymentAccountName is not null)
+        {
+            writer.WriteStartElement("payment-account-name", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-85");
+            PaymentAccountName.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (PaymentServiceProviderIdentifier is not null)
+        {
+            writer.WriteStartElement("payment-service-provider-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-86");
+            PaymentServiceProviderIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
     }
 
     public static CreditTransfer Deserialize(XmlReader reader)
@@ -2094,7 +2165,23 @@ public readonly record struct PaymentCardInformation : IIRDeserializable<Payment
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("payment-card-information", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-18");
+
+        writer.WriteStartElement("payment-card-primary-account-number", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-87");
+        PaymentCardPrimaryAccountNumber.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PaymentCardHolderName is not null)
+        {
+            writer.WriteStartElement("payment-card-holder-name", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-88");
+            PaymentCardHolderName.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
     }
 
     public static PaymentCardInformation Deserialize(XmlReader reader)
@@ -2147,7 +2234,25 @@ public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>, IIRS
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("direct-debit", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-19");
+
+        writer.WriteStartElement("mandate-reference-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-89");
+        MandateReferenceIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("bank-assigned-creditor-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-90");
+        BankAssignedCreditorIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("debited-account-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-91");
+        DebitedAccountIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
     }
 
     public static DirectDebit Deserialize(XmlReader reader)
