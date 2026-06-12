@@ -3464,7 +3464,84 @@ public readonly record struct ItemInformation : IIRDeserializable<ItemInformatio
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("item-information", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-31");
+
+        writer.WriteStartElement("item-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-153");
+        ItemName.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (ItemDescription is not null)
+        {
+            writer.WriteStartElement("item-description", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-154");
+            ItemDescription.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemSellersIdentifier is not null)
+        {
+            writer.WriteStartElement("item-sellers-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-155");
+            ItemSellersIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemBuyersIdentifier is not null)
+        {
+            writer.WriteStartElement("item-buyers-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-156");
+            ItemBuyersIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemStandardIdentifier is not null)
+        {
+            writer.WriteStartElement("item-standard-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-157");
+            ItemStandardIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemClassificationIdentifiers.Length > 0)
+        {
+            writer.WriteStartElement("item-classification-identifiers", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-158");
+
+            foreach (Identifier i in ItemClassificationIdentifiers)
+            {
+                writer.WriteStartElement("item-classification-identifier", IRConfig.NS);
+                writer.WriteAttributeString("id", "bt-158");
+                i.Serialize(writer);
+                writer.WriteEndElement();
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (ItemCountryOfOrigin is not null)
+        {
+            writer.WriteStartElement("item-country-of-origin", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-159");
+            ItemCountryOfOrigin.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemAttributes.Length > 0)
+        {
+            writer.WriteStartElement("item-attributes", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-32");
+
+            foreach (ItemAttribute ia in ItemAttributes)
+            {
+                ia.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
     }
 
     public static ItemInformation Deserialize(XmlReader reader)
@@ -3616,7 +3693,20 @@ public readonly record struct ItemAttribute : IIRDeserializable<ItemAttribute>, 
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("item-attribute", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-32");
+
+        writer.WriteStartElement("item-attribute-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-160");
+        ItemAttributeName.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("item-attribute-value", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-161");
+        ItemAttributeValue.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
     }
 
     public static ItemAttribute Deserialize(XmlReader reader)
