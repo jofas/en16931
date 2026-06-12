@@ -6,7 +6,7 @@ using En16931.Model.Primitives;
 
 namespace En16931.Model;
 
-public readonly record struct Invoice : IIRDeserializable<Invoice>
+public readonly record struct Invoice : IIRDeserializable<Invoice>, IIRSerializable
 {
     // BT-1
     public required Identifier InvoiceNumber { get; init; }
@@ -113,6 +113,11 @@ public readonly record struct Invoice : IIRDeserializable<Invoice>
 
     // BG-25
     public required NonEmptyArray<InvoiceLine> InvoiceLines { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static Invoice Deserialize(XmlReader reader)
     {
@@ -538,13 +543,18 @@ public readonly record struct Invoice : IIRDeserializable<Invoice>
     }
 }
 
-public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>
+public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>, IIRSerializable
 {
     // BT-21
     public required Code? InvoiceNoteSubjectCode { get; init; }
 
     // BT-22
     public required Text Note { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static InvoiceNote Deserialize(XmlReader reader)
     {
@@ -583,13 +593,18 @@ public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>
     }
 }
 
-public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>
+public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>, IIRSerializable
 {
     // BT-23
     public required Text BusinessProcessType { get; init; }
 
     // BT-24
     public required Identifier SpecificationIdentifier { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static ProcessControl Deserialize(XmlReader reader)
     {
@@ -623,13 +638,18 @@ public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>
     }
 }
 
-public readonly record struct PrecedingInvoiceReference : IIRDeserializable<PrecedingInvoiceReference>
+public readonly record struct PrecedingInvoiceReference : IIRDeserializable<PrecedingInvoiceReference>, IIRSerializable
 {
     // BT-25
     public required DocumentReference Reference { get; init; }
 
     // BT-26
     public required Date? PrecedingInvoiceIssueDate { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static PrecedingInvoiceReference Deserialize(XmlReader reader)
     {
@@ -668,7 +688,7 @@ public readonly record struct PrecedingInvoiceReference : IIRDeserializable<Prec
     }
 }
 
-public readonly record struct Seller : IIRDeserializable<Seller>
+public readonly record struct Seller : IIRDeserializable<Seller>, IIRSerializable
 {
     // BT-27
     public required Text SellerName { get; init; }
@@ -699,6 +719,11 @@ public readonly record struct Seller : IIRDeserializable<Seller>
 
     // BG-6
     public required SellerContact SellerContact { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static Seller Deserialize(XmlReader reader)
     {
@@ -834,7 +859,7 @@ public readonly record struct Seller : IIRDeserializable<Seller>
     }
 }
 
-public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPostalAddress>
+public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPostalAddress>, IIRSerializable
 {
     // BT-35
     public required Text? SellerAddressLine1 { get; init; }
@@ -857,6 +882,11 @@ public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPost
     // BT-40
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code SellerCountryCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static SellerPostalAddress Deserialize(XmlReader reader)
     {
@@ -955,7 +985,7 @@ public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPost
     }
 }
 
-public readonly record struct SellerContact : IIRDeserializable<SellerContact>
+public readonly record struct SellerContact : IIRDeserializable<SellerContact>, IIRSerializable
 {
     // BT-41
     public required Text SellerContactPoint { get; init; }
@@ -965,6 +995,11 @@ public readonly record struct SellerContact : IIRDeserializable<SellerContact>
 
     // BT-43
     public required Text SellerContactEmailAddress { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static SellerContact Deserialize(XmlReader reader)
     {
@@ -1007,7 +1042,7 @@ public readonly record struct SellerContact : IIRDeserializable<SellerContact>
     }
 }
 
-public readonly record struct Buyer : IIRDeserializable<Buyer>
+public readonly record struct Buyer : IIRDeserializable<Buyer>, IIRSerializable
 {
     // BT-44
     public required Text BuyerName { get; init; }
@@ -1032,6 +1067,11 @@ public readonly record struct Buyer : IIRDeserializable<Buyer>
 
     // BG-9
     public required BuyerContact? BuyerContact { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static Buyer Deserialize(XmlReader reader)
     {
@@ -1137,7 +1177,7 @@ public readonly record struct Buyer : IIRDeserializable<Buyer>
     }
 }
 
-public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostalAddress>
+public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostalAddress>, IIRSerializable
 {
     // BT-50
     public required Text? BuyerAddressLine1 { get; init; }
@@ -1160,6 +1200,11 @@ public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostal
     // BT-55
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code BuyerCountryCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static BuyerPostalAddress Deserialize(XmlReader reader)
     {
@@ -1258,7 +1303,7 @@ public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostal
     }
 }
 
-public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>
+public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>, IIRSerializable
 {
     // BT-56
     public required Text? BuyerContactPoint { get; init; }
@@ -1268,6 +1313,11 @@ public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>
 
     // BT-58
     public required Text? BuyerContactEmailAddress { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static BuyerContact Deserialize(XmlReader reader)
     {
@@ -1325,7 +1375,7 @@ public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>
     }
 }
 
-public readonly record struct Payee : IIRDeserializable<Payee>
+public readonly record struct Payee : IIRDeserializable<Payee>, IIRSerializable
 {
     // BT-59
     public required Text PayeeName { get; init; }
@@ -1335,6 +1385,11 @@ public readonly record struct Payee : IIRDeserializable<Payee>
 
     // BT-61
     public required Identifier? PayeeLegalRegistrationIdentifier { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static Payee Deserialize(XmlReader reader)
     {
@@ -1387,7 +1442,7 @@ public readonly record struct Payee : IIRDeserializable<Payee>
     }
 }
 
-public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<SellerTaxRepresentativeParty>
+public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<SellerTaxRepresentativeParty>, IIRSerializable
 {
     // BT-62
     public required Text SellerTaxRepresentativeName { get; init; }
@@ -1397,6 +1452,11 @@ public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<S
 
     // BG-12
     public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static SellerTaxRepresentativeParty Deserialize(XmlReader reader)
     {
@@ -1433,7 +1493,7 @@ public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<S
     }
 }
 
-public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserializable<SellerTaxRepresentativePostalAddress>
+public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserializable<SellerTaxRepresentativePostalAddress>, IIRSerializable
 {
     // BT-64
     public required Text? TaxRepresentativeAddressLine1 { get; init; }
@@ -1456,6 +1516,11 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserial
     // BT-69
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code TaxRepresentativeCountryCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static SellerTaxRepresentativePostalAddress Deserialize(XmlReader reader)
     {
@@ -1564,7 +1629,7 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserial
     }
 }
 
-public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryInformation>
+public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryInformation>, IIRSerializable
 {
     // BT-70
     public required Text? DeliverToPartyName { get; init; }
@@ -1580,6 +1645,11 @@ public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryIn
 
     // BG-15
     public required DeliverToAddress? DeliverToAddress { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static DeliveryInformation Deserialize(XmlReader reader)
     {
@@ -1653,13 +1723,18 @@ public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryIn
     }
 }
 
-public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPeriod>
+public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPeriod>, IIRSerializable
 {
     // BT-73
     public required Date? InvoicingPeriodStartDate { get; init; }
 
     // BT-74
     public required Date? InvoicingPeriodEndDate { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static InvoicingPeriod Deserialize(XmlReader reader)
     {
@@ -1703,7 +1778,7 @@ public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPerio
     }
 }
 
-public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddress>
+public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddress>, IIRSerializable
 {
     // BT-75
     public required Text? DeliverToAddressLine1 { get; init; }
@@ -1726,6 +1801,11 @@ public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddr
     // BT-80
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code DeliverToCountryCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static DeliverToAddress Deserialize(XmlReader reader)
     {
@@ -1824,7 +1904,7 @@ public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddr
     }
 }
 
-public readonly record struct PaymentInstructions : IIRDeserializable<PaymentInstructions>
+public readonly record struct PaymentInstructions : IIRDeserializable<PaymentInstructions>, IIRSerializable
 {
     // BT-81
     // UNTDID-4461
@@ -1844,6 +1924,11 @@ public readonly record struct PaymentInstructions : IIRDeserializable<PaymentIns
 
     // BG-19
     public required DirectDebit? DirectDebit { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static PaymentInstructions Deserialize(XmlReader reader)
     {
@@ -1932,7 +2017,7 @@ public readonly record struct PaymentInstructions : IIRDeserializable<PaymentIns
     }
 }
 
-public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>
+public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>, IIRSerializable
 {
     // BT-84
     public required Identifier PaymentAccountIdentifier { get; init; }
@@ -1942,6 +2027,11 @@ public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>
 
     // BT-86
     public required Identifier? PaymentServiceProviderIdentifier { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static CreditTransfer Deserialize(XmlReader reader)
     {
@@ -1994,13 +2084,18 @@ public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>
     }
 }
 
-public readonly record struct PaymentCardInformation : IIRDeserializable<PaymentCardInformation>
+public readonly record struct PaymentCardInformation : IIRDeserializable<PaymentCardInformation>, IIRSerializable
 {
     // BT-87
     public required Text PaymentCardPrimaryAccountNumber { get; init; }
 
     // BT-88
     public required Text? PaymentCardHolderName { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static PaymentCardInformation Deserialize(XmlReader reader)
     {
@@ -2039,7 +2134,7 @@ public readonly record struct PaymentCardInformation : IIRDeserializable<Payment
     }
 }
 
-public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>
+public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>, IIRSerializable
 {
     // BT-89
     public required Identifier MandateReferenceIdentifier { get; init; }
@@ -2049,6 +2144,11 @@ public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>
 
     // BT-91
     public required Identifier DebitedAccountIdentifier { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static DirectDebit Deserialize(XmlReader reader)
     {
@@ -2091,7 +2191,7 @@ public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>
     }
 }
 
-public readonly record struct DocumentLevelAllowance : IIRDeserializable<DocumentLevelAllowance>
+public readonly record struct DocumentLevelAllowance : IIRDeserializable<DocumentLevelAllowance>, IIRSerializable
 {
     // BT-92
     public required Amount DocumentLevelAllowanceAmount { get; init; }
@@ -2113,6 +2213,11 @@ public readonly record struct DocumentLevelAllowance : IIRDeserializable<Documen
 
     // BT-98
     public required Code? DocumentLevelAllowanceReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static DocumentLevelAllowance Deserialize(XmlReader reader)
     {
@@ -2216,7 +2321,7 @@ public readonly record struct DocumentLevelAllowance : IIRDeserializable<Documen
     }
 }
 
-public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLevelCharge>
+public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLevelCharge>, IIRSerializable
 {
     // BT-99
     public required Amount DocumentLevelChargeAmount { get; init; }
@@ -2238,6 +2343,11 @@ public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLe
 
     // BT-105
     public required Code? DocumentLevelChargeReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static DocumentLevelCharge Deserialize(XmlReader reader)
     {
@@ -2341,7 +2451,7 @@ public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLe
     }
 }
 
-public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>
+public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>, IIRSerializable
 {
     // BT-106
     public required Amount SumOfInvoiceLineNetAmount { get; init; }
@@ -2372,6 +2482,11 @@ public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>
 
     // BT-115
     public required Amount AmountDueForPayment { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static DocumentTotals Deserialize(XmlReader reader)
     {
@@ -2508,7 +2623,7 @@ public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>
     }
 }
 
-public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>
+public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>, IIRSerializable
 {
     // BT-116
     public required Amount VatCategoryTaxableAmount { get; init; }
@@ -2529,6 +2644,11 @@ public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>
     // BT-121
     // VATEX Vat exemption reason code list
     public required Code? VatExemptionReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static VatBreakdown Deserialize(XmlReader reader)
     {
@@ -2608,7 +2728,7 @@ public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>
     }
 }
 
-public readonly record struct AdditionalSupportingDocument : IIRDeserializable<AdditionalSupportingDocument>
+public readonly record struct AdditionalSupportingDocument : IIRDeserializable<AdditionalSupportingDocument>, IIRSerializable
 {
     // BT-122
     public required DocumentReference SupportingDocumentReference { get; init; }
@@ -2621,6 +2741,11 @@ public readonly record struct AdditionalSupportingDocument : IIRDeserializable<A
 
     // BT-125
     public required BinaryObject? AttachedDocument { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static AdditionalSupportingDocument Deserialize(XmlReader reader)
     {
@@ -2687,7 +2812,7 @@ public readonly record struct AdditionalSupportingDocument : IIRDeserializable<A
     }
 }
 
-public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>
+public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>, IIRSerializable
 {
     // BT-126
     public required Identifier InvoiceLineIdentifier { get; init; }
@@ -2730,6 +2855,11 @@ public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>
 
     // BG-31
     public required ItemInformation ItemInformation { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static InvoiceLine Deserialize(XmlReader reader)
     {
@@ -2894,13 +3024,18 @@ public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>
     }
 }
 
-public readonly record struct InvoiceLinePeriod : IIRDeserializable<InvoiceLinePeriod>
+public readonly record struct InvoiceLinePeriod : IIRDeserializable<InvoiceLinePeriod>, IIRSerializable
 {
     // BT-134
     public required Date? InvoiceLinePeriodStartDate { get; init; }
 
     // BT-135
     public required Date? InvoiceLinePeriodEndDate { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static InvoiceLinePeriod Deserialize(XmlReader reader)
     {
@@ -2944,7 +3079,7 @@ public readonly record struct InvoiceLinePeriod : IIRDeserializable<InvoiceLineP
     }
 }
 
-public readonly record struct InvoiceLineAllowance : IIRDeserializable<InvoiceLineAllowance>
+public readonly record struct InvoiceLineAllowance : IIRDeserializable<InvoiceLineAllowance>, IIRSerializable
 {
     // BT-136
     public required Amount InvoiceLineAllowanceAmount { get; init; }
@@ -2960,6 +3095,11 @@ public readonly record struct InvoiceLineAllowance : IIRDeserializable<InvoiceLi
 
     // BT-140
     public required Code? InvoiceLineAllowanceReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static InvoiceLineAllowance Deserialize(XmlReader reader)
     {
@@ -3040,7 +3180,7 @@ public readonly record struct InvoiceLineAllowance : IIRDeserializable<InvoiceLi
     }
 }
 
-public readonly record struct InvoiceLineCharge : IIRDeserializable<InvoiceLineCharge>
+public readonly record struct InvoiceLineCharge : IIRDeserializable<InvoiceLineCharge>, IIRSerializable
 {
     // BT-141
     public required Amount InvoiceLineChargeAmount { get; init; }
@@ -3056,6 +3196,11 @@ public readonly record struct InvoiceLineCharge : IIRDeserializable<InvoiceLineC
 
     // BT-145
     public required Code? InvoiceLineChargeReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static InvoiceLineCharge Deserialize(XmlReader reader)
     {
@@ -3136,7 +3281,7 @@ public readonly record struct InvoiceLineCharge : IIRDeserializable<InvoiceLineC
     }
 }
 
-public readonly record struct PriceDetails : IIRDeserializable<PriceDetails>
+public readonly record struct PriceDetails : IIRDeserializable<PriceDetails>, IIRSerializable
 {
     // BT-146
     public required UnitPriceAmount ItemNetPrice { get; init; }
@@ -3153,6 +3298,11 @@ public readonly record struct PriceDetails : IIRDeserializable<PriceDetails>
     // BT-150
     // UN/ECE Rec No 20,21
     public required Code? ItemPriceBaseQuantityUnitOfMeasureCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static PriceDetails Deserialize(XmlReader reader)
     {
@@ -3233,7 +3383,7 @@ public readonly record struct PriceDetails : IIRDeserializable<PriceDetails>
     }
 }
 
-public readonly record struct LineVatInformation : IIRDeserializable<LineVatInformation>
+public readonly record struct LineVatInformation : IIRDeserializable<LineVatInformation>, IIRSerializable
 {
     // BT-151
     // UNTDID 5305
@@ -3241,6 +3391,11 @@ public readonly record struct LineVatInformation : IIRDeserializable<LineVatInfo
 
     // BT-152
     public required Percentage? InvoicedItemVatRate { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static LineVatInformation Deserialize(XmlReader reader)
     {
@@ -3279,7 +3434,7 @@ public readonly record struct LineVatInformation : IIRDeserializable<LineVatInfo
     }
 }
 
-public readonly record struct ItemInformation : IIRDeserializable<ItemInformation>
+public readonly record struct ItemInformation : IIRDeserializable<ItemInformation>, IIRSerializable
 {
     // BT-153
     public required Text ItemName { get; init; }
@@ -3306,6 +3461,11 @@ public readonly record struct ItemInformation : IIRDeserializable<ItemInformatio
 
     // BG-32
     public required Array<ItemAttribute> ItemAttributes { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static ItemInformation Deserialize(XmlReader reader)
     {
@@ -3446,13 +3606,18 @@ public readonly record struct ItemInformation : IIRDeserializable<ItemInformatio
     }
 }
 
-public readonly record struct ItemAttribute : IIRDeserializable<ItemAttribute>
+public readonly record struct ItemAttribute : IIRDeserializable<ItemAttribute>, IIRSerializable
 {
     // BT-160
     public required Text ItemAttributeName { get; init; }
 
     // BT-161
     public required Text ItemAttributeValue { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        throw new System.NotImplementedException();
+    }
 
     public static ItemAttribute Deserialize(XmlReader reader)
     {
