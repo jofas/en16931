@@ -87,13 +87,7 @@ public class IRTests
 
         Invoice invoice = parser.ParseFile(invoiceLocation);
 
-        // BT-8 is mapped to different code lists in CII (UNTDID 2475) and UBL (UNTDID 2005)
-        Invoice expected = Data.Invoice2 with
-        {
-            ValueAddedTaxPointDateCode = new Code("5"),
-        };
-
-        Assert.Equal(expected, invoice);
+        Assert.Equal(Data.Invoice2, invoice);
     }
 
     [Theory]
