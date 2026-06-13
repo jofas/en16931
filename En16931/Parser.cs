@@ -24,7 +24,8 @@ public class Parser
     XsltExecutable _xRechnungUblValidator;
     XsltExecutable _xRechnungCiiValidator;
 
-    XsltExecutable _irTransformer;
+    XsltExecutable _ublToIRTransformer;
+    XsltExecutable _ciiToIRTransformer;
 
     public Parser()
     {
@@ -71,8 +72,11 @@ public class Parser
         Uri xRechnungCiiUri = new Uri(new FileInfo("Resources/XRechnung/XRechnung-CII-validation.xsl").FullName);
         _xRechnungCiiValidator = xsltCompiler.Compile(xRechnungCiiUri);
 
-        Uri irUri = new Uri(new FileInfo("Resources/IR/ir.xslt").FullName);
-        _irTransformer = xsltCompiler.Compile(irUri);
+        Uri ublToIRUri = new Uri(new FileInfo("Resources/IR/ubl2ir.xslt").FullName);
+        _ublToIRTransformer = xsltCompiler.Compile(ublToIRUri);
+
+        Uri ciiToIRUri = new Uri(new FileInfo("Resources/IR/cii2ir.xslt").FullName);
+        _ciiToIRTransformer = xsltCompiler.Compile(ciiToIRUri);
     }
 
     public Invoice ParseFile(string filepath)
@@ -143,13 +147,7 @@ public class Parser
 
         ValidateXRechnung(doc, docType);
 
-        DomDestination destination = new();
-
-        Xslt30Transformer transformer = _irTransformer.Load30();
-        transformer.GlobalContextItem = doc;
-        transformer.ApplyTemplates(doc, destination);
-
-        return destination.XmlDocument;
+        return TransformToIR(doc, docType);
     }
 
     private void ValidateEn16931(XdmNode doc, DocumentType docType)
@@ -228,6 +226,24 @@ public class Parser
                 Errors = errors.ToArray(),
             };
         }
+    }
+
+    private XmlDocument TransformToIR(XdmNode doc, DocumentType docType)
+    {
+        XsltExecutable executable = docType.Schema switch
+        {
+            Schema.UblInvoice or Schema.UblCreditNote => _ublToIRTransformer,
+            Schema.CiiCrossIndustryInvoice => _ciiToIRTransformer,
+            _ => throw new UnreachableException(),
+        };
+
+        DomDestination destination = new();
+
+        Xslt30Transformer transformer = executable.Load30();
+        transformer.GlobalContextItem = doc;
+        transformer.ApplyTemplates(doc, destination);
+
+        return destination.XmlDocument;
     }
 
     private XmlDocument GetSchemaValidatedDocument(TextReader reader)
