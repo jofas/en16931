@@ -42,9 +42,7 @@
       </xsl:if>
       <!-- CII-SR-462 fails if more than one ram:DueDateTypeCode node is present (there can be multiple ram:ApplicableTradeTax elements) -->
       <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:DueDateTypeCode)">
-        <value-added-tax-point-date-code id="bt-8">
-          <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:DueDateTypeCode"/>
-        </value-added-tax-point-date-code>
+        <xsl:call-template name="bt-8"/>
       </xsl:if>
       <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString[@format = '102'])">
         <payment-due-date id="bt-9">
@@ -1098,5 +1096,27 @@
   <xsl:template name="date">
     <xsl:param name="node"/>
     <xsl:value-of select="substring($node, 1, 4)"/>-<xsl:value-of select="substring($node, 5, 2)"/>-<xsl:value-of select="substring($node, 7, 2)"/>
+  </xsl:template>
+
+  <!--
+      BT-8 is mapped to a different code list (UNTDID 2475) in CII than in EN16931 (UNTDID 2005).
+
+      This template provides the mapping for all allowed values.
+      See also: https://github.com/phax/en16931-cii2ubl/issues/29
+  -->
+  <xsl:template name="bt-8">
+    <xsl:variable name="bt-8" select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:DueDateTypeCode"/>
+    <value-added-tax-point-date-code id="bt-8">
+      <xsl:choose>
+        <xsl:when test="$bt-8 = 5">3</xsl:when>
+        <xsl:when test="$bt-8 = 29">35</xsl:when>
+        <xsl:when test="$bt-8 = 72">432</xsl:when>
+        <xsl:otherwise>
+          <xsl:message terminate="yes">
+            Error: BT-8 is filled with unknown value: <xsl:value-of select="$bt-8"/>. Allowed values are: 5, 29, 72.
+          </xsl:message>
+        </xsl:otherwise>
+      </xsl:choose>
+    </value-added-tax-point-date-code>
   </xsl:template>
 </xsl:stylesheet>
