@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using En16931;
 using En16931.Model;
 using En16931.Model.Primitives;
@@ -14,7 +15,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice1, invoice);
     }
@@ -25,7 +26,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Invoice expected = Data.Invoice1 with
         {
@@ -41,7 +42,11 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        string content = File.ReadAllText(invoiceLocation);
+
+        using StringReader reader = new(content);
+
+        Invoice invoice = parser.Parse(reader);
 
         // CII only supports a single preceding invoice reference
         Invoice expected = Data.Invoice1 with
@@ -50,6 +55,12 @@ public class IRTests
         };
 
         Assert.Equal(expected, invoice);
+
+        using StringWriter writer = new();
+
+        parser.Serialize(ref invoice, writer, Schema.CiiCrossIndustryInvoice);
+
+        Assert.Equal(content, writer.ToString());
     }
 
     [Theory]
@@ -58,7 +69,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice2, invoice);
     }
@@ -69,7 +80,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Invoice expected = Data.Invoice2 with
         {
@@ -85,7 +96,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice2, invoice);
     }
@@ -96,7 +107,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice3, invoice);
     }
@@ -107,7 +118,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Invoice expected = Data.Invoice3 with
         {
@@ -123,7 +134,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice3, invoice);
     }
@@ -134,7 +145,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice4, invoice);
     }
@@ -145,7 +156,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Invoice expected = Data.Invoice4 with
         {
@@ -161,7 +172,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice4, invoice);
     }

@@ -79,20 +79,48 @@ public class Parser
         _ciiToIRTransformer = xsltCompiler.Compile(ciiToIRUri);
     }
 
-    public Invoice ParseFile(string filepath)
-    {
-        XmlDocument ir = ParseFileToIR(filepath);
-
-        using XmlNodeReader reader = new(ir);
-
-        Invoice invoice = Invoice.Deserialize(reader);
-
-        return invoice;
-    }
-
-    internal XmlDocument ParseFileToIR(string filepath)
+    public Invoice Parse(string filepath)
     {
         using StreamReader reader = new(filepath);
+        return Parse(reader);
+    }
+
+    public Invoice Parse(TextReader reader)
+    {
+        using XmlTextReader xmlReader = new(reader);
+        return Parse(xmlReader);
+    }
+
+    public Invoice Parse(XmlReader reader)
+    {
+        XmlDocument ir = ParseToIR(reader);
+        using XmlNodeReader irReader = new(ir);
+        return Invoice.Deserialize(irReader);
+    }
+
+    public void Serialize(ref readonly Invoice invoice, string filepath, Schema schema)
+    {
+        using StreamWriter writer = new(filepath);
+        Serialize(in invoice, writer, schema);
+    }
+
+    public void Serialize(ref readonly Invoice invoice, TextWriter writer, Schema schema)
+    {
+        using XmlTextWriter xmlWriter = new(writer);
+        Serialize(in invoice, xmlWriter, schema);
+    }
+
+    public void Serialize(ref readonly Invoice invoice, XmlWriter writer, Schema schema)
+    {
+        // TODO: serialize IR to XmlDocument
+        // TODO: XmlDocument => XdmNode
+        // TODO: transform IR to Schema
+        // TODO: validate (schematrons + schema)
+        throw new NotImplementedException();
+    }
+
+    internal XmlDocument ParseToIR(XmlReader reader)
+    {
 
         XmlDocument xmlDoc = GetSchemaValidatedDocument(reader);
 
@@ -246,7 +274,7 @@ public class Parser
         return destination.XmlDocument;
     }
 
-    private XmlDocument GetSchemaValidatedDocument(TextReader reader)
+    private XmlDocument GetSchemaValidatedDocument(XmlReader reader)
     {
         XmlDocument doc = new XmlDocument()
         {
@@ -294,7 +322,7 @@ public class Parser
     }
 }
 
-enum Schema
+public enum Schema
 {
     UblInvoice,
     UblCreditNote,
