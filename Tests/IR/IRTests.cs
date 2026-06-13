@@ -42,11 +42,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        string content = File.ReadAllText(invoiceLocation);
-
-        using StringReader reader = new(content);
-
-        Invoice invoice = parser.Parse(reader);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         // CII only supports a single preceding invoice reference
         Invoice expected = Data.Invoice1 with
@@ -55,12 +51,35 @@ public class IRTests
         };
 
         Assert.Equal(expected, invoice);
+    }
+
+
+    [Fact]
+    public void Cii1RoundTrip()
+    {
+        Parser parser = new Parser();
+
+        // CII only supports a single preceding invoice reference
+        Invoice invoice = Data.Invoice1 with
+        {
+            PrecedingInvoiceReferences = [Data.Invoice1.PrecedingInvoiceReferences[0]],
+        };
 
         using StringWriter writer = new();
 
-        parser.Serialize(ref invoice, writer, Schema.CiiCrossIndustryInvoice);
+        // Pretty printing for debugginig purposes
+        using System.Xml.XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = System.Xml.Formatting.Indented,
+        };
 
-        Assert.Equal(content, writer.ToString());
+        parser.Serialize(ref invoice, xmlWriter, Schema.CiiCrossIndustryInvoice);
+
+        Console.WriteLine(writer.ToString());
+
+        using StringReader reader = new(writer.ToString());
+
+        Assert.Equal(invoice, parser.Parse(reader));
     }
 
     [Theory]

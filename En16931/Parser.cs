@@ -27,6 +27,8 @@ public class Parser
     XsltExecutable _ublToIRTransformer;
     XsltExecutable _ciiToIRTransformer;
 
+    XsltExecutable _irToCiiTransformer;
+
     public Parser()
     {
         _namespaces = new XmlNamespaceManager(new NameTable());
@@ -77,6 +79,9 @@ public class Parser
 
         Uri ciiToIRUri = new Uri(new FileInfo("Resources/IR/cii2ir.xslt").FullName);
         _ciiToIRTransformer = xsltCompiler.Compile(ciiToIRUri);
+
+        Uri irToCiiUri = new Uri(new FileInfo("Resources/IR/ir2cii.xslt").FullName);
+        _irToCiiTransformer = xsltCompiler.Compile(irToCiiUri);
     }
 
     public Invoice Parse(string filepath)
@@ -115,9 +120,10 @@ public class Parser
         // TODO: SerializeToIR
         XmlDocument xmlDoc = new();
 
-        using XmlWriter irWriter = xmlDoc.CreateNavigator()?.AppendChild() ?? throw new UnreachableException();
-
-        invoice.Serialize(irWriter);
+        using (XmlWriter irWriter = xmlDoc.CreateNavigator()!.AppendChild())
+        {
+            invoice.Serialize(irWriter);
+        }
 
         // TODO: End SerializeToIR
 
@@ -127,7 +133,7 @@ public class Parser
         XsltExecutable executable = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => throw new NotImplementedException(),
-            Schema.CiiCrossIndustryInvoice => throw new NotImplementedException(),
+            Schema.CiiCrossIndustryInvoice => _irToCiiTransformer,
             _ => throw new UnreachableException(),
         };
 
@@ -139,6 +145,9 @@ public class Parser
 
         // TODO: End TransformIRToOfficialSyntax
 
+        destination.XmlDocument.Save(writer);
+
+        /*
         destination.XmlDocument.Schemas = _schemaSet;
 
         destination.XmlDocument.Validate(null);
@@ -150,6 +159,7 @@ public class Parser
         ValidateXRechnung(result, schema);
 
         result.WriteTo(writer);
+        */
     }
 
     internal XmlDocument ParseToIR(XmlReader reader)
