@@ -112,11 +112,44 @@ public class Parser
 
     public void Serialize(ref readonly Invoice invoice, XmlWriter writer, Schema schema)
     {
-        // TODO: serialize IR to XmlDocument
-        // TODO: XmlDocument => XdmNode
-        // TODO: transform IR to Schema
-        // TODO: validate (schematrons + schema)
-        throw new NotImplementedException();
+        // TODO: SerializeToIR
+        XmlDocument xmlDoc = new();
+
+        using XmlWriter irWriter = xmlDoc.CreateNavigator()?.AppendChild() ?? throw new UnreachableException();
+
+        invoice.Serialize(irWriter);
+
+        // TODO: End SerializeToIR
+
+        XdmNode doc = _docBuilder.Build(xmlDoc);
+
+        // TODO: TransformIRToOfficialSyntax
+        XsltExecutable executable = schema switch
+        {
+            Schema.UblInvoice or Schema.UblCreditNote => throw new NotImplementedException(),
+            Schema.CiiCrossIndustryInvoice => throw new NotImplementedException(),
+            _ => throw new UnreachableException(),
+        };
+
+        DomDestination destination = new();
+
+        Xslt30Transformer transformer = executable.Load30();
+        transformer.GlobalContextItem = doc;
+        transformer.ApplyTemplates(doc, destination);
+
+        // TODO: End TransformIRToOfficialSyntax
+
+        destination.XmlDocument.Schemas = _schemaSet;
+
+        destination.XmlDocument.Validate(null);
+
+        XdmNode result = _docBuilder.Wrap(xmlDoc);
+
+        // TODO: XRechnungExtension
+        ValidateEn16931(result, schema);
+        ValidateXRechnung(result, schema);
+
+        result.WriteTo(writer);
     }
 
     internal XmlDocument ParseToIR(XmlReader reader)
@@ -126,11 +159,11 @@ public class Parser
 
         DocumentType docType = GetDocumentType(xmlDoc);
 
-        XdmNode doc = _docBuilder.Build(xmlDoc);
+        XdmNode doc = _docBuilder.Wrap(xmlDoc);
 
         try
         {
-            ValidateEn16931(doc, docType);
+            ValidateEn16931(doc, docType.Schema);
         }
         catch (En16931SchematronException e)
         {
@@ -173,14 +206,14 @@ public class Parser
             }
         }
 
-        ValidateXRechnung(doc, docType);
+        ValidateXRechnung(doc, docType.Schema);
 
-        return TransformToIR(doc, docType);
+        return TransformToIR(doc, docType.Schema);
     }
 
-    private void ValidateEn16931(XdmNode doc, DocumentType docType)
+    private void ValidateEn16931(XdmNode doc, Schema schema)
     {
-        XsltExecutable validator = docType.Schema switch
+        XsltExecutable validator = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => _en16931UblValidator,
             Schema.CiiCrossIndustryInvoice => _en16931CiiValidator,
@@ -217,9 +250,9 @@ public class Parser
         }
     }
 
-    private void ValidateXRechnung(XdmNode doc, DocumentType docType)
+    private void ValidateXRechnung(XdmNode doc, Schema schema)
     {
-        XsltExecutable validator = docType.Schema switch
+        XsltExecutable validator = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => _xRechnungUblValidator,
             Schema.CiiCrossIndustryInvoice => _xRechnungCiiValidator,
@@ -256,9 +289,9 @@ public class Parser
         }
     }
 
-    private XmlDocument TransformToIR(XdmNode doc, DocumentType docType)
+    private XmlDocument TransformToIR(XdmNode doc, Schema schema)
     {
-        XsltExecutable executable = docType.Schema switch
+        XsltExecutable executable = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => _ublToIRTransformer,
             Schema.CiiCrossIndustryInvoice => _ciiToIRTransformer,
