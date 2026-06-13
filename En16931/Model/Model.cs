@@ -6,7 +6,7 @@ using En16931.Model.Primitives;
 
 namespace En16931.Model;
 
-public readonly record struct Invoice : IIRDeserializable<Invoice>
+public readonly record struct Invoice : IIRDeserializable<Invoice>, IIRSerializable
 {
     // BT-1
     public required Identifier InvoiceNumber { get; init; }
@@ -113,6 +113,255 @@ public readonly record struct Invoice : IIRDeserializable<Invoice>
 
     // BG-25
     public required NonEmptyArray<InvoiceLine> InvoiceLines { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartDocument();
+
+        writer.WriteStartElement("invoice", IRConfig.NS);
+
+        writer.WriteStartElement("invoice-number", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-1");
+        InvoiceNumber.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoice-issue-date", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-2");
+        InvoiceIssueDate.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoice-type-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-3");
+        InvoiceTypeCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoice-currency-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-5");
+        InvoiceCurrencyCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (VatAccountingCurrencyCode is not null)
+        {
+            writer.WriteStartElement("vat-accounting-currency-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-6");
+            VatAccountingCurrencyCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ValueAddedTaxPointDate is not null)
+        {
+            writer.WriteStartElement("value-added-tax-point-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-7");
+            ValueAddedTaxPointDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ValueAddedTaxPointDateCode is not null)
+        {
+            writer.WriteStartElement("value-added-tax-point-date-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-8");
+            ValueAddedTaxPointDateCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (PaymentDueDate is not null)
+        {
+            writer.WriteStartElement("payment-due-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-9");
+            PaymentDueDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("buyer-reference", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-10");
+        BuyerReference.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (ProjectReference is not null)
+        {
+            writer.WriteStartElement("project-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-11");
+            ProjectReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ContractReference is not null)
+        {
+            writer.WriteStartElement("contract-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-12");
+            ContractReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (PurchaseOrderReference is not null)
+        {
+            writer.WriteStartElement("purchase-order-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-13");
+            PurchaseOrderReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SalesOrderReference is not null)
+        {
+            writer.WriteStartElement("sales-order-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-14");
+            SalesOrderReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ReceivingAdviceReference is not null)
+        {
+            writer.WriteStartElement("receiving-advice-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-15");
+            ReceivingAdviceReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DespatchAdviceReference is not null)
+        {
+            writer.WriteStartElement("despatch-advice-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-16");
+            DespatchAdviceReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TenderOrLotReference is not null)
+        {
+            writer.WriteStartElement("tender-or-lot-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-17");
+            TenderOrLotReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoicedObjectIdentifier is not null)
+        {
+            writer.WriteStartElement("invoiced-object-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-18");
+            InvoicedObjectIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerAccountingReference is not null)
+        {
+            writer.WriteStartElement("buyer-accounting-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-19");
+            BuyerAccountingReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (PaymentTerms is not null)
+        {
+            writer.WriteStartElement("payment-terms", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-20");
+            PaymentTerms.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceNotes.Length > 0)
+        {
+            writer.WriteStartElement("invoice-notes", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-1");
+
+            foreach (InvoiceNote i in InvoiceNotes)
+            {
+                i.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        ProcessControl.Serialize(writer);
+
+        if (PrecedingInvoiceReferences.Length > 0)
+        {
+            writer.WriteStartElement("preceding-invoice-references", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-3");
+
+            foreach (PrecedingInvoiceReference pir in PrecedingInvoiceReferences)
+            {
+                pir.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        Seller.Serialize(writer);
+
+        Buyer.Serialize(writer);
+
+        Payee?.Serialize(writer);
+
+        SellerTaxRepresentativeParty?.Serialize(writer);
+
+        DeliveryInformation?.Serialize(writer);
+
+        PaymentInstructions.Serialize(writer);
+
+        if (DocumentLevelAllowances.Length > 0)
+        {
+            writer.WriteStartElement("document-level-allowances", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-20");
+
+            foreach (DocumentLevelAllowance dla in DocumentLevelAllowances)
+            {
+                dla.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (DocumentLevelCharges.Length > 0)
+        {
+            writer.WriteStartElement("document-level-charges", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-21");
+
+            foreach (DocumentLevelCharge dlc in DocumentLevelCharges)
+            {
+                dlc.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        DocumentTotals.Serialize(writer);
+
+        writer.WriteStartElement("vat-breakdown", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-23");
+
+        foreach (VatBreakdown vb in VatBreakdown)
+        {
+            vb.Serialize(writer);
+        }
+
+        writer.WriteEndElement();
+
+        if (AdditionalSupportingDocuments.Length > 0)
+        {
+            writer.WriteStartElement("additional-supporting-documents", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-24");
+
+            foreach (AdditionalSupportingDocument asd in AdditionalSupportingDocuments)
+            {
+                asd.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("invoice-lines", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-25");
+
+        foreach (InvoiceLine il in InvoiceLines)
+        {
+            il.Serialize(writer);
+        }
+
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+
+        writer.WriteEndDocument();
+    }
 
     public static Invoice Deserialize(XmlReader reader)
     {
@@ -538,13 +787,34 @@ public readonly record struct Invoice : IIRDeserializable<Invoice>
     }
 }
 
-public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>
+public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>, IIRSerializable
 {
     // BT-21
     public required Code? InvoiceNoteSubjectCode { get; init; }
 
     // BT-22
     public required Text Note { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("invoice-note", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-1");
+
+        if (InvoiceNoteSubjectCode is not null)
+        {
+            writer.WriteStartElement("invoice-note-subject-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-21");
+            InvoiceNoteSubjectCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("invoice-note", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-22");
+        Note.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+    }
 
     public static InvoiceNote Deserialize(XmlReader reader)
     {
@@ -583,13 +853,31 @@ public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>
     }
 }
 
-public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>
+public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>, IIRSerializable
 {
     // BT-23
     public required Text BusinessProcessType { get; init; }
 
     // BT-24
     public required Identifier SpecificationIdentifier { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("process-control", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-2");
+
+        writer.WriteStartElement("business-process-type", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-23");
+        BusinessProcessType.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("specification-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-24");
+        SpecificationIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+    }
 
     public static ProcessControl Deserialize(XmlReader reader)
     {
@@ -623,13 +911,34 @@ public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>
     }
 }
 
-public readonly record struct PrecedingInvoiceReference : IIRDeserializable<PrecedingInvoiceReference>
+public readonly record struct PrecedingInvoiceReference : IIRDeserializable<PrecedingInvoiceReference>, IIRSerializable
 {
     // BT-25
     public required DocumentReference Reference { get; init; }
 
     // BT-26
     public required Date? PrecedingInvoiceIssueDate { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("preceding-invoice-reference", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-3");
+
+        writer.WriteStartElement("preceding-invoice-reference", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-25");
+        Reference.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PrecedingInvoiceIssueDate is not null)
+        {
+            writer.WriteStartElement("preceding-invoice-issue-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-26");
+            PrecedingInvoiceIssueDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static PrecedingInvoiceReference Deserialize(XmlReader reader)
     {
@@ -668,7 +977,7 @@ public readonly record struct PrecedingInvoiceReference : IIRDeserializable<Prec
     }
 }
 
-public readonly record struct Seller : IIRDeserializable<Seller>
+public readonly record struct Seller : IIRDeserializable<Seller>, IIRSerializable
 {
     // BT-27
     public required Text SellerName { get; init; }
@@ -699,6 +1008,84 @@ public readonly record struct Seller : IIRDeserializable<Seller>
 
     // BG-6
     public required SellerContact SellerContact { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("seller", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-4");
+
+        writer.WriteStartElement("seller-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-27");
+        SellerName.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (SellerTradingName is not null)
+        {
+            writer.WriteStartElement("seller-trading-name", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-28");
+            SellerTradingName.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerIdentifiers.Length > 0)
+        {
+            writer.WriteStartElement("seller-identifiers", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-29");
+
+            foreach (Identifier i in SellerIdentifiers)
+            {
+                writer.WriteStartElement("seller-identifier", IRConfig.NS);
+                writer.WriteAttributeString("id", "bt-29");
+                i.Serialize(writer);
+                writer.WriteEndElement();
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (SellerLegalRegistrationIdentifier is not null)
+        {
+            writer.WriteStartElement("seller-legal-registration-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-30");
+            SellerLegalRegistrationIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerVatIdentifier is not null)
+        {
+            writer.WriteStartElement("seller-vat-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-31");
+            SellerVatIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerTaxRegistrationIdentifier is not null)
+        {
+            writer.WriteStartElement("seller-tax-registration-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-32");
+            SellerTaxRegistrationIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerAdditionalLegalInformation is not null)
+        {
+            writer.WriteStartElement("seller-additional-legal-information", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-33");
+            SellerAdditionalLegalInformation.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("seller-electronic-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-34");
+        SellerElectronicAddress.Serialize(writer);
+        writer.WriteEndElement();
+
+        SellerPostalAddress.Serialize(writer);
+
+        SellerContact.Serialize(writer);
+
+        writer.WriteEndElement();
+    }
 
     public static Seller Deserialize(XmlReader reader)
     {
@@ -834,7 +1221,7 @@ public readonly record struct Seller : IIRDeserializable<Seller>
     }
 }
 
-public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPostalAddress>
+public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPostalAddress>, IIRSerializable
 {
     // BT-35
     public required Text? SellerAddressLine1 { get; init; }
@@ -857,6 +1244,61 @@ public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPost
     // BT-40
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code SellerCountryCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("seller-postal-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-5");
+
+        if (SellerAddressLine1 is not null)
+        {
+            writer.WriteStartElement("seller-address-line-1", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-35");
+            SellerAddressLine1.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerAddressLine2 is not null)
+        {
+            writer.WriteStartElement("seller-address-line-2", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-36");
+            SellerAddressLine2.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerAddressLine3 is not null)
+        {
+            writer.WriteStartElement("seller-address-line-3", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-162");
+            SellerAddressLine3.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("seller-city", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-37");
+        SellerCity.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("seller-post-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-38");
+        SellerPostCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (SellerCountrySubdivision is not null)
+        {
+            writer.WriteStartElement("seller-country-subdivision", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-39");
+            SellerCountrySubdivision.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("seller-country-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-40");
+        SellerCountryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+    }
 
     public static SellerPostalAddress Deserialize(XmlReader reader)
     {
@@ -955,7 +1397,7 @@ public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPost
     }
 }
 
-public readonly record struct SellerContact : IIRDeserializable<SellerContact>
+public readonly record struct SellerContact : IIRDeserializable<SellerContact>, IIRSerializable
 {
     // BT-41
     public required Text SellerContactPoint { get; init; }
@@ -965,6 +1407,29 @@ public readonly record struct SellerContact : IIRDeserializable<SellerContact>
 
     // BT-43
     public required Text SellerContactEmailAddress { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("seller-contact", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-6");
+
+        writer.WriteStartElement("seller-contact-point", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-41");
+        SellerContactPoint.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("seller-contact-telephone-number", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-42");
+        SellerContactTelephoneNumber.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("seller-contact-email-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-43");
+        SellerContactEmailAddress.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+    }
 
     public static SellerContact Deserialize(XmlReader reader)
     {
@@ -1007,7 +1472,7 @@ public readonly record struct SellerContact : IIRDeserializable<SellerContact>
     }
 }
 
-public readonly record struct Buyer : IIRDeserializable<Buyer>
+public readonly record struct Buyer : IIRDeserializable<Buyer>, IIRSerializable
 {
     // BT-44
     public required Text BuyerName { get; init; }
@@ -1032,6 +1497,63 @@ public readonly record struct Buyer : IIRDeserializable<Buyer>
 
     // BG-9
     public required BuyerContact? BuyerContact { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("buyer", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-7");
+
+        writer.WriteStartElement("buyer-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-44");
+        BuyerName.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (BuyerTradingName is not null)
+        {
+            writer.WriteStartElement("buyer-trading-name", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-45");
+            BuyerTradingName.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerIdentifier is not null)
+        {
+            writer.WriteStartElement("buyer-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-46");
+            BuyerIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerLegalRegistrationIdentifier is not null)
+        {
+            writer.WriteStartElement("buyer-legal-registration-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-47");
+            BuyerLegalRegistrationIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerVatIdentifier is not null)
+        {
+            writer.WriteStartElement("buyer-vat-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-48");
+            BuyerVatIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerElectronicAddress is not null)
+        {
+            writer.WriteStartElement("buyer-electronic-address", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-49");
+            BuyerElectronicAddress.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        BuyerPostalAddress.Serialize(writer);
+
+        BuyerContact?.Serialize(writer);
+
+        writer.WriteEndElement();
+    }
 
     public static Buyer Deserialize(XmlReader reader)
     {
@@ -1137,7 +1659,7 @@ public readonly record struct Buyer : IIRDeserializable<Buyer>
     }
 }
 
-public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostalAddress>
+public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostalAddress>, IIRSerializable
 {
     // BT-50
     public required Text? BuyerAddressLine1 { get; init; }
@@ -1160,6 +1682,61 @@ public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostal
     // BT-55
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code BuyerCountryCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("buyer-postal-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-8");
+
+        if (BuyerAddressLine1 is not null)
+        {
+            writer.WriteStartElement("buyer-address-line-1", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-50");
+            BuyerAddressLine1.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerAddressLine2 is not null)
+        {
+            writer.WriteStartElement("buyer-address-line-2", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-51");
+            BuyerAddressLine2.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerAddressLine3 is not null)
+        {
+            writer.WriteStartElement("buyer-address-line-3", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-163");
+            BuyerAddressLine3.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("buyer-city", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-52");
+        BuyerCity.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("buyer-post-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-53");
+        BuyerPostCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (BuyerCountrySubdivision is not null)
+        {
+            writer.WriteStartElement("buyer-country-subdivision", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-54");
+            BuyerCountrySubdivision.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("buyer-country-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-55");
+        BuyerCountryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+    }
 
     public static BuyerPostalAddress Deserialize(XmlReader reader)
     {
@@ -1258,7 +1835,7 @@ public readonly record struct BuyerPostalAddress : IIRDeserializable<BuyerPostal
     }
 }
 
-public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>
+public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>, IIRSerializable
 {
     // BT-56
     public required Text? BuyerContactPoint { get; init; }
@@ -1268,6 +1845,38 @@ public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>
 
     // BT-58
     public required Text? BuyerContactEmailAddress { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("buyer-contact", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-9");
+
+        if (BuyerContactPoint is not null)
+        {
+            writer.WriteStartElement("buyer-contact-point", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-56");
+            BuyerContactPoint.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerContactTelephoneNumber is not null)
+        {
+            writer.WriteStartElement("buyer-contact-telephone-number", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-57");
+            BuyerContactTelephoneNumber.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerContactEmailAddress is not null)
+        {
+            writer.WriteStartElement("buyer-contact-email-address", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-58");
+            BuyerContactEmailAddress.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static BuyerContact Deserialize(XmlReader reader)
     {
@@ -1325,7 +1934,7 @@ public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>
     }
 }
 
-public readonly record struct Payee : IIRDeserializable<Payee>
+public readonly record struct Payee : IIRDeserializable<Payee>, IIRSerializable
 {
     // BT-59
     public required Text PayeeName { get; init; }
@@ -1335,6 +1944,35 @@ public readonly record struct Payee : IIRDeserializable<Payee>
 
     // BT-61
     public required Identifier? PayeeLegalRegistrationIdentifier { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("payee", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-10");
+
+        writer.WriteStartElement("payee-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-59");
+        PayeeName.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PayeeIdentifier is not null)
+        {
+            writer.WriteStartElement("payee-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-60");
+            PayeeIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (PayeeLegalRegistrationIdentifier is not null)
+        {
+            writer.WriteStartElement("payee-legal-registration-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-61");
+            PayeeLegalRegistrationIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static Payee Deserialize(XmlReader reader)
     {
@@ -1387,7 +2025,7 @@ public readonly record struct Payee : IIRDeserializable<Payee>
     }
 }
 
-public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<SellerTaxRepresentativeParty>
+public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<SellerTaxRepresentativeParty>, IIRSerializable
 {
     // BT-62
     public required Text SellerTaxRepresentativeName { get; init; }
@@ -1397,6 +2035,26 @@ public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<S
 
     // BG-12
     public required SellerTaxRepresentativePostalAddress SellerTaxRepresentativePostalAddress { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("seller-tax-representative-party", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-11");
+
+        writer.WriteStartElement("seller-tax-representative-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-62");
+        SellerTaxRepresentativeName.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("seller-tax-representative-vat-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-63");
+        SellerTaxRepresentativeVatIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        SellerTaxRepresentativePostalAddress.Serialize(writer);
+
+        writer.WriteEndElement();
+    }
 
     public static SellerTaxRepresentativeParty Deserialize(XmlReader reader)
     {
@@ -1433,7 +2091,7 @@ public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<S
     }
 }
 
-public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserializable<SellerTaxRepresentativePostalAddress>
+public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserializable<SellerTaxRepresentativePostalAddress>, IIRSerializable
 {
     // BT-64
     public required Text? TaxRepresentativeAddressLine1 { get; init; }
@@ -1456,6 +2114,67 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserial
     // BT-69
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code TaxRepresentativeCountryCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("seller-tax-representative-postal-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-12");
+
+        if (TaxRepresentativeAddressLine1 is not null)
+        {
+            writer.WriteStartElement("tax-representative-address-line-1", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-64");
+            TaxRepresentativeAddressLine1.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TaxRepresentativeAddressLine2 is not null)
+        {
+            writer.WriteStartElement("tax-representative-address-line-2", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-65");
+            TaxRepresentativeAddressLine2.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TaxRepresentativeAddressLine3 is not null)
+        {
+            writer.WriteStartElement("tax-representative-address-line-3", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-164");
+            TaxRepresentativeAddressLine3.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TaxRepresentativeCity is not null)
+        {
+            writer.WriteStartElement("tax-representative-city", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-66");
+            TaxRepresentativeCity.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TaxRepresentativePostCode is not null)
+        {
+            writer.WriteStartElement("tax-representative-post-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-67");
+            TaxRepresentativePostCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TaxRepresentativeCountrySubdivision is not null)
+        {
+            writer.WriteStartElement("tax-representative-country-subdivision", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-68");
+            TaxRepresentativeCountrySubdivision.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("tax-representative-country-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-69");
+        TaxRepresentativeCountryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+    }
 
     public static SellerTaxRepresentativePostalAddress Deserialize(XmlReader reader)
     {
@@ -1564,7 +2283,7 @@ public readonly record struct SellerTaxRepresentativePostalAddress : IIRDeserial
     }
 }
 
-public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryInformation>
+public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryInformation>, IIRSerializable
 {
     // BT-70
     public required Text? DeliverToPartyName { get; init; }
@@ -1580,6 +2299,42 @@ public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryIn
 
     // BG-15
     public required DeliverToAddress? DeliverToAddress { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("delivery-information", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-13");
+
+        if (DeliverToPartyName is not null)
+        {
+            writer.WriteStartElement("deliver-to-party-name", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-70");
+            DeliverToPartyName.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DeliverToLocationIdentifier is not null)
+        {
+            writer.WriteStartElement("deliver-to-location-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-71");
+            DeliverToLocationIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ActualDeliveryDate is not null)
+        {
+            writer.WriteStartElement("actual-delivery-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-72");
+            ActualDeliveryDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        InvoicingPeriod?.Serialize(writer);
+
+        DeliverToAddress?.Serialize(writer);
+
+        writer.WriteEndElement();
+    }
 
     public static DeliveryInformation Deserialize(XmlReader reader)
     {
@@ -1653,13 +2408,37 @@ public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryIn
     }
 }
 
-public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPeriod>
+public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPeriod>, IIRSerializable
 {
     // BT-73
     public required Date? InvoicingPeriodStartDate { get; init; }
 
     // BT-74
     public required Date? InvoicingPeriodEndDate { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("invoicing-period", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-14");
+
+        if (InvoicingPeriodStartDate is not null)
+        {
+            writer.WriteStartElement("invoicing-period-start-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-73");
+            InvoicingPeriodStartDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoicingPeriodEndDate is not null)
+        {
+            writer.WriteStartElement("invoicing-period-end-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-74");
+            InvoicingPeriodEndDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static InvoicingPeriod Deserialize(XmlReader reader)
     {
@@ -1703,7 +2482,7 @@ public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPerio
     }
 }
 
-public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddress>
+public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddress>, IIRSerializable
 {
     // BT-75
     public required Text? DeliverToAddressLine1 { get; init; }
@@ -1726,6 +2505,61 @@ public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddr
     // BT-80
     // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2
     public required Code DeliverToCountryCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("deliver-to-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-15");
+
+        if (DeliverToAddressLine1 is not null)
+        {
+            writer.WriteStartElement("deliver-to-address-line-1", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-75");
+            DeliverToAddressLine1.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DeliverToAddressLine2 is not null)
+        {
+            writer.WriteStartElement("deliver-to-address-line-2", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-76");
+            DeliverToAddressLine2.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DeliverToAddressLine3 is not null)
+        {
+            writer.WriteStartElement("deliver-to-address-line-3", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-165");
+            DeliverToAddressLine3.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("deliver-to-city", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-77");
+        DeliverToCity.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("deliver-to-post-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-78");
+        DeliverToPostCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (DeliverToCountrySubdivision is not null)
+        {
+            writer.WriteStartElement("deliver-to-country-subdivision", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-79");
+            DeliverToCountrySubdivision.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("deliver-to-country-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-80");
+        DeliverToCountryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+    }
 
     public static DeliverToAddress Deserialize(XmlReader reader)
     {
@@ -1824,7 +2658,7 @@ public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddr
     }
 }
 
-public readonly record struct PaymentInstructions : IIRDeserializable<PaymentInstructions>
+public readonly record struct PaymentInstructions : IIRDeserializable<PaymentInstructions>, IIRSerializable
 {
     // BT-81
     // UNTDID-4461
@@ -1844,6 +2678,52 @@ public readonly record struct PaymentInstructions : IIRDeserializable<PaymentIns
 
     // BG-19
     public required DirectDebit? DirectDebit { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("payment-instructions", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-16");
+
+        writer.WriteStartElement("payment-means-type-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-81");
+        PaymentMeansTypeCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PaymentMeansText is not null)
+        {
+            writer.WriteStartElement("payment-means-text", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-82");
+            PaymentMeansText.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (RemittanceInformation is not null)
+        {
+            writer.WriteStartElement("remittance-information", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-83");
+            RemittanceInformation.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (CreditTransfers.Length > 0)
+        {
+            writer.WriteStartElement("credit-transfers", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-17");
+
+            foreach (CreditTransfer ct in CreditTransfers)
+            {
+                ct.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        PaymentCardInformation?.Serialize(writer);
+
+        DirectDebit?.Serialize(writer);
+
+        writer.WriteEndElement();
+    }
 
     public static PaymentInstructions Deserialize(XmlReader reader)
     {
@@ -1932,7 +2812,7 @@ public readonly record struct PaymentInstructions : IIRDeserializable<PaymentIns
     }
 }
 
-public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>
+public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>, IIRSerializable
 {
     // BT-84
     public required Identifier PaymentAccountIdentifier { get; init; }
@@ -1942,6 +2822,35 @@ public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>
 
     // BT-86
     public required Identifier? PaymentServiceProviderIdentifier { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("credit-transfer", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-17");
+
+        writer.WriteStartElement("payment-account-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-84");
+        PaymentAccountIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PaymentAccountName is not null)
+        {
+            writer.WriteStartElement("payment-account-name", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-85");
+            PaymentAccountName.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (PaymentServiceProviderIdentifier is not null)
+        {
+            writer.WriteStartElement("payment-service-provider-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-86");
+            PaymentServiceProviderIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static CreditTransfer Deserialize(XmlReader reader)
     {
@@ -1994,13 +2903,34 @@ public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>
     }
 }
 
-public readonly record struct PaymentCardInformation : IIRDeserializable<PaymentCardInformation>
+public readonly record struct PaymentCardInformation : IIRDeserializable<PaymentCardInformation>, IIRSerializable
 {
     // BT-87
     public required Text PaymentCardPrimaryAccountNumber { get; init; }
 
     // BT-88
     public required Text? PaymentCardHolderName { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("payment-card-information", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-18");
+
+        writer.WriteStartElement("payment-card-primary-account-number", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-87");
+        PaymentCardPrimaryAccountNumber.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PaymentCardHolderName is not null)
+        {
+            writer.WriteStartElement("payment-card-holder-name", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-88");
+            PaymentCardHolderName.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static PaymentCardInformation Deserialize(XmlReader reader)
     {
@@ -2039,7 +2969,7 @@ public readonly record struct PaymentCardInformation : IIRDeserializable<Payment
     }
 }
 
-public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>
+public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>, IIRSerializable
 {
     // BT-89
     public required Identifier MandateReferenceIdentifier { get; init; }
@@ -2049,6 +2979,29 @@ public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>
 
     // BT-91
     public required Identifier DebitedAccountIdentifier { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("direct-debit", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-19");
+
+        writer.WriteStartElement("mandate-reference-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-89");
+        MandateReferenceIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("bank-assigned-creditor-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-90");
+        BankAssignedCreditorIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("debited-account-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-91");
+        DebitedAccountIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+    }
 
     public static DirectDebit Deserialize(XmlReader reader)
     {
@@ -2091,7 +3044,7 @@ public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>
     }
 }
 
-public readonly record struct DocumentLevelAllowance : IIRDeserializable<DocumentLevelAllowance>
+public readonly record struct DocumentLevelAllowance : IIRDeserializable<DocumentLevelAllowance>, IIRSerializable
 {
     // BT-92
     public required Amount DocumentLevelAllowanceAmount { get; init; }
@@ -2113,6 +3066,64 @@ public readonly record struct DocumentLevelAllowance : IIRDeserializable<Documen
 
     // BT-98
     public required Code? DocumentLevelAllowanceReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("document-level-allowance", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-20");
+
+        writer.WriteStartElement("document-level-allowance-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-92");
+        DocumentLevelAllowanceAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (DocumentLevelAllowanceBaseAmount is not null)
+        {
+            writer.WriteStartElement("document-level-allowance-base-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-93");
+            DocumentLevelAllowanceBaseAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DocumentLevelAllowancePercentage is not null)
+        {
+            writer.WriteStartElement("document-level-allowance-percentage", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-94");
+            DocumentLevelAllowancePercentage.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("document-level-allowance-vat-category-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-95");
+        DocumentLevelAllowanceVatCategoryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (DocumentLevelAllowanceVatRate is not null)
+        {
+            writer.WriteStartElement("document-level-allowance-vat-rate", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-96");
+            DocumentLevelAllowanceVatRate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DocumentLevelAllowanceReason is not null)
+        {
+            writer.WriteStartElement("document-level-allowance-reason", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-97");
+            DocumentLevelAllowanceReason.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DocumentLevelAllowanceReasonCode is not null)
+        {
+            writer.WriteStartElement("document-level-allowance-reason-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-98");
+            DocumentLevelAllowanceReasonCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static DocumentLevelAllowance Deserialize(XmlReader reader)
     {
@@ -2216,7 +3227,7 @@ public readonly record struct DocumentLevelAllowance : IIRDeserializable<Documen
     }
 }
 
-public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLevelCharge>
+public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLevelCharge>, IIRSerializable
 {
     // BT-99
     public required Amount DocumentLevelChargeAmount { get; init; }
@@ -2238,6 +3249,64 @@ public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLe
 
     // BT-105
     public required Code? DocumentLevelChargeReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("document-level-charge", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-21");
+
+        writer.WriteStartElement("document-level-charge-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-99");
+        DocumentLevelChargeAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (DocumentLevelChargeBaseAmount is not null)
+        {
+            writer.WriteStartElement("document-level-charge-base-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-100");
+            DocumentLevelChargeBaseAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DocumentLevelChargePercentage is not null)
+        {
+            writer.WriteStartElement("document-level-charge-percentage", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-101");
+            DocumentLevelChargePercentage.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("document-level-charge-vat-category-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-102");
+        DocumentLevelChargeVatCategoryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (DocumentLevelChargeVatRate is not null)
+        {
+            writer.WriteStartElement("document-level-charge-vat-rate", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-103");
+            DocumentLevelChargeVatRate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DocumentLevelChargeReason is not null)
+        {
+            writer.WriteStartElement("document-level-charge-reason", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-104");
+            DocumentLevelChargeReason.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DocumentLevelChargeReasonCode is not null)
+        {
+            writer.WriteStartElement("document-level-charge-reason-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-105");
+            DocumentLevelChargeReasonCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static DocumentLevelCharge Deserialize(XmlReader reader)
     {
@@ -2341,7 +3410,7 @@ public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLe
     }
 }
 
-public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>
+public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>, IIRSerializable
 {
     // BT-106
     public required Amount SumOfInvoiceLineNetAmount { get; init; }
@@ -2372,6 +3441,82 @@ public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>
 
     // BT-115
     public required Amount AmountDueForPayment { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("document-totals", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-22");
+
+        writer.WriteStartElement("sum-of-invoice-line-net-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-106");
+        SumOfInvoiceLineNetAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (SumOfAllowancesOnDocumentLevel is not null)
+        {
+            writer.WriteStartElement("sum-of-allowances-on-document-level", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-107");
+            SumOfAllowancesOnDocumentLevel.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SumOfChargesOnDocumentLevel is not null)
+        {
+            writer.WriteStartElement("sum-of-charges-on-document-level", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-108");
+            SumOfChargesOnDocumentLevel.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("invoice-total-amount-without-vat", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-109");
+        InvoiceTotalAmountWithoutVat.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (InvoiceTotalVatAmount is not null)
+        {
+            writer.WriteStartElement("invoice-total-vat-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-110");
+            InvoiceTotalVatAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceTotalVatAmountInAccountingCurrency is not null)
+        {
+            writer.WriteStartElement("invoice-total-vat-amount-in-accounting-currency", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-111");
+            InvoiceTotalVatAmountInAccountingCurrency.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("invoice-total-amount-with-vat", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-112");
+        InvoiceTotalAmountWithVat.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PaidAmount is not null)
+        {
+            writer.WriteStartElement("paid-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-113");
+            PaidAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (RoundingAmount is not null)
+        {
+            writer.WriteStartElement("rounding-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-114");
+            RoundingAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("amount-due-for-payment", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-115");
+        AmountDueForPayment.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+    }
 
     public static DocumentTotals Deserialize(XmlReader reader)
     {
@@ -2508,7 +3653,7 @@ public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>
     }
 }
 
-public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>
+public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>, IIRSerializable
 {
     // BT-116
     public required Amount VatCategoryTaxableAmount { get; init; }
@@ -2529,6 +3674,50 @@ public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>
     // BT-121
     // VATEX Vat exemption reason code list
     public required Code? VatExemptionReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("vat-breakdown", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-23");
+
+        writer.WriteStartElement("vat-category-taxable-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-116");
+        VatCategoryTaxableAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("vat-category-tax-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-117");
+        VatCategoryTaxAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("vat-category-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-118");
+        VatCategoryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("vat-category-rate", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-119");
+        VatCategoryRate.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (VatExemptionReasonText is not null)
+        {
+            writer.WriteStartElement("vat-exemption-reason-text", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-120");
+            VatExemptionReasonText.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (VatExemptionReasonCode is not null)
+        {
+            writer.WriteStartElement("vat-exemption-reason-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-121");
+            VatExemptionReasonCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static VatBreakdown Deserialize(XmlReader reader)
     {
@@ -2608,7 +3797,7 @@ public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>
     }
 }
 
-public readonly record struct AdditionalSupportingDocument : IIRDeserializable<AdditionalSupportingDocument>
+public readonly record struct AdditionalSupportingDocument : IIRDeserializable<AdditionalSupportingDocument>, IIRSerializable
 {
     // BT-122
     public required DocumentReference SupportingDocumentReference { get; init; }
@@ -2621,6 +3810,43 @@ public readonly record struct AdditionalSupportingDocument : IIRDeserializable<A
 
     // BT-125
     public required BinaryObject? AttachedDocument { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("additional-supporting-document", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-24");
+
+        writer.WriteStartElement("supporting-document-reference", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-122");
+        SupportingDocumentReference.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (SupportingDocumentDescription is not null)
+        {
+            writer.WriteStartElement("supporting-document-description", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-123");
+            SupportingDocumentDescription.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ExternalDocumentLocation is not null)
+        {
+            writer.WriteStartElement("external-document-location", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-124");
+            ExternalDocumentLocation.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (AttachedDocument is not null)
+        {
+            writer.WriteStartElement("attached-document", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-125");
+            AttachedDocument.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static AdditionalSupportingDocument Deserialize(XmlReader reader)
     {
@@ -2687,7 +3913,7 @@ public readonly record struct AdditionalSupportingDocument : IIRDeserializable<A
     }
 }
 
-public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>
+public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>, IIRSerializable
 {
     // BT-126
     public required Identifier InvoiceLineIdentifier { get; init; }
@@ -2730,6 +3956,103 @@ public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>
 
     // BG-31
     public required ItemInformation ItemInformation { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("invoice-line", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-25");
+
+        writer.WriteStartElement("invoice-line-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-126");
+        InvoiceLineIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (InvoiceLineNote is not null)
+        {
+            writer.WriteStartElement("invoice-line-note", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-127");
+            InvoiceLineNote.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineObjectIdentifier is not null)
+        {
+            writer.WriteStartElement("invoice-line-object-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-128");
+            InvoiceLineObjectIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("invoiced-quantity", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-129");
+        InvoicedQuantity.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoiced-quantity-unit-of-measure-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-130");
+        InvoicedQuantityUnitOfMeasureCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoice-line-net-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-131");
+        InvoiceLineNetAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (ReferencedPurchaseOrderLineReference is not null)
+        {
+            writer.WriteStartElement("referenced-purchase-order-line-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-132");
+            ReferencedPurchaseOrderLineReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineBuyerAccountingReference is not null)
+        {
+            writer.WriteStartElement("invoice-line-buyer-accounting-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-133");
+            InvoiceLineBuyerAccountingReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLinePeriod is not null)
+        {
+            InvoiceLinePeriod.Value.Serialize(writer);
+        }
+
+        if (InvoiceLineAllowances.Length > 0)
+        {
+            writer.WriteStartElement("invoice-line-allowances", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-27");
+
+            foreach (InvoiceLineAllowance ila in InvoiceLineAllowances)
+            {
+                ila.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineCharges.Length > 0)
+        {
+            writer.WriteStartElement("invoice-line-charges", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-28");
+
+            foreach (InvoiceLineCharge ilc in InvoiceLineCharges)
+            {
+                ilc.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        PriceDetails.Serialize(writer);
+
+        LineVatInformation.Serialize(writer);
+
+        ItemInformation.Serialize(writer);
+
+        writer.WriteEndElement();
+    }
 
     public static InvoiceLine Deserialize(XmlReader reader)
     {
@@ -2894,13 +4217,37 @@ public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>
     }
 }
 
-public readonly record struct InvoiceLinePeriod : IIRDeserializable<InvoiceLinePeriod>
+public readonly record struct InvoiceLinePeriod : IIRDeserializable<InvoiceLinePeriod>, IIRSerializable
 {
     // BT-134
     public required Date? InvoiceLinePeriodStartDate { get; init; }
 
     // BT-135
     public required Date? InvoiceLinePeriodEndDate { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("invoice-line-period", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-26");
+
+        if (InvoiceLinePeriodStartDate is not null)
+        {
+            writer.WriteStartElement("invoice-line-period-start-date");
+            writer.WriteAttributeString("id", "bt-134");
+            InvoiceLinePeriodStartDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLinePeriodEndDate is not null)
+        {
+            writer.WriteStartElement("invoice-line-period-end-date");
+            writer.WriteAttributeString("id", "bt-135");
+            InvoiceLinePeriodEndDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static InvoiceLinePeriod Deserialize(XmlReader reader)
     {
@@ -2944,7 +4291,7 @@ public readonly record struct InvoiceLinePeriod : IIRDeserializable<InvoiceLineP
     }
 }
 
-public readonly record struct InvoiceLineAllowance : IIRDeserializable<InvoiceLineAllowance>
+public readonly record struct InvoiceLineAllowance : IIRDeserializable<InvoiceLineAllowance>, IIRSerializable
 {
     // BT-136
     public required Amount InvoiceLineAllowanceAmount { get; init; }
@@ -2960,6 +4307,51 @@ public readonly record struct InvoiceLineAllowance : IIRDeserializable<InvoiceLi
 
     // BT-140
     public required Code? InvoiceLineAllowanceReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("invoice-line-allowance", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-27");
+
+        writer.WriteStartElement("invoice-line-allowance-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-136");
+        InvoiceLineAllowanceAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (InvoiceLineAllowanceBaseAmount is not null)
+        {
+            writer.WriteStartElement("invoice-line-allowance-base-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-137");
+            InvoiceLineAllowanceBaseAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineAllowancePercentage is not null)
+        {
+            writer.WriteStartElement("invoice-line-allowance-percentage", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-138");
+            InvoiceLineAllowancePercentage.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineAllowanceReason is not null)
+        {
+            writer.WriteStartElement("invoice-line-allowance-reason", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-139");
+            InvoiceLineAllowanceReason.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineAllowanceReasonCode is not null)
+        {
+            writer.WriteStartElement("invoice-line-allowance-reason-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-140");
+            InvoiceLineAllowanceReasonCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static InvoiceLineAllowance Deserialize(XmlReader reader)
     {
@@ -3040,7 +4432,7 @@ public readonly record struct InvoiceLineAllowance : IIRDeserializable<InvoiceLi
     }
 }
 
-public readonly record struct InvoiceLineCharge : IIRDeserializable<InvoiceLineCharge>
+public readonly record struct InvoiceLineCharge : IIRDeserializable<InvoiceLineCharge>, IIRSerializable
 {
     // BT-141
     public required Amount InvoiceLineChargeAmount { get; init; }
@@ -3056,6 +4448,51 @@ public readonly record struct InvoiceLineCharge : IIRDeserializable<InvoiceLineC
 
     // BT-145
     public required Code? InvoiceLineChargeReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("invoice-line-charge", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-28");
+
+        writer.WriteStartElement("invoice-line-charge-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-141");
+        InvoiceLineChargeAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (InvoiceLineChargeBaseAmount is not null)
+        {
+            writer.WriteStartElement("invoice-line-charge-base-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-142");
+            InvoiceLineChargeBaseAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineChargePercentage is not null)
+        {
+            writer.WriteStartElement("invoice-line-charge-percentage", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-143");
+            InvoiceLineChargePercentage.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineChargeReason is not null)
+        {
+            writer.WriteStartElement("invoice-line-charge-reason", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-144");
+            InvoiceLineChargeReason.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineChargeReasonCode is not null)
+        {
+            writer.WriteStartElement("invoice-line-charge-reason-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-145");
+            InvoiceLineChargeReasonCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static InvoiceLineCharge Deserialize(XmlReader reader)
     {
@@ -3136,7 +4573,7 @@ public readonly record struct InvoiceLineCharge : IIRDeserializable<InvoiceLineC
     }
 }
 
-public readonly record struct PriceDetails : IIRDeserializable<PriceDetails>
+public readonly record struct PriceDetails : IIRDeserializable<PriceDetails>, IIRSerializable
 {
     // BT-146
     public required UnitPriceAmount ItemNetPrice { get; init; }
@@ -3153,6 +4590,51 @@ public readonly record struct PriceDetails : IIRDeserializable<PriceDetails>
     // BT-150
     // UN/ECE Rec No 20,21
     public required Code? ItemPriceBaseQuantityUnitOfMeasureCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("price-details", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-29");
+
+        writer.WriteStartElement("item-net-price", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-146");
+        ItemNetPrice.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (ItemPriceDiscount is not null)
+        {
+            writer.WriteStartElement("item-price-discount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-147");
+            ItemPriceDiscount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemGrossPrice is not null)
+        {
+            writer.WriteStartElement("item-gross-price", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-148");
+            ItemGrossPrice.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemPriceBaseQuantity is not null)
+        {
+            writer.WriteStartElement("item-price-base-quantity", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-149");
+            ItemPriceBaseQuantity.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemPriceBaseQuantityUnitOfMeasureCode is not null)
+        {
+            writer.WriteStartElement("item-price-base-quantity-unit-of-measure-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-150");
+            ItemPriceBaseQuantityUnitOfMeasureCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static PriceDetails Deserialize(XmlReader reader)
     {
@@ -3233,7 +4715,7 @@ public readonly record struct PriceDetails : IIRDeserializable<PriceDetails>
     }
 }
 
-public readonly record struct LineVatInformation : IIRDeserializable<LineVatInformation>
+public readonly record struct LineVatInformation : IIRDeserializable<LineVatInformation>, IIRSerializable
 {
     // BT-151
     // UNTDID 5305
@@ -3241,6 +4723,27 @@ public readonly record struct LineVatInformation : IIRDeserializable<LineVatInfo
 
     // BT-152
     public required Percentage? InvoicedItemVatRate { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("line-vat-information", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-30");
+
+        writer.WriteStartElement("invoiced-item-vat-category-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-151");
+        InvoicedItemVatCategoryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (InvoicedItemVatRate is not null)
+        {
+            writer.WriteStartElement("invoiced-item-vat-rate", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-152");
+            InvoicedItemVatRate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static LineVatInformation Deserialize(XmlReader reader)
     {
@@ -3279,7 +4782,7 @@ public readonly record struct LineVatInformation : IIRDeserializable<LineVatInfo
     }
 }
 
-public readonly record struct ItemInformation : IIRDeserializable<ItemInformation>
+public readonly record struct ItemInformation : IIRDeserializable<ItemInformation>, IIRSerializable
 {
     // BT-153
     public required Text ItemName { get; init; }
@@ -3306,6 +4809,88 @@ public readonly record struct ItemInformation : IIRDeserializable<ItemInformatio
 
     // BG-32
     public required Array<ItemAttribute> ItemAttributes { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("item-information", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-31");
+
+        writer.WriteStartElement("item-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-153");
+        ItemName.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (ItemDescription is not null)
+        {
+            writer.WriteStartElement("item-description", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-154");
+            ItemDescription.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemSellersIdentifier is not null)
+        {
+            writer.WriteStartElement("item-sellers-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-155");
+            ItemSellersIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemBuyersIdentifier is not null)
+        {
+            writer.WriteStartElement("item-buyers-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-156");
+            ItemBuyersIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemStandardIdentifier is not null)
+        {
+            writer.WriteStartElement("item-standard-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-157");
+            ItemStandardIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemClassificationIdentifiers.Length > 0)
+        {
+            writer.WriteStartElement("item-classification-identifiers", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-158");
+
+            foreach (Identifier i in ItemClassificationIdentifiers)
+            {
+                writer.WriteStartElement("item-classification-identifier", IRConfig.NS);
+                writer.WriteAttributeString("id", "bt-158");
+                i.Serialize(writer);
+                writer.WriteEndElement();
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (ItemCountryOfOrigin is not null)
+        {
+            writer.WriteStartElement("item-country-of-origin", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-159");
+            ItemCountryOfOrigin.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemAttributes.Length > 0)
+        {
+            writer.WriteStartElement("item-attributes", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-32");
+
+            foreach (ItemAttribute ia in ItemAttributes)
+            {
+                ia.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
 
     public static ItemInformation Deserialize(XmlReader reader)
     {
@@ -3446,13 +5031,31 @@ public readonly record struct ItemInformation : IIRDeserializable<ItemInformatio
     }
 }
 
-public readonly record struct ItemAttribute : IIRDeserializable<ItemAttribute>
+public readonly record struct ItemAttribute : IIRDeserializable<ItemAttribute>, IIRSerializable
 {
     // BT-160
     public required Text ItemAttributeName { get; init; }
 
     // BT-161
     public required Text ItemAttributeValue { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("item-attribute", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-32");
+
+        writer.WriteStartElement("item-attribute-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-160");
+        ItemAttributeName.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("item-attribute-value", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-161");
+        ItemAttributeValue.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+    }
 
     public static ItemAttribute Deserialize(XmlReader reader)
     {

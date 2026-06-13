@@ -9,47 +9,72 @@ using En16931.Utils;
 
 namespace En16931.Model.Primitives;
 
-public readonly record struct Amount(decimal Value) : IIRDeserializable<Amount>
+public readonly record struct Amount(decimal Value) : IIRDeserializable<Amount>, IIRSerializable
 {
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteValue(Value);
+    }
+
     public static Amount Deserialize(XmlReader reader)
     {
         return new Amount(reader.ReadContentAsDecimal());
     }
 }
 
-public readonly record struct Percentage(decimal Value) : IIRDeserializable<Percentage>
+public readonly record struct Percentage(decimal Value) : IIRDeserializable<Percentage>, IIRSerializable
 {
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteValue(Value);
+    }
+
     public static Percentage Deserialize(XmlReader reader)
     {
         return new Percentage(reader.ReadContentAsDecimal());
     }
 }
 
-public readonly record struct Quantity(decimal Value) : IIRDeserializable<Quantity>
+public readonly record struct Quantity(decimal Value) : IIRDeserializable<Quantity>, IIRSerializable
 {
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteValue(Value);
+    }
+
     public static Quantity Deserialize(XmlReader reader)
     {
         return new Quantity(reader.ReadContentAsDecimal());
     }
 }
 
-public readonly record struct UnitPriceAmount(decimal Value) : IIRDeserializable<UnitPriceAmount>
+public readonly record struct UnitPriceAmount(decimal Value) : IIRDeserializable<UnitPriceAmount>, IIRSerializable
 {
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteValue(Value);
+    }
+
     public static UnitPriceAmount Deserialize(XmlReader reader)
     {
         return new UnitPriceAmount(reader.ReadContentAsDecimal());
     }
 }
 
-public readonly record struct Date(DateTime Value) : IIRDeserializable<Date>
+public readonly record struct Date(DateTime Value) : IIRDeserializable<Date>, IIRSerializable
 {
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteString($"{Value.Year:D4}-{Value.Month:D2}-{Value.Day:D2}");
+    }
+
     public static Date Deserialize(XmlReader reader)
     {
         return new Date(reader.ReadContentAsDateTime());
     }
 }
 
-public readonly record struct Code : IIRDeserializable<Code>
+public readonly record struct Code : IIRDeserializable<Code>, IIRSerializable
 {
     public required string Value
     {
@@ -71,13 +96,18 @@ public readonly record struct Code : IIRDeserializable<Code>
         Value = value;
     }
 
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteString(Value);
+    }
+
     public static Code Deserialize(XmlReader reader)
     {
         return new Code(reader.ReadContentAsString());
     }
 }
 
-public readonly record struct DocumentReference : IIRDeserializable<DocumentReference>
+public readonly record struct DocumentReference : IIRDeserializable<DocumentReference>, IIRSerializable
 {
     public required string Value
     {
@@ -99,13 +129,18 @@ public readonly record struct DocumentReference : IIRDeserializable<DocumentRefe
         Value = value;
     }
 
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteString(Value);
+    }
+
     public static DocumentReference Deserialize(XmlReader reader)
     {
         return new DocumentReference(reader.ReadContentAsString());
     }
 }
 
-public readonly record struct Text : IIRDeserializable<Text>
+public readonly record struct Text : IIRDeserializable<Text>, IIRSerializable
 {
     public required string Value
     {
@@ -127,13 +162,18 @@ public readonly record struct Text : IIRDeserializable<Text>
         Value = value;
     }
 
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteString(Value);
+    }
+
     public static Text Deserialize(XmlReader reader)
     {
         return new Text(reader.ReadContentAsString());
     }
 }
 
-public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>
+public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>, IIRSerializable
 {
     public required Array<byte> Content { get; init; }
 
@@ -171,6 +211,21 @@ public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>
         Content = content;
         MimeCode = mimeCode;
         Filename = filename;
+    }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("content", IRConfig.NS);
+        writer.WriteBase64(Content.ToMutable(), 0, Content.Length);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("mime-code", IRConfig.NS);
+        writer.WriteString(MimeCode);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("filename", IRConfig.NS);
+        writer.WriteString(Filename);
+        writer.WriteEndElement();
     }
 
     public static BinaryObject Deserialize(XmlReader reader)
@@ -217,7 +272,7 @@ public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>
     }
 }
 
-public readonly record struct Identifier : IIRDeserializable<Identifier>
+public readonly record struct Identifier : IIRDeserializable<Identifier>, IIRSerializable
 {
     public required string Content
     {
@@ -259,6 +314,27 @@ public readonly record struct Identifier : IIRDeserializable<Identifier>
         Content = content;
         SchemeIdentifier = schemeIdentifier;
         SchemeVersionIdentifier = schemeVersionIdentifier;
+    }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("content", IRConfig.NS);
+        writer.WriteString(Content);
+        writer.WriteEndElement();
+
+        if (SchemeIdentifier is not null)
+        {
+            writer.WriteStartElement("scheme-identifier", IRConfig.NS);
+            writer.WriteString(SchemeIdentifier);
+            writer.WriteEndElement();
+        }
+
+        if (SchemeVersionIdentifier is not null)
+        {
+            writer.WriteStartElement("scheme-version-identifier", IRConfig.NS);
+            writer.WriteString(SchemeVersionIdentifier);
+            writer.WriteEndElement();
+        }
     }
 
     public static Identifier Deserialize(XmlReader reader)

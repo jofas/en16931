@@ -9,10 +9,10 @@ using Xunit;
 
 namespace Tests.IR;
 
-public class Deserialize
+public class Serialize
 {
     [Fact]
-    public void DeserializeInvoice()
+    public void SerializeInvoice()
     {
         Blob content1 = new("hello world 1");
         Blob content2 = new("hello world 2");
@@ -302,7 +302,7 @@ public class Deserialize
                     <content>ANG987654321</content>
                     <scheme-identifier>ABZ</scheme-identifier>
                   </invoice-line-object-identifier>
-                  <invoiced-quantity id="bt-129">30.00000000000</invoiced-quantity>
+                  <invoiced-quantity id="bt-129">30</invoiced-quantity>
                   <invoiced-quantity-unit-of-measure-code id="bt-130">XPP</invoiced-quantity-unit-of-measure-code>
                   <invoice-line-net-amount id="bt-131">4743.75</invoice-line-net-amount>
                   <referenced-purchase-order-line-reference id="bt-132">6171175.1</referenced-purchase-order-line-reference>
@@ -344,9 +344,9 @@ public class Deserialize
                     </invoice-line-charge>
                   </invoice-line-charges>
                   <price-details id="bg-29">
-                    <item-net-price id="bt-146">158.1250000000</item-net-price>
-                    <item-price-discount id="bt-147">10.000000000000000000</item-price-discount>
-                    <item-gross-price id="bt-148">168.1250000000</item-gross-price>
+                    <item-net-price id="bt-146">158.125</item-net-price>
+                    <item-price-discount id="bt-147">10</item-price-discount>
+                    <item-gross-price id="bt-148">168.125</item-gross-price>
                     <item-price-base-quantity id="bt-149">1</item-price-base-quantity>
                     <item-price-base-quantity-unit-of-measure-code id="bt-150">XPP</item-price-base-quantity-unit-of-measure-code>
                   </price-details>
@@ -779,6 +779,18 @@ public class Deserialize
             ],
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -788,7 +800,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeInvoiceNote()
+    public void SerializeInvoiceNote()
     {
         string xml = """
             <invoice-note id="bg-1" xmlns="urn:todo">
@@ -803,6 +815,18 @@ public class Deserialize
             Note = new Text("Invoice Note Description"),
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -812,7 +836,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeProcessControl()
+    public void SerializeProcessControl()
     {
         string xml = """
             <process-control id="bg-2" xmlns="urn:todo">
@@ -829,6 +853,18 @@ public class Deserialize
             SpecificationIdentifier = new Identifier("urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"),
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -838,7 +874,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializePrecedingInvoiceReference()
+    public void SerializePrecedingInvoiceReference()
     {
         string xml = """
             <preceding-invoice-reference id="bg-3" xmlns="urn:todo">
@@ -853,6 +889,18 @@ public class Deserialize
             PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 2, 4)),
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -862,7 +910,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeSeller()
+    public void SerializeSeller()
     {
         string xml = """
             <seller id="bg-4" xmlns="urn:todo">
@@ -944,6 +992,18 @@ public class Deserialize
             },
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -953,7 +1013,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeBuyer()
+    public void SerializeBuyer()
     {
         string xml = """
             <buyer id="bg-7" xmlns="urn:todo">
@@ -1016,6 +1076,18 @@ public class Deserialize
             },
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1025,7 +1097,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializePayee()
+    public void SerializePayee()
     {
         string xml = """
             <payee id="bg-10" xmlns="urn:todo">
@@ -1047,6 +1119,18 @@ public class Deserialize
             PayeeLegalRegistrationIdentifier = new Identifier("90000000-03083-72", "0204"),
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1056,7 +1140,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeSellerTaxRepresentativeParty()
+    public void SerializeSellerTaxRepresentativeParty()
     {
         string xml = """
             <seller-tax-representative-party id="bg-11" xmlns="urn:todo">
@@ -1092,6 +1176,18 @@ public class Deserialize
             },
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1101,7 +1197,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeDeliveryInformation()
+    public void SerializeDeliveryInformation()
     {
         string xml = """
             <delivery-information id="bg-13" xmlns="urn:todo">
@@ -1148,6 +1244,18 @@ public class Deserialize
             },
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1157,7 +1265,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializePaymentInstructions()
+    public void SerializePaymentInstructions()
     {
         string xml = """
             <payment-instructions id="bg-16" xmlns="urn:todo">
@@ -1194,6 +1302,18 @@ public class Deserialize
             DirectDebit = null,
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1203,7 +1323,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeCreditTransfer()
+    public void SerializeCreditTransfer()
     {
         string xml = """
             <credit-transfer id="bg-17" xmlns="urn:todo">
@@ -1224,6 +1344,18 @@ public class Deserialize
             PaymentServiceProviderIdentifier = new Identifier("[BIC]"),
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1233,7 +1365,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializePaymentCardInformation()
+    public void SerializePaymentCardInformation()
     {
         string xml = """
             <payment-card-information id="bg-18" xmlns="urn:todo">
@@ -1248,6 +1380,18 @@ public class Deserialize
             PaymentCardHolderName = new Text("[Name cardholder]"),
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1257,7 +1401,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeDirectDebit()
+    public void SerializeDirectDebit()
     {
         string xml = """
             <direct-debit id="bg-19" xmlns="urn:todo">
@@ -1280,6 +1424,18 @@ public class Deserialize
             DebitedAccountIdentifier = new Identifier("DE75512108001245126199"),
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1289,7 +1445,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeDocumentLevelAllowance()
+    public void SerializeDocumentLevelAllowance()
     {
         string xml = """
             <document-level-allowance id="bg-20" xmlns="urn:todo">
@@ -1314,6 +1470,18 @@ public class Deserialize
             DocumentLevelAllowanceReasonCode = new Code("102"),
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1323,7 +1491,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeDocumentLevelCharge()
+    public void SerializeDocumentLevelCharge()
     {
         string xml = """
             <document-level-charge id="bg-21" xmlns="urn:todo">
@@ -1348,6 +1516,18 @@ public class Deserialize
             DocumentLevelChargeReasonCode = new Code("TAC"),
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1357,7 +1537,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeDocumentTotals()
+    public void SerializeDocumentTotals()
     {
         string xml = """
             <document-totals id="bg-22" xmlns="urn:todo">
@@ -1388,6 +1568,18 @@ public class Deserialize
             AmountDueForPayment = new Amount(12829.69m),
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1397,7 +1589,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeVatBreakdown()
+    public void SerializeVatBreakdown()
     {
         string xml = """
             <vat-breakdown id="bg-23" xmlns="urn:todo">
@@ -1418,6 +1610,18 @@ public class Deserialize
             VatExemptionReasonCode = null,
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1427,7 +1631,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeAdditionalSupportingDocument()
+    public void SerializeAdditionalSupportingDocument()
     {
         Blob content = new("hello world");
 
@@ -1456,6 +1660,18 @@ public class Deserialize
             ),
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1465,7 +1681,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeInvoiceLine()
+    public void SerializeInvoiceLine()
     {
         string xml = """
             <invoice-line id="bg-25" xmlns="urn:todo">
@@ -1477,7 +1693,7 @@ public class Deserialize
                 <content>ANG987654321</content>
                 <scheme-identifier>ABZ</scheme-identifier>
               </invoice-line-object-identifier>
-              <invoiced-quantity id="bt-129">30.00000000000</invoiced-quantity>
+              <invoiced-quantity id="bt-129">30</invoiced-quantity>
               <invoiced-quantity-unit-of-measure-code id="bt-130">XPP</invoiced-quantity-unit-of-measure-code>
               <invoice-line-net-amount id="bt-131">4743.75</invoice-line-net-amount>
               <referenced-purchase-order-line-reference id="bt-132">6171175.1</referenced-purchase-order-line-reference>
@@ -1519,9 +1735,9 @@ public class Deserialize
                 </invoice-line-charge>
               </invoice-line-charges>
               <price-details id="bg-29">
-                <item-net-price id="bt-146">158.1250000000</item-net-price>
-                <item-price-discount id="bt-147">10.000000000000000000</item-price-discount>
-                <item-gross-price id="bt-148">168.1250000000</item-gross-price>
+                <item-net-price id="bt-146">158.125</item-net-price>
+                <item-price-discount id="bt-147">10</item-price-discount>
+                <item-gross-price id="bt-148">168.125</item-gross-price>
                 <item-price-base-quantity id="bt-149">1</item-price-base-quantity>
                 <item-price-base-quantity-unit-of-measure-code id="bt-150">XPP</item-price-base-quantity-unit-of-measure-code>
               </price-details>
@@ -1654,6 +1870,18 @@ public class Deserialize
             },
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1663,7 +1891,7 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeItemInformation()
+    public void SerializeItemInformation()
     {
         string xml = """
             <item-information id="bg-31" xmlns="urn:todo">
@@ -1729,6 +1957,18 @@ public class Deserialize
             ],
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        expected.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1738,15 +1978,15 @@ public class Deserialize
     }
 
     [Fact]
-    public void DeserializeBinaryObject()
+    public void SerializeBinaryObject()
     {
         Blob content = new("hello world");
 
         string xml = $"""
             <binary-object xmlns="urn:todo">
-                <content>{content.Base64Content}</content>
-                <mime-code>text/utf-8</mime-code>
-                <filename>hello.txt</filename>
+              <content>{content.Base64Content}</content>
+              <mime-code>text/utf-8</mime-code>
+              <filename>hello.txt</filename>
             </binary-object>
             """;
 
@@ -1757,6 +1997,20 @@ public class Deserialize
             Filename = "hello.txt",
         };
 
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        xmlWriter.WriteStartElement("binary-object", "urn:todo");
+        expected.Serialize(xmlWriter);
+        xmlWriter.WriteEndElement();
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
@@ -1764,6 +2018,40 @@ public class Deserialize
         xmlReader.MoveToContent();
 
         var actual = BinaryObject.Deserialize(xmlReader);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void SerializeDate()
+    {
+        string xml = """
+            <date xmlns="urn:todo">2018-04-13</date>
+            """;
+
+        Date expected = new Date(new DateTime(2018, 4, 13));
+
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer)
+        {
+            Formatting = Formatting.Indented,
+        };
+
+        xmlWriter.WriteStartElement("date", "urn:todo");
+        expected.Serialize(xmlWriter);
+        xmlWriter.WriteEndElement();
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal(xml, serializedXml);
+
+        using StringReader reader = new(xml);
+        using XmlTextReader xmlReader = new(reader);
+
+        xmlReader.ReadStartElement("date");
+        xmlReader.MoveToContent();
+
+        var actual = Date.Deserialize(xmlReader);
 
         Assert.Equal(expected, actual);
     }

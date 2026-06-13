@@ -64,6 +64,8 @@ public readonly struct Array<T> : IEquatable<Array<T>>, IEnumerable<T>, IReadOnl
         return new(_values.Slice(start, length));
     }
 
+    public T[] ToMutable() => _values.ToArray();
+
     #region value-equality
 
     public override bool Equals(object? o) => o is Array<T> other && this.Equals(other);
@@ -159,6 +161,8 @@ public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>>, IEnumera
     {
         return new(_values.Slice(start, length));
     }
+
+    public T[] ToMutable() => _values.ToArray();
 
     #region value-equality
 
