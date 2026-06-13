@@ -302,7 +302,7 @@ public class Serialize
                     <content>ANG987654321</content>
                     <scheme-identifier>ABZ</scheme-identifier>
                   </invoice-line-object-identifier>
-                  <invoiced-quantity id="bt-129">30.00000000000</invoiced-quantity>
+                  <invoiced-quantity id="bt-129">30</invoiced-quantity>
                   <invoiced-quantity-unit-of-measure-code id="bt-130">XPP</invoiced-quantity-unit-of-measure-code>
                   <invoice-line-net-amount id="bt-131">4743.75</invoice-line-net-amount>
                   <referenced-purchase-order-line-reference id="bt-132">6171175.1</referenced-purchase-order-line-reference>
@@ -344,9 +344,9 @@ public class Serialize
                     </invoice-line-charge>
                   </invoice-line-charges>
                   <price-details id="bg-29">
-                    <item-net-price id="bt-146">158.1250000000</item-net-price>
-                    <item-price-discount id="bt-147">10.000000000000000000</item-price-discount>
-                    <item-gross-price id="bt-148">168.1250000000</item-gross-price>
+                    <item-net-price id="bt-146">158.125</item-net-price>
+                    <item-price-discount id="bt-147">10</item-price-discount>
+                    <item-gross-price id="bt-148">168.125</item-gross-price>
                     <item-price-base-quantity id="bt-149">1</item-price-base-quantity>
                     <item-price-base-quantity-unit-of-measure-code id="bt-150">XPP</item-price-base-quantity-unit-of-measure-code>
                   </price-details>

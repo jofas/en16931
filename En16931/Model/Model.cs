@@ -116,7 +116,251 @@ public readonly record struct Invoice : IIRDeserializable<Invoice>, IIRSerializa
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartDocument();
+
+        writer.WriteStartElement("invoice", IRConfig.NS);
+
+        writer.WriteStartElement("invoice-number", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-1");
+        InvoiceNumber.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoice-issue-date", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-2");
+        InvoiceIssueDate.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoice-type-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-3");
+        InvoiceTypeCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoice-currency-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-5");
+        InvoiceCurrencyCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (VatAccountingCurrencyCode is not null)
+        {
+            writer.WriteStartElement("vat-accounting-currency-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-6");
+            VatAccountingCurrencyCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ValueAddedTaxPointDate is not null)
+        {
+            writer.WriteStartElement("value-added-tax-point-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-7");
+            ValueAddedTaxPointDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ValueAddedTaxPointDateCode is not null)
+        {
+            writer.WriteStartElement("value-added-tax-point-date-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-8");
+            ValueAddedTaxPointDateCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (PaymentDueDate is not null)
+        {
+            writer.WriteStartElement("payment-due-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-9");
+            PaymentDueDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("buyer-reference", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-10");
+        BuyerReference.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (ProjectReference is not null)
+        {
+            writer.WriteStartElement("project-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-11");
+            ProjectReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ContractReference is not null)
+        {
+            writer.WriteStartElement("contract-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-12");
+            ContractReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (PurchaseOrderReference is not null)
+        {
+            writer.WriteStartElement("purchase-order-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-13");
+            PurchaseOrderReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SalesOrderReference is not null)
+        {
+            writer.WriteStartElement("sales-order-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-14");
+            SalesOrderReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ReceivingAdviceReference is not null)
+        {
+            writer.WriteStartElement("receiving-advice-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-15");
+            ReceivingAdviceReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DespatchAdviceReference is not null)
+        {
+            writer.WriteStartElement("despatch-advice-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-16");
+            DespatchAdviceReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (TenderOrLotReference is not null)
+        {
+            writer.WriteStartElement("tender-or-lot-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-17");
+            TenderOrLotReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoicedObjectIdentifier is not null)
+        {
+            writer.WriteStartElement("invoiced-object-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-18");
+            InvoicedObjectIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerAccountingReference is not null)
+        {
+            writer.WriteStartElement("buyer-accounting-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-19");
+            BuyerAccountingReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (PaymentTerms is not null)
+        {
+            writer.WriteStartElement("payment-terms", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-20");
+            PaymentTerms.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceNotes.Length > 0)
+        {
+            writer.WriteStartElement("invoice-notes", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-1");
+
+            foreach (InvoiceNote i in InvoiceNotes)
+            {
+                i.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        ProcessControl.Serialize(writer);
+
+        if (PrecedingInvoiceReferences.Length > 0)
+        {
+            writer.WriteStartElement("preceding-invoice-references", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-3");
+
+            foreach (PrecedingInvoiceReference pir in PrecedingInvoiceReferences)
+            {
+                pir.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        Seller.Serialize(writer);
+
+        Buyer.Serialize(writer);
+
+        Payee?.Serialize(writer);
+
+        SellerTaxRepresentativeParty?.Serialize(writer);
+
+        DeliveryInformation?.Serialize(writer);
+
+        PaymentInstructions.Serialize(writer);
+
+        if (DocumentLevelAllowances.Length > 0)
+        {
+            writer.WriteStartElement("document-level-allowances", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-20");
+
+            foreach (DocumentLevelAllowance dla in DocumentLevelAllowances)
+            {
+                dla.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (DocumentLevelCharges.Length > 0)
+        {
+            writer.WriteStartElement("document-level-charges", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-21");
+
+            foreach (DocumentLevelCharge dlc in DocumentLevelCharges)
+            {
+                dlc.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        DocumentTotals.Serialize(writer);
+
+        writer.WriteStartElement("vat-breakdown", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-23");
+
+        foreach (VatBreakdown vb in VatBreakdown)
+        {
+            vb.Serialize(writer);
+        }
+
+        writer.WriteEndElement();
+
+        if (AdditionalSupportingDocuments.Length > 0)
+        {
+            writer.WriteStartElement("additional-supporting-documents", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-24");
+
+            foreach (AdditionalSupportingDocument asd in AdditionalSupportingDocuments)
+            {
+                asd.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("invoice-lines", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-25");
+
+        foreach (InvoiceLine il in InvoiceLines)
+        {
+            il.Serialize(writer);
+        }
+
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+
+        writer.WriteEndDocument();
     }
 
     public static Invoice Deserialize(XmlReader reader)
@@ -553,7 +797,23 @@ public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>, IIRS
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("invoice-note", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-1");
+
+        if (InvoiceNoteSubjectCode is not null)
+        {
+            writer.WriteStartElement("invoice-note-subject-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-21");
+            InvoiceNoteSubjectCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("invoice-note", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-22");
+        Note.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
     }
 
     public static InvoiceNote Deserialize(XmlReader reader)
@@ -603,7 +863,20 @@ public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("process-control", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-2");
+
+        writer.WriteStartElement("business-process-type", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-23");
+        BusinessProcessType.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("specification-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-24");
+        SpecificationIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
     }
 
     public static ProcessControl Deserialize(XmlReader reader)
@@ -648,7 +921,23 @@ public readonly record struct PrecedingInvoiceReference : IIRDeserializable<Prec
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("preceding-invoice-reference", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-3");
+
+        writer.WriteStartElement("preceding-invoice-reference", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-25");
+        Reference.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PrecedingInvoiceIssueDate is not null)
+        {
+            writer.WriteStartElement("preceding-invoice-issue-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-26");
+            PrecedingInvoiceIssueDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
     }
 
     public static PrecedingInvoiceReference Deserialize(XmlReader reader)
@@ -722,7 +1011,80 @@ public readonly record struct Seller : IIRDeserializable<Seller>, IIRSerializabl
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("seller", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-4");
+
+        writer.WriteStartElement("seller-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-27");
+        SellerName.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (SellerTradingName is not null)
+        {
+            writer.WriteStartElement("seller-trading-name", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-28");
+            SellerTradingName.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerIdentifiers.Length > 0)
+        {
+            writer.WriteStartElement("seller-identifiers", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-29");
+
+            foreach (Identifier i in SellerIdentifiers)
+            {
+                writer.WriteStartElement("seller-identifier", IRConfig.NS);
+                writer.WriteAttributeString("id", "bt-29");
+                i.Serialize(writer);
+                writer.WriteEndElement();
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (SellerLegalRegistrationIdentifier is not null)
+        {
+            writer.WriteStartElement("seller-legal-registration-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-30");
+            SellerLegalRegistrationIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerVatIdentifier is not null)
+        {
+            writer.WriteStartElement("seller-vat-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-31");
+            SellerVatIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerTaxRegistrationIdentifier is not null)
+        {
+            writer.WriteStartElement("seller-tax-registration-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-32");
+            SellerTaxRegistrationIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SellerAdditionalLegalInformation is not null)
+        {
+            writer.WriteStartElement("seller-additional-legal-information", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-33");
+            SellerAdditionalLegalInformation.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("seller-electronic-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-34");
+        SellerElectronicAddress.Serialize(writer);
+        writer.WriteEndElement();
+
+        SellerPostalAddress.Serialize(writer);
+
+        SellerContact.Serialize(writer);
+
+        writer.WriteEndElement();
     }
 
     public static Seller Deserialize(XmlReader reader)
@@ -1048,7 +1410,25 @@ public readonly record struct SellerContact : IIRDeserializable<SellerContact>, 
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("seller-contact", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-6");
+
+        writer.WriteStartElement("seller-contact-point", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-41");
+        SellerContactPoint.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("seller-contact-telephone-number", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-42");
+        SellerContactTelephoneNumber.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("seller-contact-email-address", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-43");
+        SellerContactEmailAddress.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
     }
 
     public static SellerContact Deserialize(XmlReader reader)
@@ -1120,7 +1500,59 @@ public readonly record struct Buyer : IIRDeserializable<Buyer>, IIRSerializable
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("buyer", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-7");
+
+        writer.WriteStartElement("buyer-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-44");
+        BuyerName.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (BuyerTradingName is not null)
+        {
+            writer.WriteStartElement("buyer-trading-name", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-45");
+            BuyerTradingName.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerIdentifier is not null)
+        {
+            writer.WriteStartElement("buyer-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-46");
+            BuyerIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerLegalRegistrationIdentifier is not null)
+        {
+            writer.WriteStartElement("buyer-legal-registration-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-47");
+            BuyerLegalRegistrationIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerVatIdentifier is not null)
+        {
+            writer.WriteStartElement("buyer-vat-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-48");
+            BuyerVatIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerElectronicAddress is not null)
+        {
+            writer.WriteStartElement("buyer-electronic-address", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-49");
+            BuyerElectronicAddress.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        BuyerPostalAddress.Serialize(writer);
+
+        BuyerContact?.Serialize(writer);
+
+        writer.WriteEndElement();
     }
 
     public static Buyer Deserialize(XmlReader reader)
@@ -1416,7 +1848,34 @@ public readonly record struct BuyerContact : IIRDeserializable<BuyerContact>, II
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("buyer-contact", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-9");
+
+        if (BuyerContactPoint is not null)
+        {
+            writer.WriteStartElement("buyer-contact-point", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-56");
+            BuyerContactPoint.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerContactTelephoneNumber is not null)
+        {
+            writer.WriteStartElement("buyer-contact-telephone-number", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-57");
+            BuyerContactTelephoneNumber.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (BuyerContactEmailAddress is not null)
+        {
+            writer.WriteStartElement("buyer-contact-email-address", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-58");
+            BuyerContactEmailAddress.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
     }
 
     public static BuyerContact Deserialize(XmlReader reader)
@@ -1488,7 +1947,31 @@ public readonly record struct Payee : IIRDeserializable<Payee>, IIRSerializable
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("payee", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-10");
+
+        writer.WriteStartElement("payee-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-59");
+        PayeeName.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (PayeeIdentifier is not null)
+        {
+            writer.WriteStartElement("payee-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-60");
+            PayeeIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (PayeeLegalRegistrationIdentifier is not null)
+        {
+            writer.WriteStartElement("payee-legal-registration-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-61");
+            PayeeLegalRegistrationIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
     }
 
     public static Payee Deserialize(XmlReader reader)
@@ -1555,7 +2038,22 @@ public readonly record struct SellerTaxRepresentativeParty : IIRDeserializable<S
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("seller-tax-representative-party", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-11");
+
+        writer.WriteStartElement("seller-tax-representative-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-62");
+        SellerTaxRepresentativeName.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("seller-tax-representative-vat-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-63");
+        SellerTaxRepresentativeVatIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        SellerTaxRepresentativePostalAddress.Serialize(writer);
+
+        writer.WriteEndElement();
     }
 
     public static SellerTaxRepresentativeParty Deserialize(XmlReader reader)
@@ -1804,7 +2302,38 @@ public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryIn
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("delivery-information", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-13");
+
+        if (DeliverToPartyName is not null)
+        {
+            writer.WriteStartElement("deliver-to-party-name", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-70");
+            DeliverToPartyName.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (DeliverToLocationIdentifier is not null)
+        {
+            writer.WriteStartElement("deliver-to-location-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-71");
+            DeliverToLocationIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ActualDeliveryDate is not null)
+        {
+            writer.WriteStartElement("actual-delivery-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-72");
+            ActualDeliveryDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        InvoicingPeriod?.Serialize(writer);
+
+        DeliverToAddress?.Serialize(writer);
+
+        writer.WriteEndElement();
     }
 
     public static DeliveryInformation Deserialize(XmlReader reader)
@@ -1889,7 +2418,26 @@ public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPerio
 
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("invoicing-period", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-14");
+
+        if (InvoicingPeriodStartDate is not null)
+        {
+            writer.WriteStartElement("invoicing-period-start-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-73");
+            InvoicingPeriodStartDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoicingPeriodEndDate is not null)
+        {
+            writer.WriteStartElement("invoicing-period-end-date", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-74");
+            InvoicingPeriodEndDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
     }
 
     public static InvoicingPeriod Deserialize(XmlReader reader)
