@@ -483,6 +483,137 @@
               </ram:SpecifiedTaxRegistration>
             </xsl:if>
           </ram:SellerTradeParty>
+          <ram:BuyerTradeParty>
+            <xsl:if test="exists(ir:buyer/ir:buyer-identifier[not(ir:scheme-identifier)])">
+              <ram:ID>
+                <!-- bt-46 -->
+                <xsl:value-of select="ir:buyer/ir:buyer-identifier/ir:content"/>
+              </ram:ID>
+            </xsl:if>
+            <xsl:if test="exists(ir:buyer/ir:buyer-identifier[ir:scheme-identifier])">
+              <ram:GlobalID>
+                <xsl:attribute name="schemeID">
+                  <!-- bt-29-1 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-identifier/ir:scheme-identifier"/>
+                </xsl:attribute>
+                <!-- bt-29 -->
+                <xsl:value-of select="ir:buyer/ir:buyer-identifier/ir:content"/>
+              </ram:GlobalID>
+            </xsl:if>
+            <ram:Name>
+              <!-- bt-44 -->
+              <xsl:value-of select="ir:buyer/ir:buyer-name"/>
+            </ram:Name>
+            <xsl:if test="exists(ir:buyer/ir:buyer-trading-name)
+                or exists(ir:buyer/ir:buyer-legal-registration-identifier)">
+              <ram:SpecifiedLegalOrganization>
+                <xsl:if test="exists(ir:buyer/ir:buyer-legal-registration-identifier)">
+                  <ram:ID>
+                    <xsl:if test="exists(ir:buyer/ir:buyer-legal-registration-identifier/ir:scheme-identifier)">
+                      <xsl:attribute name="schemeID">
+                        <!-- bt-47-1 -->
+                        <xsl:value-of select="ir:buyer/ir:buyer-legal-registration-identifier/ir:scheme-identifier"/>
+                      </xsl:attribute>
+                    </xsl:if>
+                    <!-- bt-47 -->
+                    <xsl:value-of select="ir:buyer/ir:buyer-legal-registration-identifier/ir:content"/>
+                  </ram:ID>
+                  <xsl:if test="exists(ir:buyer/ir:buyer-trading-name)">
+                    <ram:TradingBusinessName>
+                      <!-- bt-45 -->
+                      <xsl:value-of select="ir:buyer/ir:buyer-trading-name"/>
+                    </ram:TradingBusinessName>
+                  </xsl:if>
+                </xsl:if>
+              </ram:SpecifiedLegalOrganization>
+            </xsl:if>
+            <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)
+                or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number)
+                or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address)">
+              <ram:DefinedTradeContact>
+                <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)">
+                  <ram:PersonName>
+                    <!-- bt-56 -->
+                    <xsl:value-of select="ir:buyer/ir:buyer-contact/ir:buyer-contact-point"/>
+                  </ram:PersonName>
+                </xsl:if>
+                <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number)">
+                  <ram:TelephoneUniversalCommunication>
+                    <ram:CompleteNumber>
+                      <!-- bt-57 -->
+                      <xsl:value-of select="ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number"/>
+                    </ram:CompleteNumber>
+                  </ram:TelephoneUniversalCommunication>
+                </xsl:if>
+                <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address)">
+                  <ram:EmailURIUniversalCommunication>
+                    <ram:URIID>
+                      <!-- bt-58 -->
+                      <xsl:value-of select="ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address"/>
+                    </ram:URIID>
+                  </ram:EmailURIUniversalCommunication>
+                </xsl:if>
+              </ram:DefinedTradeContact>
+            </xsl:if>
+            <ram:PostalTradeAddress>
+              <ram:PostcodeCode>
+                <!-- bt-53 -->
+                <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-post-code"/>
+              </ram:PostcodeCode>
+              <xsl:if test="exists(ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-1)">
+                <ram:LineOne>
+                  <!-- bt-50 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-1"/>
+                </ram:LineOne>
+              </xsl:if>
+              <xsl:if test="exists(ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-2)">
+                <ram:LineTwo>
+                  <!-- bt-51 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-2"/>
+                </ram:LineTwo>
+              </xsl:if>
+              <xsl:if test="exists(ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-3)">
+                <ram:LineThree>
+                  <!-- bt-163 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-3"/>
+                </ram:LineThree>
+              </xsl:if>
+              <ram:CityName>
+                <!-- bt-52 -->
+                <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-city"/>
+              </ram:CityName>
+              <ram:CountryID>
+                <!-- bt-55 -->
+                <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-country-code"/>
+              </ram:CountryID>
+              <xsl:if test="exists(ir:buyer/ir:buyer-postal-address/ir:buyer-country-subdivision)">
+                <ram:CountrySubDivisionName>
+                  <!-- bt-54 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-country-subdivision"/>
+                </ram:CountrySubDivisionName>
+              </xsl:if>
+            </ram:PostalTradeAddress>
+            <xsl:if test="exists(ir:buyer/ir:buyer-electronic-address)">
+              <ram:URIUniversalCommunication>
+                <ram:URIID>
+                  <xsl:attribute name="schemeID">
+                    <!-- bt-49-1 -->
+                    <xsl:value-of select="ir:buyer/ir:buyer-electronic-address/ir:scheme-identifier"/>
+                  </xsl:attribute>
+                  <!-- bt-49 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-electronic-address/ir:content"/>
+                </ram:URIID>
+              </ram:URIUniversalCommunication>
+            </xsl:if>
+            <xsl:if test="exists(ir:buyer/ir:buyer-vat-identifier)">
+              <ram:SpecifiedTaxRegistration>
+                <ram:ID schemeID="VA">
+                  <!-- bt-48 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-vat-identifier/ir:content"/>
+                </ram:ID>
+              </ram:SpecifiedTaxRegistration>
+            </xsl:if>
+          </ram:BuyerTradeParty>
         </ram:ApplicableHeaderTradeAgreement>
       </rsm:SupplyChainTradeTransaction>
     </rsm:CrossIndustryInvoice>
