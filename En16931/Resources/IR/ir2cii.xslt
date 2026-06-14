@@ -144,6 +144,56 @@
                 </ram:OriginTradeCountry>
               </xsl:if>
             </ram:SpecifiedTradeProduct>
+            <ram:SpecifiedLineTradeAgreement>
+              <xsl:if test="exists(./ir:referenced-purchase-order-line-reference)">
+                <ram:BuyerOrderReferencedDocument>
+                  <ram:LineID>
+                    <!-- bt-132 -->
+                    <xsl:value-of select="./ir:referenced-purchase-order-line-reference"/>
+                  </ram:LineID>
+                </ram:BuyerOrderReferencedDocument>
+              </xsl:if>
+              <xsl:if test="exists(./ir:price-details/ir:item-price-discount)
+                  or exists(./ir:price-details/ir:item-gross-price)">
+                <ram:GrossPriceProductTradePrice>
+                  <xsl:if test="exists(./ir:price-details/ir:item-gross-price)">
+                    <ram:ChargeAmount>
+                      <!-- bt-148 -->
+                      <xsl:value-of select="./ir:price-details/ir:item-gross-price"/>
+                    </ram:ChargeAmount>
+                  </xsl:if>
+                  <xsl:if test="exists(./ir:price-details/ir:item-price-discount)">
+                    <ram:AppliedTradeAllowanceCharge>
+                      <ram:ChargeIndicator>
+                        <udt:Indicator>false</udt:Indicator>
+                      </ram:ChargeIndicator>
+                      <ram:ActualAmount>
+                        <!-- bt-147 -->
+                        <xsl:value-of select="./ir:price-details/ir:item-price-discount"/>
+                      </ram:ActualAmount>
+                    </ram:AppliedTradeAllowanceCharge>
+                  </xsl:if>
+                </ram:GrossPriceProductTradePrice>
+              </xsl:if>
+              <ram:NetPriceProductTradePrice>
+                <ram:ChargeAmount>
+                  <!-- bt-146 -->
+                  <xsl:value-of select="./ir:price-details/ir:item-net-price"/>
+                </ram:ChargeAmount>
+                <xsl:if test="exists(./ir:price-details/ir:item-price-base-quantity)">
+                  <ram:BasisQuantity>
+                    <xsl:if test="exists(./ir:price-details/ir:item-price-base-quantity-unit-of-measure-code)">
+                      <xsl:attribute name="unitCode">
+                        <!-- bt-150 -->
+                        <xsl:value-of select="./ir:price-details/ir:item-price-base-quantity-unit-of-measure-code"/>
+                      </xsl:attribute>
+                    </xsl:if>
+                    <!-- bt-149 -->
+                    <xsl:value-of select="./ir:price-details/ir:item-price-base-quantity"/>
+                  </ram:BasisQuantity>
+                </xsl:if>
+              </ram:NetPriceProductTradePrice>
+            </ram:SpecifiedLineTradeAgreement>
           </ram:IncludedSupplyChainTradeLineItem>
         </xsl:for-each>
       </rsm:SupplyChainTradeTransaction>
