@@ -194,6 +194,31 @@
                 </xsl:if>
               </ram:NetPriceProductTradePrice>
             </ram:SpecifiedLineTradeAgreement>
+            <ram:SpecifiedLineTradeDelivery>
+              <ram:BilledQuantity>
+                <xsl:attribute name="unitCode">
+                  <!-- bt-130 -->
+                  <xsl:value-of select="./ir:invoiced-quantity-unit-of-measure-code"/>
+                </xsl:attribute>
+                <!-- bt-129 -->
+                <xsl:value-of select="./ir:invoiced-quantity"/>
+              </ram:BilledQuantity>
+            </ram:SpecifiedLineTradeDelivery>
+            <ram:SpecifiedLineTradeSettlement>
+              <ram:ApplicableTradeTax>
+                <ram:TypeCode>VAT</ram:TypeCode>
+                <ram:CategoryCode>
+                  <!-- bt-151 -->
+                  <xsl:value-of select="./ir:line-vat-information/ir:invoiced-item-vat-category-code"/>
+                </ram:CategoryCode>
+                <xsl:if test="exists(./ir:line-vat-information/ir:invoiced-item-vat-rate)">
+                  <ram:RateApplicablePercent>
+                    <!-- bt-152 -->
+                    <xsl:value-of select="./ir:line-vat-information/ir:invoiced-item-vat-rate"/>
+                  </ram:RateApplicablePercent>
+                </xsl:if>
+              </ram:ApplicableTradeTax>
+            </ram:SpecifiedLineTradeSettlement>
           </ram:IncludedSupplyChainTradeLineItem>
         </xsl:for-each>
       </rsm:SupplyChainTradeTransaction>
