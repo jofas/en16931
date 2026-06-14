@@ -218,6 +218,31 @@
                   </ram:RateApplicablePercent>
                 </xsl:if>
               </ram:ApplicableTradeTax>
+              <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)
+                  or exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
+                <ram:BillingSpecifiedPeriod>
+                  <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)">
+                    <ram:StartDateTime>
+                      <udt:DateTimeString format="102">
+                        <!-- bt-134 -->
+                        <xsl:call-template name="date">
+                          <xsl:with-param name="node" select="./ir:invoice-line-period/ir:invoice-line-period-start-date"/>
+                        </xsl:call-template>
+                      </udt:DateTimeString>
+                    </ram:StartDateTime>
+                  </xsl:if>
+                  <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
+                    <ram:EndDateTime>
+                      <udt:DateTimeString format="102">
+                        <!-- bt-135 -->
+                        <xsl:call-template name="date">
+                          <xsl:with-param name="node" select="./ir:invoice-line-period/ir:invoice-line-period-end-date"/>
+                        </xsl:call-template>
+                      </udt:DateTimeString>
+                    </ram:EndDateTime>
+                  </xsl:if>
+                </ram:BillingSpecifiedPeriod>
+              </xsl:if>
             </ram:SpecifiedLineTradeSettlement>
           </ram:IncludedSupplyChainTradeLineItem>
         </xsl:for-each>
