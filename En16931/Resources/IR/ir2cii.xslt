@@ -313,6 +313,35 @@
                   </xsl:if>
                 </ram:SpecifiedTradeAllowanceCharge>
               </xsl:for-each>
+              <ram:SpecifiedTradeSettlementLineMonetarySummation>
+                <ram:LineTotalAmount>
+                  <!-- bt-131 -->
+                  <xsl:value-of select="./ir:invoice-line-net-amount"/>
+                </ram:LineTotalAmount>
+              </ram:SpecifiedTradeSettlementLineMonetarySummation>
+              <xsl:if test="exists(./ir:invoice-line-object-identifier)">
+                <ram:AdditionalReferencedDocument>
+                  <ram:IssuerAssignedID>
+                    <!-- bt-128 -->
+                    <xsl:value-of select="./ir:invoice-line-object-identifier/ir:content"/>
+                  </ram:IssuerAssignedID>
+                  <ram:TypeCode>130</ram:TypeCode>
+                  <xsl:if test="exists(./ir:invoice-line-object-identifier/ir:scheme-identifier)">
+                    <ram:ReferenceTypeCode>
+                      <!-- bt-128-1 -->
+                      <xsl:value-of select="./ir:invoice-line-object-identifier/ir:scheme-identifier"/>
+                    </ram:ReferenceTypeCode>
+                  </xsl:if>
+                </ram:AdditionalReferencedDocument>
+              </xsl:if>
+              <xsl:if test="exists(./ir:invoice-line-buyer-accounting-reference)">
+                <ram:ReceivableSpecifiedTradeAccountingAccount>
+                  <ram:ID>
+                    <!-- bt-133 -->
+                    <xsl:value-of select="./ir:invoice-line-buyer-accounting-reference"/>
+                  </ram:ID>
+                </ram:ReceivableSpecifiedTradeAccountingAccount>
+              </xsl:if>
             </ram:SpecifiedLineTradeSettlement>
           </ram:IncludedSupplyChainTradeLineItem>
         </xsl:for-each>
