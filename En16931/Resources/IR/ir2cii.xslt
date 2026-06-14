@@ -670,6 +670,65 @@
               </ram:SpecifiedTaxRegistration>
             </ram:SellerTaxRepresentativeTradeParty>
           </xsl:if>
+          <xsl:if test="exists(ir:sales-order-reference)">
+            <ram:SellerOrderReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-14 -->
+                <xsl:value-of select="ir:sales-order-reference"/>
+              </ram:IssuerAssignedID>
+            </ram:SellerOrderReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:purchase-order-reference)">
+            <ram:BuyerOrderReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-13 -->
+                <xsl:value-of select="ir:purchase-order-reference"/>
+              </ram:IssuerAssignedID>
+            </ram:BuyerOrderReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:contract-reference)">
+            <ram:ContractReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-12 -->
+                <xsl:value-of select="ir:contract-reference"/>
+              </ram:IssuerAssignedID>
+            </ram:ContractReferencedDocument>
+          </xsl:if>
+          <xsl:for-each select="ir:additional-supporting-documents/ir:additional-supporting-document">
+            <ram:AdditionalReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-122 -->
+                <xsl:value-of select="./ir:supporting-document-reference"/>
+              </ram:IssuerAssignedID>
+              <xsl:if test="exists(./ir:external-document-location)">
+                <ram:URIID>
+                  <!-- bt-124 -->
+                  <xsl:value-of select="./ir:external-document-location"/>
+                </ram:URIID>
+              </xsl:if>
+              <ram:TypeCode>916</ram:TypeCode>
+              <xsl:if test="exists(./ir:supporting-document-description)">
+                <ram:Name>
+                  <!-- bt-123 -->
+                  <xsl:value-of select="./ir:supporting-document-description"/>
+                </ram:Name>
+              </xsl:if>
+              <xsl:if test="exists(./ir:attached-document)">
+                <ram:AttachmentBinaryObject>
+                  <xsl:attribute name="mimeCode">
+                    <!-- bt-125-1 -->
+                    <xsl:value-of select="./ir:attached-document/ir:mime-code"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="filename">
+                    <!-- bt-125-2 -->
+                    <xsl:value-of select="./ir:attached-document/ir:filename"/>
+                  </xsl:attribute>
+                  <!-- bt-125 -->
+                  <xsl:value-of select="./ir:attached-document/ir:content"/>
+                </ram:AttachmentBinaryObject>
+              </xsl:if>
+            </ram:AdditionalReferencedDocument>
+          </xsl:for-each>
         </ram:ApplicableHeaderTradeAgreement>
       </rsm:SupplyChainTradeTransaction>
     </rsm:CrossIndustryInvoice>
