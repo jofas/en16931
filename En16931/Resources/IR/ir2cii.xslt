@@ -729,7 +729,95 @@
               </xsl:if>
             </ram:AdditionalReferencedDocument>
           </xsl:for-each>
+          <xsl:if test="exists(ir:tender-or-lot-reference)">
+            <ram:AdditionalReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-17 -->
+                <xsl:value-of select="ir:tender-or-lot-reference"/>
+              </ram:IssuerAssignedID>
+              <ram:TypeCode>50</ram:TypeCode>
+            </ram:AdditionalReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:invoiced-object-identifier)">
+            <ram:AdditionalReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-18 -->
+                <xsl:value-of select="ir:invoiced-object-identifier"/>
+              </ram:IssuerAssignedID>
+              <ram:TypeCode>130</ram:TypeCode>
+            </ram:AdditionalReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:project-reference)">
+            <ram:SpecifiedProcuringProject>
+              <ram:ID>
+                <!-- bt-11 -->
+                <xsl:value-of select="ir:project-reference"/>
+              </ram:ID>
+              <ram:Name>Project reference</ram:Name>
+            </ram:SpecifiedProcuringProject>
+          </xsl:if>
         </ram:ApplicableHeaderTradeAgreement>
+        <ram:ApplicableHeaderTradeDelivery>
+          <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)
+              or exists(ir:delivery-information/ir:deliver-to-location-identifier)
+              or exists(ir:delivery-information/ir:deliver-to-address)">
+            <ram:ShipToTradeParty>
+              <xsl:if test="exists(ir:delivery-information/ir:deliver-to-location-identifier)">
+                <ram:ID>
+                  <!-- bt-71 -->
+                  <xsl:value-of select="ir:delivery-information/ir:deliver-to-location-identifier"/>
+                </ram:ID>
+              </xsl:if>
+              <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)">
+                <ram:Name>
+                  <!-- bt-70 -->
+                  <xsl:value-of select="ir:delivery-information/ir:deliver-to-party-name"/>
+                </ram:Name>
+              </xsl:if>
+              <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address)">
+                <ram:PostalTradeAddress>
+                  <ram:PostcodeCode>
+                    <!-- bt-78 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-post-code"/>
+                  </ram:PostcodeCode>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-1)">
+                    <ram:LineOne>
+                      <!-- bt-75 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-1"/>
+                    </ram:LineOne>
+                  </xsl:if>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-2)">
+                    <ram:LineTwo>
+                      <!-- bt-76 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-2"/>
+                    </ram:LineTwo>
+                  </xsl:if>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-3)">
+                    <ram:LineThree>
+                      <!-- bt-165 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-3"/>
+                    </ram:LineThree>
+                  </xsl:if>
+                  <ram:CityName>
+                    <!-- bt-77 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-city"/>
+                  </ram:CityName>
+                  <ram:CountryID>
+                    <!-- bt-80 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-country-code"/>
+                  </ram:CountryID>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-country-subdivision)">
+                    <ram:CountrySubDivisionName>
+                      <!-- bt-79 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-country-subdivision"/>
+                    </ram:CountrySubDivisionName>
+                  </xsl:if>
+                </ram:PostalTradeAddress>
+              </xsl:if>
+            </ram:ShipToTradeParty>
+          </xsl:if>
+          <!-- TODO: continue here -->
+        </ram:ApplicableHeaderTradeDelivery>
       </rsm:SupplyChainTradeTransaction>
     </rsm:CrossIndustryInvoice>
   </xsl:template>
