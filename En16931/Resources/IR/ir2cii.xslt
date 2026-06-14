@@ -614,6 +614,62 @@
               </ram:SpecifiedTaxRegistration>
             </xsl:if>
           </ram:BuyerTradeParty>
+          <xsl:if test="exists(ir:seller-tax-representative-party)">
+            <ram:SellerTaxRepresentativeTradeParty>
+              <ram:Name>
+                <!-- bt-62 -->
+                <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-name"/>
+              </ram:Name>
+              <ram:PostalTradeAddress>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-post-code)">
+                  <ram:PostcodeCode>
+                    <!-- bt-67 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-post-code"/>
+                  </ram:PostcodeCode>
+                </xsl:if>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-1)">
+                  <ram:LineOne>
+                    <!-- bt-64 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-1"/>
+                  </ram:LineOne>
+                </xsl:if>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-2)">
+                  <ram:LineTwo>
+                    <!-- bt-65 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-2"/>
+                  </ram:LineTwo>
+                </xsl:if>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-3)">
+                  <ram:LineThree>
+                    <!-- bt-164 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-3"/>
+                  </ram:LineThree>
+                </xsl:if>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-city)">
+                  <ram:CityName>
+                    <!-- bt-66 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-city"/>
+                  </ram:CityName>
+                </xsl:if>
+                <ram:CountryID>
+                  <!-- bt-69 -->
+                  <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-country-code"/>
+                </ram:CountryID>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-country-subdivision)">
+                  <ram:CountrySubDivisionName>
+                    <!-- bt-68 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-country-subdivision"/>
+                  </ram:CountrySubDivisionName>
+                </xsl:if>
+              </ram:PostalTradeAddress>
+              <ram:SpecifiedTaxRegistration>
+                <ram:ID schemeID="VA">
+                  <!-- bt-63 -->
+                  <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-vat-identifier"/>
+                </ram:ID>
+              </ram:SpecifiedTaxRegistration>
+            </ram:SellerTaxRepresentativeTradeParty>
+          </xsl:if>
         </ram:ApplicableHeaderTradeAgreement>
       </rsm:SupplyChainTradeTransaction>
     </rsm:CrossIndustryInvoice>
