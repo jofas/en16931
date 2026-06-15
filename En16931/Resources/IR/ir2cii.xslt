@@ -862,6 +862,34 @@
             <!-- bt-5 -->
             <xsl:value-of select="ir:invoice-currency-code"/>
           </ram:InvoiceCurrencyCode>
+          <xsl:if test="exists(ir:payee)">
+            <ram:PayeeTradeParty>
+              <xsl:if test="exists(ir:payee/ir:payee-identifier)">
+                <ram:ID>
+                  <!-- bt-60 -->
+                  <xsl:value-of select="ir:payee/ir:payee-identifier"/>
+                </ram:ID>
+              </xsl:if>
+              <ram:Name>
+                <!-- bt-59 -->
+                <xsl:value-of select="ir:payee/ir:payee-name"/>
+              </ram:Name>
+              <xsl:if test="exists(ir:payee/ir:payee-legal-registration-identifier)">
+                <ram:SpecifiedLegalOrganization>
+                  <ram:ID>
+                    <xsl:if test="exists(ir:payee/ir:payee-legal-registration-identifier/ir:scheme-identifier)">
+                      <xsl:attribute name="schemeID">
+                        <!-- bt-61-1 -->
+                        <xsl:value-of select="ir:payee/ir:payee-legal-registration-identifier/ir:scheme-identifier"/>
+                      </xsl:attribute>
+                    </xsl:if>
+                    <!-- bt-61 -->
+                    <xsl:value-of select="ir:payee/ir:payee-legal-registration-identifier/ir:content"/>
+                  </ram:ID>
+                </ram:SpecifiedLegalOrganization>
+              </xsl:if>
+            </ram:PayeeTradeParty>
+          </xsl:if>
           <!-- TODO: continue here -->
         </ram:ApplicableHeaderTradeSettlement>
       </rsm:SupplyChainTradeTransaction>
