@@ -816,8 +816,54 @@
               </xsl:if>
             </ram:ShipToTradeParty>
           </xsl:if>
-          <!-- TODO: continue here -->
+          <xsl:if test="exists(ir:delivery-information/ir:actual-delivery-date)">
+            <ram:ActualDeliverySupplyChainEvent>
+              <ram:OccurrenceDateTime>
+                <udt:DateTimeString format="102">
+                  <!-- bt-72 -->
+                  <xsl:call-template name="date">
+                    <xsl:with-param name="node" select="ir:delivery-information/ir:actual-delivery-date"/>
+                  </xsl:call-template>
+                </udt:DateTimeString>
+              </ram:OccurrenceDateTime>
+            </ram:ActualDeliverySupplyChainEvent>
+          </xsl:if>
+          <xsl:if test="exists(ir:despatch-advice-reference)">
+            <ram:DespatchAdviceReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-16 -->
+                <xsl:value-of select="ir:despatch-advice-reference"/>
+              </ram:IssuerAssignedID>
+            </ram:DespatchAdviceReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:receiving-advice-reference)">
+            <ram:ReceivingAdviceReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-15 -->
+                <xsl:value-of select="ir:receiving-advice-reference"/>
+              </ram:IssuerAssignedID>
+            </ram:ReceivingAdviceReferencedDocument>
+          </xsl:if>
         </ram:ApplicableHeaderTradeDelivery>
+        <ram:ApplicableHeaderTradeSettlement>
+          <xsl:if test="exists(ir:payment-instructions/ir:remittance-information)">
+            <ram:PaymentReference>
+              <!-- bt-83 -->
+              <xsl:value-of select="ir:payment-instructions/ir:remittance-information"/>
+            </ram:PaymentReference>
+          </xsl:if>
+          <xsl:if test="exists(ir:vat-accounting-currency-code)">
+            <ram:TaxCurrencyCode>
+              <!-- bt-6 -->
+              <xsl:value-of select="ir:vat-accounting-currency-code"/>
+            </ram:TaxCurrencyCode>
+          </xsl:if>
+          <ram:InvoiceCurrencyCode>
+            <!-- bt-5 -->
+            <xsl:value-of select="ir:invoice-currency-code"/>
+          </ram:InvoiceCurrencyCode>
+          <!-- TODO: continue here -->
+        </ram:ApplicableHeaderTradeSettlement>
       </rsm:SupplyChainTradeTransaction>
     </rsm:CrossIndustryInvoice>
   </xsl:template>
