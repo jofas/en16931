@@ -890,6 +890,93 @@
               </xsl:if>
             </ram:PayeeTradeParty>
           </xsl:if>
+          <ram:SpecifiedTradeSettlementPaymentMeans>
+            <ram:TypeCode>
+              <!-- bt-81 -->
+              <xsl:value-of select="ir:payment-instructions/ir:payment-means-type-code"/>
+            </ram:TypeCode>
+            <xsl:if test="exists(ir:payment-instructions/ir:payment-means-text)">
+              <ram:Information>
+                <!-- bt-82 -->
+                <xsl:value-of select="ir:payment-instructions/ir:payment-means-text"/>
+              </ram:Information>
+            </xsl:if>
+            <!-- TODO: bg-17, bg-18, bg-19 (make sure to put them in the right order, even thought they technically can't be present together -->
+          </ram:SpecifiedTradeSettlementPaymentMeans>
+          <ram:ApplicableTradeTax>
+            <ram:CalculatedAmount>
+              <!-- bt-117 -->
+              <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-tax-amount"/>
+            </ram:CalculatedAmount>
+            <ram:TypeCode>VAT</ram:TypeCode>
+            <xsl:if test="exists(ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-text)">
+              <ram:ExemptionReason>
+                <!-- bt-120 -->
+                <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-text"/>
+              </ram:ExemptionReason>
+            </xsl:if>
+            <ram:BasisAmount>
+              <!-- bt-116 -->
+              <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-taxable-amount"/>
+            </ram:BasisAmount>
+            <ram:CategoryCode>
+              <!-- bt-118 -->
+              <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-code"/>
+            </ram:CategoryCode>
+            <xsl:if test="exists(ir:value-added-tax-point-date)">
+              <ram:TaxPointDate>
+                <udt:DateString format="102">
+                  <!-- bt-7 -->
+                  <xsl:call-template name="date">
+                    <xsl:with-param name="node" select="ir:value-added-tax-point-date"/>
+                  </xsl:call-template>
+                </udt:DateString>
+              </ram:TaxPointDate>
+            </xsl:if>
+            <xsl:if test="exists(ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-code)">
+              <ram:ExemptionReasonCode>
+                <!-- bt-121 -->
+                <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-code"/>
+              </ram:ExemptionReasonCode>
+            </xsl:if>
+            <ram:RateApplicablePercent>
+              <!-- bt-119 -->
+              <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-rate"/>
+            </ram:RateApplicablePercent>
+          </ram:ApplicableTradeTax>
+          <xsl:for-each select="ir:vat-breakdown/ir:vat-breakdown[position() > 1]">
+            <ram:ApplicableTradeTax>
+              <ram:CalculatedAmount>
+                <!-- bt-117 -->
+                <xsl:value-of select="./ir:vat-category-tax-amount"/>
+              </ram:CalculatedAmount>
+              <ram:TypeCode>VAT</ram:TypeCode>
+              <xsl:if test="exists(./ir:vat-exemption-reason-text)">
+                <ram:ExemptionReason>
+                  <!-- bt-120 -->
+                  <xsl:value-of select="./ir:vat-exemption-reason-text"/>
+                </ram:ExemptionReason>
+              </xsl:if>
+              <ram:BasisAmount>
+                <!-- bt-116 -->
+                <xsl:value-of select="./ir:vat-category-taxable-amount"/>
+              </ram:BasisAmount>
+              <ram:CategoryCode>
+                <!-- bt-118 -->
+                <xsl:value-of select="./ir:vat-category-code"/>
+              </ram:CategoryCode>
+              <xsl:if test="exists(./ir:vat-exemption-reason-code)">
+                <ram:ExemptionReasonCode>
+                  <!-- bt-121 -->
+                  <xsl:value-of select="./ir:vat-exemption-reason-code"/>
+                </ram:ExemptionReasonCode>
+              </xsl:if>
+              <ram:RateApplicablePercent>
+                <!-- bt-119 -->
+                <xsl:value-of select="./ir:vat-category-rate"/>
+              </ram:RateApplicablePercent>
+            </ram:ApplicableTradeTax>
+          </xsl:for-each>
           <!-- TODO: continue here -->
         </ram:ApplicableHeaderTradeSettlement>
       </rsm:SupplyChainTradeTransaction>
