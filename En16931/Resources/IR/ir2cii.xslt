@@ -1002,6 +1002,102 @@
               </xsl:if>
             </ram:BillingSpecifiedPeriod>
           </xsl:if>
+          <xsl:for-each select="ir:document-level-charges/ir:document-level-charge">
+            <ram:SpecifiedTradeAllowanceCharge>
+              <ram:ChargeIndicator>
+                <udt:Indicator>true</udt:Indicator>
+              </ram:ChargeIndicator>
+              <xsl:if test="exists(./ir:document-level-charge-percentage)">
+                <ram:CalculationPercent>
+                  <!-- bt-101 -->
+                  <xsl:value-of select="./ir:document-level-charge-percentage"/>
+                </ram:CalculationPercent>
+              </xsl:if>
+              <xsl:if test="exists(./ir:document-level-charge-base-amount)">
+                <ram:BasisAmount>
+                  <!-- bt-100 -->
+                  <xsl:value-of select="./ir:document-level-charge-base-amount"/>
+                </ram:BasisAmount>
+              </xsl:if>
+              <ram:ActualAmount>
+                <!-- bt-99 -->
+                <xsl:value-of select="./ir:document-level-charge-amount"/>
+              </ram:ActualAmount>
+              <xsl:if test="exists(./ir:document-level-charge-reason-code)">
+                <ram:ReasonCode>
+                  <!-- bt-105 -->
+                  <xsl:value-of select="./ir:document-level-charge-reason-code"/>
+                </ram:ReasonCode>
+              </xsl:if>
+              <xsl:if test="exists(./ir:document-level-charge-reason)">
+                <ram:Reason>
+                  <!-- bt-104 -->
+                  <xsl:value-of select="./ir:document-level-charge-reason"/>
+                </ram:Reason>
+              </xsl:if>
+              <ram:CategoryTradeTax>
+                <ram:TypeCode>VAT</ram:TypeCode>
+                <ram:CategoryCode>
+                  <!-- bt-102 -->
+                  <xsl:value-of select="./ir:document-level-charge-vat-category-code"/>
+                </ram:CategoryCode>
+                <xsl:if test="exists(./ir:document-level-charge-vat-rate)">
+                  <ram:RateApplicablePercent>
+                    <!-- bt-103 -->
+                    <xsl:value-of select="./ir:document-level-charge-vat-rate"/>
+                  </ram:RateApplicablePercent>
+                </xsl:if>
+              </ram:CategoryTradeTax>
+            </ram:SpecifiedTradeAllowanceCharge>
+          </xsl:for-each>
+          <xsl:for-each select="ir:document-level-allowances/ir:document-level-allowance">
+            <ram:SpecifiedTradeAllowanceCharge>
+              <ram:ChargeIndicator>
+                <udt:Indicator>false</udt:Indicator>
+              </ram:ChargeIndicator>
+              <xsl:if test="exists(./ir:document-level-allowance-percentage)">
+                <ram:CalculationPercent>
+                  <!-- bt-94 -->
+                  <xsl:value-of select="./ir:document-level-allowance-percentage"/>
+                </ram:CalculationPercent>
+              </xsl:if>
+              <xsl:if test="exists(./ir:document-level-allowance-base-amount)">
+                <ram:BasisAmount>
+                  <!-- bt-93 -->
+                  <xsl:value-of select="./ir:document-level-allowance-base-amount"/>
+                </ram:BasisAmount>
+              </xsl:if>
+              <ram:ActualAmount>
+                <!-- bt-92 -->
+                <xsl:value-of select="./ir:document-level-allowance-amount"/>
+              </ram:ActualAmount>
+              <xsl:if test="exists(./ir:document-level-allowance-reason-code)">
+                <ram:ReasonCode>
+                  <!-- bt-98 -->
+                  <xsl:value-of select="./ir:document-level-allowance-reason-code"/>
+                </ram:ReasonCode>
+              </xsl:if>
+              <xsl:if test="exists(./ir:document-level-allowance-reason)">
+                <ram:Reason>
+                  <!-- bt-97 -->
+                  <xsl:value-of select="./ir:document-level-allowance-reason"/>
+                </ram:Reason>
+              </xsl:if>
+              <ram:CategoryTradeTax>
+                <ram:TypeCode>VAT</ram:TypeCode>
+                <ram:CategoryCode>
+                  <!-- bt-95 -->
+                  <xsl:value-of select="./ir:document-level-allowance-vat-category-code"/>
+                </ram:CategoryCode>
+                <xsl:if test="exists(./ir:document-level-allowance-vat-rate)">
+                  <ram:RateApplicablePercent>
+                    <!-- bt-96 -->
+                    <xsl:value-of select="./ir:document-level-allowance-vat-rate"/>
+                  </ram:RateApplicablePercent>
+                </xsl:if>
+              </ram:CategoryTradeTax>
+            </ram:SpecifiedTradeAllowanceCharge>
+          </xsl:for-each>
           <!-- TODO: continue here -->
         </ram:ApplicableHeaderTradeSettlement>
       </rsm:SupplyChainTradeTransaction>
