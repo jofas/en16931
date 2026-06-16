@@ -923,6 +923,12 @@
               <!-- bt-118 -->
               <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-code"/>
             </ram:CategoryCode>
+            <xsl:if test="exists(ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-code)">
+              <ram:ExemptionReasonCode>
+                <!-- bt-121 -->
+                <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-code"/>
+              </ram:ExemptionReasonCode>
+            </xsl:if>
             <xsl:if test="exists(ir:value-added-tax-point-date)">
               <ram:TaxPointDate>
                 <udt:DateString format="102">
@@ -933,11 +939,13 @@
                 </udt:DateString>
               </ram:TaxPointDate>
             </xsl:if>
-            <xsl:if test="exists(ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-code)">
-              <ram:ExemptionReasonCode>
-                <!-- bt-121 -->
-                <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-code"/>
-              </ram:ExemptionReasonCode>
+            <xsl:if test="exists(ir:value-added-tax-point-date-code)">
+              <ram:DueDateTypeCode>
+                <!-- bt-8 -->
+                <xsl:call-template name="bt-8">
+                  <xsl:with-param name="node" select="ir:value-added-tax-point-date-code"/>
+                </xsl:call-template>
+              </ram:DueDateTypeCode>
             </xsl:if>
             <ram:RateApplicablePercent>
               <!-- bt-119 -->
@@ -1117,18 +1125,16 @@
       See also: https://github.com/phax/en16931-cii2ubl/issues/29
   -->
   <xsl:template name="bt-8">
-    <xsl:variable name="bt-8" select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:DueDateTypeCode"/>
-    <value-added-tax-point-date-code id="bt-8">
-      <xsl:choose>
-        <xsl:when test="$bt-8 = 5">3</xsl:when>
-        <xsl:when test="$bt-8 = 29">35</xsl:when>
-        <xsl:when test="$bt-8 = 72">432</xsl:when>
-        <xsl:otherwise>
-          <xsl:message terminate="yes">
-            Error: BT-8 is filled with unknown value: <xsl:value-of select="$bt-8"/>. Allowed values are: 5, 29, 72.
-          </xsl:message>
-        </xsl:otherwise>
-      </xsl:choose>
-    </value-added-tax-point-date-code>
+    <xsl:param name="node"/>
+    <xsl:choose>
+      <xsl:when test="$node = 3">5</xsl:when>
+      <xsl:when test="$node = 35">29</xsl:when>
+      <xsl:when test="$node = 432">72</xsl:when>
+      <xsl:otherwise>
+        <xsl:message terminate="yes">
+          Error: BT-8 is filled with unknown value: <xsl:value-of select="$node"/>. Allowed values are: 3, 35, 432.
+        </xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
