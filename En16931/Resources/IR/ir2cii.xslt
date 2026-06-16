@@ -977,6 +977,31 @@
               </ram:RateApplicablePercent>
             </ram:ApplicableTradeTax>
           </xsl:for-each>
+          <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)
+              or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)">
+            <ram:BillingSpecifiedPeriod>
+              <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)">
+                <ram:StartDateTime>
+                  <udt:DateTimeString format="102">
+                    <!-- bt-73 -->
+                    <xsl:call-template name="date">
+                      <xsl:with-param name="node" select="ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date"/>
+                    </xsl:call-template>
+                  </udt:DateTimeString>
+                </ram:StartDateTime>
+              </xsl:if>
+              <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)">
+                <ram:EndDateTime>
+                  <udt:DateTimeString format="102">
+                    <!-- bt-74 -->
+                    <xsl:call-template name="date">
+                      <xsl:with-param name="node" select="ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date"/>
+                    </xsl:call-template>
+                  </udt:DateTimeString>
+                </ram:EndDateTime>
+              </xsl:if>
+            </ram:BillingSpecifiedPeriod>
+          </xsl:if>
           <!-- TODO: continue here -->
         </ram:ApplicableHeaderTradeSettlement>
       </rsm:SupplyChainTradeTransaction>
