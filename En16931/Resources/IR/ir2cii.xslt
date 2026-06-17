@@ -1188,7 +1188,32 @@
               </ram:DuePayableAmount>
             </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
           </xsl:if>
-          <!-- TODO: continue here -->
+          <xsl:if test="exists(ir:preceding-invoice-references/ir:preceding-invoice-reference)">
+            <ram:InvoiceReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-25 -->
+                <xsl:value-of select="ir:preceding-invoice-references/ir:preceding-invoice-reference[1]/ir:preceding-invoice-reference"/>
+              </ram:IssuerAssignedID>
+              <xsl:if test="exists(ir:preceding-invoice-references/ir:preceding-invoice-reference[1]/ir:preceding-invoice-issue-date)">
+                <ram:FormattedIssueDateTime>
+                  <qdt:DateTimeString format="102">
+                    <!-- bt-26 -->
+                    <xsl:call-template name="date">
+                      <xsl:with-param name="node" select="ir:preceding-invoice-references/ir:preceding-invoice-reference[1]/ir:preceding-invoice-issue-date"/>
+                    </xsl:call-template>
+                  </qdt:DateTimeString>
+                </ram:FormattedIssueDateTime>
+              </xsl:if>
+            </ram:InvoiceReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:buyer-accounting-reference)">
+            <ram:ReceivableSpecifiedTradeAccountingAccount>
+              <ram:ID>
+                <!-- bt-19 -->
+                <xsl:value-of select="ir:buyer-accounting-reference"/>
+              </ram:ID>
+            </ram:ReceivableSpecifiedTradeAccountingAccount>
+          </xsl:if>
         </ram:ApplicableHeaderTradeSettlement>
       </rsm:SupplyChainTradeTransaction>
     </rsm:CrossIndustryInvoice>
