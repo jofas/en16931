@@ -102,7 +102,7 @@
               <xsl:if test="exists(./ir:item-information/ir:item-description)">
                 <ram:Description>
                     <!-- bt-154 -->
-                  <xsl:value-of select="./ir:item-information/ir:item-decription"/>
+                  <xsl:value-of select="./ir:item-information/ir:item-description"/>
                 </ram:Description>
               </xsl:if>
               <xsl:for-each select="./ir:item-information/ir:item-attributes/ir:item-attribute">
