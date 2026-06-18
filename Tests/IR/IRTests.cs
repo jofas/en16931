@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using En16931;
 using En16931.Model;
@@ -55,31 +56,31 @@ public class IRTests
 
 
     [Fact]
-    public void Cii1RoundTrip()
+    public void CiiRoundTrip()
     {
         Parser parser = new Parser();
 
-        // CII only supports a single preceding invoice reference
-        Invoice invoice = Data.Invoice1 with
+        List<Invoice> invoices = [
+            // CII only supports a single preceding invoice reference
+            Data.Invoice1 with
+            {
+                PrecedingInvoiceReferences = [Data.Invoice1.PrecedingInvoiceReferences[0]],
+            },
+            Data.Invoice2,
+            Data.Invoice3,
+            Data.Invoice4,
+        ];
+
+        foreach (Invoice invoice in invoices)
         {
-            PrecedingInvoiceReferences = [Data.Invoice1.PrecedingInvoiceReferences[0]],
-        };
+            using StringWriter writer = new();
 
-        using StringWriter writer = new();
+            parser.Serialize(in invoice, writer, Schema.CiiCrossIndustryInvoice);
 
-        // Pretty printing for debugginig purposes
-        using System.Xml.XmlTextWriter xmlWriter = new(writer)
-        {
-            Formatting = System.Xml.Formatting.Indented,
-        };
+            using StringReader reader = new(writer.ToString());
 
-        parser.Serialize(ref invoice, xmlWriter, Schema.CiiCrossIndustryInvoice);
-
-        Console.WriteLine(writer.ToString());
-
-        using StringReader reader = new(writer.ToString());
-
-        Assert.Equal(invoice, parser.Parse(reader));
+            Assert.Equal(invoice, parser.Parse(reader));
+        }
     }
 
     [Theory]

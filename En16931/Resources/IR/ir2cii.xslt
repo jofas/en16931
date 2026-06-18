@@ -861,7 +861,7 @@
           <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
             <ram:CreditorReferenceID>
               <!-- bt-90 -->
-              <xsl:value-of select="ir:payment-instruction/ir:direct-debit/ir:bank-assigned-creditor-identifier"/>
+              <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:bank-assigned-creditor-identifier/ir:content"/>
             </ram:CreditorReferenceID>
           </xsl:if>
           <xsl:if test="exists(ir:payment-instructions/ir:remittance-information)">
@@ -938,10 +938,10 @@
                   <xsl:value-of select="ir:payment-instructions/ir:payment-card-information/ir:payment-card-primary-account-number"/>
                 </ram:ID>
                 <xsl:if test="exists(ir:payment-instructions/ir:payment-card-information/ir:payment-card-holder-name)">
-                  <ram:CardHolderName>
+                  <ram:CardholderName>
                     <!-- bt-88 -->
                     <xsl:value-of select="ir:payment-instructions/ir:payment-card-information/ir:payment-card-holder-name"/>
-                  </ram:CardHolderName>
+                  </ram:CardholderName>
                 </xsl:if>
               </ram:ApplicableTradeSettlementFinancialCard>
             </xsl:if>
@@ -949,7 +949,7 @@
               <ram:PayerPartyDebtorFinancialAccount>
                 <ram:IBANID>
                   <!-- bt-91 -->
-                  <xsl:value-of select="ir:payment-instruction/ir:direct-debit/ir:debited-account-identifier"/>
+                  <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:debited-account-identifier/ir:content"/>
                 </ram:IBANID>
               </ram:PayerPartyDebtorFinancialAccount>
             </xsl:if>
@@ -1202,7 +1202,7 @@
               <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
                 <ram:DirectDebitMandateID>
                   <!-- bt-89 -->
-                  <xsl:value-of select="ir:payment-instruction/ir:direct-debit/ir:mandate-reference-identifier"/>
+                  <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:mandate-reference-identifier/ir:content"/>
                 </ram:DirectDebitMandateID>
               </xsl:if>
             </ram:SpecifiedTradePaymentTerms>
