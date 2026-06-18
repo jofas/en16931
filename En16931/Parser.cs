@@ -117,49 +117,16 @@ public class Parser
 
     public void Serialize(ref readonly Invoice invoice, XmlWriter writer, Schema schema)
     {
-        // TODO: SerializeToIR
-        XmlDocument xmlDoc = new();
+        XmlDocument irDoc = SerializeToIR(in invoice);
 
-        using (XmlWriter irWriter = xmlDoc.CreateNavigator()!.AppendChild())
-        {
-            invoice.Serialize(irWriter);
-        }
+        XmlDocument schemaDoc = IRToSchema(irDoc, schema);
 
-        // TODO: End SerializeToIR
+        XdmNode result = _docBuilder.Wrap(schemaDoc);
 
-        XdmNode doc = _docBuilder.Build(xmlDoc);
-
-        // TODO: TransformIRToOfficialSyntax
-        XsltExecutable executable = schema switch
-        {
-            Schema.UblInvoice or Schema.UblCreditNote => throw new NotImplementedException(),
-            Schema.CiiCrossIndustryInvoice => _irToCiiTransformer,
-            _ => throw new UnreachableException(),
-        };
-
-        DomDestination destination = new();
-
-        Xslt30Transformer transformer = executable.Load30();
-        transformer.GlobalContextItem = doc;
-        transformer.ApplyTemplates(doc, destination);
-
-        // TODO: End TransformIRToOfficialSyntax
-
-        destination.XmlDocument.Save(writer);
-
-        /*
-        destination.XmlDocument.Schemas = _schemaSet;
-
-        destination.XmlDocument.Validate(null);
-
-        XdmNode result = _docBuilder.Wrap(xmlDoc);
-
-        // TODO: XRechnungExtension
         ValidateEn16931(result, schema);
         ValidateXRechnung(result, schema);
 
         result.WriteTo(writer);
-        */
     }
 
     internal XmlDocument ParseToIR(XmlReader reader)
@@ -315,6 +282,41 @@ public class Parser
         transformer.ApplyTemplates(doc, destination);
 
         return destination.XmlDocument;
+    }
+
+    private XmlDocument IRToSchema(XmlDocument ir, Schema schema)
+    {
+        XsltExecutable executable = schema switch
+        {
+            Schema.UblInvoice or Schema.UblCreditNote => throw new NotImplementedException(),
+            Schema.CiiCrossIndustryInvoice => _irToCiiTransformer,
+            _ => throw new UnreachableException(),
+        };
+
+        XdmNode doc = _docBuilder.Build(ir);
+
+        DomDestination destination = new();
+
+        Xslt30Transformer transformer = executable.Load30();
+        transformer.GlobalContextItem = doc;
+        transformer.ApplyTemplates(doc, destination);
+
+        destination.XmlDocument.Schemas = _schemaSet;
+        destination.XmlDocument.Validate(null);
+
+        return destination.XmlDocument;
+    }
+
+    private XmlDocument SerializeToIR(ref readonly Invoice invoice)
+    {
+        XmlDocument result = new();
+
+        using (XmlWriter irWriter = result.CreateNavigator()!.AppendChild())
+        {
+            invoice.Serialize(irWriter);
+        }
+
+        return result;
     }
 
     private XmlDocument GetSchemaValidatedDocument(XmlReader reader)
