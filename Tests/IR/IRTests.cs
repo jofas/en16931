@@ -55,34 +55,6 @@ public class IRTests
     }
 
 
-    [Fact]
-    public void CiiRoundTrip()
-    {
-        Parser parser = new Parser();
-
-        List<Invoice> invoices = [
-            // CII only supports a single preceding invoice reference
-            Data.Invoice1 with
-            {
-                PrecedingInvoiceReferences = [Data.Invoice1.PrecedingInvoiceReferences[0]],
-            },
-            Data.Invoice2,
-            Data.Invoice3,
-            Data.Invoice4,
-        ];
-
-        foreach (Invoice invoice in invoices)
-        {
-            using StringWriter writer = new();
-
-            parser.Serialize(in invoice, writer, Schema.CiiCrossIndustryInvoice);
-
-            using StringReader reader = new(writer.ToString());
-
-            Assert.Equal(invoice, parser.Parse(reader));
-        }
-    }
-
     [Theory]
     [InlineData("Resources/XRechnung-Cius/Ubl-Invoice/Success/2.xml")]
     public void UblInvoice2(string invoiceLocation)
@@ -195,5 +167,33 @@ public class IRTests
         Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice4, invoice);
+    }
+
+    [Fact]
+    public void CiiRoundTrip()
+    {
+        Parser parser = new Parser();
+
+        List<Invoice> invoices = [
+            // CII only supports a single preceding invoice reference
+            Data.Invoice1 with
+            {
+                PrecedingInvoiceReferences = [Data.Invoice1.PrecedingInvoiceReferences[0]],
+            },
+            Data.Invoice2,
+            Data.Invoice3,
+            Data.Invoice4,
+        ];
+
+        foreach (Invoice invoice in invoices)
+        {
+            using StringWriter writer = new();
+
+            parser.Serialize(in invoice, writer, Schema.CiiCrossIndustryInvoice);
+
+            using StringReader reader = new(writer.ToString());
+
+            Assert.Equal(invoice, parser.Parse(reader));
+        }
     }
 }
