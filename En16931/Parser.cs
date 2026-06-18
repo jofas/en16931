@@ -24,7 +24,10 @@ public class Parser
     XsltExecutable _xRechnungUblValidator;
     XsltExecutable _xRechnungCiiValidator;
 
-    XsltExecutable _irTransformer;
+    XsltExecutable _ublToIRTransformer;
+    XsltExecutable _ciiToIRTransformer;
+
+    XsltExecutable _irToCiiTransformer;
 
     public Parser()
     {
@@ -71,34 +74,73 @@ public class Parser
         Uri xRechnungCiiUri = new Uri(new FileInfo("Resources/XRechnung/XRechnung-CII-validation.xsl").FullName);
         _xRechnungCiiValidator = xsltCompiler.Compile(xRechnungCiiUri);
 
-        Uri irUri = new Uri(new FileInfo("Resources/IR/ir.xslt").FullName);
-        _irTransformer = xsltCompiler.Compile(irUri);
+        Uri ublToIRUri = new Uri(new FileInfo("Resources/IR/ubl2ir.xslt").FullName);
+        _ublToIRTransformer = xsltCompiler.Compile(ublToIRUri);
+
+        Uri ciiToIRUri = new Uri(new FileInfo("Resources/IR/cii2ir.xslt").FullName);
+        _ciiToIRTransformer = xsltCompiler.Compile(ciiToIRUri);
+
+        Uri irToCiiUri = new Uri(new FileInfo("Resources/IR/ir2cii.xslt").FullName);
+        _irToCiiTransformer = xsltCompiler.Compile(irToCiiUri);
     }
 
-    public Invoice ParseFile(string filepath)
-    {
-        XmlDocument ir = ParseFileToIR(filepath);
-
-        using XmlNodeReader reader = new(ir);
-
-        Invoice invoice = Invoice.Deserialize(reader);
-
-        return invoice;
-    }
-
-    internal XmlDocument ParseFileToIR(string filepath)
+    public Invoice Parse(string filepath)
     {
         using StreamReader reader = new(filepath);
+        return Parse(reader);
+    }
+
+    public Invoice Parse(TextReader reader)
+    {
+        using XmlTextReader xmlReader = new(reader);
+        return Parse(xmlReader);
+    }
+
+    public Invoice Parse(XmlReader reader)
+    {
+        XmlDocument ir = ParseToIR(reader);
+        using XmlNodeReader irReader = new(ir);
+        return Invoice.Deserialize(irReader);
+    }
+
+    public void Serialize(ref readonly Invoice invoice, string filepath, Schema schema)
+    {
+        using StreamWriter writer = new(filepath);
+        Serialize(in invoice, writer, schema);
+    }
+
+    public void Serialize(ref readonly Invoice invoice, TextWriter writer, Schema schema)
+    {
+        using XmlTextWriter xmlWriter = new(writer);
+        Serialize(in invoice, xmlWriter, schema);
+    }
+
+    public void Serialize(ref readonly Invoice invoice, XmlWriter writer, Schema schema)
+    {
+        XmlDocument irDoc = SerializeToIR(in invoice);
+
+        XmlDocument schemaDoc = IRToSchema(irDoc, schema);
+
+        XdmNode result = _docBuilder.Wrap(schemaDoc);
+
+        ValidateEn16931(result, schema);
+        ValidateXRechnung(result, schema);
+
+        result.WriteTo(writer);
+    }
+
+    internal XmlDocument ParseToIR(XmlReader reader)
+    {
 
         XmlDocument xmlDoc = GetSchemaValidatedDocument(reader);
 
         DocumentType docType = GetDocumentType(xmlDoc);
 
-        XdmNode doc = _docBuilder.Build(xmlDoc);
+        XdmNode doc = _docBuilder.Wrap(xmlDoc);
 
         try
         {
-            ValidateEn16931(doc, docType);
+            ValidateEn16931(doc, docType.Schema);
         }
         catch (En16931SchematronException e)
         {
@@ -141,20 +183,14 @@ public class Parser
             }
         }
 
-        ValidateXRechnung(doc, docType);
+        ValidateXRechnung(doc, docType.Schema);
 
-        DomDestination destination = new();
-
-        Xslt30Transformer transformer = _irTransformer.Load30();
-        transformer.GlobalContextItem = doc;
-        transformer.ApplyTemplates(doc, destination);
-
-        return destination.XmlDocument;
+        return TransformToIR(doc, docType.Schema);
     }
 
-    private void ValidateEn16931(XdmNode doc, DocumentType docType)
+    private void ValidateEn16931(XdmNode doc, Schema schema)
     {
-        XsltExecutable validator = docType.Schema switch
+        XsltExecutable validator = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => _en16931UblValidator,
             Schema.CiiCrossIndustryInvoice => _en16931CiiValidator,
@@ -191,9 +227,9 @@ public class Parser
         }
     }
 
-    private void ValidateXRechnung(XdmNode doc, DocumentType docType)
+    private void ValidateXRechnung(XdmNode doc, Schema schema)
     {
-        XsltExecutable validator = docType.Schema switch
+        XsltExecutable validator = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => _xRechnungUblValidator,
             Schema.CiiCrossIndustryInvoice => _xRechnungCiiValidator,
@@ -230,7 +266,60 @@ public class Parser
         }
     }
 
-    private XmlDocument GetSchemaValidatedDocument(TextReader reader)
+    private XmlDocument TransformToIR(XdmNode doc, Schema schema)
+    {
+        XsltExecutable executable = schema switch
+        {
+            Schema.UblInvoice or Schema.UblCreditNote => _ublToIRTransformer,
+            Schema.CiiCrossIndustryInvoice => _ciiToIRTransformer,
+            _ => throw new UnreachableException(),
+        };
+
+        DomDestination destination = new();
+
+        Xslt30Transformer transformer = executable.Load30();
+        transformer.GlobalContextItem = doc;
+        transformer.ApplyTemplates(doc, destination);
+
+        return destination.XmlDocument;
+    }
+
+    private XmlDocument IRToSchema(XmlDocument ir, Schema schema)
+    {
+        XsltExecutable executable = schema switch
+        {
+            Schema.UblInvoice or Schema.UblCreditNote => throw new NotImplementedException(),
+            Schema.CiiCrossIndustryInvoice => _irToCiiTransformer,
+            _ => throw new UnreachableException(),
+        };
+
+        XdmNode doc = _docBuilder.Build(ir);
+
+        DomDestination destination = new();
+
+        Xslt30Transformer transformer = executable.Load30();
+        transformer.GlobalContextItem = doc;
+        transformer.ApplyTemplates(doc, destination);
+
+        destination.XmlDocument.Schemas = _schemaSet;
+        destination.XmlDocument.Validate(null);
+
+        return destination.XmlDocument;
+    }
+
+    private XmlDocument SerializeToIR(ref readonly Invoice invoice)
+    {
+        XmlDocument result = new();
+
+        using (XmlWriter irWriter = result.CreateNavigator()!.AppendChild())
+        {
+            invoice.Serialize(irWriter);
+        }
+
+        return result;
+    }
+
+    private XmlDocument GetSchemaValidatedDocument(XmlReader reader)
     {
         XmlDocument doc = new XmlDocument()
         {
@@ -278,7 +367,7 @@ public class Parser
     }
 }
 
-enum Schema
+public enum Schema
 {
     UblInvoice,
     UblCreditNote,

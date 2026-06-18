@@ -1,0 +1,1327 @@
+<xsl:stylesheet
+    xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+    xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+    xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+    xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:ir="urn:todo"
+    exclude-result-prefixes="xsl ir"
+    version="1.0">
+  <xsl:template match="/ir:invoice">
+    <rsm:CrossIndustryInvoice>
+      <rsm:ExchangedDocumentContext>
+        <ram:BusinessProcessSpecifiedDocumentContextParameter>
+          <ram:ID>
+            <!-- bt-23 -->
+            <xsl:value-of select="ir:process-control/ir:business-process-type"/>
+          </ram:ID>
+        </ram:BusinessProcessSpecifiedDocumentContextParameter>
+        <ram:GuidelineSpecifiedDocumentContextParameter>
+          <ram:ID>
+            <!-- bt-24 -->
+            <xsl:value-of select="ir:process-control/ir:specification-identifier/ir:content"/>
+          </ram:ID>
+        </ram:GuidelineSpecifiedDocumentContextParameter>
+      </rsm:ExchangedDocumentContext>
+      <rsm:ExchangedDocument>
+        <ram:ID>
+		  <!-- bt-1 -->
+          <xsl:value-of select="ir:invoice-number"/>
+        </ram:ID>
+        <ram:TypeCode>
+		  <!-- bt-3 -->
+          <xsl:value-of select="ir:invoice-type-code"/>
+        </ram:TypeCode>
+        <ram:IssueDateTime>
+          <udt:DateTimeString format="102">
+		    <!-- bt-2 -->
+            <xsl:call-template name="date">
+              <xsl:with-param name="node" select="ir:invoice-issue-date"/>
+            </xsl:call-template>
+          </udt:DateTimeString>
+        </ram:IssueDateTime>
+        <xsl:for-each select="ir:invoice-notes/ir:invoice-note">
+          <ram:IncludedNote>
+            <ram:Content>
+	          <!-- bt-22 -->
+              <xsl:value-of select="./ir:invoice-note"/>
+            </ram:Content>
+            <xsl:if test="exists(./ir:invoice-note-subject-code)">
+              <ram:SubjectCode>
+		        <!-- bt-21 -->
+                <xsl:value-of select="./ir:invoice-note-subject-code"/>
+              </ram:SubjectCode>
+            </xsl:if>
+          </ram:IncludedNote>
+        </xsl:for-each>
+      </rsm:ExchangedDocument>
+      <rsm:SupplyChainTradeTransaction>
+        <xsl:for-each select="ir:invoice-lines/ir:invoice-line">
+          <ram:IncludedSupplyChainTradeLineItem>
+            <ram:AssociatedDocumentLineDocument>
+              <ram:LineID>
+                <!-- bt-126 -->
+                <xsl:value-of select="./ir:invoice-line-identifier/ir:content"/>
+              </ram:LineID>
+              <xsl:if test="exists(./ir:invoice-line-note)">
+                <ram:IncludedNote>
+                  <ram:Content>
+                    <!-- bt-127 -->
+                    <xsl:value-of select="./ir:invoice-line-note"/>
+                  </ram:Content>
+                </ram:IncludedNote>
+              </xsl:if>
+            </ram:AssociatedDocumentLineDocument>
+            <ram:SpecifiedTradeProduct>
+              <xsl:if test="exists(./ir:item-information/ir:item-standard-identifier)">
+                <ram:GlobalID>
+                  <xsl:attribute name="schemeID">
+                    <!-- bt-157-1 -->
+                    <xsl:value-of select="./ir:item-information/ir:item-standard-identifier/ir:scheme-identifier"/>
+                  </xsl:attribute>
+                  <!-- bt-157 -->
+                  <xsl:value-of select="./ir:item-information/ir:item-standard-identifier/ir:content"/>
+                </ram:GlobalID>
+              </xsl:if>
+              <xsl:if test="exists(./ir:item-information/ir:item-sellers-identifier)">
+                <ram:SellerAssignedID>
+                    <!-- bt-155 -->
+                  <xsl:value-of select="./ir:item-information/ir:item-sellers-identifier/ir:content"/>
+                </ram:SellerAssignedID>
+              </xsl:if>
+              <xsl:if test="exists(./ir:item-information/ir:item-buyers-identifier)">
+                <ram:BuyerAssignedID>
+                    <!-- bt-156 -->
+                  <xsl:value-of select="./ir:item-information/ir:item-buyers-identifier/ir:content"/>
+                </ram:BuyerAssignedID>
+              </xsl:if>
+              <ram:Name>
+                <!-- bt-153 -->
+                <xsl:value-of select="./ir:item-information/ir:item-name"/>
+              </ram:Name>
+              <xsl:if test="exists(./ir:item-information/ir:item-description)">
+                <ram:Description>
+                    <!-- bt-154 -->
+                  <xsl:value-of select="./ir:item-information/ir:item-description"/>
+                </ram:Description>
+              </xsl:if>
+              <xsl:for-each select="./ir:item-information/ir:item-attributes/ir:item-attribute">
+                <ram:ApplicableProductCharacteristic>
+                  <ram:Description>
+                    <!-- bt-160 -->
+                    <xsl:value-of select="./ir:item-attribute-name"/>
+                  </ram:Description>
+                  <ram:Value>
+                    <!-- bt-161 -->
+                    <xsl:value-of select="./ir:item-attribute-value"/>
+                  </ram:Value>
+                </ram:ApplicableProductCharacteristic>
+              </xsl:for-each>
+              <xsl:for-each select="./ir:item-information/ir:item-classification-identifiers/ir:item-classification-identifier">
+                <ram:DesignatedProductClassification>
+                  <ram:ClassCode>
+                    <xsl:attribute name="listID">
+                      <!-- bt-158-1 -->
+                      <xsl:value-of select="./ir:scheme-identifier"/>
+                    </xsl:attribute>
+                    <xsl:if test="exists(./ir:scheme-version-identifier)">
+                      <xsl:attribute name="listVersionID">
+                        <!-- bt-158-2 -->
+                        <xsl:value-of select="./ir:scheme-version-identifier"/>
+                      </xsl:attribute>
+                    </xsl:if>
+                    <!-- bt-158 -->
+                    <xsl:value-of select="./ir:content"/>
+                  </ram:ClassCode>
+                </ram:DesignatedProductClassification>
+              </xsl:for-each>
+              <xsl:if test="exists(./ir:item-information/ir:item-country-of-origin)">
+                <ram:OriginTradeCountry>
+                  <ram:ID>
+                    <!-- bt-159 -->
+                    <xsl:value-of select="./ir:item-information/ir:item-country-of-origin"/>
+                  </ram:ID>
+                </ram:OriginTradeCountry>
+              </xsl:if>
+            </ram:SpecifiedTradeProduct>
+            <ram:SpecifiedLineTradeAgreement>
+              <xsl:if test="exists(./ir:referenced-purchase-order-line-reference)">
+                <ram:BuyerOrderReferencedDocument>
+                  <ram:LineID>
+                    <!-- bt-132 -->
+                    <xsl:value-of select="./ir:referenced-purchase-order-line-reference"/>
+                  </ram:LineID>
+                </ram:BuyerOrderReferencedDocument>
+              </xsl:if>
+              <xsl:if test="exists(./ir:price-details/ir:item-price-discount)
+                  or exists(./ir:price-details/ir:item-gross-price)">
+                <ram:GrossPriceProductTradePrice>
+                  <xsl:if test="exists(./ir:price-details/ir:item-gross-price)">
+                    <ram:ChargeAmount>
+                      <!-- bt-148 -->
+                      <xsl:value-of select="./ir:price-details/ir:item-gross-price"/>
+                    </ram:ChargeAmount>
+                  </xsl:if>
+                  <xsl:if test="exists(./ir:price-details/ir:item-price-discount)">
+                    <ram:AppliedTradeAllowanceCharge>
+                      <ram:ChargeIndicator>
+                        <udt:Indicator>false</udt:Indicator>
+                      </ram:ChargeIndicator>
+                      <ram:ActualAmount>
+                        <!-- bt-147 -->
+                        <xsl:value-of select="./ir:price-details/ir:item-price-discount"/>
+                      </ram:ActualAmount>
+                    </ram:AppliedTradeAllowanceCharge>
+                  </xsl:if>
+                </ram:GrossPriceProductTradePrice>
+              </xsl:if>
+              <ram:NetPriceProductTradePrice>
+                <ram:ChargeAmount>
+                  <!-- bt-146 -->
+                  <xsl:value-of select="./ir:price-details/ir:item-net-price"/>
+                </ram:ChargeAmount>
+                <xsl:if test="exists(./ir:price-details/ir:item-price-base-quantity)">
+                  <ram:BasisQuantity>
+                    <xsl:if test="exists(./ir:price-details/ir:item-price-base-quantity-unit-of-measure-code)">
+                      <xsl:attribute name="unitCode">
+                        <!-- bt-150 -->
+                        <xsl:value-of select="./ir:price-details/ir:item-price-base-quantity-unit-of-measure-code"/>
+                      </xsl:attribute>
+                    </xsl:if>
+                    <!-- bt-149 -->
+                    <xsl:value-of select="./ir:price-details/ir:item-price-base-quantity"/>
+                  </ram:BasisQuantity>
+                </xsl:if>
+              </ram:NetPriceProductTradePrice>
+            </ram:SpecifiedLineTradeAgreement>
+            <ram:SpecifiedLineTradeDelivery>
+              <ram:BilledQuantity>
+                <xsl:attribute name="unitCode">
+                  <!-- bt-130 -->
+                  <xsl:value-of select="./ir:invoiced-quantity-unit-of-measure-code"/>
+                </xsl:attribute>
+                <!-- bt-129 -->
+                <xsl:value-of select="./ir:invoiced-quantity"/>
+              </ram:BilledQuantity>
+            </ram:SpecifiedLineTradeDelivery>
+            <ram:SpecifiedLineTradeSettlement>
+              <ram:ApplicableTradeTax>
+                <ram:TypeCode>VAT</ram:TypeCode>
+                <ram:CategoryCode>
+                  <!-- bt-151 -->
+                  <xsl:value-of select="./ir:line-vat-information/ir:invoiced-item-vat-category-code"/>
+                </ram:CategoryCode>
+                <xsl:if test="exists(./ir:line-vat-information/ir:invoiced-item-vat-rate)">
+                  <ram:RateApplicablePercent>
+                    <!-- bt-152 -->
+                    <xsl:value-of select="./ir:line-vat-information/ir:invoiced-item-vat-rate"/>
+                  </ram:RateApplicablePercent>
+                </xsl:if>
+              </ram:ApplicableTradeTax>
+              <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)
+                  or exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
+                <ram:BillingSpecifiedPeriod>
+                  <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)">
+                    <ram:StartDateTime>
+                      <udt:DateTimeString format="102">
+                        <!-- bt-134 -->
+                        <xsl:call-template name="date">
+                          <xsl:with-param name="node" select="./ir:invoice-line-period/ir:invoice-line-period-start-date"/>
+                        </xsl:call-template>
+                      </udt:DateTimeString>
+                    </ram:StartDateTime>
+                  </xsl:if>
+                  <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
+                    <ram:EndDateTime>
+                      <udt:DateTimeString format="102">
+                        <!-- bt-135 -->
+                        <xsl:call-template name="date">
+                          <xsl:with-param name="node" select="./ir:invoice-line-period/ir:invoice-line-period-end-date"/>
+                        </xsl:call-template>
+                      </udt:DateTimeString>
+                    </ram:EndDateTime>
+                  </xsl:if>
+                </ram:BillingSpecifiedPeriod>
+              </xsl:if>
+              <xsl:for-each select="./ir:invoice-line-charges/ir:invoice-line-charge">
+                <ram:SpecifiedTradeAllowanceCharge>
+                  <ram:ChargeIndicator>
+                    <udt:Indicator>true</udt:Indicator>
+                  </ram:ChargeIndicator>
+                  <xsl:if test="exists(./ir:invoice-line-charge-percentage)">
+                    <ram:CalculationPercent>
+                      <!-- bt-143 -->
+                      <xsl:value-of select="./ir:invoice-line-charge-percentage"/>
+                    </ram:CalculationPercent>
+                  </xsl:if>
+                  <xsl:if test="exists(./ir:invoice-line-charge-base-amount)">
+                    <ram:BasisAmount>
+                      <!-- bt-142 -->
+                      <xsl:value-of select="./ir:invoice-line-charge-base-amount"/>
+                    </ram:BasisAmount>
+                  </xsl:if>
+                  <ram:ActualAmount>
+                    <!-- bt-141 -->
+                    <xsl:value-of select="./ir:invoice-line-charge-amount"/>
+                  </ram:ActualAmount>
+                  <xsl:if test="exists(./ir:invoice-line-charge-reason-code)">
+                    <ram:ReasonCode>
+                      <!-- bt-145 -->
+                      <xsl:value-of select="./ir:invoice-line-charge-reason-code"/>
+                    </ram:ReasonCode>
+                  </xsl:if>
+                  <xsl:if test="exists(./ir:invoice-line-charge-reason)">
+                    <ram:Reason>
+                      <!-- bt-144 -->
+                      <xsl:value-of select="./ir:invoice-line-charge-reason"/>
+                    </ram:Reason>
+                  </xsl:if>
+                </ram:SpecifiedTradeAllowanceCharge>
+              </xsl:for-each>
+              <xsl:for-each select="./ir:invoice-line-allowances/ir:invoice-line-allowance">
+                <ram:SpecifiedTradeAllowanceCharge>
+                  <ram:ChargeIndicator>
+                    <udt:Indicator>false</udt:Indicator>
+                  </ram:ChargeIndicator>
+                  <xsl:if test="exists(./ir:invoice-line-allowance-percentage)">
+                    <ram:CalculationPercent>
+                      <!-- bt-138 -->
+                      <xsl:value-of select="./ir:invoice-line-allowance-percentage"/>
+                    </ram:CalculationPercent>
+                  </xsl:if>
+                  <xsl:if test="exists(./ir:invoice-line-allowance-base-amount)">
+                    <ram:BasisAmount>
+                      <!-- bt-137 -->
+                      <xsl:value-of select="./ir:invoice-line-allowance-base-amount"/>
+                    </ram:BasisAmount>
+                  </xsl:if>
+                  <ram:ActualAmount>
+                    <!-- bt-136 -->
+                    <xsl:value-of select="./ir:invoice-line-allowance-amount"/>
+                  </ram:ActualAmount>
+                  <xsl:if test="exists(./ir:invoice-line-allowance-reason-code)">
+                    <ram:ReasonCode>
+                      <!-- bt-140 -->
+                      <xsl:value-of select="./ir:invoice-line-allowance-reason-code"/>
+                    </ram:ReasonCode>
+                  </xsl:if>
+                  <xsl:if test="exists(./ir:invoice-line-allowance-reason)">
+                    <ram:Reason>
+                      <!-- bt-139 -->
+                      <xsl:value-of select="./ir:invoice-line-allowance-reason"/>
+                    </ram:Reason>
+                  </xsl:if>
+                </ram:SpecifiedTradeAllowanceCharge>
+              </xsl:for-each>
+              <ram:SpecifiedTradeSettlementLineMonetarySummation>
+                <ram:LineTotalAmount>
+                  <!-- bt-131 -->
+                  <xsl:value-of select="./ir:invoice-line-net-amount"/>
+                </ram:LineTotalAmount>
+              </ram:SpecifiedTradeSettlementLineMonetarySummation>
+              <xsl:if test="exists(./ir:invoice-line-object-identifier)">
+                <ram:AdditionalReferencedDocument>
+                  <ram:IssuerAssignedID>
+                    <!-- bt-128 -->
+                    <xsl:value-of select="./ir:invoice-line-object-identifier/ir:content"/>
+                  </ram:IssuerAssignedID>
+                  <ram:TypeCode>130</ram:TypeCode>
+                  <xsl:if test="exists(./ir:invoice-line-object-identifier/ir:scheme-identifier)">
+                    <ram:ReferenceTypeCode>
+                      <!-- bt-128-1 -->
+                      <xsl:value-of select="./ir:invoice-line-object-identifier/ir:scheme-identifier"/>
+                    </ram:ReferenceTypeCode>
+                  </xsl:if>
+                </ram:AdditionalReferencedDocument>
+              </xsl:if>
+              <xsl:if test="exists(./ir:invoice-line-buyer-accounting-reference)">
+                <ram:ReceivableSpecifiedTradeAccountingAccount>
+                  <ram:ID>
+                    <!-- bt-133 -->
+                    <xsl:value-of select="./ir:invoice-line-buyer-accounting-reference"/>
+                  </ram:ID>
+                </ram:ReceivableSpecifiedTradeAccountingAccount>
+              </xsl:if>
+            </ram:SpecifiedLineTradeSettlement>
+          </ram:IncludedSupplyChainTradeLineItem>
+        </xsl:for-each>
+        <ram:ApplicableHeaderTradeAgreement>
+          <ram:BuyerReference>
+            <!-- bt-10 -->
+            <xsl:value-of select="ir:buyer-reference"/>
+          </ram:BuyerReference>
+          <ram:SellerTradeParty>
+            <xsl:for-each select="ir:seller/ir:seller-identifiers/ir:seller-identifier[not(ir:scheme-identifier)]">
+              <ram:ID>
+                <!-- bt-29 -->
+                <xsl:value-of select="./ir:content"/>
+              </ram:ID>
+            </xsl:for-each>
+            <xsl:for-each select="ir:seller/ir:seller-identifiers/ir:seller-identifier[ir:scheme-identifier]">
+              <ram:GlobalID>
+                <xsl:attribute name="schemeID">
+                  <!-- bt-29-1 -->
+                  <xsl:value-of select="./ir:scheme-identifier"/>
+                </xsl:attribute>
+                <!-- bt-29 -->
+                <xsl:value-of select="./ir:content"/>
+              </ram:GlobalID>
+            </xsl:for-each>
+            <ram:Name>
+              <!-- bt-27 -->
+              <xsl:value-of select="ir:seller/ir:seller-name"/>
+            </ram:Name>
+            <xsl:if test="exists(ir:seller/ir:seller-additional-legal-information)">
+              <ram:Description>
+                <!-- bt-33 -->
+                <xsl:value-of select="ir:seller/ir:seller-additional-legal-information"/>
+              </ram:Description>
+            </xsl:if>
+            <xsl:if test="exists(ir:seller/ir:seller-trading-name)
+                or exists(ir:seller/ir:seller-legal-registration-identifier)">
+              <ram:SpecifiedLegalOrganization>
+                <xsl:if test="exists(ir:seller/ir:seller-legal-registration-identifier)">
+                  <ram:ID>
+                    <xsl:if test="exists(ir:seller/ir:seller-legal-registration-identifier/ir:scheme-identifier)">
+                      <xsl:attribute name="schemeID">
+                        <!-- bt-30-1 -->
+                        <xsl:value-of select="ir:seller/ir:seller-legal-registration-identifier/ir:scheme-identifier"/>
+                      </xsl:attribute>
+                    </xsl:if>
+                    <!-- bt-30 -->
+                    <xsl:value-of select="ir:seller/ir:seller-legal-registration-identifier/ir:content"/>
+                  </ram:ID>
+                  <xsl:if test="exists(ir:seller/ir:seller-trading-name)">
+                    <ram:TradingBusinessName>
+                      <!-- bt-28 -->
+                      <xsl:value-of select="ir:seller/ir:seller-trading-name"/>
+                    </ram:TradingBusinessName>
+                  </xsl:if>
+                </xsl:if>
+              </ram:SpecifiedLegalOrganization>
+            </xsl:if>
+            <ram:DefinedTradeContact>
+              <ram:PersonName>
+                <!-- bt-41 -->
+                <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-point"/>
+              </ram:PersonName>
+              <ram:TelephoneUniversalCommunication>
+                <ram:CompleteNumber>
+                  <!-- bt-42 -->
+                  <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-telephone-number"/>
+                </ram:CompleteNumber>
+              </ram:TelephoneUniversalCommunication>
+              <ram:EmailURIUniversalCommunication>
+                <ram:URIID>
+                  <!-- bt-43 -->
+                  <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-email-address"/>
+                </ram:URIID>
+              </ram:EmailURIUniversalCommunication>
+            </ram:DefinedTradeContact>
+            <ram:PostalTradeAddress>
+              <ram:PostcodeCode>
+                <!-- bt-38 -->
+                <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-post-code"/>
+              </ram:PostcodeCode>
+              <xsl:if test="exists(ir:seller/ir:seller-postal-address/ir:seller-address-line-1)">
+                <ram:LineOne>
+                  <!-- bt-35 -->
+                  <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-address-line-1"/>
+                </ram:LineOne>
+              </xsl:if>
+              <xsl:if test="exists(ir:seller/ir:seller-postal-address/ir:seller-address-line-2)">
+                <ram:LineTwo>
+                  <!-- bt-36 -->
+                  <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-address-line-2"/>
+                </ram:LineTwo>
+              </xsl:if>
+              <xsl:if test="exists(ir:seller/ir:seller-postal-address/ir:seller-address-line-3)">
+                <ram:LineThree>
+                  <!-- bt-162 -->
+                  <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-address-line-3"/>
+                </ram:LineThree>
+              </xsl:if>
+              <ram:CityName>
+                <!-- bt-37 -->
+                <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-city"/>
+              </ram:CityName>
+              <ram:CountryID>
+                <!-- bt-40 -->
+                <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-country-code"/>
+              </ram:CountryID>
+              <xsl:if test="exists(ir:seller/ir:seller-postal-address/ir:seller-country-subdivision)">
+                <ram:CountrySubDivisionName>
+                  <!-- bt-39 -->
+                  <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-country-subdivision"/>
+                </ram:CountrySubDivisionName>
+              </xsl:if>
+            </ram:PostalTradeAddress>
+            <ram:URIUniversalCommunication>
+              <ram:URIID>
+                <xsl:attribute name="schemeID">
+                  <!-- bt-34-1 -->
+                  <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:scheme-identifier"/>
+                </xsl:attribute>
+                <!-- bt-34 -->
+                <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:content"/>
+              </ram:URIID>
+            </ram:URIUniversalCommunication>
+            <xsl:if test="exists(ir:seller/ir:seller-vat-identifier)">
+              <ram:SpecifiedTaxRegistration>
+                <ram:ID schemeID="VA">
+                  <!-- bt-31 -->
+                  <xsl:value-of select="ir:seller/ir:seller-vat-identifier/ir:content"/>
+                </ram:ID>
+              </ram:SpecifiedTaxRegistration>
+            </xsl:if>
+            <xsl:if test="exists(ir:seller/ir:seller-tax-registration-identifier)">
+              <ram:SpecifiedTaxRegistration>
+                <ram:ID schemeID="FC">
+                  <!-- bt-32 -->
+                  <xsl:value-of select="ir:seller/ir:seller-tax-registration-identifier/ir:content"/>
+                </ram:ID>
+              </ram:SpecifiedTaxRegistration>
+            </xsl:if>
+          </ram:SellerTradeParty>
+          <ram:BuyerTradeParty>
+            <xsl:if test="exists(ir:buyer/ir:buyer-identifier[not(ir:scheme-identifier)])">
+              <ram:ID>
+                <!-- bt-46 -->
+                <xsl:value-of select="ir:buyer/ir:buyer-identifier/ir:content"/>
+              </ram:ID>
+            </xsl:if>
+            <xsl:if test="exists(ir:buyer/ir:buyer-identifier[ir:scheme-identifier])">
+              <ram:GlobalID>
+                <xsl:attribute name="schemeID">
+                  <!-- bt-29-1 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-identifier/ir:scheme-identifier"/>
+                </xsl:attribute>
+                <!-- bt-29 -->
+                <xsl:value-of select="ir:buyer/ir:buyer-identifier/ir:content"/>
+              </ram:GlobalID>
+            </xsl:if>
+            <ram:Name>
+              <!-- bt-44 -->
+              <xsl:value-of select="ir:buyer/ir:buyer-name"/>
+            </ram:Name>
+            <xsl:if test="exists(ir:buyer/ir:buyer-trading-name)
+                or exists(ir:buyer/ir:buyer-legal-registration-identifier)">
+              <ram:SpecifiedLegalOrganization>
+                <xsl:if test="exists(ir:buyer/ir:buyer-legal-registration-identifier)">
+                  <ram:ID>
+                    <xsl:if test="exists(ir:buyer/ir:buyer-legal-registration-identifier/ir:scheme-identifier)">
+                      <xsl:attribute name="schemeID">
+                        <!-- bt-47-1 -->
+                        <xsl:value-of select="ir:buyer/ir:buyer-legal-registration-identifier/ir:scheme-identifier"/>
+                      </xsl:attribute>
+                    </xsl:if>
+                    <!-- bt-47 -->
+                    <xsl:value-of select="ir:buyer/ir:buyer-legal-registration-identifier/ir:content"/>
+                  </ram:ID>
+                  <xsl:if test="exists(ir:buyer/ir:buyer-trading-name)">
+                    <ram:TradingBusinessName>
+                      <!-- bt-45 -->
+                      <xsl:value-of select="ir:buyer/ir:buyer-trading-name"/>
+                    </ram:TradingBusinessName>
+                  </xsl:if>
+                </xsl:if>
+              </ram:SpecifiedLegalOrganization>
+            </xsl:if>
+            <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)
+                or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number)
+                or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address)">
+              <ram:DefinedTradeContact>
+                <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)">
+                  <ram:PersonName>
+                    <!-- bt-56 -->
+                    <xsl:value-of select="ir:buyer/ir:buyer-contact/ir:buyer-contact-point"/>
+                  </ram:PersonName>
+                </xsl:if>
+                <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number)">
+                  <ram:TelephoneUniversalCommunication>
+                    <ram:CompleteNumber>
+                      <!-- bt-57 -->
+                      <xsl:value-of select="ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number"/>
+                    </ram:CompleteNumber>
+                  </ram:TelephoneUniversalCommunication>
+                </xsl:if>
+                <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address)">
+                  <ram:EmailURIUniversalCommunication>
+                    <ram:URIID>
+                      <!-- bt-58 -->
+                      <xsl:value-of select="ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address"/>
+                    </ram:URIID>
+                  </ram:EmailURIUniversalCommunication>
+                </xsl:if>
+              </ram:DefinedTradeContact>
+            </xsl:if>
+            <ram:PostalTradeAddress>
+              <ram:PostcodeCode>
+                <!-- bt-53 -->
+                <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-post-code"/>
+              </ram:PostcodeCode>
+              <xsl:if test="exists(ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-1)">
+                <ram:LineOne>
+                  <!-- bt-50 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-1"/>
+                </ram:LineOne>
+              </xsl:if>
+              <xsl:if test="exists(ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-2)">
+                <ram:LineTwo>
+                  <!-- bt-51 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-2"/>
+                </ram:LineTwo>
+              </xsl:if>
+              <xsl:if test="exists(ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-3)">
+                <ram:LineThree>
+                  <!-- bt-163 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-3"/>
+                </ram:LineThree>
+              </xsl:if>
+              <ram:CityName>
+                <!-- bt-52 -->
+                <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-city"/>
+              </ram:CityName>
+              <ram:CountryID>
+                <!-- bt-55 -->
+                <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-country-code"/>
+              </ram:CountryID>
+              <xsl:if test="exists(ir:buyer/ir:buyer-postal-address/ir:buyer-country-subdivision)">
+                <ram:CountrySubDivisionName>
+                  <!-- bt-54 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-country-subdivision"/>
+                </ram:CountrySubDivisionName>
+              </xsl:if>
+            </ram:PostalTradeAddress>
+            <xsl:if test="exists(ir:buyer/ir:buyer-electronic-address)">
+              <ram:URIUniversalCommunication>
+                <ram:URIID>
+                  <xsl:attribute name="schemeID">
+                    <!-- bt-49-1 -->
+                    <xsl:value-of select="ir:buyer/ir:buyer-electronic-address/ir:scheme-identifier"/>
+                  </xsl:attribute>
+                  <!-- bt-49 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-electronic-address/ir:content"/>
+                </ram:URIID>
+              </ram:URIUniversalCommunication>
+            </xsl:if>
+            <xsl:if test="exists(ir:buyer/ir:buyer-vat-identifier)">
+              <ram:SpecifiedTaxRegistration>
+                <ram:ID schemeID="VA">
+                  <!-- bt-48 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-vat-identifier/ir:content"/>
+                </ram:ID>
+              </ram:SpecifiedTaxRegistration>
+            </xsl:if>
+          </ram:BuyerTradeParty>
+          <xsl:if test="exists(ir:seller-tax-representative-party)">
+            <ram:SellerTaxRepresentativeTradeParty>
+              <ram:Name>
+                <!-- bt-62 -->
+                <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-name"/>
+              </ram:Name>
+              <ram:PostalTradeAddress>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-post-code)">
+                  <ram:PostcodeCode>
+                    <!-- bt-67 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-post-code"/>
+                  </ram:PostcodeCode>
+                </xsl:if>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-1)">
+                  <ram:LineOne>
+                    <!-- bt-64 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-1"/>
+                  </ram:LineOne>
+                </xsl:if>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-2)">
+                  <ram:LineTwo>
+                    <!-- bt-65 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-2"/>
+                  </ram:LineTwo>
+                </xsl:if>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-3)">
+                  <ram:LineThree>
+                    <!-- bt-164 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-3"/>
+                  </ram:LineThree>
+                </xsl:if>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-city)">
+                  <ram:CityName>
+                    <!-- bt-66 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-city"/>
+                  </ram:CityName>
+                </xsl:if>
+                <ram:CountryID>
+                  <!-- bt-69 -->
+                  <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-country-code"/>
+                </ram:CountryID>
+                <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-country-subdivision)">
+                  <ram:CountrySubDivisionName>
+                    <!-- bt-68 -->
+                    <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-country-subdivision"/>
+                  </ram:CountrySubDivisionName>
+                </xsl:if>
+              </ram:PostalTradeAddress>
+              <ram:SpecifiedTaxRegistration>
+                <ram:ID schemeID="VA">
+                  <!-- bt-63 -->
+                  <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-vat-identifier"/>
+                </ram:ID>
+              </ram:SpecifiedTaxRegistration>
+            </ram:SellerTaxRepresentativeTradeParty>
+          </xsl:if>
+          <xsl:if test="exists(ir:sales-order-reference)">
+            <ram:SellerOrderReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-14 -->
+                <xsl:value-of select="ir:sales-order-reference"/>
+              </ram:IssuerAssignedID>
+            </ram:SellerOrderReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:purchase-order-reference)">
+            <ram:BuyerOrderReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-13 -->
+                <xsl:value-of select="ir:purchase-order-reference"/>
+              </ram:IssuerAssignedID>
+            </ram:BuyerOrderReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:contract-reference)">
+            <ram:ContractReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-12 -->
+                <xsl:value-of select="ir:contract-reference"/>
+              </ram:IssuerAssignedID>
+            </ram:ContractReferencedDocument>
+          </xsl:if>
+          <xsl:for-each select="ir:additional-supporting-documents/ir:additional-supporting-document">
+            <ram:AdditionalReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-122 -->
+                <xsl:value-of select="./ir:supporting-document-reference"/>
+              </ram:IssuerAssignedID>
+              <xsl:if test="exists(./ir:external-document-location)">
+                <ram:URIID>
+                  <!-- bt-124 -->
+                  <xsl:value-of select="./ir:external-document-location"/>
+                </ram:URIID>
+              </xsl:if>
+              <ram:TypeCode>916</ram:TypeCode>
+              <xsl:if test="exists(./ir:supporting-document-description)">
+                <ram:Name>
+                  <!-- bt-123 -->
+                  <xsl:value-of select="./ir:supporting-document-description"/>
+                </ram:Name>
+              </xsl:if>
+              <xsl:if test="exists(./ir:attached-document)">
+                <ram:AttachmentBinaryObject>
+                  <xsl:attribute name="mimeCode">
+                    <!-- bt-125-1 -->
+                    <xsl:value-of select="./ir:attached-document/ir:mime-code"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="filename">
+                    <!-- bt-125-2 -->
+                    <xsl:value-of select="./ir:attached-document/ir:filename"/>
+                  </xsl:attribute>
+                  <!-- bt-125 -->
+                  <xsl:value-of select="./ir:attached-document/ir:content"/>
+                </ram:AttachmentBinaryObject>
+              </xsl:if>
+            </ram:AdditionalReferencedDocument>
+          </xsl:for-each>
+          <xsl:if test="exists(ir:tender-or-lot-reference)">
+            <ram:AdditionalReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-17 -->
+                <xsl:value-of select="ir:tender-or-lot-reference"/>
+              </ram:IssuerAssignedID>
+              <ram:TypeCode>50</ram:TypeCode>
+            </ram:AdditionalReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:invoiced-object-identifier)">
+            <ram:AdditionalReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-18 -->
+                <xsl:value-of select="ir:invoiced-object-identifier"/>
+              </ram:IssuerAssignedID>
+              <ram:TypeCode>130</ram:TypeCode>
+            </ram:AdditionalReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:project-reference)">
+            <ram:SpecifiedProcuringProject>
+              <ram:ID>
+                <!-- bt-11 -->
+                <xsl:value-of select="ir:project-reference"/>
+              </ram:ID>
+              <ram:Name>Project reference</ram:Name>
+            </ram:SpecifiedProcuringProject>
+          </xsl:if>
+        </ram:ApplicableHeaderTradeAgreement>
+        <ram:ApplicableHeaderTradeDelivery>
+          <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)
+              or exists(ir:delivery-information/ir:deliver-to-location-identifier)
+              or exists(ir:delivery-information/ir:deliver-to-address)">
+            <ram:ShipToTradeParty>
+              <xsl:choose>
+                <xsl:when test="exists(ir:delivery-information/ir:deliver-to-location-identifier/ir:scheme-identifier)">
+                  <ram:GlobalID>
+                    <xsl:attribute name="schemeID">
+                      <!-- bt-71-1 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-location-identifier/ir:scheme-identifier"/>
+                    </xsl:attribute>
+                    <!-- bt-71 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-location-identifier/ir:content"/>
+                  </ram:GlobalID>
+                </xsl:when>
+                <xsl:when test="exists(ir:delivery-information/ir:deliver-to-location-identifier)">
+                  <ram:ID>
+                    <!-- bt-71 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-location-identifier/ir:content"/>
+                  </ram:ID>
+                </xsl:when>
+              </xsl:choose>
+              <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)">
+                <ram:Name>
+                  <!-- bt-70 -->
+                  <xsl:value-of select="ir:delivery-information/ir:deliver-to-party-name"/>
+                </ram:Name>
+              </xsl:if>
+              <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address)">
+                <ram:PostalTradeAddress>
+                  <ram:PostcodeCode>
+                    <!-- bt-78 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-post-code"/>
+                  </ram:PostcodeCode>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-1)">
+                    <ram:LineOne>
+                      <!-- bt-75 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-1"/>
+                    </ram:LineOne>
+                  </xsl:if>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-2)">
+                    <ram:LineTwo>
+                      <!-- bt-76 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-2"/>
+                    </ram:LineTwo>
+                  </xsl:if>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-3)">
+                    <ram:LineThree>
+                      <!-- bt-165 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-3"/>
+                    </ram:LineThree>
+                  </xsl:if>
+                  <ram:CityName>
+                    <!-- bt-77 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-city"/>
+                  </ram:CityName>
+                  <ram:CountryID>
+                    <!-- bt-80 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-country-code"/>
+                  </ram:CountryID>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-country-subdivision)">
+                    <ram:CountrySubDivisionName>
+                      <!-- bt-79 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-country-subdivision"/>
+                    </ram:CountrySubDivisionName>
+                  </xsl:if>
+                </ram:PostalTradeAddress>
+              </xsl:if>
+            </ram:ShipToTradeParty>
+          </xsl:if>
+          <xsl:if test="exists(ir:delivery-information/ir:actual-delivery-date)">
+            <ram:ActualDeliverySupplyChainEvent>
+              <ram:OccurrenceDateTime>
+                <udt:DateTimeString format="102">
+                  <!-- bt-72 -->
+                  <xsl:call-template name="date">
+                    <xsl:with-param name="node" select="ir:delivery-information/ir:actual-delivery-date"/>
+                  </xsl:call-template>
+                </udt:DateTimeString>
+              </ram:OccurrenceDateTime>
+            </ram:ActualDeliverySupplyChainEvent>
+          </xsl:if>
+          <xsl:if test="exists(ir:despatch-advice-reference)">
+            <ram:DespatchAdviceReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-16 -->
+                <xsl:value-of select="ir:despatch-advice-reference"/>
+              </ram:IssuerAssignedID>
+            </ram:DespatchAdviceReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:receiving-advice-reference)">
+            <ram:ReceivingAdviceReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-15 -->
+                <xsl:value-of select="ir:receiving-advice-reference"/>
+              </ram:IssuerAssignedID>
+            </ram:ReceivingAdviceReferencedDocument>
+          </xsl:if>
+        </ram:ApplicableHeaderTradeDelivery>
+        <ram:ApplicableHeaderTradeSettlement>
+          <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
+            <ram:CreditorReferenceID>
+              <!-- bt-90 -->
+              <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:bank-assigned-creditor-identifier/ir:content"/>
+            </ram:CreditorReferenceID>
+          </xsl:if>
+          <xsl:if test="exists(ir:payment-instructions/ir:remittance-information)">
+            <ram:PaymentReference>
+              <!-- bt-83 -->
+              <xsl:value-of select="ir:payment-instructions/ir:remittance-information"/>
+            </ram:PaymentReference>
+          </xsl:if>
+          <xsl:if test="exists(ir:vat-accounting-currency-code)">
+            <ram:TaxCurrencyCode>
+              <!-- bt-6 -->
+              <xsl:value-of select="ir:vat-accounting-currency-code"/>
+            </ram:TaxCurrencyCode>
+          </xsl:if>
+          <ram:InvoiceCurrencyCode>
+            <!-- bt-5 -->
+            <xsl:value-of select="ir:invoice-currency-code"/>
+          </ram:InvoiceCurrencyCode>
+          <xsl:if test="exists(ir:payee)">
+            <ram:PayeeTradeParty>
+              <xsl:choose>
+                <xsl:when test="exists(ir:payee/ir:payee-identifier/ir:scheme-identifier)">
+                  <ram:GlobalID>
+                    <xsl:attribute name="schemeID">
+                      <!-- bt-60-1 -->
+                      <xsl:value-of select="ir:payee/ir:payee-identifier/ir:scheme-identifier"/>
+                    </xsl:attribute>
+                    <!-- bt-60 -->
+                    <xsl:value-of select="ir:payee/ir:payee-identifier/ir:content"/>
+                  </ram:GlobalID>
+                </xsl:when>
+                <xsl:when test="exists(ir:payee/ir:payee-identifier)">
+                  <ram:ID>
+                    <!-- bt-60 -->
+                    <xsl:value-of select="ir:payee/ir:payee-identifier/ir:content"/>
+                  </ram:ID>
+                </xsl:when>
+              </xsl:choose>
+              <ram:Name>
+                <!-- bt-59 -->
+                <xsl:value-of select="ir:payee/ir:payee-name"/>
+              </ram:Name>
+              <xsl:if test="exists(ir:payee/ir:payee-legal-registration-identifier)">
+                <ram:SpecifiedLegalOrganization>
+                  <ram:ID>
+                    <xsl:if test="exists(ir:payee/ir:payee-legal-registration-identifier/ir:scheme-identifier)">
+                      <xsl:attribute name="schemeID">
+                        <!-- bt-61-1 -->
+                        <xsl:value-of select="ir:payee/ir:payee-legal-registration-identifier/ir:scheme-identifier"/>
+                      </xsl:attribute>
+                    </xsl:if>
+                    <!-- bt-61 -->
+                    <xsl:value-of select="ir:payee/ir:payee-legal-registration-identifier/ir:content"/>
+                  </ram:ID>
+                </ram:SpecifiedLegalOrganization>
+              </xsl:if>
+            </ram:PayeeTradeParty>
+          </xsl:if>
+          <ram:SpecifiedTradeSettlementPaymentMeans>
+            <ram:TypeCode>
+              <!-- bt-81 -->
+              <xsl:value-of select="ir:payment-instructions/ir:payment-means-type-code"/>
+            </ram:TypeCode>
+            <xsl:if test="exists(ir:payment-instructions/ir:payment-means-text)">
+              <ram:Information>
+                <!-- bt-82 -->
+                <xsl:value-of select="ir:payment-instructions/ir:payment-means-text"/>
+              </ram:Information>
+            </xsl:if>
+            <xsl:if test="exists(ir:payment-instructions/ir:payment-card-information)">
+              <ram:ApplicableTradeSettlementFinancialCard>
+                <ram:ID>
+                  <!-- bt-87 -->
+                  <xsl:value-of select="ir:payment-instructions/ir:payment-card-information/ir:payment-card-primary-account-number"/>
+                </ram:ID>
+                <xsl:if test="exists(ir:payment-instructions/ir:payment-card-information/ir:payment-card-holder-name)">
+                  <ram:CardholderName>
+                    <!-- bt-88 -->
+                    <xsl:value-of select="ir:payment-instructions/ir:payment-card-information/ir:payment-card-holder-name"/>
+                  </ram:CardholderName>
+                </xsl:if>
+              </ram:ApplicableTradeSettlementFinancialCard>
+            </xsl:if>
+            <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
+              <ram:PayerPartyDebtorFinancialAccount>
+                <ram:IBANID>
+                  <!-- bt-91 -->
+                  <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:debited-account-identifier/ir:content"/>
+                </ram:IBANID>
+              </ram:PayerPartyDebtorFinancialAccount>
+            </xsl:if>
+            <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer)">
+              <ram:PayeePartyCreditorFinancialAccount>
+                <!-- TODO: ProprietaryID for account numbers -->
+                <ram:IBANID>
+                  <!-- bt-84 -->
+                  <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-identifier"/>
+                </ram:IBANID>
+                <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-name)">
+                  <ram:AccountName>
+                    <!-- bt-85 -->
+                    <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-name"/>
+                  </ram:AccountName>
+                </xsl:if>
+              </ram:PayeePartyCreditorFinancialAccount>
+              <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-service-provider-identifier)">
+                <ram:PayeeSpecifiedCreditorFinancialInstitution>
+                  <ram:BICID>
+                    <!-- bt-86 -->
+                    <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-service-provider-identifier"/>
+                  </ram:BICID>
+                </ram:PayeeSpecifiedCreditorFinancialInstitution>
+              </xsl:if>
+            </xsl:if>
+          </ram:SpecifiedTradeSettlementPaymentMeans>
+          <ram:ApplicableTradeTax>
+            <ram:CalculatedAmount>
+              <!-- bt-117 -->
+              <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-tax-amount"/>
+            </ram:CalculatedAmount>
+            <ram:TypeCode>VAT</ram:TypeCode>
+            <xsl:if test="exists(ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-text)">
+              <ram:ExemptionReason>
+                <!-- bt-120 -->
+                <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-text"/>
+              </ram:ExemptionReason>
+            </xsl:if>
+            <ram:BasisAmount>
+              <!-- bt-116 -->
+              <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-taxable-amount"/>
+            </ram:BasisAmount>
+            <ram:CategoryCode>
+              <!-- bt-118 -->
+              <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-code"/>
+            </ram:CategoryCode>
+            <xsl:if test="exists(ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-code)">
+              <ram:ExemptionReasonCode>
+                <!-- bt-121 -->
+                <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-exemption-reason-code"/>
+              </ram:ExemptionReasonCode>
+            </xsl:if>
+            <xsl:if test="exists(ir:value-added-tax-point-date)">
+              <ram:TaxPointDate>
+                <udt:DateString format="102">
+                  <!-- bt-7 -->
+                  <xsl:call-template name="date">
+                    <xsl:with-param name="node" select="ir:value-added-tax-point-date"/>
+                  </xsl:call-template>
+                </udt:DateString>
+              </ram:TaxPointDate>
+            </xsl:if>
+            <xsl:if test="exists(ir:value-added-tax-point-date-code)">
+              <ram:DueDateTypeCode>
+                <!-- bt-8 -->
+                <xsl:call-template name="bt-8">
+                  <xsl:with-param name="node" select="ir:value-added-tax-point-date-code"/>
+                </xsl:call-template>
+              </ram:DueDateTypeCode>
+            </xsl:if>
+            <ram:RateApplicablePercent>
+              <!-- bt-119 -->
+              <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-rate"/>
+            </ram:RateApplicablePercent>
+          </ram:ApplicableTradeTax>
+          <xsl:for-each select="ir:vat-breakdown/ir:vat-breakdown[position() > 1]">
+            <ram:ApplicableTradeTax>
+              <ram:CalculatedAmount>
+                <!-- bt-117 -->
+                <xsl:value-of select="./ir:vat-category-tax-amount"/>
+              </ram:CalculatedAmount>
+              <ram:TypeCode>VAT</ram:TypeCode>
+              <xsl:if test="exists(./ir:vat-exemption-reason-text)">
+                <ram:ExemptionReason>
+                  <!-- bt-120 -->
+                  <xsl:value-of select="./ir:vat-exemption-reason-text"/>
+                </ram:ExemptionReason>
+              </xsl:if>
+              <ram:BasisAmount>
+                <!-- bt-116 -->
+                <xsl:value-of select="./ir:vat-category-taxable-amount"/>
+              </ram:BasisAmount>
+              <ram:CategoryCode>
+                <!-- bt-118 -->
+                <xsl:value-of select="./ir:vat-category-code"/>
+              </ram:CategoryCode>
+              <xsl:if test="exists(./ir:vat-exemption-reason-code)">
+                <ram:ExemptionReasonCode>
+                  <!-- bt-121 -->
+                  <xsl:value-of select="./ir:vat-exemption-reason-code"/>
+                </ram:ExemptionReasonCode>
+              </xsl:if>
+              <ram:RateApplicablePercent>
+                <!-- bt-119 -->
+                <xsl:value-of select="./ir:vat-category-rate"/>
+              </ram:RateApplicablePercent>
+            </ram:ApplicableTradeTax>
+          </xsl:for-each>
+          <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)
+              or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)">
+            <ram:BillingSpecifiedPeriod>
+              <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)">
+                <ram:StartDateTime>
+                  <udt:DateTimeString format="102">
+                    <!-- bt-73 -->
+                    <xsl:call-template name="date">
+                      <xsl:with-param name="node" select="ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date"/>
+                    </xsl:call-template>
+                  </udt:DateTimeString>
+                </ram:StartDateTime>
+              </xsl:if>
+              <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)">
+                <ram:EndDateTime>
+                  <udt:DateTimeString format="102">
+                    <!-- bt-74 -->
+                    <xsl:call-template name="date">
+                      <xsl:with-param name="node" select="ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date"/>
+                    </xsl:call-template>
+                  </udt:DateTimeString>
+                </ram:EndDateTime>
+              </xsl:if>
+            </ram:BillingSpecifiedPeriod>
+          </xsl:if>
+          <xsl:for-each select="ir:document-level-charges/ir:document-level-charge">
+            <ram:SpecifiedTradeAllowanceCharge>
+              <ram:ChargeIndicator>
+                <udt:Indicator>true</udt:Indicator>
+              </ram:ChargeIndicator>
+              <xsl:if test="exists(./ir:document-level-charge-percentage)">
+                <ram:CalculationPercent>
+                  <!-- bt-101 -->
+                  <xsl:value-of select="./ir:document-level-charge-percentage"/>
+                </ram:CalculationPercent>
+              </xsl:if>
+              <xsl:if test="exists(./ir:document-level-charge-base-amount)">
+                <ram:BasisAmount>
+                  <!-- bt-100 -->
+                  <xsl:value-of select="./ir:document-level-charge-base-amount"/>
+                </ram:BasisAmount>
+              </xsl:if>
+              <ram:ActualAmount>
+                <!-- bt-99 -->
+                <xsl:value-of select="./ir:document-level-charge-amount"/>
+              </ram:ActualAmount>
+              <xsl:if test="exists(./ir:document-level-charge-reason-code)">
+                <ram:ReasonCode>
+                  <!-- bt-105 -->
+                  <xsl:value-of select="./ir:document-level-charge-reason-code"/>
+                </ram:ReasonCode>
+              </xsl:if>
+              <xsl:if test="exists(./ir:document-level-charge-reason)">
+                <ram:Reason>
+                  <!-- bt-104 -->
+                  <xsl:value-of select="./ir:document-level-charge-reason"/>
+                </ram:Reason>
+              </xsl:if>
+              <ram:CategoryTradeTax>
+                <ram:TypeCode>VAT</ram:TypeCode>
+                <ram:CategoryCode>
+                  <!-- bt-102 -->
+                  <xsl:value-of select="./ir:document-level-charge-vat-category-code"/>
+                </ram:CategoryCode>
+                <xsl:if test="exists(./ir:document-level-charge-vat-rate)">
+                  <ram:RateApplicablePercent>
+                    <!-- bt-103 -->
+                    <xsl:value-of select="./ir:document-level-charge-vat-rate"/>
+                  </ram:RateApplicablePercent>
+                </xsl:if>
+              </ram:CategoryTradeTax>
+            </ram:SpecifiedTradeAllowanceCharge>
+          </xsl:for-each>
+          <xsl:for-each select="ir:document-level-allowances/ir:document-level-allowance">
+            <ram:SpecifiedTradeAllowanceCharge>
+              <ram:ChargeIndicator>
+                <udt:Indicator>false</udt:Indicator>
+              </ram:ChargeIndicator>
+              <xsl:if test="exists(./ir:document-level-allowance-percentage)">
+                <ram:CalculationPercent>
+                  <!-- bt-94 -->
+                  <xsl:value-of select="./ir:document-level-allowance-percentage"/>
+                </ram:CalculationPercent>
+              </xsl:if>
+              <xsl:if test="exists(./ir:document-level-allowance-base-amount)">
+                <ram:BasisAmount>
+                  <!-- bt-93 -->
+                  <xsl:value-of select="./ir:document-level-allowance-base-amount"/>
+                </ram:BasisAmount>
+              </xsl:if>
+              <ram:ActualAmount>
+                <!-- bt-92 -->
+                <xsl:value-of select="./ir:document-level-allowance-amount"/>
+              </ram:ActualAmount>
+              <xsl:if test="exists(./ir:document-level-allowance-reason-code)">
+                <ram:ReasonCode>
+                  <!-- bt-98 -->
+                  <xsl:value-of select="./ir:document-level-allowance-reason-code"/>
+                </ram:ReasonCode>
+              </xsl:if>
+              <xsl:if test="exists(./ir:document-level-allowance-reason)">
+                <ram:Reason>
+                  <!-- bt-97 -->
+                  <xsl:value-of select="./ir:document-level-allowance-reason"/>
+                </ram:Reason>
+              </xsl:if>
+              <ram:CategoryTradeTax>
+                <ram:TypeCode>VAT</ram:TypeCode>
+                <ram:CategoryCode>
+                  <!-- bt-95 -->
+                  <xsl:value-of select="./ir:document-level-allowance-vat-category-code"/>
+                </ram:CategoryCode>
+                <xsl:if test="exists(./ir:document-level-allowance-vat-rate)">
+                  <ram:RateApplicablePercent>
+                    <!-- bt-96 -->
+                    <xsl:value-of select="./ir:document-level-allowance-vat-rate"/>
+                  </ram:RateApplicablePercent>
+                </xsl:if>
+              </ram:CategoryTradeTax>
+            </ram:SpecifiedTradeAllowanceCharge>
+          </xsl:for-each>
+          <xsl:if test="exists(ir:payment-terms)
+              or exists(ir:payment-due-date)">
+            <ram:SpecifiedTradePaymentTerms>
+              <xsl:if test="exists(ir:payment-terms)">
+                <ram:Description>
+                  <!-- bt-20 -->
+                  <xsl:value-of select="ir:payment-terms"/>
+                </ram:Description>
+              </xsl:if>
+              <xsl:if test="exists(ir:payment-due-date)">
+                <ram:DueDateDateTime>
+                  <udt:DateTimeString format="102">
+                    <!-- bt-9 -->
+                    <xsl:call-template name="date">
+                      <xsl:with-param name="node" select="ir:payment-due-date"/>
+                    </xsl:call-template>
+                  </udt:DateTimeString>
+                </ram:DueDateDateTime>
+              </xsl:if>
+              <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
+                <ram:DirectDebitMandateID>
+                  <!-- bt-89 -->
+                  <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:mandate-reference-identifier/ir:content"/>
+                </ram:DirectDebitMandateID>
+              </xsl:if>
+            </ram:SpecifiedTradePaymentTerms>
+            <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+              <ram:LineTotalAmount>
+                <!-- bt-106 -->
+                <xsl:value-of select="ir:document-totals/ir:sum-of-invoice-line-net-amount"/>
+              </ram:LineTotalAmount>
+              <xsl:if test="exists(ir:document-totals/ir:sum-of-charges-on-document-level)">
+                <ram:ChargeTotalAmount>
+                  <!-- bt-108 -->
+                  <xsl:value-of select="ir:document-totals/ir:sum-of-charges-on-document-level"/>
+                </ram:ChargeTotalAmount>
+              </xsl:if>
+              <xsl:if test="exists(ir:document-totals/ir:sum-of-allowances-on-document-level)">
+                <ram:AllowanceTotalAmount>
+                  <!-- bt-107 -->
+                  <xsl:value-of select="ir:document-totals/ir:sum-of-allowances-on-document-level"/>
+                </ram:AllowanceTotalAmount>
+              </xsl:if>
+              <ram:TaxBasisTotalAmount>
+                <!-- bt-109 -->
+                <xsl:value-of select="ir:document-totals/ir:invoice-total-amount-without-vat"/>
+              </ram:TaxBasisTotalAmount>
+              <xsl:if test="exists(ir:document-totals/ir:invoice-total-vat-amount)">
+                <ram:TaxTotalAmount>
+                  <xsl:attribute name="currencyID">
+                    <xsl:value-of select="ir:invoice-currency-code"/>
+                  </xsl:attribute>
+                  <!-- bt-110 -->
+                  <xsl:value-of select="ir:document-totals/ir:invoice-total-vat-amount"/>
+                </ram:TaxTotalAmount>
+              </xsl:if>
+              <xsl:if test="exists(ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency)
+                  and exists(ir:vat-accounting-currency-code)">
+                <ram:TaxTotalAmount>
+                  <xsl:attribute name="currencyID">
+                    <xsl:value-of select="ir:vat-accounting-currency-code"/>
+                  </xsl:attribute>
+                  <!-- bt-111 -->
+                  <xsl:value-of select="ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency"/>
+                </ram:TaxTotalAmount>
+              </xsl:if>
+              <xsl:if test="exists(ir:document-totals/ir:rounding-amount)">
+                <ram:RoundingAmount>
+                  <!-- bt-114 -->
+                  <xsl:value-of select="ir:document-totals/ir:rounding-amount"/>
+                </ram:RoundingAmount>
+              </xsl:if>
+              <ram:GrandTotalAmount>
+                <!-- bt-112 -->
+                <xsl:value-of select="ir:document-totals/ir:invoice-total-amount-with-vat"/>
+              </ram:GrandTotalAmount>
+              <xsl:if test="exists(ir:document-totals/ir:paid-amount)">
+                <ram:TotalPrepaidAmount>
+                  <!-- bt-113 -->
+                  <xsl:value-of select="ir:document-totals/ir:paid-amount"/>
+                </ram:TotalPrepaidAmount>
+              </xsl:if>
+              <ram:DuePayableAmount>
+                <!-- bt-115 -->
+                <xsl:value-of select="ir:document-totals/ir:amount-due-for-payment"/>
+              </ram:DuePayableAmount>
+            </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+          </xsl:if>
+          <xsl:if test="exists(ir:preceding-invoice-references/ir:preceding-invoice-reference)">
+            <ram:InvoiceReferencedDocument>
+              <ram:IssuerAssignedID>
+                <!-- bt-25 -->
+                <xsl:value-of select="ir:preceding-invoice-references/ir:preceding-invoice-reference[1]/ir:preceding-invoice-reference"/>
+              </ram:IssuerAssignedID>
+              <xsl:if test="exists(ir:preceding-invoice-references/ir:preceding-invoice-reference[1]/ir:preceding-invoice-issue-date)">
+                <ram:FormattedIssueDateTime>
+                  <qdt:DateTimeString format="102">
+                    <!-- bt-26 -->
+                    <xsl:call-template name="date">
+                      <xsl:with-param name="node" select="ir:preceding-invoice-references/ir:preceding-invoice-reference[1]/ir:preceding-invoice-issue-date"/>
+                    </xsl:call-template>
+                  </qdt:DateTimeString>
+                </ram:FormattedIssueDateTime>
+              </xsl:if>
+            </ram:InvoiceReferencedDocument>
+          </xsl:if>
+          <xsl:if test="exists(ir:buyer-accounting-reference)">
+            <ram:ReceivableSpecifiedTradeAccountingAccount>
+              <ram:ID>
+                <!-- bt-19 -->
+                <xsl:value-of select="ir:buyer-accounting-reference"/>
+              </ram:ID>
+            </ram:ReceivableSpecifiedTradeAccountingAccount>
+          </xsl:if>
+        </ram:ApplicableHeaderTradeSettlement>
+      </rsm:SupplyChainTradeTransaction>
+    </rsm:CrossIndustryInvoice>
+  </xsl:template>
+
+  <!-- TODO: support for format codes 610 and 616. 102 already implemented. See https://github.com/itplr-kosit/validator-configuration-xrechnung/issues/56 -->
+  <xsl:template name="date">
+    <xsl:param name="node"/>
+    <xsl:value-of select="substring($node, 1, 4)"/><xsl:value-of select="substring($node, 6, 2)"/><xsl:value-of select="substring($node, 9, 2)"/>
+  </xsl:template>
+
+  <!--
+      BT-8 is mapped to a different code list (UNTDID 2475) in CII than in EN16931 (UNTDID 2005).
+
+      This template provides the mapping for all allowed values.
+      See also: https://github.com/phax/en16931-cii2ubl/issues/29
+  -->
+  <xsl:template name="bt-8">
+    <xsl:param name="node"/>
+    <xsl:choose>
+      <xsl:when test="$node = 3">5</xsl:when>
+      <xsl:when test="$node = 35">29</xsl:when>
+      <xsl:when test="$node = 432">72</xsl:when>
+      <xsl:otherwise>
+        <xsl:message terminate="yes">
+          Error: BT-8 is filled with unknown value: <xsl:value-of select="$node"/>. Allowed values are: 3, 35, 432.
+        </xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+</xsl:stylesheet>

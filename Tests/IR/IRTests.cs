@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using En16931;
 using En16931.Model;
 using En16931.Model.Primitives;
@@ -14,7 +16,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice1, invoice);
     }
@@ -25,7 +27,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Invoice expected = Data.Invoice1 with
         {
@@ -41,7 +43,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         // CII only supports a single preceding invoice reference
         Invoice expected = Data.Invoice1 with
@@ -52,13 +54,14 @@ public class IRTests
         Assert.Equal(expected, invoice);
     }
 
+
     [Theory]
     [InlineData("Resources/XRechnung-Cius/Ubl-Invoice/Success/2.xml")]
     public void UblInvoice2(string invoiceLocation)
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice2, invoice);
     }
@@ -69,7 +72,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Invoice expected = Data.Invoice2 with
         {
@@ -85,7 +88,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice2, invoice);
     }
@@ -96,7 +99,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice3, invoice);
     }
@@ -107,7 +110,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Invoice expected = Data.Invoice3 with
         {
@@ -123,7 +126,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice3, invoice);
     }
@@ -134,7 +137,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice4, invoice);
     }
@@ -145,7 +148,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Invoice expected = Data.Invoice4 with
         {
@@ -161,8 +164,36 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.ParseFile(invoiceLocation);
+        Invoice invoice = parser.Parse(invoiceLocation);
 
         Assert.Equal(Data.Invoice4, invoice);
+    }
+
+    [Fact]
+    public void CiiRoundTrip()
+    {
+        Parser parser = new Parser();
+
+        List<Invoice> invoices = [
+            // CII only supports a single preceding invoice reference
+            Data.Invoice1 with
+            {
+                PrecedingInvoiceReferences = [Data.Invoice1.PrecedingInvoiceReferences[0]],
+            },
+            Data.Invoice2,
+            Data.Invoice3,
+            Data.Invoice4,
+        ];
+
+        foreach (Invoice invoice in invoices)
+        {
+            using StringWriter writer = new();
+
+            parser.Serialize(in invoice, writer, Schema.CiiCrossIndustryInvoice);
+
+            using StringReader reader = new(writer.ToString());
+
+            Assert.Equal(invoice, parser.Parse(reader));
+        }
     }
 }
