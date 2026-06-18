@@ -762,12 +762,24 @@
               or exists(ir:delivery-information/ir:deliver-to-location-identifier)
               or exists(ir:delivery-information/ir:deliver-to-address)">
             <ram:ShipToTradeParty>
-              <xsl:if test="exists(ir:delivery-information/ir:deliver-to-location-identifier)">
-                <ram:ID>
-                  <!-- bt-71 -->
-                  <xsl:value-of select="ir:delivery-information/ir:deliver-to-location-identifier"/>
-                </ram:ID>
-              </xsl:if>
+              <xsl:choose>
+                <xsl:when test="exists(ir:delivery-information/ir:deliver-to-location-identifier/ir:scheme-identifier)">
+                  <ram:GlobalID>
+                    <xsl:attribute name="schemeID">
+                      <!-- bt-71-1 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-location-identifier/ir:scheme-identifier"/>
+                    </xsl:attribute>
+                    <!-- bt-71 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-location-identifier/ir:content"/>
+                  </ram:GlobalID>
+                </xsl:when>
+                <xsl:when test="exists(ir:delivery-information/ir:deliver-to-location-identifier)">
+                  <ram:ID>
+                    <!-- bt-71 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-location-identifier/ir:content"/>
+                  </ram:ID>
+                </xsl:when>
+              </xsl:choose>
               <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)">
                 <ram:Name>
                   <!-- bt-70 -->
@@ -870,12 +882,24 @@
           </ram:InvoiceCurrencyCode>
           <xsl:if test="exists(ir:payee)">
             <ram:PayeeTradeParty>
-              <xsl:if test="exists(ir:payee/ir:payee-identifier)">
-                <ram:ID>
-                  <!-- bt-60 -->
-                  <xsl:value-of select="ir:payee/ir:payee-identifier"/>
-                </ram:ID>
-              </xsl:if>
+              <xsl:choose>
+                <xsl:when test="exists(ir:payee/ir:payee-identifier/ir:scheme-identifier)">
+                  <ram:GlobalID>
+                    <xsl:attribute name="schemeID">
+                      <!-- bt-60-1 -->
+                      <xsl:value-of select="ir:payee/ir:payee-identifier/ir:scheme-identifier"/>
+                    </xsl:attribute>
+                    <!-- bt-60 -->
+                    <xsl:value-of select="ir:payee/ir:payee-identifier/ir:content"/>
+                  </ram:GlobalID>
+                </xsl:when>
+                <xsl:when test="exists(ir:payee/ir:payee-identifier)">
+                  <ram:ID>
+                    <!-- bt-60 -->
+                    <xsl:value-of select="ir:payee/ir:payee-identifier/ir:content"/>
+                  </ram:ID>
+                </xsl:when>
+              </xsl:choose>
               <ram:Name>
                 <!-- bt-59 -->
                 <xsl:value-of select="ir:payee/ir:payee-name"/>
@@ -931,6 +955,7 @@
             </xsl:if>
             <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer)">
               <ram:PayeePartyCreditorFinancialAccount>
+                <!-- TODO: ProprietaryID for account numbers -->
                 <ram:IBANID>
                   <!-- bt-84 -->
                   <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-identifier"/>
