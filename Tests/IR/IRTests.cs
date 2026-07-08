@@ -170,6 +170,78 @@ public class IRTests
     }
 
     [Fact]
+    public void UblInvoiceRoundTrip() {
+        Parser parser = new Parser();
+
+        List<Invoice> invoices = [
+            Data.Invoice1,
+            Data.Invoice2,
+            Data.Invoice3,
+            Data.Invoice4,
+        ];
+
+        foreach (Invoice invoice in invoices)
+        {
+            using StringWriter writer = new();
+
+            // TODO: remove once test works
+            using System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(writer, new() {
+                Indent = true,
+            });
+
+            parser.Serialize(in invoice, xmlWriter, Schema.UblInvoice);
+
+            Console.WriteLine(writer.ToString());
+
+            using StringReader reader = new(writer.ToString());
+
+            Assert.Equal(invoice, parser.Parse(reader));
+        }
+    }
+
+    [Fact]
+    public void UblCreditNoteRoundTrip() {
+        Parser parser = new Parser();
+
+        List<Invoice> invoices = [
+            Data.Invoice1 with
+            {
+                InvoiceTypeCode = new Code("381"),
+            },
+            Data.Invoice2 with
+            {
+                InvoiceTypeCode = new Code("381"),
+            },
+            Data.Invoice3 with
+            {
+                InvoiceTypeCode = new Code("381"),
+            },
+            Data.Invoice4 with
+            {
+                InvoiceTypeCode = new Code("381"),
+            },
+        ];
+
+        foreach (Invoice invoice in invoices)
+        {
+            using StringWriter writer = new();
+
+            // TODO: remove once test works
+            using System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(writer, new() {
+                Indent = true,
+            });
+
+            parser.Serialize(in invoice, xmlWriter, Schema.UblCreditNote);
+
+            Console.WriteLine(writer.ToString());
+
+            using StringReader reader = new(writer.ToString());
+
+            Assert.Equal(invoice, parser.Parse(reader));
+        }
+    }
+
+    [Fact]
     public void CiiRoundTrip()
     {
         Parser parser = new Parser();

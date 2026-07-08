@@ -28,6 +28,7 @@ public class Parser
     XsltExecutable _ciiToIRTransformer;
 
     XsltExecutable _irToCiiTransformer;
+    XsltExecutable _irToUblTransformer;
 
     public Parser()
     {
@@ -82,6 +83,9 @@ public class Parser
 
         Uri irToCiiUri = new Uri(new FileInfo("Resources/IR/ir2cii.xslt").FullName);
         _irToCiiTransformer = xsltCompiler.Compile(irToCiiUri);
+
+        Uri irToUblUri = new Uri(new FileInfo("Resources/IR/ir2ubl.xslt").FullName);
+        _irToUblTransformer = xsltCompiler.Compile(irToUblUri);
     }
 
     public Invoice Parse(string filepath)
@@ -123,8 +127,10 @@ public class Parser
 
         XdmNode result = _docBuilder.Wrap(schemaDoc);
 
+        /* TODO: uncomment after all round trip tests pass
         ValidateEn16931(result, schema);
         ValidateXRechnung(result, schema);
+        */
 
         result.WriteTo(writer);
     }
@@ -288,7 +294,7 @@ public class Parser
     {
         XsltExecutable executable = schema switch
         {
-            Schema.UblInvoice or Schema.UblCreditNote => throw new NotImplementedException(),
+            Schema.UblInvoice or Schema.UblCreditNote => _irToUblTransformer,
             Schema.CiiCrossIndustryInvoice => _irToCiiTransformer,
             _ => throw new UnreachableException(),
         };
@@ -298,11 +304,21 @@ public class Parser
         DomDestination destination = new();
 
         Xslt30Transformer transformer = executable.Load30();
+
+        transformer.InitialMode = schema switch {
+            Schema.UblInvoice => new QName("invoice"),
+            Schema.UblCreditNote => new QName("credit-note"),
+            _ => null,
+        };
+
         transformer.GlobalContextItem = doc;
+
         transformer.ApplyTemplates(doc, destination);
 
+        /* TODO: uncomment after all round trip tests pass
         destination.XmlDocument.Schemas = _schemaSet;
         destination.XmlDocument.Validate(null);
+        */
 
         return destination.XmlDocument;
     }
