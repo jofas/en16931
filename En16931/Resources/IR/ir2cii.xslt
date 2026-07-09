@@ -665,7 +665,7 @@
               <ram:SpecifiedTaxRegistration>
                 <ram:ID schemeID="VA">
                   <!-- bt-63 -->
-                  <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-vat-identifier"/>
+                  <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-vat-identifier/ir:content"/>
                 </ram:ID>
               </ram:SpecifiedTaxRegistration>
             </ram:SellerTaxRepresentativeTradeParty>

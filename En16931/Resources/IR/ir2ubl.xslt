@@ -1,11 +1,9 @@
 <xsl:stylesheet
-    xmlns:invoice="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-    xmlns:credit-note="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
     xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
     xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:ir="urn:todo"
-    exclude-result-prefixes="invoice credit-note xsl ir"
+    exclude-result-prefixes="xsl ir"
     version="1.0">
   <xsl:template match="/ir:invoice" mode="invoice">
     <invoice:Invoice xmlns:invoice="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
@@ -483,6 +481,193 @@
           </xsl:if>
         </cac:Party>
       </cac:AccountingCustomerParty>
+      <xsl:if test="exists(ir:payee)">
+        <cac:PayeeParty>
+          <xsl:if test="exists(ir:payee/ir:payee-identifier)">
+            <cac:PartyIdentification>
+              <cbc:ID>
+                <xsl:if test="exists(ir:payee/ir:payee-identifier/ir:scheme-identifier)">
+                  <xsl:attribute name="schemeID">
+                    <!-- bt-60-1 -->
+                    <xsl:value-of select="ir:payee/ir:payee-identifier/ir:scheme-identifier"/>
+                  </xsl:attribute>
+                </xsl:if>
+                <!-- bt-60 -->
+                <xsl:value-of select="ir:payee/ir:payee-identifier/ir:content"/>
+              </cbc:ID>
+            </cac:PartyIdentification>
+          </xsl:if>
+          <cac:PartyName>
+            <cbc:Name>
+              <!-- bt-59 -->
+              <xsl:value-of select="ir:payee/ir:payee-name"/>
+            </cbc:Name>
+          </cac:PartyName>
+          <xsl:if test="exists(ir:payee/ir:payee-legal-registration-identifier)">
+            <cac:PartyLegalEntity>
+              <cbc:CompanyID>
+                <xsl:if test="exists(ir:payee/ir:payee-legal-registration-identifier/ir:scheme-identifier)">
+                  <xsl:attribute name="schemeID">
+                    <!-- bt-61-1 -->
+                    <xsl:value-of select="ir:payee/ir:payee-legal-registration-identifier/ir:scheme-identifier"/>
+                  </xsl:attribute>
+                </xsl:if>
+                <!-- bt-61 -->
+                <xsl:value-of select="ir:payee/ir:payee-legal-registration-identifier/ir:content"/>
+              </cbc:CompanyID>
+            </cac:PartyLegalEntity>
+          </xsl:if>
+        </cac:PayeeParty>
+      </xsl:if>
+      <xsl:if test="exists(ir:seller-tax-representative-party)">
+        <cac:TaxRepresentativeParty>
+          <cac:PartyName>
+            <cbc:Name>
+              <!-- bt-62 -->
+              <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-name"/>
+            </cbc:Name>
+          </cac:PartyName>
+          <cac:PostalAddress>
+            <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-1)">
+              <cbc:StreetName>
+                <!-- bt-64 -->
+                <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-1"/>
+              </cbc:StreetName>
+            </xsl:if>
+            <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-2)">
+              <cbc:AdditionalStreetName>
+                <!-- bt-65 -->
+                <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-2"/>
+              </cbc:AdditionalStreetName>
+            </xsl:if>
+            <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-city)">
+              <cbc:CityName>
+                <!-- bt-66 -->
+                <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-city"/>
+              </cbc:CityName>
+            </xsl:if>
+            <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-post-code)">
+              <cbc:PostalZone>
+                <!-- bt-67 -->
+                <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-post-code"/>
+              </cbc:PostalZone>
+            </xsl:if>
+            <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-country-subdivision)">
+              <cbc:CountrySubentity>
+                <!-- bt-68 -->
+                <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-country-subdivision"/>
+              </cbc:CountrySubentity>
+            </xsl:if>
+            <xsl:if test="exists(ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-3)">
+              <cac:AddressLine>
+                <cbc:Line>
+                  <!-- bt-164 -->
+                  <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-address-line-3"/>
+                </cbc:Line>
+              </cac:AddressLine>
+            </xsl:if>
+            <cac:Country>
+              <cbc:IdentificationCode>
+                <!-- bt-69 -->
+                <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-postal-address/ir:tax-representative-country-code"/>
+              </cbc:IdentificationCode>
+            </cac:Country>
+          </cac:PostalAddress>
+          <cac:PartyTaxScheme>
+            <cbc:CompanyID>
+              <!-- bt-63 -->
+              <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-vat-identifier/ir:content"/>
+            </cbc:CompanyID>
+            <cac:TaxScheme>
+              <cbc:ID>VAT</cbc:ID>
+            </cac:TaxScheme>
+          </cac:PartyTaxScheme>
+        </cac:TaxRepresentativeParty>
+      </xsl:if>
+      <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)
+          or exists(ir:delivery-information/ir:deliver-to-location-identifier)
+          or exists(ir:delivery-information/ir:actual-delivery-date)
+          or exists(ir:deliver-information/ir:deliver-to-address)">
+        <cac:Delivery>
+          <xsl:if test="exists(ir:delivery-information/ir:actual-delivery-date)">
+            <cbc:ActualDeliveryDate>
+              <!-- bt-72 -->
+              <xsl:value-of select="ir:delivery-information/ir:actual-delivery-date"/>
+            </cbc:ActualDeliveryDate>
+          </xsl:if>
+          <xsl:if test="exists(ir:delivery-information/ir:deliver-to-location-identifier)
+              or exists(ir:deliver-information/ir:deliver-to-address)">
+            <cac:DeliveryLocation>
+              <xsl:if test="exists(ir:delivery-information/ir:deliver-to-location-identifier)">
+                <cbc:ID>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-location-identifier/ir:scheme-identifier)">
+                    <xsl:attribute name="schemeID">
+                      <!-- bt-71-1 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-location-identifier/ir:scheme-identifier"/>
+                    </xsl:attribute>
+                  </xsl:if>
+                  <!-- bt-71 -->
+                  <xsl:value-of select="ir:delivery-information/ir:deliver-to-location-identifier/ir:content"/>
+                </cbc:ID>
+              </xsl:if>
+              <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address)">
+                <cac:Address>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-1)">
+                    <cbc:StreetName>
+                      <!-- bt-75 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-1"/>
+                    </cbc:StreetName>
+                  </xsl:if>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-2)">
+                    <cbc:AdditionalStreetName>
+                      <!-- bt-76 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-2"/>
+                    </cbc:AdditionalStreetName>
+                  </xsl:if>
+                  <cbc:CityName>
+                    <!-- bt-77 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-city"/>
+                  </cbc:CityName>
+                  <cbc:PostalZone>
+                    <!-- bt-78 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-post-code"/>
+                  </cbc:PostalZone>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-country-subdivision)">
+                    <cbc:CountrySubentity>
+                      <!-- bt-79 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-country-subdivision"/>
+                    </cbc:CountrySubentity>
+                  </xsl:if>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-3)">
+                    <cac:AddressLine>
+                      <cbc:Line>
+                        <!-- bt-165 -->
+                        <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-3"/>
+                      </cbc:Line>
+                    </cac:AddressLine>
+                  </xsl:if>
+                  <cac:Country>
+                    <cbc:IdentificationCode>
+                      <!-- bt-80 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-country-code"/>
+                    </cbc:IdentificationCode>
+                  </cac:Country>
+                </cac:Address>
+              </xsl:if>
+            </cac:DeliveryLocation>
+          </xsl:if>
+          <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)">
+            <cac:DeliveryParty>
+              <cac:PartyName>
+                <cbc:Name>
+                  <!-- bt-70 -->
+                  <xsl:value-of select="ir:delivery-information/ir:deliver-to-party-name"/>
+                </cbc:Name>
+              </cac:PartyName>
+            </cac:DeliveryParty>
+          </xsl:if>
+        </cac:Delivery>
+      </xsl:if>
     </invoice:Invoice>
   </xsl:template>
 
