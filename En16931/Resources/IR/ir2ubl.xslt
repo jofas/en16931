@@ -668,6 +668,306 @@
           </xsl:if>
         </cac:Delivery>
       </xsl:if>
+      <cac:PaymentMeans>
+        <cbc:PaymentMeansCode>
+          <xsl:if test="exists(ir:payment-instructions/ir:payment-means-text)">
+            <xsl:attribute name="name">
+              <!-- bt-82 -->
+              <xsl:value-of select="ir:payment-instructions/ir:payment-means-text"/>
+            </xsl:attribute>
+          </xsl:if>
+          <!-- bt-81 -->
+          <xsl:value-of select="ir:payment-instructions/ir:payment-means-type-code"/>
+        </cbc:PaymentMeansCode>
+        <xsl:if test="exists(ir:payment-instructions/ir:remittance-information)">
+          <cbc:PaymentID>
+            <!-- bt-83 -->
+            <xsl:value-of select="ir:payment-instructions/ir:remittance-information"/>
+          </cbc:PaymentID>
+        </xsl:if>
+        <!-- TODO: bg-18, bg-19 (make sure to match order in xml schema) -->
+        <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer)">
+          <cac:PayeeFinancialAccount>
+            <cbc:ID>
+              <!-- bt-84 -->
+              <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-identifier"/>
+            </cbc:ID>
+            <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-name)">
+              <cbc:Name>
+                <!-- bt-85 -->
+                <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-name"/>
+              </cbc:Name>
+            </xsl:if>
+            <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-service-provider-identifier)">
+              <cac:FinancialInstitutionBranch>
+                <cbc:ID>
+                  <!-- bt-86 -->
+                  <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-service-provider-identifier"/>
+                </cbc:ID>
+              </cac:FinancialInstitutionBranch>
+            </xsl:if>
+          </cac:PayeeFinancialAccount>
+        </xsl:if>
+      </cac:PaymentMeans>
+      <xsl:if test="exists(ir:payment-terms)">
+        <cac:PaymentTerms>
+          <cbc:Note>
+            <!-- bt-20 -->
+            <xsl:value-of select="ir:payment-terms"/>
+          </cbc:Note>
+        </cac:PaymentTerms>
+      </xsl:if>
+      <xsl:for-each select="ir:document-level-charges/ir:document-level-charge">
+        <cac:AllowanceCharge>
+          <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+          <xsl:if test="exists(./ir:document-level-charge-reason-code)">
+            <cbc:AllowanceChargeReasonCode>
+              <!-- bt-105 -->
+              <xsl:value-of select="./ir:document-level-charge-reason-code"/>
+            </cbc:AllowanceChargeReasonCode>
+          </xsl:if>
+          <xsl:if test="exists(./ir:document-level-charge-reason)">
+            <cbc:AllowanceChargeReason>
+              <!-- bt-104 -->
+              <xsl:value-of select="./ir:document-level-charge-reason"/>
+            </cbc:AllowanceChargeReason>
+          </xsl:if>
+          <xsl:if test="exists(./ir:document-level-charge-percentage)">
+            <cbc:MultiplierFactorNumeric>
+              <!-- bt-101 -->
+              <xsl:value-of select="./ir:document-level-charge-percentage"/>
+            </cbc:MultiplierFactorNumeric>
+          </xsl:if>
+          <cbc:Amount>
+            <xsl:attribute name="currencyID">
+              <xsl:value-of select="/ir:invoice/ir:invoice-currency-code"/>
+            </xsl:attribute>
+            <!-- bt-99 -->
+            <xsl:value-of select="./ir:document-level-charge-amount"/>
+          </cbc:Amount>
+          <xsl:if test="exists(./ir:document-level-charge-base-amount)">
+            <cbc:BaseAmount>
+              <xsl:attribute name="currencyID">
+                <xsl:value-of select="/ir:invoice/ir:invoice-currency-code"/>
+              </xsl:attribute>
+              <!-- bt-100 -->
+              <xsl:value-of select="./ir:document-level-charge-base-amount"/>
+            </cbc:BaseAmount>
+          </xsl:if>
+          <cac:TaxCategory>
+            <cbc:ID>
+              <!-- bt-102 -->
+              <xsl:value-of select="./ir:document-level-charge-vat-category-code"/>
+            </cbc:ID>
+            <xsl:if test="exists(./ir:document-level-charge-vat-rate)">
+              <cbc:Percent>
+                <!-- bt-103 -->
+                <xsl:value-of select="./ir:document-level-charge-vat-rate"/>
+              </cbc:Percent>
+            </xsl:if>
+            <cac:TaxScheme>
+              <cbc:ID>VAT</cbc:ID>
+            </cac:TaxScheme>
+          </cac:TaxCategory>
+        </cac:AllowanceCharge>
+      </xsl:for-each>
+      <xsl:for-each select="ir:document-level-allowances/ir:document-level-allowance">
+        <cac:AllowanceCharge>
+          <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+          <xsl:if test="exists(./ir:document-level-allowance-reason-code)">
+            <cbc:AllowanceChargeReasonCode>
+              <!-- bt-94 -->
+              <xsl:value-of select="./ir:document-level-allowance-reason-code"/>
+            </cbc:AllowanceChargeReasonCode>
+          </xsl:if>
+          <xsl:if test="exists(./ir:document-level-allowance-reason)">
+            <cbc:AllowanceChargeReason>
+              <!-- bt-93 -->
+              <xsl:value-of select="./ir:document-level-allowance-reason"/>
+            </cbc:AllowanceChargeReason>
+          </xsl:if>
+          <xsl:if test="exists(./ir:document-level-allowance-percentage)">
+            <cbc:MultiplierFactorNumeric>
+              <!-- bt-92 -->
+              <xsl:value-of select="./ir:document-level-allowance-percentage"/>
+            </cbc:MultiplierFactorNumeric>
+          </xsl:if>
+          <cbc:Amount>
+            <xsl:attribute name="currencyID">
+              <xsl:value-of select="/ir:invoice/ir:invoice-currency-code"/>
+            </xsl:attribute>
+            <!-- bt-98 -->
+            <xsl:value-of select="./ir:document-level-allowance-amount"/>
+          </cbc:Amount>
+          <xsl:if test="exists(./ir:document-level-allowance-base-amount)">
+            <cbc:BaseAmount>
+              <xsl:attribute name="currencyID">
+                <xsl:value-of select="/ir:invoice/ir:invoice-currency-code"/>
+              </xsl:attribute>
+              <!-- bt-97 -->
+              <xsl:value-of select="./ir:document-level-allowance-base-amount"/>
+            </cbc:BaseAmount>
+          </xsl:if>
+          <cac:TaxCategory>
+            <cbc:ID>
+              <!-- bt-95 -->
+              <xsl:value-of select="./ir:document-level-allowance-vat-category-code"/>
+            </cbc:ID>
+            <xsl:if test="exists(./ir:document-level-allowance-vat-rate)">
+              <cbc:Percent>
+                <!-- bt-96 -->
+                <xsl:value-of select="./ir:document-level-allowance-vat-rate"/>
+              </cbc:Percent>
+            </xsl:if>
+            <cac:TaxScheme>
+              <cbc:ID>VAT</cbc:ID>
+            </cac:TaxScheme>
+          </cac:TaxCategory>
+        </cac:AllowanceCharge>
+      </xsl:for-each>
+      <cac:TaxTotal>
+        <cbc:TaxAmount>
+          <xsl:attribute name="currencyID">
+            <xsl:value-of select="ir:invoice-currency-code"/>
+          </xsl:attribute>
+          <xsl:choose>
+            <xsl:when test="exists(ir:document-totals/ir:invoice-total-vat-amount)">
+              <!-- bt-110 -->
+              <xsl:value-of select="ir:document-totals/ir:invoice-total-vat-amount"/>
+            </xsl:when>
+            <!-- If bt-110 is not present, we still need to put a value here to satisfy the UBL schema -->
+            <xsl:otherwise>
+              <xsl:text>0.00</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+        </cbc:TaxAmount>
+        <xsl:for-each select="ir:vat-breakdown/ir:vat-breakdown">
+          <cac:TaxSubtotal>
+            <cbc:TaxableAmount>
+              <xsl:attribute name="currencyID">
+                <xsl:value-of select="/ir:invoice/ir:invoice-currency-code"/>
+              </xsl:attribute>
+              <!-- bt-116 -->
+              <xsl:value-of select="./ir:vat-category-taxable-amount"/>
+            </cbc:TaxableAmount>
+            <cbc:TaxAmount>
+              <xsl:attribute name="currencyID">
+                <xsl:value-of select="/ir:invoice/ir:invoice-currency-code"/>
+              </xsl:attribute>
+              <!-- bt-117 -->
+              <xsl:value-of select="./ir:vat-category-tax-amount"/>
+            </cbc:TaxAmount>
+            <cac:TaxCategory>
+              <cbc:ID>
+                <!-- bt-118 -->
+                <xsl:value-of select="./ir:vat-category-code"/>
+              </cbc:ID>
+              <cbc:Percent>
+                <!-- bt-119 -->
+                <xsl:value-of select="./ir:vat-category-rate"/>
+              </cbc:Percent>
+              <xsl:if test="exists(./ir:vat-exemption-reason-code)">
+                <cbc:TaxExemptionReasonCode>
+                  <!-- bt-121 -->
+                  <xsl:value-of select="./ir:vat-exemption-reason-code"/>
+                </cbc:TaxExemptionReasonCode>
+              </xsl:if>
+              <xsl:if test="exists(./ir:vat-exemption-reason-text)">
+                <cbc:TaxExemptionReason>
+                  <!-- bt-120 -->
+                  <xsl:value-of select="./ir:vat-exemption-reason-text"/>
+                </cbc:TaxExemptionReason>
+              </xsl:if>
+              <cac:TaxScheme>
+                <cbc:ID>VAT</cbc:ID>
+              </cac:TaxScheme>
+            </cac:TaxCategory>
+          </cac:TaxSubtotal>
+        </xsl:for-each>
+      </cac:TaxTotal>
+      <xsl:if test="exists(ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency)
+          and exists(ir:vat-accounting-currency-code)">
+        <cac:TaxTotal>
+          <cbc:TaxAmount>
+            <xsl:attribute name="currencyID">
+              <xsl:value-of select="ir:vat-accounting-currency-code"/>
+            </xsl:attribute>
+            <!-- bt-111 -->
+            <xsl:value-of select="ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency"/>
+          </cbc:TaxAmount>
+        </cac:TaxTotal>
+      </xsl:if>
+      <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount>
+          <xsl:attribute name="currencyID">
+            <xsl:value-of select="ir:invoice-currency-code"/>
+          </xsl:attribute>
+          <!-- bt-106 -->
+          <xsl:value-of select="ir:document-totals/ir:sum-of-invoice-line-net-amount"/>
+        </cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount>
+          <xsl:attribute name="currencyID">
+            <xsl:value-of select="ir:invoice-currency-code"/>
+          </xsl:attribute>
+          <!-- bt-109 -->
+          <xsl:value-of select="ir:document-totals/ir:invoice-total-amount-without-vat"/>
+        </cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount>
+          <xsl:attribute name="currencyID">
+            <xsl:value-of select="ir:invoice-currency-code"/>
+          </xsl:attribute>
+          <!-- bt-112 -->
+          <xsl:value-of select="ir:document-totals/ir:invoice-total-amount-with-vat"/>
+        </cbc:TaxInclusiveAmount>
+        <xsl:if test="exists(ir:document-totals/ir:sum-of-allowances-on-document-level)">
+          <cbc:AllowanceTotalAmount>
+            <xsl:attribute name="currencyID">
+              <xsl:value-of select="ir:invoice-currency-code"/>
+            </xsl:attribute>
+            <!-- bt-107 -->
+            <xsl:value-of select="ir:document-totals/ir:sum-of-allowances-on-document-level"/>
+          </cbc:AllowanceTotalAmount>
+        </xsl:if>
+        <xsl:if test="exists(ir:document-totals/ir:sum-of-charges-on-document-level)">
+          <cbc:ChargeTotalAmount>
+            <xsl:attribute name="currencyID">
+              <xsl:value-of select="ir:invoice-currency-code"/>
+            </xsl:attribute>
+            <!-- bt-108 -->
+            <xsl:value-of select="ir:document-totals/ir:sum-of-charges-on-document-level"/>
+          </cbc:ChargeTotalAmount>
+        </xsl:if>
+        <xsl:if test="exists(ir:document-totals/ir:paid-amount)">
+          <cbc:PrepaidAmount>
+            <xsl:attribute name="currencyID">
+              <xsl:value-of select="ir:invoice-currency-code"/>
+            </xsl:attribute>
+            <!-- bt-113 -->
+            <xsl:value-of select="ir:document-totals/ir:paid-amount"/>
+          </cbc:PrepaidAmount>
+        </xsl:if>
+        <xsl:if test="exists(ir:document-totals/ir:rounding-amount)">
+          <cbc:PayableRoundingAmount>
+            <xsl:attribute name="currencyID">
+              <xsl:value-of select="ir:invoice-currency-code"/>
+            </xsl:attribute>
+            <!-- bt-114 -->
+            <xsl:value-of select="ir:document-totals/ir:rounding-amount"/>
+          </cbc:PayableRoundingAmount>
+        </xsl:if>
+        <cbc:PayableAmount>
+          <xsl:attribute name="currencyID">
+            <xsl:value-of select="ir:invoice-currency-code"/>
+          </xsl:attribute>
+          <!-- bt-115 -->
+          <xsl:value-of select="ir:document-totals/ir:amount-due-for-payment"/>
+        </cbc:PayableAmount>
+      </cac:LegalMonetaryTotal>
+      <xsl:for-each select="ir:invoice-lines/ir:invoice-line">
+        <cac:InvoiceLine>
+
+        </cac:InvoiceLine>
+      </xsl:for-each>
     </invoice:Invoice>
   </xsl:template>
 
