@@ -965,7 +965,77 @@
       </cac:LegalMonetaryTotal>
       <xsl:for-each select="ir:invoice-lines/ir:invoice-line">
         <cac:InvoiceLine>
-
+          <cbc:ID>
+            <!-- bt-126 -->
+            <xsl:value-of select="./ir:invoice-line-identifier/ir:content"/>
+          </cbc:ID>
+          <xsl:if test="exists(./ir:invoice-line-note)">
+            <cbc:Note>
+              <!-- bt-127 -->
+              <xsl:value-of select="./ir:invoice-line-note"/>
+            </cbc:Note>
+          </xsl:if>
+          <cbc:InvoicedQuantity>
+            <xsl:attribute name="unitCode">
+              <!-- bt-130 -->
+              <xsl:value-of select="./ir:invoiced-quantity-unit-of-measure-code"/>
+            </xsl:attribute>
+            <!-- bt-129 -->
+            <xsl:value-of select="./ir:invoiced-quantity"/>
+          </cbc:InvoicedQuantity>
+          <cbc:LineExtensionAmount>
+            <xsl:attribute name="currencyID">
+              <xsl:value-of select="/ir:invoice/ir:invoice-currency-code"/>
+            </xsl:attribute>
+            <!-- bt-131 -->
+            <xsl:value-of select="./ir:invoice-line-net-amount"/>
+          </cbc:LineExtensionAmount>
+          <xsl:if test="exists(./ir:invoice-line-buyer-accounting-reference)">
+            <cbc:AccountingCost>
+              <!-- bt-133 -->
+              <xsl:value-of select="./ir:invoice-line-buyer-accounting-reference"/>
+            </cbc:AccountingCost>
+          </xsl:if>
+          <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)
+              or exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
+            <cac:InvoicePeriod>
+              <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)">
+                <cbc:StartDate>
+                  <!-- bt-134 -->
+                  <xsl:value-of select="./ir:invoice-line-period/ir:invoice-line-period-start-date"/>
+                </cbc:StartDate>
+              </xsl:if>
+              <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
+                <cbc:EndDate>
+                  <!-- bt-135 -->
+                  <xsl:value-of select="./ir:invoice-line-period/ir:invoice-line-period-end-date"/>
+                </cbc:EndDate>
+              </xsl:if>
+            </cac:InvoicePeriod>
+          </xsl:if>
+          <xsl:if test="exists(./ir:referenced-purchase-order-line-reference)">
+            <cac:OrderLineReference>
+              <cbc:LineID>
+                <!-- bt-132 -->
+                <xsl:value-of select="./ir:referenced-purchase-order-line-reference"/>
+              </cbc:LineID>
+            </cac:OrderLineReference>
+          </xsl:if>
+          <xsl:if test="exists(./ir:invoice-line-object-identifier)">
+            <cac:DocumentReference>
+              <cbc:ID>
+                <xsl:if test="exists(./ir:invoice-line-object-identifier/ir:scheme-identifier)">
+                  <xsl:attribute name="schemeID">
+                    <!-- bt-128-1 -->
+                    <xsl:value-of select="./ir:invoice-line-object-identifier/ir:scheme-identifier"/>
+                  </xsl:attribute>
+                </xsl:if>
+                <!-- bt-128 -->
+                <xsl:value-of select="./ir:invoice-line-object-identifier/ir:content"/>
+              </cbc:ID>
+              <cbc:DocumentTypeCode>130</cbc:DocumentTypeCode>
+            </cac:DocumentReference>
+          </xsl:if>
         </cac:InvoiceLine>
       </xsl:for-each>
     </invoice:Invoice>
