@@ -85,13 +85,13 @@
               </xsl:if>
               <xsl:if test="exists(./ir:item-information/ir:item-sellers-identifier)">
                 <ram:SellerAssignedID>
-                    <!-- bt-155 -->
+                  <!-- bt-155 -->
                   <xsl:value-of select="./ir:item-information/ir:item-sellers-identifier/ir:content"/>
                 </ram:SellerAssignedID>
               </xsl:if>
               <xsl:if test="exists(./ir:item-information/ir:item-buyers-identifier)">
                 <ram:BuyerAssignedID>
-                    <!-- bt-156 -->
+                  <!-- bt-156 -->
                   <xsl:value-of select="./ir:item-information/ir:item-buyers-identifier/ir:content"/>
                 </ram:BuyerAssignedID>
               </xsl:if>
@@ -101,7 +101,7 @@
               </ram:Name>
               <xsl:if test="exists(./ir:item-information/ir:item-description)">
                 <ram:Description>
-                    <!-- bt-154 -->
+                  <!-- bt-154 -->
                   <xsl:value-of select="./ir:item-information/ir:item-description"/>
                 </ram:Description>
               </xsl:if>
