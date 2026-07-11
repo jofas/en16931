@@ -72,7 +72,8 @@
         <xsl:value-of select="ir:buyer-reference"/>
       </cbc:BuyerReference>
       <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)
-          or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)">
+          or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)
+          or exists(ir:value-added-tax-point-date-code)">
         <cac:InvoicePeriod>
           <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)">
             <cbc:StartDate>
@@ -85,6 +86,12 @@
               <!-- bt-74 -->
               <xsl:value-of select="ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date"/>
             </cbc:EndDate>
+          </xsl:if>
+          <xsl:if test="exists(ir:value-added-tax-point-date-code)">
+            <cbc:DescriptionCode>
+              <!-- bt-8 -->
+              <xsl:value-of select="ir:value-added-tax-point-date-code"/>
+            </cbc:DescriptionCode>
           </xsl:if>
         </cac:InvoicePeriod>
       </xsl:if>
@@ -179,10 +186,7 @@
                     <xsl:value-of select="./ir:attached-document/ir:filename"/>
                   </xsl:attribute>
                   <!-- bt-125 -->
-                  <xsl:text>dGVzdA==</xsl:text>
-                  <!-- TODO: uncomment and replace above <xsl:text> with this
                   <xsl:value-of select="./ir:attached-document/ir:content"/>
-                  -->
                 </cbc:EmbeddedDocumentBinaryObject>
               </xsl:if>
               <xsl:if test="exists(./ir:external-document-location)">
@@ -238,6 +242,14 @@
               </cbc:ID>
             </cac:PartyIdentification>
           </xsl:for-each>
+          <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
+            <cac:PartyIdentification>
+              <cbc:ID schemeID="SEPA">
+                <!-- bt-90 -->
+                <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:bank-assigned-creditor-identifier/ir:content"/>
+              </cbc:ID>
+            </cac:PartyIdentification>
+          </xsl:if>
           <xsl:if test="exists(ir:seller/ir:seller-trading-name)">
             <cac:PartyName>
               <cbc:Name>
@@ -685,7 +697,21 @@
             <xsl:value-of select="ir:payment-instructions/ir:remittance-information"/>
           </cbc:PaymentID>
         </xsl:if>
-        <!-- TODO: bg-18, bg-19 (make sure to match order in xml schema) -->
+        <xsl:if test="exists(ir:payment-instructions/ir:payment-card-information)">
+          <cac:CardAccount>
+            <cbc:PrimaryAccountNumberID>
+              <!-- bt-87 -->
+              <xsl:value-of select="ir:payment-instructions/ir:payment-card-information/ir:payment-card-primary-account-number"/>
+            </cbc:PrimaryAccountNumberID>
+            <cbc:NetworkID>required-but-unmapped-field</cbc:NetworkID>
+            <xsl:if test="exists(ir:payment-instructions/ir:payment-card-information/ir:payment-card-holder-name)">
+              <cbc:HolderName>
+                <!-- bt-88 -->
+                <xsl:value-of select="ir:payment-instructions/ir:payment-card-information/ir:payment-card-holder-name"/>
+              </cbc:HolderName>
+            </xsl:if>
+          </cac:CardAccount>
+        </xsl:if>
         <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer)">
           <cac:PayeeFinancialAccount>
             <cbc:ID>
@@ -708,6 +734,21 @@
             </xsl:if>
           </cac:PayeeFinancialAccount>
         </xsl:if>
+        <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
+          <cac:PaymentMandate>
+            <cbc:ID>
+              <!-- bt-89 -->
+              <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:mandate-reference-identifier/ir:content"/>
+            </cbc:ID>
+            <cac:PayerFinancialAccount>
+              <cbc:ID>
+                <!-- bt-91 -->
+                <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:debited-account-identifier/ir:content"/>
+              </cbc:ID>
+            </cac:PayerFinancialAccount>
+          </cac:PaymentMandate>
+        </xsl:if>
+        <!-- TODO: bg-19 here (+ bt-90 some place rediculous) -->
       </cac:PaymentMeans>
       <xsl:if test="exists(ir:payment-terms)">
         <cac:PaymentTerms>

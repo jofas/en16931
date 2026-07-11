@@ -305,7 +305,8 @@ public class Parser
 
         Xslt30Transformer transformer = executable.Load30();
 
-        transformer.InitialMode = schema switch {
+        transformer.InitialMode = schema switch
+        {
             Schema.UblInvoice => new QName("invoice"),
             Schema.UblCreditNote => new QName("credit-note"),
             _ => null,

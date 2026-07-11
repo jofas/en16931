@@ -170,7 +170,8 @@ public class IRTests
     }
 
     [Fact]
-    public void UblInvoiceRoundTrip() {
+    public void UblInvoiceRoundTrip()
+    {
         Parser parser = new Parser();
 
         List<Invoice> invoices = [
@@ -184,14 +185,7 @@ public class IRTests
         {
             using StringWriter writer = new();
 
-            // TODO: remove once test works
-            using System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(writer, new() {
-                Indent = true,
-            });
-
-            parser.Serialize(in invoice, xmlWriter, Schema.UblInvoice);
-
-            Console.WriteLine(writer.ToString());
+            parser.Serialize(in invoice, writer, Schema.UblInvoice);
 
             using StringReader reader = new(writer.ToString());
 
@@ -200,7 +194,8 @@ public class IRTests
     }
 
     [Fact]
-    public void UblCreditNoteRoundTrip() {
+    public void UblCreditNoteRoundTrip()
+    {
         Parser parser = new Parser();
 
         List<Invoice> invoices = [
@@ -227,7 +222,8 @@ public class IRTests
             using StringWriter writer = new();
 
             // TODO: remove once test works
-            using System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(writer, new() {
+            using System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(writer, new()
+            {
                 Indent = true,
             });
 
