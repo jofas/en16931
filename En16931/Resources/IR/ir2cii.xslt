@@ -85,13 +85,13 @@
               </xsl:if>
               <xsl:if test="exists(./ir:item-information/ir:item-sellers-identifier)">
                 <ram:SellerAssignedID>
-                    <!-- bt-155 -->
+                  <!-- bt-155 -->
                   <xsl:value-of select="./ir:item-information/ir:item-sellers-identifier/ir:content"/>
                 </ram:SellerAssignedID>
               </xsl:if>
               <xsl:if test="exists(./ir:item-information/ir:item-buyers-identifier)">
                 <ram:BuyerAssignedID>
-                    <!-- bt-156 -->
+                  <!-- bt-156 -->
                   <xsl:value-of select="./ir:item-information/ir:item-buyers-identifier/ir:content"/>
                 </ram:BuyerAssignedID>
               </xsl:if>
@@ -101,7 +101,7 @@
               </ram:Name>
               <xsl:if test="exists(./ir:item-information/ir:item-description)">
                 <ram:Description>
-                    <!-- bt-154 -->
+                  <!-- bt-154 -->
                   <xsl:value-of select="./ir:item-information/ir:item-description"/>
                 </ram:Description>
               </xsl:if>
@@ -493,10 +493,10 @@
             <xsl:if test="exists(ir:buyer/ir:buyer-identifier[ir:scheme-identifier])">
               <ram:GlobalID>
                 <xsl:attribute name="schemeID">
-                  <!-- bt-29-1 -->
+                  <!-- bt-46-1 -->
                   <xsl:value-of select="ir:buyer/ir:buyer-identifier/ir:scheme-identifier"/>
                 </xsl:attribute>
-                <!-- bt-29 -->
+                <!-- bt-46 -->
                 <xsl:value-of select="ir:buyer/ir:buyer-identifier/ir:content"/>
               </ram:GlobalID>
             </xsl:if>
@@ -665,7 +665,7 @@
               <ram:SpecifiedTaxRegistration>
                 <ram:ID schemeID="VA">
                   <!-- bt-63 -->
-                  <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-vat-identifier"/>
+                  <xsl:value-of select="ir:seller-tax-representative-party/ir:seller-tax-representative-vat-identifier/ir:content"/>
                 </ram:ID>
               </ram:SpecifiedTaxRegistration>
             </ram:SellerTaxRepresentativeTradeParty>

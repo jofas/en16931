@@ -200,8 +200,11 @@
     <cbc:PaymentMeansCode name="[Payment means text]">48</cbc:PaymentMeansCode>
     <cbc:PaymentID>Deb. 12345 / Fact. 9876543</cbc:PaymentID>
     <cac:CardAccount>
+      <!-- bt-87 -->
       <cbc:PrimaryAccountNumberID>6789</cbc:PrimaryAccountNumberID>
+      <!-- required field that is not mapped to EN16931 data model -->
       <cbc:NetworkID>mapped-from-cii</cbc:NetworkID>
+      <!-- bt-88 -->
       <cbc:HolderName>[Name cardholder]</cbc:HolderName>
     </cac:CardAccount>
   </cac:PaymentMeans>

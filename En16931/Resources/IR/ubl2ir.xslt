@@ -800,7 +800,7 @@
       </amount-due-for-payment>
     </document-totals>
     <vat-breakdown id="bg-23">
-      <xsl:for-each select="cac:TaxTotal/cac:TaxSubtotal">
+      <xsl:for-each select="cac:TaxTotal/cac:TaxSubtotal[cac:TaxCategory/cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']">
         <vat-breakdown id="bg-23">
           <vat-category-taxable-amount id="bt-116">
             <xsl:value-of select="./cbc:TaxableAmount"/>
@@ -809,19 +809,19 @@
             <xsl:value-of select="./cbc:TaxAmount"/>
           </vat-category-tax-amount>
           <vat-category-code id="bt-118">
-            <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID"/>
+            <xsl:value-of select="./cac:TaxCategory/cbc:ID"/>
           </vat-category-code>
           <vat-category-rate id="bt-119">
-            <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:Percent"/>
+            <xsl:value-of select="./cac:TaxCategory/cbc:Percent"/>
           </vat-category-rate>
-          <xsl:if test="exists(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:TaxExemptionReason)">
+          <xsl:if test="exists(./cac:TaxCategory/cbc:TaxExemptionReason)">
             <vat-exemption-reason-text id="bt-120">
-              <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:TaxExemptionReason"/>
+              <xsl:value-of select="./cac:TaxCategory/cbc:TaxExemptionReason"/>
             </vat-exemption-reason-text>
           </xsl:if>
-          <xsl:if test="exists(./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:TaxExemptionReasonCode)">
+          <xsl:if test="exists(./cac:TaxCategory/cbc:TaxExemptionReasonCode)">
             <vat-exemption-reason-code id="bt-121">
-              <xsl:value-of select="./cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:TaxExemptionReasonCode"/>
+              <xsl:value-of select="./cac:TaxCategory/cbc:TaxExemptionReasonCode"/>
             </vat-exemption-reason-code>
           </xsl:if>
         </vat-breakdown>

@@ -170,6 +170,66 @@ public class IRTests
     }
 
     [Fact]
+    public void UblInvoiceRoundTrip()
+    {
+        Parser parser = new Parser();
+
+        List<Invoice> invoices = [
+            Data.Invoice1,
+            Data.Invoice2,
+            Data.Invoice3,
+            Data.Invoice4,
+        ];
+
+        foreach (Invoice invoice in invoices)
+        {
+            using StringWriter writer = new();
+
+            parser.Serialize(in invoice, writer, Schema.UblInvoice);
+
+            using StringReader reader = new(writer.ToString());
+
+            Assert.Equal(invoice, parser.Parse(reader));
+        }
+    }
+
+    [Fact]
+    public void UblCreditNoteRoundTrip()
+    {
+        Parser parser = new Parser();
+
+        List<Invoice> invoices = [
+            Data.Invoice1 with
+            {
+                InvoiceTypeCode = new Code("381"),
+            },
+            Data.Invoice2 with
+            {
+                InvoiceTypeCode = new Code("381"),
+            },
+            Data.Invoice3 with
+            {
+                InvoiceTypeCode = new Code("381"),
+            },
+            Data.Invoice4 with
+            {
+                InvoiceTypeCode = new Code("381"),
+            },
+        ];
+
+        foreach (Invoice invoice in invoices)
+        {
+            using StringWriter writer = new();
+
+            parser.Serialize(in invoice, writer, Schema.UblCreditNote);
+
+            using StringReader reader = new(writer.ToString());
+
+            Assert.Equal(invoice, parser.Parse(reader));
+        }
+    }
+
+    [Fact]
     public void CiiRoundTrip()
     {
         Parser parser = new Parser();

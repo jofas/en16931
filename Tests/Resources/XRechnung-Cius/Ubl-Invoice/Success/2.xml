@@ -17,6 +17,7 @@
   <cac:InvoicePeriod>
     <cbc:StartDate>2018-04-13</cbc:StartDate>
     <cbc:EndDate>2018-04-13</cbc:EndDate>
+    <!-- bt-8 -->
     <cbc:DescriptionCode>3</cbc:DescriptionCode>
   </cac:InvoicePeriod>
   <cac:OrderReference>
