@@ -127,10 +127,8 @@ public class Parser
 
         XdmNode result = _docBuilder.Wrap(schemaDoc);
 
-        /* TODO: uncomment after all round trip tests pass
         ValidateEn16931(result, schema);
         ValidateXRechnung(result, schema);
-        */
 
         result.WriteTo(writer);
     }
@@ -316,10 +314,8 @@ public class Parser
 
         transformer.ApplyTemplates(doc, destination);
 
-        /* TODO: uncomment after all round trip tests pass
         destination.XmlDocument.Schemas = _schemaSet;
         destination.XmlDocument.Validate(null);
-        */
 
         return destination.XmlDocument;
     }
