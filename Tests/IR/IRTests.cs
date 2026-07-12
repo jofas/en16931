@@ -221,15 +221,7 @@ public class IRTests
         {
             using StringWriter writer = new();
 
-            // TODO: remove once test works
-            using System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(writer, new()
-            {
-                Indent = true,
-            });
-
-            parser.Serialize(in invoice, xmlWriter, Schema.UblCreditNote);
-
-            Console.WriteLine(writer.ToString());
+            parser.Serialize(in invoice, writer, Schema.UblCreditNote);
 
             using StringReader reader = new(writer.ToString());
 
