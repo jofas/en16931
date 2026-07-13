@@ -10,50 +10,56 @@ using Saxon.Api;
 
 namespace En16931;
 
+static class Urn
+{
+    public const string UblInvoice = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2";
+    public const string UblCreditNote = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2";
+    public const string UblCbc = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
+
+    public const string Cii = "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100";
+    public const string CiiRam = "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100";
+
+    public const string XRechnungV3 = "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0";
+    public const string XRechnungExtensionV3 = "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0";
+}
+
 public class Parser
 {
-    XmlNamespaceManager _namespaces;
+    private static QName _ublInvoice = new QName(Urn.UblInvoice, "Invoice");
+    private static QName _ublCreditNote = new QName(Urn.UblCreditNote, "CreditNote");
+    private static QName _cii = new QName(Urn.Cii, "CrossIndustryInvoice");
 
-    XmlSchemaSet _schemaSet;
+    private XmlSchemaSet _schemaSet;
 
-    DocumentBuilder _docBuilder;
+    private DocumentBuilder _docBuilder;
 
-    XsltExecutable _en16931UblValidator;
-    XsltExecutable _en16931CiiValidator;
+    private XsltExecutable _en16931UblValidator;
+    private XsltExecutable _en16931CiiValidator;
 
-    XsltExecutable _xRechnungUblValidator;
-    XsltExecutable _xRechnungCiiValidator;
+    private XsltExecutable _xRechnungUblValidator;
+    private XsltExecutable _xRechnungCiiValidator;
 
-    XsltExecutable _ublToIRTransformer;
-    XsltExecutable _ciiToIRTransformer;
+    private XsltExecutable _ublToIRTransformer;
+    private XsltExecutable _ciiToIRTransformer;
 
-    XsltExecutable _irToCiiTransformer;
-    XsltExecutable _irToUblTransformer;
+    private XsltExecutable _irToCiiTransformer;
+    private XsltExecutable _irToUblTransformer;
 
     public Parser()
     {
-        _namespaces = new XmlNamespaceManager(new NameTable());
+        _schemaSet = new XmlSchemaSet();
+        _schemaSet.XmlResolver = new XmlUrlResolver();
 
-        // UBL namespaces
-        _namespaces.AddNamespace("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");
-        _namespaces.AddNamespace("invoice", "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2");
-        _namespaces.AddNamespace("credit-note", "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2");
-
-        // CII namespaces
-        _namespaces.AddNamespace("rsm", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100");
-        _namespaces.AddNamespace("ram", "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100");
+        _schemaSet.Add(null, "Resources/Ubl/maindoc/UBL-Invoice-2.1.xsd");
+        _schemaSet.Add(null, "Resources/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
+        _schemaSet.Add(null, "Resources/Cii/CrossIndustryInvoice_100pD16B.xsd");
 
         // Schema is DTD annotated, which is why we have to add it like this,
         // instead of adding the file directly with `_schemaSet.Add`
         FileStream w3XmlSigSchemaFile = File.OpenRead("Resources/W3/xmldsig-core-schema.xsd");
         XmlSchema w3XmlSigSchema = XmlSchema.Read(w3XmlSigSchemaFile, null)!;
-
-        _schemaSet = new XmlSchemaSet();
-        _schemaSet.XmlResolver = new XmlUrlResolver();
-        _schemaSet.Add(null, "Resources/Ubl/maindoc/UBL-Invoice-2.1.xsd");
-        _schemaSet.Add(null, "Resources/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
-        _schemaSet.Add(null, "Resources/Cii/CrossIndustryInvoice_100pD16B.xsd");
         _schemaSet.Add(w3XmlSigSchema);
+
         _schemaSet.Compile();
 
         Processor processor = new Processor(false);
@@ -102,9 +108,35 @@ public class Parser
 
     public Invoice Parse(XmlReader reader)
     {
-        XmlDocument ir = ParseToIR(reader);
-        using XmlNodeReader irReader = new(ir);
+        XdmNode doc = GetSchemaValidatedDocument(reader);
+        DocumentType docType = GetDocumentType(doc);
+
+        Validate(doc, in docType);
+
+        XdmNode ir = SchemaToIR(doc, docType.Schema);
+
+        using XmlNodeReader irReader = new(ir.GetUnderlyingXmlNode());
         return Invoice.Deserialize(irReader);
+    }
+
+    public void Validate(string filepath)
+    {
+        using StreamReader reader = new(filepath);
+        Validate(reader);
+    }
+
+    public void Validate(TextReader reader)
+    {
+        using XmlTextReader xmlReader = new(reader);
+        Validate(xmlReader);
+    }
+
+    public void Validate(XmlReader reader)
+    {
+        XdmNode doc = GetSchemaValidatedDocument(reader);
+        DocumentType docType = GetDocumentType(doc);
+
+        Validate(doc, in docType);
     }
 
     public void Serialize(ref readonly Invoice invoice, string filepath, Schema schema)
@@ -121,27 +153,19 @@ public class Parser
 
     public void Serialize(ref readonly Invoice invoice, XmlWriter writer, Schema schema)
     {
-        XmlDocument irDoc = SerializeToIR(in invoice);
+        XdmNode irDoc = SerializeToIR(in invoice);
 
-        XmlDocument schemaDoc = IRToSchema(irDoc, schema);
+        XdmNode doc = IRToSchema(irDoc, schema);
 
-        XdmNode result = _docBuilder.Wrap(schemaDoc);
+        DocumentType docType = GetDocumentType(doc);
 
-        ValidateEn16931(result, schema);
-        ValidateXRechnung(result, schema);
+        Validate(doc, in docType);
 
-        result.WriteTo(writer);
+        doc.WriteTo(writer);
     }
 
-    internal XmlDocument ParseToIR(XmlReader reader)
+    private void Validate(XdmNode doc, ref readonly DocumentType docType)
     {
-
-        XmlDocument xmlDoc = GetSchemaValidatedDocument(reader);
-
-        DocumentType docType = GetDocumentType(xmlDoc);
-
-        XdmNode doc = _docBuilder.Wrap(xmlDoc);
-
         try
         {
             ValidateEn16931(doc, docType.Schema);
@@ -188,8 +212,6 @@ public class Parser
         }
 
         ValidateXRechnung(doc, docType.Schema);
-
-        return TransformToIR(doc, docType.Schema);
     }
 
     private void ValidateEn16931(XdmNode doc, Schema schema)
@@ -270,7 +292,7 @@ public class Parser
         }
     }
 
-    private XmlDocument TransformToIR(XdmNode doc, Schema schema)
+    private XdmNode SchemaToIR(XdmNode doc, Schema schema)
     {
         XsltExecutable executable = schema switch
         {
@@ -285,10 +307,12 @@ public class Parser
         transformer.GlobalContextItem = doc;
         transformer.ApplyTemplates(doc, destination);
 
-        return destination.XmlDocument;
+        // TODO: validate against IR schema, once it exists
+
+        return _docBuilder.Wrap(destination.XmlDocument);
     }
 
-    private XmlDocument IRToSchema(XmlDocument ir, Schema schema)
+    private XdmNode IRToSchema(XdmNode ir, Schema schema)
     {
         XsltExecutable executable = schema switch
         {
@@ -296,8 +320,6 @@ public class Parser
             Schema.CiiCrossIndustryInvoice => _irToCiiTransformer,
             _ => throw new UnreachableException(),
         };
-
-        XdmNode doc = _docBuilder.Build(ir);
 
         DomDestination destination = new();
 
@@ -310,17 +332,17 @@ public class Parser
             _ => null,
         };
 
-        transformer.GlobalContextItem = doc;
+        transformer.GlobalContextItem = ir;
 
-        transformer.ApplyTemplates(doc, destination);
+        transformer.ApplyTemplates(ir, destination);
 
         destination.XmlDocument.Schemas = _schemaSet;
         destination.XmlDocument.Validate(null);
 
-        return destination.XmlDocument;
+        return _docBuilder.Wrap(destination.XmlDocument);
     }
 
-    private XmlDocument SerializeToIR(ref readonly Invoice invoice)
+    private XdmNode SerializeToIR(ref readonly Invoice invoice)
     {
         XmlDocument result = new();
 
@@ -329,46 +351,62 @@ public class Parser
             invoice.Serialize(irWriter);
         }
 
-        return result;
+        // TODO: validate against IR schema, once it exists
+
+        return _docBuilder.Wrap(result);
     }
 
-    private XmlDocument GetSchemaValidatedDocument(XmlReader reader)
+    private XdmNode GetSchemaValidatedDocument(XmlReader reader)
     {
-        XmlDocument doc = new XmlDocument()
+        XmlDocument result = new()
         {
             Schemas = _schemaSet,
         };
 
-        doc.Load(reader);
+        result.Load(reader);
 
-        doc.Validate(null);
+        result.Validate(null);
 
-        return doc;
+        return _docBuilder.Wrap(result);
     }
 
-    private DocumentType GetDocumentType(XmlDocument doc)
+    private DocumentType GetDocumentType(XdmNode doc)
     {
-        XmlNode root = doc.DocumentElement ?? throw new Exception("Could not find root node.");
+        doc = doc ?? throw new ArgumentNullException();
 
-        Schema schema = (root.NamespaceURI, root.LocalName) switch
+        XdmNode root = doc.OutermostElement ?? throw new Exception("Could not find root node.");
+
+        Schema schema = root.NodeName switch
         {
-            (string namespaceUri, "Invoice") when namespaceUri == _namespaces.LookupNamespace("invoice") => Schema.UblInvoice,
-            (string namespaceUri, "CreditNote") when namespaceUri == _namespaces.LookupNamespace("credit-note") => Schema.UblCreditNote,
-            (string namespaceUri, "CrossIndustryInvoice") when namespaceUri == _namespaces.LookupNamespace("rsm") => Schema.CiiCrossIndustryInvoice,
-            (_, _) => throw new Exception($"Unknown root node: {root.Name}."),
+            QName n when n.Equals(_ublInvoice) => Schema.UblInvoice,
+            QName n when n.Equals(_ublCreditNote) => Schema.UblCreditNote,
+            QName n when n.Equals(_cii) => Schema.CiiCrossIndustryInvoice,
+            _ => throw new Exception($"Unknown root node: {root.NodeName?.EQName ?? "null?"}."),
         };
 
         string specificationIdentifier = schema switch
         {
-            Schema.UblInvoice or Schema.UblCreditNote => root.SelectSingleNode("cbc:CustomizationID", _namespaces)?.InnerText ?? throw new Exception("Could not find specification identifier node."),
-            Schema.CiiCrossIndustryInvoice => root.SelectSingleNode("rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID", _namespaces)?.InnerText ?? throw new Exception("Could not find specification identifier node."),
+            Schema.UblInvoice or Schema.UblCreditNote => root
+                .Children(Urn.UblCbc, "CustomizationID")
+                .Single()
+                .GetUnderlyingXmlNode()?
+                .InnerText ?? throw new Exception("Could not find specification identifier node."),
+            Schema.CiiCrossIndustryInvoice => root
+                .Children(Urn.Cii, "ExchangedDocumentContext")
+                .Single()
+                .Children(Urn.CiiRam, "GuidelineSpecifiedDocumentContextParameter")
+                .Single()
+                .Children(Urn.CiiRam, "ID")
+                .Single()
+                .GetUnderlyingXmlNode()?
+                .InnerText ?? throw new Exception("Could not find specification identifier node."),
             _ => throw new UnreachableException(),
         };
 
         Standard standard = specificationIdentifier switch
         {
-            "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0" => Standard.XRechnungCius,
-            "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0" => Standard.XRechnungExtension,
+            Urn.XRechnungV3 => Standard.XRechnungCius,
+            Urn.XRechnungExtensionV3 => Standard.XRechnungExtension,
             _ => throw new Exception($"Uncompatible specification identifier: {specificationIdentifier}."),
         };
 
