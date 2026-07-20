@@ -119,8 +119,6 @@ public static class NonEmptyArrayBuilder
 [CollectionBuilder(typeof(NonEmptyArrayBuilder), "Create")]
 public readonly struct NonEmptyArray<T> : IEquatable<NonEmptyArray<T>>, IEnumerable<T>, IReadOnlyCollection<T> where T : struct
 {
-    public static NonEmptyArray<T> Empty = new(ImmutableArray<T>.Empty);
-
     private ImmutableArray<T> _values
     {
         get
