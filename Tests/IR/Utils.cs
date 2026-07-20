@@ -1,12 +1,14 @@
 using System.Linq;
+using En16931;
 using En16931.Model;
+using En16931.Spec;
 using Xunit;
 
 namespace Tests.IR;
 
 public static class Utils
 {
-    public static void RefinedInvoiceComparson(Invoice expected, Invoice invoice)
+    public static void RefinedInvoiceComparison<T>(Invoice<T> expected, Invoice<T> invoice) where T : ISpecification
     {
         Assert.Equal(expected.InvoiceNumber, invoice.InvoiceNumber);
         Assert.Equal(expected.InvoiceIssueDate, invoice.InvoiceIssueDate);

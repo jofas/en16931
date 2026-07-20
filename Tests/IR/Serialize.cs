@@ -5,6 +5,7 @@ using System.Xml;
 using En16931;
 using En16931.Model;
 using En16931.Model.Primitives;
+using En16931.Specs;
 using Xunit;
 
 namespace Tests.IR;
@@ -414,7 +415,7 @@ public class Serialize
             </invoice>
             """;
 
-        Invoice expected = new Invoice
+        Invoice<XRechnung> expected = new Invoice<XRechnung>
         {
             InvoiceNumber = new Identifier("1234567"),
             InvoiceIssueDate = new Date(new DateTime(2018, 4, 13)),
@@ -445,10 +446,9 @@ public class Serialize
                     Note = new Text("Invoice Note Description 2"),
                 },
             ],
-            ProcessControl = new ProcessControl
+            ProcessControl = new ProcessControl<XRechnung>
             {
                 BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
-                SpecificationIdentifier = new Identifier("urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"),
             },
             PrecedingInvoiceReferences = [
                 new PrecedingInvoiceReference {
@@ -794,7 +794,7 @@ public class Serialize
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
-        var actual = Invoice.Deserialize(xmlReader);
+        var actual = Invoice<XRechnung>.Deserialize(xmlReader);
 
         Assert.Equal(expected, actual);
     }
@@ -847,10 +847,9 @@ public class Serialize
             </process-control>
             """;
 
-        ProcessControl expected = new ProcessControl
+        ProcessControl<XRechnung> expected = new ProcessControl<XRechnung>
         {
             BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
-            SpecificationIdentifier = new Identifier("urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"),
         };
 
         using StringWriter writer = new();
@@ -868,7 +867,7 @@ public class Serialize
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
-        var actual = ProcessControl.Deserialize(xmlReader);
+        var actual = ProcessControl<XRechnung>.Deserialize(xmlReader);
 
         Assert.Equal(expected, actual);
     }

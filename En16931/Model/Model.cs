@@ -3,11 +3,30 @@ using System.Xml;
 using En16931.Collections.Immutable;
 using En16931.IR;
 using En16931.Model.Primitives;
+using En16931.Utils;
+using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct Invoice : IIRDeserializable<Invoice>, IIRSerializable
+public interface IInvoice
 {
+    // BG-2
+    public IProcessControl ProcessControl { get; }
+}
+
+public interface IProcessControl
+{
+    // BT-24
+    public Identifier SpecificationIdentifier { get; }
+}
+
+// interface for cius/core data model, as it allows multiple implementations
+public interface IInvoice<TSpec> where TSpec : ISpecification { }
+
+public readonly record struct Invoice<T> : IInvoice, IInvoice<T>, IIRDeserializable<Invoice<T>>, IIRSerializable where T : ISpecification
+{
+    IProcessControl IInvoice.ProcessControl { get => ProcessControl; }
+
     // BT-1
     public required Identifier InvoiceNumber { get; init; }
 
@@ -73,7 +92,7 @@ public readonly record struct Invoice : IIRDeserializable<Invoice>, IIRSerializa
     public required Array<InvoiceNote> InvoiceNotes { get; init; }
 
     // BG-2
-    public required ProcessControl ProcessControl { get; init; }
+    public required ProcessControl<T> ProcessControl { get; init; }
 
     // BG-3
     public required Array<PrecedingInvoiceReference> PrecedingInvoiceReferences { get; init; }
@@ -363,7 +382,7 @@ public readonly record struct Invoice : IIRDeserializable<Invoice>, IIRSerializa
         writer.WriteEndDocument();
     }
 
-    public static Invoice Deserialize(XmlReader reader)
+    public static Invoice<T> Deserialize(XmlReader reader)
     {
         reader.ReadStartElement("invoice", IRConfig.NS);
         reader.MoveToContent();
@@ -609,7 +628,7 @@ public readonly record struct Invoice : IIRDeserializable<Invoice>, IIRSerializa
             reader.MoveToContent();
         }
 
-        ProcessControl processControl = ProcessControl.Deserialize(reader);
+        ProcessControl<T> processControl = ProcessControl<T>.Deserialize(reader);
 
         Array<PrecedingInvoiceReference> precedingInvoiceReferences = Array<PrecedingInvoiceReference>.Empty;
 
@@ -747,7 +766,7 @@ public readonly record struct Invoice : IIRDeserializable<Invoice>, IIRSerializa
         reader.ReadEndElement();
         reader.MoveToContent();
 
-        return new Invoice
+        return new Invoice<T>
         {
             InvoiceNumber = invoiceNumber,
             InvoiceIssueDate = invoiceIssueDate,
@@ -853,13 +872,13 @@ public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>, IIRS
     }
 }
 
-public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>, IIRSerializable
+public readonly record struct ProcessControl<T> : IProcessControl, IIRDeserializable<ProcessControl<T>>, IIRSerializable where T : ISpecification
 {
     // BT-23
     public required Text BusinessProcessType { get; init; }
 
     // BT-24
-    public required Identifier SpecificationIdentifier { get; init; }
+    public Identifier SpecificationIdentifier { get => T.SpecificationIdentifier; }
 
     public void Serialize(XmlWriter writer)
     {
@@ -879,7 +898,7 @@ public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>
         writer.WriteEndElement();
     }
 
-    public static ProcessControl Deserialize(XmlReader reader)
+    public static ProcessControl<T> Deserialize(XmlReader reader)
     {
         reader.ReadStartElement("process-control", IRConfig.NS);
         reader.MoveToContent();
@@ -897,16 +916,20 @@ public readonly record struct ProcessControl : IIRDeserializable<ProcessControl>
 
         Identifier specificationIdentifier = Identifier.Deserialize(reader);
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+        if (specificationIdentifier != T.SpecificationIdentifier)
+        {
+            ThrowHelper.ThrowInvalidOperationException($"`specification-identifier` field value `{specificationIdentifier.Content}` from the xml document does not match the identifier from the specification {typeof(T).Name}, which is: {T.SpecificationIdentifier.Content}");
+        }
 
         reader.ReadEndElement();
         reader.MoveToContent();
 
-        return new ProcessControl
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new ProcessControl<T>
         {
             BusinessProcessType = businessProcessType,
-            SpecificationIdentifier = specificationIdentifier,
         };
     }
 }

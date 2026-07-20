@@ -1,12 +1,13 @@
 using System;
 using En16931.Model;
 using En16931.Model.Primitives;
+using En16931.Specs;
 
 namespace Tests.IR;
 
 public static class Data
 {
-    public static readonly Invoice Invoice1 = new Invoice
+    public static readonly Invoice<XRechnung> Invoice1 = new Invoice<XRechnung>
     {
         InvoiceNumber = new Identifier("1234567"),
         InvoiceIssueDate = new Date(new DateTime(2018, 4, 13)),
@@ -37,10 +38,9 @@ public static class Data
                 Note = new Text("Invoice Note Description 2"),
             },
         ],
-        ProcessControl = new ProcessControl
+        ProcessControl = new ProcessControl<XRechnung>
         {
             BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
-            SpecificationIdentifier = new Identifier("urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"),
         },
         PrecedingInvoiceReferences = [
             new PrecedingInvoiceReference {
@@ -375,7 +375,7 @@ public static class Data
         ],
     };
 
-    public static readonly Invoice Invoice2 = new Invoice
+    public static readonly Invoice<XRechnung> Invoice2 = new Invoice<XRechnung>
     {
         InvoiceNumber = new Identifier("1234567"),
         InvoiceIssueDate = new Date(new DateTime(2018, 4, 13)),
@@ -402,10 +402,9 @@ public static class Data
                     Note = new Text("Invoice Note Description"),
                 },
             ],
-        ProcessControl = new ProcessControl
+        ProcessControl = new ProcessControl<XRechnung>
         {
             BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
-            SpecificationIdentifier = new Identifier("urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"),
         },
         PrecedingInvoiceReferences = [
                 new PrecedingInvoiceReference {
@@ -687,7 +686,7 @@ public static class Data
             ],
     };
 
-    public static readonly Invoice Invoice3 = new Invoice
+    public static readonly Invoice<XRechnung> Invoice3 = new Invoice<XRechnung>
     {
         InvoiceNumber = new Identifier("1234567"),
         InvoiceIssueDate = new Date(new DateTime(2018, 4, 13)),
@@ -714,10 +713,9 @@ public static class Data
                     Note = new Text("Invoice Note Description"),
                 },
             ],
-        ProcessControl = new ProcessControl
+        ProcessControl = new ProcessControl<XRechnung>
         {
             BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
-            SpecificationIdentifier = new Identifier("urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"),
         },
         PrecedingInvoiceReferences = [
                 new PrecedingInvoiceReference {
@@ -997,7 +995,7 @@ public static class Data
             ],
     };
 
-    public static readonly Invoice Invoice4 = new Invoice
+    public static readonly Invoice<XRechnung> Invoice4 = new Invoice<XRechnung>
     {
         InvoiceNumber = new Identifier("1234567"),
         InvoiceIssueDate = new Date(new DateTime(2018, 4, 13)),
@@ -1024,10 +1022,9 @@ public static class Data
                 Note = new Text("Invoice Note Description"),
             },
         ],
-        ProcessControl = new ProcessControl
+        ProcessControl = new ProcessControl<XRechnung>
         {
             BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
-            SpecificationIdentifier = new Identifier("urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"),
         },
         PrecedingInvoiceReferences = [
             new PrecedingInvoiceReference {

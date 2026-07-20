@@ -2,11 +2,13 @@ using System;
 using System.IO;
 using System.Xml.Schema;
 using En16931;
+using En16931.Model;
+using En16931.Specs;
 using Xunit;
 
 namespace Tests;
 
-public class XRechnung
+public class XRechnungTests
 {
     [Theory]
     [InlineData("Resources/Ubl-Invoice/Failure")]
@@ -20,7 +22,7 @@ public class XRechnung
         {
             Assert.Throws<XmlSchemaValidationException>(() =>
             {
-                parser.Parse(test);
+                parser.Parse<XRechnung>(test);
             });
         }
     }
@@ -37,7 +39,7 @@ public class XRechnung
         {
             Assert.Throws<XmlSchemaValidationException>(() =>
             {
-                parser.Parse(test);
+                parser.Parse<XRechnung>(test);
             });
         }
     }
@@ -54,7 +56,7 @@ public class XRechnung
         {
             Assert.Throws<En16931SchematronException>(() =>
             {
-                parser.Parse(test);
+                parser.Parse<XRechnung>(test);
             });
         }
     }
@@ -71,7 +73,7 @@ public class XRechnung
         {
             Assert.Throws<En16931SchematronException>(() =>
             {
-                parser.Parse(test);
+                parser.Parse<XRechnung>(test);
             });
         }
     }
@@ -86,7 +88,7 @@ public class XRechnung
 
         foreach (string test in testFiles)
         {
-            parser.Parse(test);
+            parser.Parse<XRechnung>(test);
         }
     }
 
@@ -102,7 +104,7 @@ public class XRechnung
         {
             Assert.Throws<XRechnungSchematronException>(() =>
             {
-                parser.Parse(test);
+                parser.Parse<XRechnung>(test);
             });
         }
     }
@@ -117,7 +119,7 @@ public class XRechnung
 
         foreach (string test in testFiles)
         {
-            parser.Parse(test);
+            parser.Parse<XRechnung>(test);
         }
     }
 
@@ -133,7 +135,7 @@ public class XRechnung
         {
             Assert.Throws<XRechnungSchematronException>(() =>
             {
-                parser.Parse(test);
+                parser.Parse<XRechnung>(test);
             });
         }
     }
@@ -150,7 +152,7 @@ public class XRechnung
         {
             Assert.Throws<XRechnungSchematronException>(() =>
             {
-                parser.Parse(test);
+                parser.Parse<XRechnungExtension>(test);
             });
         }
     }
@@ -167,7 +169,7 @@ public class XRechnung
         {
             Assert.Throws<XRechnungSchematronException>(() =>
             {
-                parser.Parse(test);
+                parser.Parse<XRechnungExtension>(test);
             });
         }
     }
@@ -184,7 +186,8 @@ public class XRechnung
 
         foreach (string standardTest in standardTests)
         {
-            parser.Parse(standardTest);
+            IInvoice invoice = parser.Parse(standardTest);
+            Assert.True(invoice is Invoice<XRechnung> || invoice is Invoice<XRechnungExtension>);
         }
     }
 }

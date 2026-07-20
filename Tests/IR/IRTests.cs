@@ -4,6 +4,7 @@ using System.IO;
 using En16931;
 using En16931.Model;
 using En16931.Model.Primitives;
+using En16931.Specs;
 using Xunit;
 
 namespace Tests.IR;
@@ -16,7 +17,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
         Assert.Equal(Data.Invoice1, invoice);
     }
@@ -27,9 +28,9 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
-        Invoice expected = Data.Invoice1 with
+        Invoice<XRechnung> expected = Data.Invoice1 with
         {
             InvoiceTypeCode = new Code("381"),
         };
@@ -43,10 +44,10 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
         // CII only supports a single preceding invoice reference
-        Invoice expected = Data.Invoice1 with
+        Invoice<XRechnung> expected = Data.Invoice1 with
         {
             PrecedingInvoiceReferences = [Data.Invoice1.PrecedingInvoiceReferences[0]],
         };
@@ -61,7 +62,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
         Assert.Equal(Data.Invoice2, invoice);
     }
@@ -72,9 +73,9 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
-        Invoice expected = Data.Invoice2 with
+        Invoice<XRechnung> expected = Data.Invoice2 with
         {
             InvoiceTypeCode = new Code("381"),
         };
@@ -88,7 +89,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
         Assert.Equal(Data.Invoice2, invoice);
     }
@@ -99,7 +100,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
         Assert.Equal(Data.Invoice3, invoice);
     }
@@ -110,9 +111,9 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
-        Invoice expected = Data.Invoice3 with
+        Invoice<XRechnung> expected = Data.Invoice3 with
         {
             InvoiceTypeCode = new Code("381"),
         };
@@ -126,7 +127,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
         Assert.Equal(Data.Invoice3, invoice);
     }
@@ -137,7 +138,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
         Assert.Equal(Data.Invoice4, invoice);
     }
@@ -148,9 +149,9 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
-        Invoice expected = Data.Invoice4 with
+        Invoice<XRechnung> expected = Data.Invoice4 with
         {
             InvoiceTypeCode = new Code("381"),
         };
@@ -164,7 +165,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        Invoice invoice = parser.Parse(invoiceLocation);
+        Invoice<XRechnung> invoice = parser.Parse<XRechnung>(invoiceLocation);
 
         Assert.Equal(Data.Invoice4, invoice);
     }
@@ -174,22 +175,22 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        List<Invoice> invoices = [
+        List<Invoice<XRechnung>> invoices = [
             Data.Invoice1,
             Data.Invoice2,
             Data.Invoice3,
             Data.Invoice4,
         ];
 
-        foreach (Invoice invoice in invoices)
+        foreach (Invoice<XRechnung> invoice in invoices)
         {
             using StringWriter writer = new();
 
-            parser.Serialize(in invoice, writer, Schema.UblInvoice);
+            parser.Serialize(in invoice, Schema.UblInvoice, writer);
 
             using StringReader reader = new(writer.ToString());
 
-            Assert.Equal(invoice, parser.Parse(reader));
+            Assert.Equal(invoice, parser.Parse<XRechnung>(reader));
         }
     }
 
@@ -198,7 +199,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        List<Invoice> invoices = [
+        List<Invoice<XRechnung>> invoices = [
             Data.Invoice1 with
             {
                 InvoiceTypeCode = new Code("381"),
@@ -217,15 +218,15 @@ public class IRTests
             },
         ];
 
-        foreach (Invoice invoice in invoices)
+        foreach (Invoice<XRechnung> invoice in invoices)
         {
             using StringWriter writer = new();
 
-            parser.Serialize(in invoice, writer, Schema.UblCreditNote);
+            parser.Serialize(in invoice, Schema.UblCreditNote, writer);
 
             using StringReader reader = new(writer.ToString());
 
-            Assert.Equal(invoice, parser.Parse(reader));
+            Assert.Equal(invoice, parser.Parse<XRechnung>(reader));
         }
     }
 
@@ -234,7 +235,7 @@ public class IRTests
     {
         Parser parser = new Parser();
 
-        List<Invoice> invoices = [
+        List<Invoice<XRechnung>> invoices = [
             // CII only supports a single preceding invoice reference
             Data.Invoice1 with
             {
@@ -245,15 +246,15 @@ public class IRTests
             Data.Invoice4,
         ];
 
-        foreach (Invoice invoice in invoices)
+        foreach (Invoice<XRechnung> invoice in invoices)
         {
             using StringWriter writer = new();
 
-            parser.Serialize(in invoice, writer, Schema.CiiCrossIndustryInvoice);
+            parser.Serialize(in invoice, Schema.CiiCrossIndustryInvoice, writer);
 
             using StringReader reader = new(writer.ToString());
 
-            Assert.Equal(invoice, parser.Parse(reader));
+            Assert.Equal(invoice, parser.Parse<XRechnung>(reader));
         }
     }
 }

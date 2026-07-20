@@ -5,6 +5,16 @@ namespace En16931.Utils;
 
 public static class Assert
 {
+    public static void IsTrue(bool value, string message)
+    {
+        if (value is true)
+        {
+            return;
+        }
+
+        ThrowHelper.ThrowArgumentException(message);
+    }
+
     public static void IsFalse(bool value, string message)
     {
         if (value is false)
@@ -61,6 +71,11 @@ public static class ThrowHelper
     public static void ThrowArgumentException(string message)
     {
         throw new ArgumentException(message);
+    }
+
+    public static void ThrowInvalidOperationException(string message)
+    {
+        throw new InvalidOperationException(message);
     }
 
     public static void ThrowArgumentNullException()
