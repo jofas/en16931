@@ -3,8 +3,8 @@ using System.Xml;
 using En16931.Collections.Immutable;
 using En16931.IR;
 using En16931.Model.Primitives;
-using En16931.Utils;
 using En16931.Spec;
+using En16931.Utils;
 
 namespace En16931.Model;
 

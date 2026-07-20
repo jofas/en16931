@@ -6,9 +6,9 @@ using System.Xml.Linq;
 using En16931.Collections.Immutable;
 using En16931.Model;
 using En16931.Model.Primitives;
-using En16931.Utils;
 using En16931.Spec;
 using En16931.Spec.Utils;
+using En16931.Utils;
 
 namespace En16931.Specs;
 
@@ -29,7 +29,8 @@ namespace En16931.Specs;
 
 // TODO: Core Spec
 
-public static class BuiltinSpecs {
+public static class BuiltinSpecs
+{
     // TODO: List<T> to RefArray<T> (once it exists)
     public static readonly List<ISpecificationParser> All = [XRechnung.Instance, XRechnungExtension.Instance];
 }
@@ -82,10 +83,10 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         ValidateXRechnung(in doc);
     }
 
-    public void Serialize(IInvoice invoice, Schema schema, XmlWriter writer)
+    public Document Serialize(IInvoice invoice, Schema schema)
     {
         Invoice<XRechnung> unboxed = (Invoice<XRechnung>)invoice;
-        Serialize(in unboxed, schema, writer);
+        return Serialize(ref unboxed, schema);
     }
 
     public Invoice<XRechnung> Parse(ref readonly Document doc)
@@ -98,13 +99,14 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         };
 
         // TODO: have tranformer participate in `Document` API once IR become fully
-        //   a first-class syntax
+        //   a first-class syntax... That would require supporting SVRL documents as well
+        //
         XDocument ir = _transformers[transformerId].Transform(doc.Doc);
 
         return Invoice<XRechnung>.Deserialize(ir.CreateReader());
     }
 
-    public void Serialize(ref readonly Invoice<XRechnung> invoice, Schema schema, XmlWriter writer)
+    public Document Serialize(scoped ref readonly Invoice<XRechnung> invoice, Schema schema)
     {
         XDocument ir = new();
 
@@ -127,7 +129,9 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
             _ => null,
         };
 
-        _transformers[transformerId].Transform(ir, writer, initialMode);
+        XDocument result = _transformers[transformerId].Transform(ir, initialMode);
+
+        return new Document(result);
     }
 
     private void ValidateEn16931(ref readonly Document doc)
@@ -256,10 +260,10 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         ValidateXRechnung(in doc);
     }
 
-    public void Serialize(IInvoice invoice, Schema schema, XmlWriter writer)
+    public Document Serialize(IInvoice invoice, Schema schema)
     {
         Invoice<XRechnungExtension> unboxed = (Invoice<XRechnungExtension>)invoice;
-        Serialize(in unboxed, schema, writer);
+        return Serialize(in unboxed, schema);
     }
 
     public Invoice<XRechnungExtension> Parse(ref readonly Document doc)
@@ -271,14 +275,12 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
             _ => throw new UnreachableException(),
         };
 
-        // TODO: have tranformer participate in `Document` API once IR become fully
-        //   a first-class syntax
         XDocument ir = _transformers[transformerId].Transform(doc.Doc);
 
         return Invoice<XRechnungExtension>.Deserialize(ir.CreateReader());
     }
 
-    public void Serialize(ref readonly Invoice<XRechnungExtension> invoice, Schema schema, XmlWriter writer)
+    public Document Serialize(scoped ref readonly Invoice<XRechnungExtension> invoice, Schema schema)
     {
         XDocument ir = new();
 
@@ -301,7 +303,9 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
             _ => null,
         };
 
-        _transformers[transformerId].Transform(ir, writer, initialMode);
+        XDocument result = _transformers[transformerId].Transform(ir, initialMode);
+
+        return new Document(result);
     }
 
     private void ValidateEn16931(ref readonly Document doc)

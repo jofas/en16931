@@ -16,7 +16,8 @@ public class Parser
 {
     private readonly ImmutableDictionary<Identifier, ISpecificationParser> _specs;
 
-    public Parser(IEnumerable<ISpecificationParser> specs) {
+    public Parser(IEnumerable<ISpecificationParser> specs)
+    {
         _specs = specs
             .Select(s => KeyValuePair.Create(s.SpecificationIdentifier, s))
             .ToImmutableDictionary();
@@ -39,12 +40,20 @@ public class Parser
     public IInvoice Parse(XmlReader reader)
     {
         Document doc = new(reader);
+        return Parse(in doc);
+    }
 
-        ISpecificationParser parser = _specs[doc.Specification];
+    public IInvoice Parse(XDocument document)
+    {
+        Document doc = new(document);
+        return Parse(in doc);
+    }
 
-        parser.Validate(in doc);
-
-        return parser.Parse(in doc);
+    public IInvoice Parse(ref readonly Document document)
+    {
+        ISpecificationParser parser = _specs[document.Specification];
+        parser.Validate(in document);
+        return parser.Parse(in document);
     }
 
     public Invoice<T> Parse<T>(string filepath) where T : ISpecification
@@ -62,13 +71,23 @@ public class Parser
     public Invoice<T> Parse<T>(XmlReader reader) where T : ISpecification
     {
         Document doc = new(reader);
+        return Parse<T>(in doc);
+    }
 
-        ISpecificationParser parser = _specs[doc.Specification];
+    public Invoice<T> Parse<T>(XDocument document) where T : ISpecification
+    {
+        Document doc = new(document);
+        return Parse<T>(in doc);
+    }
+
+    public Invoice<T> Parse<T>(ref readonly Document document) where T : ISpecification
+    {
+        ISpecificationParser parser = _specs[document.Specification];
         ISpecificationParser<Invoice<T>, T> typedParser = (ISpecificationParser<Invoice<T>, T>)parser;
 
-        parser.Validate(in doc);
+        parser.Validate(in document);
 
-        return typedParser.Parse(in doc);
+        return typedParser.Parse(in document);
     }
 
     public void Validate(string filepath)
@@ -86,10 +105,19 @@ public class Parser
     public void Validate(XmlReader reader)
     {
         Document doc = new(reader);
+        Validate(in doc);
+    }
 
-        ISpecificationParser parser = _specs[doc.Specification];
+    public void Validate(XDocument document)
+    {
+        Document doc = new Document(document);
+        Validate(in doc);
+    }
 
-        parser.Validate(in doc);
+    public void Validate(ref readonly Document document)
+    {
+        ISpecificationParser parser = _specs[document.Specification];
+        parser.Validate(in document);
     }
 
     public void Serialize(IInvoice invoice, Schema schema, string filepath)
@@ -106,20 +134,19 @@ public class Parser
 
     public void Serialize(IInvoice invoice, Schema schema, XmlWriter writer)
     {
+        Document doc = Serialize(invoice, schema);
+        doc.WriteTo(writer);
+    }
+
+    public Document Serialize(IInvoice invoice, Schema schema)
+    {
         ISpecificationParser parser = _specs[invoice.ProcessControl.SpecificationIdentifier];
 
-        XDocument rawDoc = new();
-
-        using (XmlWriter docWriter = rawDoc.CreateWriter())
-        {
-            parser.Serialize(invoice, schema, docWriter);
-        }
-
-        Document doc = new(rawDoc);
+        Document doc = parser.Serialize(invoice, schema);
 
         parser.Validate(in doc);
 
-        doc.WriteTo(writer);
+        return doc;
     }
 
     public void Serialize<T>(ref readonly Invoice<T> invoice, Schema schema, string filepath) where T : ISpecification
@@ -136,21 +163,20 @@ public class Parser
 
     public void Serialize<T>(ref readonly Invoice<T> invoice, Schema schema, XmlWriter writer) where T : ISpecification
     {
+        Document doc = Serialize(in invoice, schema);
+        doc.WriteTo(writer);
+    }
+
+    public Document Serialize<T>(scoped ref readonly Invoice<T> invoice, Schema schema) where T : ISpecification
+    {
         ISpecificationParser parser = _specs[invoice.ProcessControl.SpecificationIdentifier];
         ISpecificationParser<Invoice<T>, T> typedParser = (ISpecificationParser<Invoice<T>, T>)parser;
 
-        XDocument rawDoc = new();
-
-        using (XmlWriter docWriter = rawDoc.CreateWriter())
-        {
-            typedParser.Serialize(in invoice, schema, docWriter);
-        }
-
-        Document doc = new(rawDoc);
+        Document doc = typedParser.Serialize(in invoice, schema);
 
         parser.Validate(in doc);
 
-        doc.WriteTo(writer);
+        return doc;
     }
 }
 

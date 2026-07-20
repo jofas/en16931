@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Xml;
 using En16931.Collections.Immutable;
 using En16931.Model;
 using En16931.Model.Primitives;
@@ -29,14 +28,14 @@ public interface ISpecificationParser : ISpecificationValidator
 
     public IInvoice Parse(ref readonly Document doc);
 
-    public void Serialize(IInvoice invoice, Schema schema, XmlWriter writer);
+    public Document Serialize(IInvoice invoice, Schema schema);
 }
 
 public interface ISpecificationParser<TInvoice, TSpec> where TInvoice : IInvoice<TSpec> where TSpec : ISpecification
 {
     public TInvoice Parse(ref readonly Document doc);
 
-    public void Serialize(ref readonly TInvoice invoice, Schema schema, XmlWriter writer);
+    public Document Serialize(scoped ref readonly TInvoice invoice, Schema schema);
 }
 
 public readonly record struct InvoiceType
