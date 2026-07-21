@@ -19,6 +19,8 @@ public interface ISpecificationValidator
     public Identifier SpecificationIdentifier { get; }
 
     // Invariant: bt-24 in doc must be equal to `SpecificationIdentifier`
+    // XRechnung: BR-DE-21
+    // Core: no rule; must be implemented
     public void Validate(ref readonly Document doc);
 }
 

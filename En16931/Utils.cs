@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace En16931.Utils;
@@ -55,7 +56,7 @@ public static class Assert
         ThrowHelper.ThrowArgumentException(message);
     }
 
-    public static void ArgContainsNoNullValues<T>(T?[] value, string message) where T : class
+    public static void ArgContainsNoNullValues<T>(IEnumerable<T?> value, string message) where T : class
     {
         if (value.All(x => x is not null))
         {

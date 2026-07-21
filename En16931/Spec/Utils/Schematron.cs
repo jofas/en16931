@@ -4,12 +4,11 @@ using En16931.Collections.Immutable;
 
 namespace En16931.Spec.Utils;
 
-// TODO: List<T> to RefArray<T> (once it exists)
 public readonly record struct SchematronResult
 {
-    public required List<string> Infos { get; init; }
-    public required List<string> Warnings { get; init; }
-    public required List<string> Errors { get; init; }
+    public required RefArray<string> Infos { get; init; }
+    public required RefArray<string> Warnings { get; init; }
+    public required RefArray<string> Errors { get; init; }
 }
 
 public static class Svrl
@@ -44,9 +43,9 @@ public static class Svrl
 
         return new SchematronResult
         {
-            Infos = infos,
-            Warnings = warnings,
-            Errors = errors,
+            Infos = new(infos),
+            Warnings = new(warnings),
+            Errors = new(errors),
         };
     }
 }

@@ -12,8 +12,6 @@ using En16931.Utils;
 
 namespace En16931.Specs;
 
-// TODO: more array types (#54)
-//
 // TODO: restructure Test suite (IRTests.cs aren't IR tests but end-to-end tests of the parsing pipeline)
 // TODO: have a dedicated Invoice instance for every test (instead of .. with { ... })
 // TODO: use filename to check for violated business rules in failing tests
@@ -31,8 +29,7 @@ namespace En16931.Specs;
 
 public static class BuiltinSpecs
 {
-    // TODO: List<T> to RefArray<T> (once it exists)
-    public static readonly List<ISpecificationParser> All = [XRechnung.Instance, XRechnungExtension.Instance];
+    public static readonly RefArray<ISpecificationParser> All = [XRechnung.Instance, XRechnungExtension.Instance];
 }
 
 public class XRechnung : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<Invoice<XRechnung>, XRechnung>
