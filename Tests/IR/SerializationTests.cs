@@ -5,12 +5,12 @@ using System.Xml;
 using En16931;
 using En16931.Model;
 using En16931.Model.Primitives;
-using En16931.Specs;
 using Xunit;
+using S = En16931.Specs;
 
 namespace Tests.IR;
 
-public class Serialize
+public class SerializationTests
 {
     [Fact]
     public void SerializeInvoice()
@@ -415,7 +415,7 @@ public class Serialize
             </invoice>
             """;
 
-        Invoice<XRechnung> expected = new Invoice<XRechnung>
+        Invoice<S.XRechnung> expected = new Invoice<S.XRechnung>
         {
             InvoiceNumber = new Identifier("1234567"),
             InvoiceIssueDate = new Date(new DateTime(2018, 4, 13)),
@@ -446,7 +446,7 @@ public class Serialize
                     Note = new Text("Invoice Note Description 2"),
                 },
             ],
-            ProcessControl = new ProcessControl<XRechnung>
+            ProcessControl = new ProcessControl<S.XRechnung>
             {
                 BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
             },
@@ -794,7 +794,7 @@ public class Serialize
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
-        var actual = Invoice<XRechnung>.Deserialize(xmlReader);
+        var actual = Invoice<S.XRechnung>.Deserialize(xmlReader);
 
         Assert.Equal(expected, actual);
     }
@@ -847,7 +847,7 @@ public class Serialize
             </process-control>
             """;
 
-        ProcessControl<XRechnung> expected = new ProcessControl<XRechnung>
+        ProcessControl<S.XRechnung> expected = new ProcessControl<S.XRechnung>
         {
             BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
         };
@@ -867,7 +867,7 @@ public class Serialize
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
-        var actual = ProcessControl<XRechnung>.Deserialize(xmlReader);
+        var actual = ProcessControl<S.XRechnung>.Deserialize(xmlReader);
 
         Assert.Equal(expected, actual);
     }

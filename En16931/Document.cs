@@ -15,30 +15,6 @@ public enum Schema
     CiiCrossIndustryInvoice,
 }
 
-static class Xsd
-{
-    public static XmlSchemaSet SchemaSet;
-
-    static Xsd()
-    {
-        SchemaSet = new XmlSchemaSet();
-        SchemaSet.XmlResolver = new XmlUrlResolver();
-
-        SchemaSet.Add(null, "Resources/Ubl/maindoc/UBL-Invoice-2.1.xsd");
-        SchemaSet.Add(null, "Resources/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
-        SchemaSet.Add(null, "Resources/Cii/CrossIndustryInvoice_100pD16B.xsd");
-
-        // Schema is DTD annotated, which is why we have to add it like this,
-        // instead of adding the file directly with `SchemaSet.Add`
-        FileStream w3XmlSigSchemaFile = File.OpenRead("Resources/W3/xmldsig-core-schema.xsd");
-        XmlSchema w3XmlSigSchema = XmlSchema.Read(w3XmlSigSchemaFile, null)!;
-        SchemaSet.Add(w3XmlSigSchema);
-
-        SchemaSet.Compile();
-    }
-
-}
-
 public readonly ref struct Document
 {
     private static XNamespace _ublInvoice = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2";
@@ -92,6 +68,29 @@ public readonly ref struct Document
     public void WriteTo(XmlWriter writer)
     {
         Doc.WriteTo(writer);
+    }
+}
+
+static class Xsd
+{
+    public static XmlSchemaSet SchemaSet;
+
+    static Xsd()
+    {
+        SchemaSet = new XmlSchemaSet();
+        SchemaSet.XmlResolver = new XmlUrlResolver();
+
+        SchemaSet.Add(null, "Resources/Ubl/maindoc/UBL-Invoice-2.1.xsd");
+        SchemaSet.Add(null, "Resources/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
+        SchemaSet.Add(null, "Resources/Cii/CrossIndustryInvoice_100pD16B.xsd");
+
+        // Schema is DTD annotated, which is why we have to add it like this,
+        // instead of adding the file directly with `SchemaSet.Add`
+        FileStream w3XmlSigSchemaFile = File.OpenRead("Resources/W3/xmldsig-core-schema.xsd");
+        XmlSchema w3XmlSigSchema = XmlSchema.Read(w3XmlSigSchemaFile, null)!;
+        SchemaSet.Add(w3XmlSigSchema);
+
+        SchemaSet.Compile();
     }
 }
 
