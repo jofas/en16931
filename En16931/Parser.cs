@@ -182,7 +182,7 @@ public class Parser
 
 public class SchematronException : Exception
 {
-    public required string[] Errors { get; init; }
+    public required En16931.Collections.Immutable.RefArray<string> Errors { get; init; }
 }
 
 public class En16931SchematronException : SchematronException { }

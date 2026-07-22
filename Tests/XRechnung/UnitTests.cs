@@ -43,7 +43,7 @@ public class UnitTests
         foreach (string test in testFiles)
         {
             string invoiceName = Path.GetFileNameWithoutExtension(test);
-            Console.WriteLine(invoiceName);
+
             Invoice<S.XRechnung> expected = InvoiceExtractor.Invoice<Invoice<S.XRechnung>>(invoiceCollection, invoiceName);
 
             Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(test);

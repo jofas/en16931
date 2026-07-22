@@ -146,7 +146,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         {
             throw new En16931SchematronException
             {
-                Errors = result.Errors.ToArray(),
+                Errors = new RefArray<string>(result.Errors),
             };
         }
     }
@@ -166,7 +166,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         {
             throw new XRechnungSchematronException
             {
-                Errors = result.Errors.ToArray(),
+                Errors = new RefArray<string>(result.Errors),
             };
         }
     }
@@ -320,7 +320,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         {
             throw new En16931SchematronException
             {
-                Errors = result.Errors.ToArray(),
+                Errors = new RefArray<string>(result.Errors),
             };
         }
     }
@@ -340,7 +340,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         {
             throw new XRechnungSchematronException
             {
-                Errors = result.Errors.ToArray(),
+                Errors = new RefArray<string>(result.Errors),
             };
         }
     }

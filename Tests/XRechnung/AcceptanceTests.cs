@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Xml.Schema;
 using En16931;
 using En16931.Model;
@@ -21,10 +22,12 @@ public class AcceptanceTests
 
         foreach (string test in testFiles)
         {
-            Assert.Throws<En16931SchematronException>(() =>
+            En16931SchematronException e = Assert.Throws<En16931SchematronException>(() =>
             {
                 parser.Parse<S.XRechnung>(test);
             });
+
+            Assert.Contains(Path.GetFileNameWithoutExtension(test), e.Errors);
         }
     }
 
@@ -39,10 +42,12 @@ public class AcceptanceTests
 
         foreach (string test in testFiles)
         {
-            Assert.Throws<XRechnungSchematronException>(() =>
+            XRechnungSchematronException e = Assert.Throws<XRechnungSchematronException>(() =>
             {
                 parser.Parse<S.XRechnung>(test);
             });
+
+            Assert.Contains(Path.GetFileNameWithoutExtension(test), e.Errors);
         }
     }
 
