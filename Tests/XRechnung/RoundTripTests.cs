@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using En16931;
+using En16931.Collections.Immutable;
 using En16931.Model;
 using En16931.Model.Primitives;
+using Tests.Utils;
 using Tests.XRechnung.Invoices;
 using Xunit;
 using S = En16931.Specs;
@@ -15,68 +18,33 @@ public class RoundTripTests
     [Fact]
     public void UblInvoiceRoundTrip()
     {
-        Parser parser = new Parser();
-
-        List<Invoice<S.XRechnung>> invoices = [
-            UblInvoices.Invoice1,
-            UblInvoices.Invoice2,
-            UblInvoices.Invoice3,
-            UblInvoices.Invoice4,
-        ];
-
-        foreach (Invoice<S.XRechnung> invoice in invoices)
-        {
-            using StringWriter writer = new();
-
-            parser.Serialize(in invoice, Schema.UblInvoice, writer);
-
-            using StringReader reader = new(writer.ToString());
-
-            Assert.Equal(invoice, parser.Parse<S.XRechnung>(reader));
-        }
+        Array<Invoice<S.XRechnung>> invoices = InvoiceExtractor.Invoices<Invoice<S.XRechnung>>(typeof(UblInvoices));
+        RoundTrip(invoices, Schema.UblInvoice);
     }
 
     [Fact]
     public void UblCreditNoteRoundTrip()
     {
-        Parser parser = new Parser();
-
-        List<Invoice<S.XRechnung>> invoices = [
-            UblCreditNotes.Invoice1,
-            UblCreditNotes.Invoice2,
-            UblCreditNotes.Invoice3,
-            UblCreditNotes.Invoice4,
-        ];
-
-        foreach (Invoice<S.XRechnung> invoice in invoices)
-        {
-            using StringWriter writer = new();
-
-            parser.Serialize(in invoice, Schema.UblCreditNote, writer);
-
-            using StringReader reader = new(writer.ToString());
-
-            Assert.Equal(invoice, parser.Parse<S.XRechnung>(reader));
-        }
+        Array<Invoice<S.XRechnung>> invoices = InvoiceExtractor.Invoices<Invoice<S.XRechnung>>(typeof(UblCreditNotes));
+        RoundTrip(invoices, Schema.UblCreditNote);
     }
 
     [Fact]
     public void CiiRoundTrip()
     {
-        Parser parser = new Parser();
+        Array<Invoice<S.XRechnung>> invoices = InvoiceExtractor.Invoices<Invoice<S.XRechnung>>(typeof(Ciis));
+        RoundTrip(invoices, Schema.CiiCrossIndustryInvoice);
+    }
 
-        List<Invoice<S.XRechnung>> invoices = [
-            Ciis.Invoice1,
-            Ciis.Invoice2,
-            Ciis.Invoice3,
-            Ciis.Invoice4,
-        ];
+    private void RoundTrip(Array<Invoice<S.XRechnung>> invoices, Schema schema)
+    {
+        Parser parser = new Parser();
 
         foreach (Invoice<S.XRechnung> invoice in invoices)
         {
             using StringWriter writer = new();
 
-            parser.Serialize(in invoice, Schema.CiiCrossIndustryInvoice, writer);
+            parser.Serialize(in invoice, schema, writer);
 
             using StringReader reader = new(writer.ToString());
 

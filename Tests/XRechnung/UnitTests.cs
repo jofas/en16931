@@ -4,6 +4,7 @@ using System.IO;
 using En16931;
 using En16931.Model;
 using En16931.Model.Primitives;
+using Tests.Utils;
 using Tests.XRechnung.Invoices;
 using Xunit;
 using S = En16931.Specs;
@@ -13,111 +14,41 @@ namespace Tests.XRechnung;
 public class UnitTests
 {
     [Theory]
-    [InlineData("Resources/XRechnung/UblInvoice/Success/1.xml")]
-    public void UblInvoice1(string invoiceLocation)
+    [InlineData("Resources/XRechnung/UblInvoice/Success")]
+    public void UblInvoicesTest(string testsLocation)
     {
-        Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(UblInvoices.Invoice1, invoice);
+        TestInvoices(testsLocation, typeof(UblInvoices));
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/UblCreditNote/Success/1.xml")]
-    public void UblCreditNote1(string invoiceLocation)
+    [InlineData("Resources/XRechnung/UblCreditNote/Success")]
+    public void UblCreditNotesTest(string testsLocation)
     {
-        Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(UblCreditNotes.Invoice1, invoice);
+        TestInvoices(testsLocation, typeof(UblCreditNotes));
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/Cii/Success/1.xml")]
-    public void Cii1(string invoiceLocation)
+    [InlineData("Resources/XRechnung/Cii/Success")]
+    public void CiisTest(string testsLocation)
     {
-        Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(Ciis.Invoice1, invoice);
+        TestInvoices(testsLocation, typeof(Ciis));
     }
 
-
-    [Theory]
-    [InlineData("Resources/XRechnung/UblInvoice/Success/2.xml")]
-    public void UblInvoice2(string invoiceLocation)
+    private void TestInvoices(string testsLocation, Type invoiceCollection)
     {
         Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(UblInvoices.Invoice2, invoice);
-    }
 
-    [Theory]
-    [InlineData("Resources/XRechnung/UblCreditNote/Success/2.xml")]
-    public void UblCreditNote2(string invoiceLocation)
-    {
-        Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(UblCreditNotes.Invoice2, invoice);
-    }
+        string[] testFiles = Directory.GetFiles(testsLocation);
 
-    [Theory]
-    [InlineData("Resources/XRechnung/Cii/Success/2.xml")]
-    public void Cii2(string invoiceLocation)
-    {
-        Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(Ciis.Invoice2, invoice);
-    }
+        foreach (string test in testFiles)
+        {
+            string invoiceName = Path.GetFileNameWithoutExtension(test);
+            Console.WriteLine(invoiceName);
+            Invoice<S.XRechnung> expected = InvoiceExtractor.Invoice<Invoice<S.XRechnung>>(invoiceCollection, invoiceName);
 
-    [Theory]
-    [InlineData("Resources/XRechnung/UblInvoice/Success/3.xml")]
-    public void UblInvoice3(string invoiceLocation)
-    {
-        Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(UblInvoices.Invoice3, invoice);
-    }
+            Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(test);
 
-    [Theory]
-    [InlineData("Resources/XRechnung/UblCreditNote/Success/3.xml")]
-    public void UblCreditNote3(string invoiceLocation)
-    {
-        Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(UblCreditNotes.Invoice3, invoice);
-    }
-
-    [Theory]
-    [InlineData("Resources/XRechnung/Cii/Success/3.xml")]
-    public void Cii3(string invoiceLocation)
-    {
-        Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(Ciis.Invoice3, invoice);
-    }
-
-    [Theory]
-    [InlineData("Resources/XRechnung/UblInvoice/Success/4.xml")]
-    public void UblInvoice4(string invoiceLocation)
-    {
-        Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(UblInvoices.Invoice4, invoice);
-    }
-
-    [Theory]
-    [InlineData("Resources/XRechnung/UblCreditNote/Success/4.xml")]
-    public void UblCreditNote4(string invoiceLocation)
-    {
-        Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(UblCreditNotes.Invoice4, invoice);
-    }
-
-    [Theory]
-    [InlineData("Resources/XRechnung/Cii/Success/4.xml")]
-    public void Cii4(string invoiceLocation)
-    {
-        Parser parser = new Parser();
-        Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-        Assert.Equal(Ciis.Invoice4, invoice);
+            Assert.Equal(expected, invoice);
+        }
     }
 }
