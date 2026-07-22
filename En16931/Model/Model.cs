@@ -20,7 +20,8 @@ public interface IProcessControl
     public Identifier SpecificationIdentifier { get; }
 }
 
-// interface for cius/core data model, as it allows multiple implementations
+// Interface for cius/core data model, as it allows multiple implementations.
+// Extension invoices do not need to implement this and can instead store BT-24 as a constant inline.
 public interface IInvoice<TSpec> where TSpec : ISpecification { }
 
 public readonly record struct Invoice<T> : IInvoice, IInvoice<T>, IIRDeserializable<Invoice<T>>, IIRSerializable where T : ISpecification

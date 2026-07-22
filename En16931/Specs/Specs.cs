@@ -12,8 +12,7 @@ using En16931.Utils;
 
 namespace En16931.Specs;
 
-// TODO: test parsing, validating wrong bt-24
-// TODO: test InvoiceType
+// TODO: test parsing, validating wrong bt-24 (simple failing test case for XRechnung suffices as it has a business rule)
 //
 // TODO: ExtensionInvoice type for XRechnungExtension (by hand for now)
 // TODO: ir xslt files for ExtensionInvoice (by hand for now)
@@ -62,8 +61,6 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
     Identifier ISpecificationValidator.SpecificationIdentifier { get => SpecificationIdentifier; }
 
     public NonEmptyArray<Schema> SupportedSchemas { get; } = [Schema.UblInvoice, Schema.UblCreditNote, Schema.CiiCrossIndustryInvoice];
-
-    public InvoiceType InvoiceType { get; } = new(typeof(Invoice<XRechnung>), typeof(XRechnung));
 
     IInvoice ISpecificationParser.Parse(ref readonly Document doc)
     {
@@ -202,8 +199,6 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
     Identifier ISpecificationValidator.SpecificationIdentifier { get => SpecificationIdentifier; }
 
     public NonEmptyArray<Schema> SupportedSchemas { get; } = [Schema.UblInvoice, Schema.UblCreditNote, Schema.CiiCrossIndustryInvoice];
-
-    public InvoiceType InvoiceType { get; } = new(typeof(Invoice<XRechnung>), typeof(XRechnung));
 
     IInvoice ISpecificationParser.Parse(ref readonly Document doc)
     {

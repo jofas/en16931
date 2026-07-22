@@ -26,8 +26,6 @@ public interface ISpecificationValidator
 
 public interface ISpecificationParser : ISpecificationValidator
 {
-    public InvoiceType InvoiceType { get; }
-
     public IInvoice Parse(ref readonly Document doc);
 
     public Document Serialize(IInvoice invoice, Schema schema);
@@ -38,36 +36,4 @@ public interface ISpecificationParser<TInvoice, TSpec> where TInvoice : IInvoice
     public TInvoice Parse(ref readonly Document doc);
 
     public Document Serialize(scoped ref readonly TInvoice invoice, Schema schema);
-}
-
-public readonly record struct InvoiceType
-{
-    public Type Type
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-    }
-
-    public InvoiceType(Type invoiceType, Type specType)
-    {
-        bool isInvoiceType(Type t)
-        {
-            return t.IsGenericType
-                && t.GetGenericTypeDefinition() == typeof(IInvoice<>)
-                && t.GetGenericArguments()[0] == specType;
-        }
-
-        Assert.ArgIsNotNull(invoiceType);
-        Assert.ArgIsNotNull(specType);
-
-        if (!invoiceType.GetInterfaces().Any(isInvoiceType))
-        {
-            ThrowHelper.ThrowArgumentException($"{invoiceType} is not an invoice type (it doesn't implement `IInvoice`correctly).");
-        }
-
-        Type = invoiceType;
-    }
 }
