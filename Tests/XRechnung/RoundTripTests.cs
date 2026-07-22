@@ -42,22 +42,10 @@ public class RoundTripTests
         Parser parser = new Parser();
 
         List<Invoice<S.XRechnung>> invoices = [
-            UblInvoices.Invoice1 with
-            {
-                InvoiceTypeCode = new Code("381"),
-            },
-            UblInvoices.Invoice2 with
-            {
-                InvoiceTypeCode = new Code("381"),
-            },
-            UblInvoices.Invoice3 with
-            {
-                InvoiceTypeCode = new Code("381"),
-            },
-            UblInvoices.Invoice4 with
-            {
-                InvoiceTypeCode = new Code("381"),
-            },
+            UblCreditNotes.Invoice1,
+            UblCreditNotes.Invoice2,
+            UblCreditNotes.Invoice3,
+            UblCreditNotes.Invoice4,
         ];
 
         foreach (Invoice<S.XRechnung> invoice in invoices)
@@ -78,14 +66,10 @@ public class RoundTripTests
         Parser parser = new Parser();
 
         List<Invoice<S.XRechnung>> invoices = [
-            // CII only supports a single preceding invoice reference
-            UblInvoices.Invoice1 with
-            {
-                PrecedingInvoiceReferences = [UblInvoices.Invoice1.PrecedingInvoiceReferences[0]],
-            },
-            UblInvoices.Invoice2,
-            UblInvoices.Invoice3,
-            UblInvoices.Invoice4,
+            Ciis.Invoice1,
+            Ciis.Invoice2,
+            Ciis.Invoice3,
+            Ciis.Invoice4,
         ];
 
         foreach (Invoice<S.XRechnung> invoice in invoices)

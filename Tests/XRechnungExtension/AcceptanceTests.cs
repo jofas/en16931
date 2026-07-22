@@ -10,8 +10,7 @@ namespace Tests.XRechnungExtension;
 
 public class AcceptanceTests
 {
-    // TODO: Cii + Credit-Note invoices
-    // TODO: Move unit tests to reflection
+    // TODO: Move unit tests, roundtrip tests to reflection
     // TODO: Move failed tests to comparing filename to errors
     // TODO: Remove specialized schematronexceptions
     // TODO: Move failing En16931 tests to XRechnung

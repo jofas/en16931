@@ -17,9 +17,7 @@ public class UnitTests
     public void UblInvoice1(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
         Assert.Equal(UblInvoices.Invoice1, invoice);
     }
 
@@ -28,15 +26,8 @@ public class UnitTests
     public void UblCreditNote1(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
-        Invoice<S.XRechnung> expected = UblInvoices.Invoice1 with
-        {
-            InvoiceTypeCode = new Code("381"),
-        };
-
-        Assert.Equal(expected, invoice);
+        Assert.Equal(UblCreditNotes.Invoice1, invoice);
     }
 
     [Theory]
@@ -44,16 +35,8 @@ public class UnitTests
     public void Cii1(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
-        // CII only supports a single preceding invoice reference
-        Invoice<S.XRechnung> expected = UblInvoices.Invoice1 with
-        {
-            PrecedingInvoiceReferences = [UblInvoices.Invoice1.PrecedingInvoiceReferences[0]],
-        };
-
-        Assert.Equal(expected, invoice);
+        Assert.Equal(Ciis.Invoice1, invoice);
     }
 
 
@@ -62,9 +45,7 @@ public class UnitTests
     public void UblInvoice2(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
         Assert.Equal(UblInvoices.Invoice2, invoice);
     }
 
@@ -73,15 +54,8 @@ public class UnitTests
     public void UblCreditNote2(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
-        Invoice<S.XRechnung> expected = UblInvoices.Invoice2 with
-        {
-            InvoiceTypeCode = new Code("381"),
-        };
-
-        Assert.Equal(expected, invoice);
+        Assert.Equal(UblCreditNotes.Invoice2, invoice);
     }
 
     [Theory]
@@ -89,10 +63,8 @@ public class UnitTests
     public void Cii2(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
-        Assert.Equal(UblInvoices.Invoice2, invoice);
+        Assert.Equal(Ciis.Invoice2, invoice);
     }
 
     [Theory]
@@ -100,9 +72,7 @@ public class UnitTests
     public void UblInvoice3(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
         Assert.Equal(UblInvoices.Invoice3, invoice);
     }
 
@@ -111,15 +81,8 @@ public class UnitTests
     public void UblCreditNote3(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
-        Invoice<S.XRechnung> expected = UblInvoices.Invoice3 with
-        {
-            InvoiceTypeCode = new Code("381"),
-        };
-
-        Assert.Equal(expected, invoice);
+        Assert.Equal(UblCreditNotes.Invoice3, invoice);
     }
 
     [Theory]
@@ -127,10 +90,8 @@ public class UnitTests
     public void Cii3(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
-        Assert.Equal(UblInvoices.Invoice3, invoice);
+        Assert.Equal(Ciis.Invoice3, invoice);
     }
 
     [Theory]
@@ -138,9 +99,7 @@ public class UnitTests
     public void UblInvoice4(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
         Assert.Equal(UblInvoices.Invoice4, invoice);
     }
 
@@ -149,15 +108,8 @@ public class UnitTests
     public void UblCreditNote4(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
-        Invoice<S.XRechnung> expected = UblInvoices.Invoice4 with
-        {
-            InvoiceTypeCode = new Code("381"),
-        };
-
-        Assert.Equal(expected, invoice);
+        Assert.Equal(UblCreditNotes.Invoice4, invoice);
     }
 
     [Theory]
@@ -165,9 +117,7 @@ public class UnitTests
     public void Cii4(string invoiceLocation)
     {
         Parser parser = new Parser();
-
         Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(invoiceLocation);
-
-        Assert.Equal(UblInvoices.Invoice4, invoice);
+        Assert.Equal(Ciis.Invoice4, invoice);
     }
 }
