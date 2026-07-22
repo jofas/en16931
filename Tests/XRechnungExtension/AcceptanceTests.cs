@@ -10,7 +10,6 @@ namespace Tests.XRechnungExtension;
 
 public class AcceptanceTests
 {
-    // TODO: Resources completely without hyphens
     // TODO: Cii + Credit-Note invoices
     // TODO: Move unit tests to reflection
     // TODO: Move failed tests to comparing filename to errors
@@ -44,7 +43,7 @@ public class AcceptanceTests
     */
 
     [Theory]
-    [InlineData("Resources/XRechnungExtension/Ubl-Invoice/Failure")]
+    [InlineData("Resources/XRechnungExtension/UblInvoice/Failure")]
     [InlineData("Resources/XRechnungExtension/Cii/Failure")]
     public void SchematronViolationXRechnungExtension(string testsLocation)
     {

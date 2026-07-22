@@ -11,7 +11,7 @@ namespace Tests.XRechnung;
 public class AcceptanceTests
 {
     [Theory]
-    [InlineData("Resources/En16931/Ubl-Invoice/Failure")]
+    [InlineData("Resources/En16931/UblInvoice/Failure")]
     [InlineData("Resources/En16931/Cii/Failure")]
     public void SchematronViolationEn16931(string testsLocation)
     {
@@ -29,7 +29,7 @@ public class AcceptanceTests
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/Ubl-Invoice/Failure")]
+    [InlineData("Resources/XRechnung/UblInvoice/Failure")]
     [InlineData("Resources/XRechnung/Cii/Failure")]
     public void SchematronViolationXRechnung(string testsLocation)
     {
@@ -47,8 +47,9 @@ public class AcceptanceTests
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/Ubl-Invoice/Success")]
-    [InlineData("Resources/XRechnung/Ubl-Credit-Note/Success")]
+    [InlineData("Resources/XRechnung/UblInvoice/Success")]
+    [InlineData("Resources/XRechnung/UblCreditNote/Success")]
+    [InlineData("Resources/XRechnung/Cii/Success")]
     public void SuccessfulXRechnung(string testsLocation)
     {
         Parser parser = new Parser();

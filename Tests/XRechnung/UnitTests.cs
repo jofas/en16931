@@ -13,7 +13,7 @@ namespace Tests.XRechnung;
 public class UnitTests
 {
     [Theory]
-    [InlineData("Resources/XRechnung/Ubl-Invoice/Success/1.xml")]
+    [InlineData("Resources/XRechnung/UblInvoice/Success/1.xml")]
     public void UblInvoice1(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -24,7 +24,7 @@ public class UnitTests
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/Ubl-Credit-Note/Success/1.xml")]
+    [InlineData("Resources/XRechnung/UblCreditNote/Success/1.xml")]
     public void UblCreditNote1(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -58,7 +58,7 @@ public class UnitTests
 
 
     [Theory]
-    [InlineData("Resources/XRechnung/Ubl-Invoice/Success/2.xml")]
+    [InlineData("Resources/XRechnung/UblInvoice/Success/2.xml")]
     public void UblInvoice2(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -69,7 +69,7 @@ public class UnitTests
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/Ubl-Credit-Note/Success/2.xml")]
+    [InlineData("Resources/XRechnung/UblCreditNote/Success/2.xml")]
     public void UblCreditNote2(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -96,7 +96,7 @@ public class UnitTests
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/Ubl-Invoice/Success/3.xml")]
+    [InlineData("Resources/XRechnung/UblInvoice/Success/3.xml")]
     public void UblInvoice3(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -107,7 +107,7 @@ public class UnitTests
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/Ubl-Credit-Note/Success/3.xml")]
+    [InlineData("Resources/XRechnung/UblCreditNote/Success/3.xml")]
     public void UblCreditNote3(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -134,7 +134,7 @@ public class UnitTests
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/Ubl-Invoice/Success/4.xml")]
+    [InlineData("Resources/XRechnung/UblInvoice/Success/4.xml")]
     public void UblInvoice4(string invoiceLocation)
     {
         Parser parser = new Parser();
@@ -145,7 +145,7 @@ public class UnitTests
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/Ubl-Credit-Note/Success/4.xml")]
+    [InlineData("Resources/XRechnung/UblCreditNote/Success/4.xml")]
     public void UblCreditNote4(string invoiceLocation)
     {
         Parser parser = new Parser();
