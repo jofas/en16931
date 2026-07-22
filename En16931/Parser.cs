@@ -12,6 +12,11 @@ using En16931.Specs;
 
 namespace En16931;
 
+public class ValidationException : Exception
+{
+    public required En16931.Collections.Immutable.RefArray<string> Errors { get; init; }
+}
+
 public class Parser
 {
     private readonly ImmutableDictionary<Identifier, ISpecificationParser> _specs;
@@ -179,12 +184,3 @@ public class Parser
         return doc;
     }
 }
-
-public class SchematronException : Exception
-{
-    public required En16931.Collections.Immutable.RefArray<string> Errors { get; init; }
-}
-
-public class En16931SchematronException : SchematronException { }
-
-public class XRechnungSchematronException : SchematronException { }

@@ -12,10 +12,6 @@ using En16931.Utils;
 
 namespace En16931.Specs;
 
-// TODO: restructure Test suite (IRTests.cs aren't IR tests but end-to-end tests of the parsing pipeline)
-// TODO: have a dedicated Invoice instance for every test (instead of .. with { ... })
-// TODO: use filename to check for violated business rules in failing tests
-//
 // TODO: test parsing, validating wrong bt-24
 // TODO: test InvoiceType
 //
@@ -144,7 +140,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
 
         if (result.Errors.Count > 0)
         {
-            throw new En16931SchematronException
+            throw new ValidationException
             {
                 Errors = new RefArray<string>(result.Errors),
             };
@@ -164,7 +160,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
 
         if (result.Errors.Count > 0)
         {
-            throw new XRechnungSchematronException
+            throw new ValidationException
             {
                 Errors = new RefArray<string>(result.Errors),
             };
@@ -220,7 +216,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         {
             ValidateEn16931(in doc);
         }
-        catch (En16931SchematronException e)
+        catch (ValidationException e)
         {
             // Extensions can extend code listings and otherwise add elements
             // or override rules of the EN16931 specification.
@@ -318,7 +314,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
 
         if (result.Errors.Count > 0)
         {
-            throw new En16931SchematronException
+            throw new ValidationException
             {
                 Errors = new RefArray<string>(result.Errors),
             };
@@ -338,7 +334,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
 
         if (result.Errors.Count > 0)
         {
-            throw new XRechnungSchematronException
+            throw new ValidationException
             {
                 Errors = new RefArray<string>(result.Errors),
             };

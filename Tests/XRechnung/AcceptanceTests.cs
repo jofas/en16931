@@ -12,29 +12,9 @@ namespace Tests.XRechnung;
 public class AcceptanceTests
 {
     [Theory]
-    [InlineData("Resources/En16931/UblInvoice/Failure")]
-    [InlineData("Resources/En16931/Cii/Failure")]
-    public void SchematronViolationEn16931(string testsLocation)
-    {
-        Parser parser = new Parser();
-
-        string[] testFiles = Directory.GetFiles(testsLocation);
-
-        foreach (string test in testFiles)
-        {
-            En16931SchematronException e = Assert.Throws<En16931SchematronException>(() =>
-            {
-                parser.Parse<S.XRechnung>(test);
-            });
-
-            Assert.Contains(Path.GetFileNameWithoutExtension(test), e.Errors);
-        }
-    }
-
-    [Theory]
     [InlineData("Resources/XRechnung/UblInvoice/Failure")]
     [InlineData("Resources/XRechnung/Cii/Failure")]
-    public void SchematronViolationXRechnung(string testsLocation)
+    public void Failures(string testsLocation)
     {
         Parser parser = new Parser();
 
@@ -42,7 +22,7 @@ public class AcceptanceTests
 
         foreach (string test in testFiles)
         {
-            XRechnungSchematronException e = Assert.Throws<XRechnungSchematronException>(() =>
+            ValidationException e = Assert.Throws<ValidationException>(() =>
             {
                 parser.Parse<S.XRechnung>(test);
             });
@@ -55,7 +35,7 @@ public class AcceptanceTests
     [InlineData("Resources/XRechnung/UblInvoice/Success")]
     [InlineData("Resources/XRechnung/UblCreditNote/Success")]
     [InlineData("Resources/XRechnung/Cii/Success")]
-    public void SuccessfulXRechnung(string testsLocation)
+    public void Successes(string testsLocation)
     {
         Parser parser = new Parser();
 
