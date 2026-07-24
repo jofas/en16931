@@ -14,11 +14,10 @@ public interface ISpecification
 
 public interface ISpecificationValidator
 {
-    public NonEmptyArray<Schema> SupportedSchemas { get; }
-
     public Identifier SpecificationIdentifier { get; }
 
     // Invariant: bt-24 in doc must be equal to `SpecificationIdentifier`
+    // ... does it though? We can't map it in the parser and if users want to call the validator directly, we don't really care do we?
     // XRechnung: BR-DE-21
     // Core: no rule; must be implemented
     public void Validate(ref readonly Document doc);

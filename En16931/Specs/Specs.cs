@@ -12,8 +12,6 @@ using En16931.Utils;
 
 namespace En16931.Specs;
 
-// TODO: test parsing, validating wrong bt-24 (simple failing test case for XRechnung suffices as it has a business rule)
-//
 // TODO: ExtensionInvoice type for XRechnungExtension (by hand for now)
 // TODO: ir xslt files for ExtensionInvoice (by hand for now)
 //
@@ -59,8 +57,6 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
     });
 
     Identifier ISpecificationValidator.SpecificationIdentifier { get => SpecificationIdentifier; }
-
-    public NonEmptyArray<Schema> SupportedSchemas { get; } = [Schema.UblInvoice, Schema.UblCreditNote, Schema.CiiCrossIndustryInvoice];
 
     IInvoice ISpecificationParser.Parse(ref readonly Document doc)
     {
@@ -190,6 +186,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         { TransformerId.En16931Cii, "Resources/En16931/EN16931-CII-validation.xslt" },
         { TransformerId.XRechnungUbl, "Resources/XRechnung/XRechnung-UBL-validation.xsl" },
         { TransformerId.XRechnungCii, "Resources/XRechnung/XRechnung-CII-validation.xsl" },
+        // TODO: these files must be created for extension to work (cii ignores additional fields -- the core files can be reused)
         { TransformerId.UblToIr, "Resources/IR/ubl2ir.xslt" },
         { TransformerId.CiiToIr, "Resources/IR/cii2ir.xslt" },
         { TransformerId.IrToUbl, "Resources/IR/ir2ubl.xslt" },
@@ -197,8 +194,6 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
     });
 
     Identifier ISpecificationValidator.SpecificationIdentifier { get => SpecificationIdentifier; }
-
-    public NonEmptyArray<Schema> SupportedSchemas { get; } = [Schema.UblInvoice, Schema.UblCreditNote, Schema.CiiCrossIndustryInvoice];
 
     IInvoice ISpecificationParser.Parse(ref readonly Document doc)
     {
