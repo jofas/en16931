@@ -8,17 +8,6 @@ using S = En16931.Specs;
 
 namespace En16931.Model.XRechnungExtension;
 
-// TODO: add missing types and fields:
-//  * Third Party Payment (field in invoice) (BG-DEX-09)
-//  * Sub Invoice Line (BG-DEX-01)
-//    - Sub Invoice Line Item Information (BG-DEX-02)
-//    - Sub Invoice Line Allowance (BG-DEX-03)
-//    - Sub Invoice Line Charge (BG-DEX-04)
-//    - Sub Invoice Line Period (BG-DEX-05)
-//    - Sub Invoice Line Vat Information (BG-DEX-06)
-//    - Sub Invoice Line Price Details (BG-DEX-07)
-//    - Sub Invoice Line Item Attributes (BG-DEX-08)
-
 public readonly record struct XRechnungExtensionInvoice : IInvoice, IIRDeserializable<XRechnungExtensionInvoice>, IIRSerializable
 {
     IProcessControl IInvoice.ProcessControl { get => ProcessControl; }
@@ -127,7 +116,7 @@ public readonly record struct XRechnungExtensionInvoice : IInvoice, IIRDeseriali
     public required Array<AdditionalSupportingDocument> AdditionalSupportingDocuments { get; init; }
 
     // BG-25
-    public required NonEmptyArray<InvoiceLine> InvoiceLines { get; init; }
+    public required NonEmptyArray<XRechnungExtensionInvoiceLine> InvoiceLines { get; init; }
 
     // BG-DEX-09
     // TODO: Serialization
@@ -370,12 +359,25 @@ public readonly record struct XRechnungExtensionInvoice : IInvoice, IIRDeseriali
         writer.WriteStartElement("invoice-lines", IRConfig.NS);
         writer.WriteAttributeString("id", "bg-25");
 
-        foreach (InvoiceLine il in InvoiceLines)
+        foreach (XRechnungExtensionInvoiceLine il in InvoiceLines)
         {
             il.Serialize(writer);
         }
 
         writer.WriteEndElement();
+
+        if (ThirdPartyPayments.Length > 0)
+        {
+            writer.WriteStartElement("third-party-payments", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-dex-09");
+
+            foreach (XRechnungExtensionThirdPartyPayment tpp in ThirdPartyPayments)
+            {
+                tpp.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
 
         writer.WriteEndElement();
 
@@ -752,16 +754,35 @@ public readonly record struct XRechnungExtensionInvoice : IInvoice, IIRDeseriali
         reader.ReadStartElement("invoice-lines", IRConfig.NS);
         reader.MoveToContent();
 
-        List<InvoiceLine> invoiceLinesBuilder = [];
+        List<XRechnungExtensionInvoiceLine> invoiceLinesBuilder = [];
         while (reader.IsStartElement("invoice-line", IRConfig.NS))
         {
-            invoiceLinesBuilder.Add(InvoiceLine.Deserialize(reader));
+            invoiceLinesBuilder.Add(XRechnungExtensionInvoiceLine.Deserialize(reader));
         }
 
-        NonEmptyArray<InvoiceLine> invoiceLines = new(invoiceLinesBuilder);
+        NonEmptyArray<XRechnungExtensionInvoiceLine> invoiceLines = new(invoiceLinesBuilder);
 
         reader.ReadEndElement();
         reader.MoveToContent();
+
+        Array<XRechnungExtensionThirdPartyPayment> thirdPartyPayments = Array<XRechnungExtensionThirdPartyPayment>.Empty;
+
+        if (reader.IsStartElement("third-party-payments", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<XRechnungExtensionThirdPartyPayment> thirdPartyPaymentsBuilder = [];
+            while (reader.IsStartElement("third-party-payment", IRConfig.NS))
+            {
+                thirdPartyPaymentsBuilder.Add(XRechnungExtensionThirdPartyPayment.Deserialize(reader));
+            }
+
+            thirdPartyPayments = new(thirdPartyPaymentsBuilder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
         reader.ReadEndElement();
         reader.MoveToContent();
@@ -802,6 +823,7 @@ public readonly record struct XRechnungExtensionInvoice : IInvoice, IIRDeseriali
             VatBreakdown = vatBreakdown,
             AdditionalSupportingDocuments = additionalSupportingDocuments,
             InvoiceLines = invoiceLines,
+            ThirdPartyPayments = thirdPartyPayments,
         };
     }
 }
@@ -870,13 +892,1614 @@ public readonly record struct XRechnungExtensionProcessControl : IProcessControl
 
 public readonly record struct XRechnungExtensionThirdPartyPayment : IIRDeserializable<XRechnungExtensionThirdPartyPayment>, IIRSerializable
 {
+    // BT-DEX-001
+    public required Text ThirdPartyPaymentType { get; init; }
+
+    // BT-DEX-002
+    public required Amount ThirdPartyPaymentAmount { get; init; }
+
+    // BT-DEX-003
+    public required Text ThirdPartyPaymentDescription { get; init; }
+
     public void Serialize(XmlWriter writer)
     {
-        throw new System.NotImplementedException();
+        writer.WriteStartElement("third-party-payment", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-dex-09");
+
+        writer.WriteStartElement("third-party-payment-type", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-dex-001");
+        ThirdPartyPaymentType.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("third-party-payment-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-dex-002");
+        ThirdPartyPaymentAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("third-party-payment-description", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-dex-003");
+        ThirdPartyPaymentDescription.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
     }
 
     public static XRechnungExtensionThirdPartyPayment Deserialize(XmlReader reader)
     {
-        throw new System.NotImplementedException();
+        reader.ReadStartElement("third-party-payment", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("third-party-payment-type", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text thirdPartyPaymentType = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("third-party-payment-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount thirdPartyPaymentAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("third-party-payment-description", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text thirdPartyPaymentDescription = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new XRechnungExtensionThirdPartyPayment
+        {
+            ThirdPartyPaymentType = thirdPartyPaymentType,
+            ThirdPartyPaymentAmount = thirdPartyPaymentAmount,
+            ThirdPartyPaymentDescription = thirdPartyPaymentDescription,
+        };
+    }
+}
+
+public readonly record struct XRechnungExtensionInvoiceLine : IIRDeserializable<XRechnungExtensionInvoiceLine>, IIRSerializable
+{
+    // BT-126
+    public required Identifier InvoiceLineIdentifier { get; init; }
+
+    // BT-127
+    public required Text? InvoiceLineNote { get; init; }
+
+    // BT-128
+    public required Identifier? InvoiceLineObjectIdentifier { get; init; }
+
+    // BT-129
+    public required Quantity InvoicedQuantity { get; init; }
+
+    // BT-130
+    public required Code InvoicedQuantityUnitOfMeasureCode { get; init; }
+
+    // BT-131
+    public required Amount InvoiceLineNetAmount { get; init; }
+
+    // BT-132
+    public required DocumentReference? ReferencedPurchaseOrderLineReference { get; init; }
+
+    // BT-133
+    public required Text? InvoiceLineBuyerAccountingReference { get; init; }
+
+    // BG-26
+    public required InvoiceLinePeriod? InvoiceLinePeriod { get; init; }
+
+    // BG-27
+    public required Array<InvoiceLineAllowance> InvoiceLineAllowances { get; init; }
+
+    // BG-28
+    public required Array<InvoiceLineCharge> InvoiceLineCharges { get; init; }
+
+    // BG-29
+    public required PriceDetails PriceDetails { get; init; }
+
+    // BG-30
+    public required LineVatInformation LineVatInformation { get; init; }
+
+    // BG-31
+    public required ItemInformation ItemInformation { get; init; }
+
+    // BG-DEX-01
+    public required RefArray<XRechnungExtensionSubInvoiceLine> SubInvoiceLines { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("invoice-line", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-25");
+
+        writer.WriteStartElement("invoice-line-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-126");
+        InvoiceLineIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (InvoiceLineNote is not null)
+        {
+            writer.WriteStartElement("invoice-line-note", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-127");
+            InvoiceLineNote.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineObjectIdentifier is not null)
+        {
+            writer.WriteStartElement("invoice-line-object-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-128");
+            InvoiceLineObjectIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("invoiced-quantity", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-129");
+        InvoicedQuantity.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoiced-quantity-unit-of-measure-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-130");
+        InvoicedQuantityUnitOfMeasureCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoice-line-net-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-131");
+        InvoiceLineNetAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (ReferencedPurchaseOrderLineReference is not null)
+        {
+            writer.WriteStartElement("referenced-purchase-order-line-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-132");
+            ReferencedPurchaseOrderLineReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineBuyerAccountingReference is not null)
+        {
+            writer.WriteStartElement("invoice-line-buyer-accounting-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-133");
+            InvoiceLineBuyerAccountingReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLinePeriod is not null)
+        {
+            InvoiceLinePeriod.Value.Serialize(writer);
+        }
+
+        if (InvoiceLineAllowances.Length > 0)
+        {
+            writer.WriteStartElement("invoice-line-allowances", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-27");
+
+            foreach (InvoiceLineAllowance ila in InvoiceLineAllowances)
+            {
+                ila.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineCharges.Length > 0)
+        {
+            writer.WriteStartElement("invoice-line-charges", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-28");
+
+            foreach (InvoiceLineCharge ilc in InvoiceLineCharges)
+            {
+                ilc.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        PriceDetails.Serialize(writer);
+
+        LineVatInformation.Serialize(writer);
+
+        ItemInformation.Serialize(writer);
+
+        writer.WriteEndElement();
+    }
+
+    public static XRechnungExtensionInvoiceLine Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("invoice-line", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier invoiceLineIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? invoiceLineNote = null;
+
+        if (reader.IsStartElement("invoice-line-note", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineNote = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? invoiceLineObjectIdentifier = null;
+
+        if (reader.IsStartElement("invoice-line-object-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineObjectIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoiced-quantity", IRConfig.NS);
+        reader.MoveToContent();
+
+        Quantity invoicedQuantity = Quantity.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoiced-quantity-unit-of-measure-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code invoicedQuantityUnitOfMeasureCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-net-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceLineNetAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        DocumentReference? referencedPurchaseOrderLineReference = null;
+
+        if (reader.IsStartElement("referenced-purchase-order-line-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            referencedPurchaseOrderLineReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? invoiceLineBuyerAccountingReference = null;
+
+        if (reader.IsStartElement("invoice-line-buyer-accounting-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineBuyerAccountingReference = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        InvoiceLinePeriod? invoiceLinePeriod = null;
+
+        if (reader.IsStartElement("invoice-line-period", IRConfig.NS))
+        {
+            invoiceLinePeriod = Model.InvoiceLinePeriod.Deserialize(reader);
+        }
+
+        Array<InvoiceLineAllowance> invoiceLineAllowances = Array<InvoiceLineAllowance>.Empty;
+
+        if (reader.IsStartElement("invoice-line-allowances", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<InvoiceLineAllowance> builder = [];
+            while (reader.IsStartElement("invoice-line-allowance", IRConfig.NS))
+            {
+                builder.Add(InvoiceLineAllowance.Deserialize(reader));
+            }
+
+            invoiceLineAllowances = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<InvoiceLineCharge> invoiceLineCharges = Array<InvoiceLineCharge>.Empty;
+
+        if (reader.IsStartElement("invoice-line-charges", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<InvoiceLineCharge> builder = [];
+            while (reader.IsStartElement("invoice-line-charge", IRConfig.NS))
+            {
+                builder.Add(InvoiceLineCharge.Deserialize(reader));
+            }
+
+            invoiceLineCharges = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        PriceDetails priceDetails = PriceDetails.Deserialize(reader);
+
+        LineVatInformation lineVatInformation = LineVatInformation.Deserialize(reader);
+
+        ItemInformation itemInformation = ItemInformation.Deserialize(reader);
+
+        RefArray<XRechnungExtensionSubInvoiceLine> subInvoiceLines = RefArray<XRechnungExtensionSubInvoiceLine>.Empty;
+
+        if (reader.IsStartElement("sub-invoice-lines", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<XRechnungExtensionSubInvoiceLine> builder = [];
+            while (reader.IsStartElement("sub-invoice-line", IRConfig.NS))
+            {
+                builder.Add(XRechnungExtensionSubInvoiceLine.Deserialize(reader));
+            }
+
+            subInvoiceLines = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new XRechnungExtensionInvoiceLine
+        {
+            InvoiceLineIdentifier = invoiceLineIdentifier,
+            InvoiceLineNote = invoiceLineNote,
+            InvoiceLineObjectIdentifier = invoiceLineObjectIdentifier,
+            InvoicedQuantity = invoicedQuantity,
+            InvoicedQuantityUnitOfMeasureCode = invoicedQuantityUnitOfMeasureCode,
+            InvoiceLineNetAmount = invoiceLineNetAmount,
+            ReferencedPurchaseOrderLineReference = referencedPurchaseOrderLineReference,
+            InvoiceLineBuyerAccountingReference = invoiceLineBuyerAccountingReference,
+            InvoiceLinePeriod = invoiceLinePeriod,
+            InvoiceLineAllowances = invoiceLineAllowances,
+            InvoiceLineCharges = invoiceLineCharges,
+            PriceDetails = priceDetails,
+            LineVatInformation = lineVatInformation,
+            ItemInformation = itemInformation,
+            SubInvoiceLines = subInvoiceLines,
+        };
+    }
+}
+
+public record class XRechnungExtensionSubInvoiceLine : IIRDeserializable<XRechnungExtensionSubInvoiceLine>, IIRSerializable
+{
+    // BT-126
+    public required Identifier InvoiceLineIdentifier { get; init; }
+
+    // BT-127
+    public required Text? InvoiceLineNote { get; init; }
+
+    // BT-128
+    public required Identifier? InvoiceLineObjectIdentifier { get; init; }
+
+    // BT-129
+    public required Quantity InvoicedQuantity { get; init; }
+
+    // BT-130
+    public required Code InvoicedQuantityUnitOfMeasureCode { get; init; }
+
+    // BT-131
+    public required Amount InvoiceLineNetAmount { get; init; }
+
+    // BT-132
+    public required DocumentReference? ReferencedPurchaseOrderLineReference { get; init; }
+
+    // BT-133
+    public required Text? InvoiceLineBuyerAccountingReference { get; init; }
+
+    // BG-DEX-02
+    public required XRechnungExtensionSubInvoiceLineItemInformation SubInvoiceLineItemInformation { get; init; }
+
+    // BG-DEX-03
+    public required Array<XRechnungExtensionSubInvoiceLineAllowance> SubInvoiceLineAllowances { get; init; }
+
+    // BG-DEX-04
+    public required Array<XRechnungExtensionSubInvoiceLineCharge> SubInvoiceLineCharges { get; init; }
+
+    // BG-DEX-05
+    public required XRechnungExtensionSubInvoiceLinePeriod? SubInvoiceLinePeriod { get; init; }
+
+    // BG-DEX-06
+    public required XRechnungExtensionSubInvoiceLineVatInformation SubInvoiceLineVatInformation { get; init; }
+
+    // BG-DEX-07
+    public required XRechnungExtensionSubInvoiceLinePriceDetails SubInvoiceLinePriceDetails { get; init; }
+
+    // BG-DEX-01
+    public required RefArray<XRechnungExtensionSubInvoiceLine> SubInvoiceLines { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("sub-invoice-line", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-dex-01");
+
+        writer.WriteStartElement("invoice-line-identifier", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-126");
+        InvoiceLineIdentifier.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (InvoiceLineNote is not null)
+        {
+            writer.WriteStartElement("invoice-line-note", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-127");
+            InvoiceLineNote.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineObjectIdentifier is not null)
+        {
+            writer.WriteStartElement("invoice-line-object-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-128");
+            InvoiceLineObjectIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteStartElement("invoiced-quantity", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-129");
+        InvoicedQuantity.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoiced-quantity-unit-of-measure-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-130");
+        InvoicedQuantityUnitOfMeasureCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("invoice-line-net-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-131");
+        InvoiceLineNetAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (ReferencedPurchaseOrderLineReference is not null)
+        {
+            writer.WriteStartElement("referenced-purchase-order-line-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-132");
+            ReferencedPurchaseOrderLineReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineBuyerAccountingReference is not null)
+        {
+            writer.WriteStartElement("invoice-line-buyer-accounting-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-133");
+            InvoiceLineBuyerAccountingReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        SubInvoiceLineItemInformation.Serialize(writer);
+
+        if (SubInvoiceLineAllowances.Length > 0)
+        {
+            writer.WriteStartElement("sub-invoice-line-allowances", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-dex-03");
+
+            foreach (XRechnungExtensionSubInvoiceLineAllowance ila in SubInvoiceLineAllowances)
+            {
+                ila.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (SubInvoiceLineCharges.Length > 0)
+        {
+            writer.WriteStartElement("sub-invoice-line-charges", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-dex-04");
+
+            foreach (XRechnungExtensionSubInvoiceLineCharge ilc in SubInvoiceLineCharges)
+            {
+                ilc.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (SubInvoiceLinePeriod is not null)
+        {
+            SubInvoiceLinePeriod.Value.Serialize(writer);
+        }
+
+        SubInvoiceLineVatInformation.Serialize(writer);
+
+        SubInvoiceLinePriceDetails.Serialize(writer);
+
+        if (SubInvoiceLines.Length > 0)
+        {
+            writer.WriteStartElement("sub-invoice-lines", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-dex-01");
+
+            foreach (XRechnungExtensionSubInvoiceLine il in SubInvoiceLines)
+            {
+                il.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
+
+    public static XRechnungExtensionSubInvoiceLine Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("sub-invoice-line", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-identifier", IRConfig.NS);
+        reader.MoveToContent();
+
+        Identifier invoiceLineIdentifier = Identifier.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? invoiceLineNote = null;
+
+        if (reader.IsStartElement("invoice-line-note", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineNote = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? invoiceLineObjectIdentifier = null;
+
+        if (reader.IsStartElement("invoice-line-object-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineObjectIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadStartElement("invoiced-quantity", IRConfig.NS);
+        reader.MoveToContent();
+
+        Quantity invoicedQuantity = Quantity.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoiced-quantity-unit-of-measure-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code invoicedQuantityUnitOfMeasureCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-net-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceLineNetAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        DocumentReference? referencedPurchaseOrderLineReference = null;
+
+        if (reader.IsStartElement("referenced-purchase-order-line-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            referencedPurchaseOrderLineReference = DocumentReference.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? invoiceLineBuyerAccountingReference = null;
+
+        if (reader.IsStartElement("invoice-line-buyer-accounting-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineBuyerAccountingReference = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        XRechnungExtensionSubInvoiceLineItemInformation subInvoiceLineItemInformation = XRechnungExtensionSubInvoiceLineItemInformation.Deserialize(reader);
+
+        Array<XRechnungExtensionSubInvoiceLineAllowance> subInvoiceLineAllowances = Array<XRechnungExtensionSubInvoiceLineAllowance>.Empty;
+
+        if (reader.IsStartElement("sub-invoice-line-allowances", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<XRechnungExtensionSubInvoiceLineAllowance> builder = [];
+            while (reader.IsStartElement("sub-invoice-line-allowance", IRConfig.NS))
+            {
+                builder.Add(XRechnungExtensionSubInvoiceLineAllowance.Deserialize(reader));
+            }
+
+            subInvoiceLineAllowances = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<XRechnungExtensionSubInvoiceLineCharge> subInvoiceLineCharges = Array<XRechnungExtensionSubInvoiceLineCharge>.Empty;
+
+        if (reader.IsStartElement("sub-invoice-line-charges", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<XRechnungExtensionSubInvoiceLineCharge> builder = [];
+            while (reader.IsStartElement("sub-invoice-line-charge", IRConfig.NS))
+            {
+                builder.Add(XRechnungExtensionSubInvoiceLineCharge.Deserialize(reader));
+            }
+
+            subInvoiceLineCharges = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        XRechnungExtensionSubInvoiceLinePeriod? subInvoiceLinePeriod = null;
+
+        if (reader.IsStartElement("sub-invoice-line-period", IRConfig.NS))
+        {
+            subInvoiceLinePeriod = XRechnungExtensionSubInvoiceLinePeriod.Deserialize(reader);
+        }
+
+        XRechnungExtensionSubInvoiceLineVatInformation subInvoiceLineVatInformation = XRechnungExtensionSubInvoiceLineVatInformation.Deserialize(reader);
+
+        XRechnungExtensionSubInvoiceLinePriceDetails subInvoiceLinePriceDetails = XRechnungExtensionSubInvoiceLinePriceDetails.Deserialize(reader);
+
+        RefArray<XRechnungExtensionSubInvoiceLine> subInvoiceLines = RefArray<XRechnungExtensionSubInvoiceLine>.Empty;
+
+        if (reader.IsStartElement("sub-invoice-lines", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<XRechnungExtensionSubInvoiceLine> builder = [];
+            while (reader.IsStartElement("sub-invoice-line", IRConfig.NS))
+            {
+                builder.Add(XRechnungExtensionSubInvoiceLine.Deserialize(reader));
+            }
+
+            subInvoiceLines = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new XRechnungExtensionSubInvoiceLine
+        {
+            InvoiceLineIdentifier = invoiceLineIdentifier,
+            InvoiceLineNote = invoiceLineNote,
+            InvoiceLineObjectIdentifier = invoiceLineObjectIdentifier,
+            InvoicedQuantity = invoicedQuantity,
+            InvoicedQuantityUnitOfMeasureCode = invoicedQuantityUnitOfMeasureCode,
+            InvoiceLineNetAmount = invoiceLineNetAmount,
+            ReferencedPurchaseOrderLineReference = referencedPurchaseOrderLineReference,
+            InvoiceLineBuyerAccountingReference = invoiceLineBuyerAccountingReference,
+            SubInvoiceLineItemInformation = subInvoiceLineItemInformation,
+            SubInvoiceLineAllowances = subInvoiceLineAllowances,
+            SubInvoiceLineCharges = subInvoiceLineCharges,
+            SubInvoiceLinePeriod = subInvoiceLinePeriod,
+            SubInvoiceLineVatInformation = subInvoiceLineVatInformation,
+            SubInvoiceLinePriceDetails = subInvoiceLinePriceDetails,
+            SubInvoiceLines = subInvoiceLines,
+        };
+    }
+}
+
+public readonly record struct XRechnungExtensionSubInvoiceLineItemInformation : IIRDeserializable<XRechnungExtensionSubInvoiceLineItemInformation>, IIRSerializable
+{
+    // BT-153
+    public required Text ItemName { get; init; }
+
+    // BT-154
+    public required Text? ItemDescription { get; init; }
+
+    // BT-155
+    public required Identifier? ItemSellersIdentifier { get; init; }
+
+    // BT-156
+    public required Identifier? ItemBuyersIdentifier { get; init; }
+
+    // BT-157
+    public required Identifier? ItemStandardIdentifier { get; init; }
+
+    // BT-158
+    // UNTDID 7143
+    public required Array<Identifier> ItemClassificationIdentifiers { get; init; }
+
+    // BT-159
+    // ISO 3166-1 - Codes for the representation of names of countries and their subdivisions - Alpha-2 representation
+    public required Code? ItemCountryOfOrigin { get; init; }
+
+    // BG-DEX-08
+    public required Array<XRechnungExtensionSubInvoiceLineItemAttribute> SubInvoiceLineItemAttributes { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("sub-invoice-line-item-information", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-dex-02");
+
+        writer.WriteStartElement("item-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-153");
+        ItemName.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (ItemDescription is not null)
+        {
+            writer.WriteStartElement("item-description", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-154");
+            ItemDescription.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemSellersIdentifier is not null)
+        {
+            writer.WriteStartElement("item-sellers-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-155");
+            ItemSellersIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemBuyersIdentifier is not null)
+        {
+            writer.WriteStartElement("item-buyers-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-156");
+            ItemBuyersIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemStandardIdentifier is not null)
+        {
+            writer.WriteStartElement("item-standard-identifier", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-157");
+            ItemStandardIdentifier.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemClassificationIdentifiers.Length > 0)
+        {
+            writer.WriteStartElement("item-classification-identifiers", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-158");
+
+            foreach (Identifier i in ItemClassificationIdentifiers)
+            {
+                writer.WriteStartElement("item-classification-identifier", IRConfig.NS);
+                writer.WriteAttributeString("id", "bt-158");
+                i.Serialize(writer);
+                writer.WriteEndElement();
+            }
+
+            writer.WriteEndElement();
+        }
+
+        if (ItemCountryOfOrigin is not null)
+        {
+            writer.WriteStartElement("item-country-of-origin", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-159");
+            ItemCountryOfOrigin.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (SubInvoiceLineItemAttributes.Length > 0)
+        {
+            writer.WriteStartElement("sub-invoice-line-item-attributes", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-dex-08");
+
+            foreach (XRechnungExtensionSubInvoiceLineItemAttribute ia in SubInvoiceLineItemAttributes)
+            {
+                ia.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
+
+    public static XRechnungExtensionSubInvoiceLineItemInformation Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("sub-invoice-line-item-information", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text itemName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Text? itemDescription = null;
+
+        if (reader.IsStartElement("item-description", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemDescription = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? itemSellersIdentifier = null;
+
+        if (reader.IsStartElement("item-sellers-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemSellersIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? itemBuyersIdentifier = null;
+
+        if (reader.IsStartElement("item-buyers-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemBuyersIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Identifier? itemStandardIdentifier = null;
+
+        if (reader.IsStartElement("item-standard-identifier", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemStandardIdentifier = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<Identifier> itemClassificationIdentifiers = Array<Identifier>.Empty;
+
+        if (reader.IsStartElement("item-classification-identifiers", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<Identifier> builder = [];
+            while (reader.IsStartElement("item-classification-identifier", IRConfig.NS))
+            {
+                reader.ReadStartElement();
+                reader.MoveToContent();
+
+                builder.Add(Identifier.Deserialize(reader));
+
+                reader.ReadEndElement();
+                reader.MoveToContent();
+            }
+
+            itemClassificationIdentifiers = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? itemCountryOfOrigin = null;
+
+        if (reader.IsStartElement("item-country-of-origin", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemCountryOfOrigin = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Array<XRechnungExtensionSubInvoiceLineItemAttribute> subInvoiceLineItemAttributes = Array<XRechnungExtensionSubInvoiceLineItemAttribute>.Empty;
+
+        if (reader.IsStartElement("sub-invoice-line-item-attributes", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            List<XRechnungExtensionSubInvoiceLineItemAttribute> builder = [];
+            while (reader.IsStartElement("sub-invoice-line-item-attribute", IRConfig.NS))
+            {
+                builder.Add(XRechnungExtensionSubInvoiceLineItemAttribute.Deserialize(reader));
+            }
+
+            subInvoiceLineItemAttributes = new(builder);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new XRechnungExtensionSubInvoiceLineItemInformation
+        {
+            ItemName = itemName,
+            ItemDescription = itemDescription,
+            ItemSellersIdentifier = itemSellersIdentifier,
+            ItemBuyersIdentifier = itemBuyersIdentifier,
+            ItemStandardIdentifier = itemStandardIdentifier,
+            ItemClassificationIdentifiers = itemClassificationIdentifiers,
+            ItemCountryOfOrigin = itemCountryOfOrigin,
+            SubInvoiceLineItemAttributes = subInvoiceLineItemAttributes,
+        };
+    }
+}
+
+public readonly record struct XRechnungExtensionSubInvoiceLineItemAttribute : IIRDeserializable<XRechnungExtensionSubInvoiceLineItemAttribute>, IIRSerializable
+{
+    // BT-160
+    public required Text ItemAttributeName { get; init; }
+
+    // BT-161
+    public required Text ItemAttributeValue { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("sub-invoice-line-item-attribute", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-dex-08");
+
+        writer.WriteStartElement("item-attribute-name", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-160");
+        ItemAttributeName.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("item-attribute-value", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-161");
+        ItemAttributeValue.Serialize(writer);
+        writer.WriteEndElement();
+
+        writer.WriteEndElement();
+    }
+
+    public static XRechnungExtensionSubInvoiceLineItemAttribute Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("sub-invoice-line-item-attribute", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-attribute-name", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text itemAttributeName = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-attribute-value", IRConfig.NS);
+        reader.MoveToContent();
+
+        Text itemAttributeValue = Text.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new XRechnungExtensionSubInvoiceLineItemAttribute
+        {
+            ItemAttributeName = itemAttributeName,
+            ItemAttributeValue = itemAttributeValue,
+        };
+    }
+}
+
+public readonly record struct XRechnungExtensionSubInvoiceLineAllowance : IIRDeserializable<XRechnungExtensionSubInvoiceLineAllowance>, IIRSerializable
+{
+    // BT-136
+    public required Amount InvoiceLineAllowanceAmount { get; init; }
+
+    // BT-137
+    public required Amount? InvoiceLineAllowanceBaseAmount { get; init; }
+
+    // BT-138
+    public required Percentage? InvoiceLineAllowancePercentage { get; init; }
+
+    // BT-139
+    public required Text? InvoiceLineAllowanceReason { get; init; }
+
+    // BT-140
+    public required Code? InvoiceLineAllowanceReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("sub-invoice-line-allowance", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-dex-03");
+
+        writer.WriteStartElement("invoice-line-allowance-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-136");
+        InvoiceLineAllowanceAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (InvoiceLineAllowanceBaseAmount is not null)
+        {
+            writer.WriteStartElement("invoice-line-allowance-base-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-137");
+            InvoiceLineAllowanceBaseAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineAllowancePercentage is not null)
+        {
+            writer.WriteStartElement("invoice-line-allowance-percentage", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-138");
+            InvoiceLineAllowancePercentage.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineAllowanceReason is not null)
+        {
+            writer.WriteStartElement("invoice-line-allowance-reason", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-139");
+            InvoiceLineAllowanceReason.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineAllowanceReasonCode is not null)
+        {
+            writer.WriteStartElement("invoice-line-allowance-reason-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-140");
+            InvoiceLineAllowanceReasonCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
+
+    public static XRechnungExtensionSubInvoiceLineAllowance Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("sub-invoice-line-allowance", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-allowance-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceLineAllowanceAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? invoiceLineAllowanceBaseAmount = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-base-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowanceBaseAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Percentage? invoiceLineAllowancePercentage = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-percentage", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowancePercentage = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? invoiceLineAllowanceReason = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-reason", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowanceReason = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? invoiceLineAllowanceReasonCode = null;
+
+        if (reader.IsStartElement("invoice-line-allowance-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineAllowanceReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new XRechnungExtensionSubInvoiceLineAllowance
+        {
+            InvoiceLineAllowanceAmount = invoiceLineAllowanceAmount,
+            InvoiceLineAllowanceBaseAmount = invoiceLineAllowanceBaseAmount,
+            InvoiceLineAllowancePercentage = invoiceLineAllowancePercentage,
+            InvoiceLineAllowanceReason = invoiceLineAllowanceReason,
+            InvoiceLineAllowanceReasonCode = invoiceLineAllowanceReasonCode,
+        };
+    }
+}
+
+public readonly record struct XRechnungExtensionSubInvoiceLineCharge : IIRDeserializable<XRechnungExtensionSubInvoiceLineCharge>, IIRSerializable
+{
+    // BT-141
+    public required Amount InvoiceLineChargeAmount { get; init; }
+
+    // BT-142
+    public required Amount? InvoiceLineChargeBaseAmount { get; init; }
+
+    // BT-143
+    public required Percentage? InvoiceLineChargePercentage { get; init; }
+
+    // BT-144
+    public required Text? InvoiceLineChargeReason { get; init; }
+
+    // BT-145
+    public required Code? InvoiceLineChargeReasonCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("sub-invoice-line-charge", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-dex-04");
+
+        writer.WriteStartElement("invoice-line-charge-amount", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-141");
+        InvoiceLineChargeAmount.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (InvoiceLineChargeBaseAmount is not null)
+        {
+            writer.WriteStartElement("invoice-line-charge-base-amount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-142");
+            InvoiceLineChargeBaseAmount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineChargePercentage is not null)
+        {
+            writer.WriteStartElement("invoice-line-charge-percentage", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-143");
+            InvoiceLineChargePercentage.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineChargeReason is not null)
+        {
+            writer.WriteStartElement("invoice-line-charge-reason", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-144");
+            InvoiceLineChargeReason.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLineChargeReasonCode is not null)
+        {
+            writer.WriteStartElement("invoice-line-charge-reason-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-145");
+            InvoiceLineChargeReasonCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
+
+    public static XRechnungExtensionSubInvoiceLineCharge Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("sub-invoice-line-charge", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoice-line-charge-amount", IRConfig.NS);
+        reader.MoveToContent();
+
+        Amount invoiceLineChargeAmount = Amount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Amount? invoiceLineChargeBaseAmount = null;
+
+        if (reader.IsStartElement("invoice-line-charge-base-amount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargeBaseAmount = Amount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Percentage? invoiceLineChargePercentage = null;
+
+        if (reader.IsStartElement("invoice-line-charge-percentage", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargePercentage = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Text? invoiceLineChargeReason = null;
+
+        if (reader.IsStartElement("invoice-line-charge-reason", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargeReason = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? invoiceLineChargeReasonCode = null;
+
+        if (reader.IsStartElement("invoice-line-charge-reason-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLineChargeReasonCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new XRechnungExtensionSubInvoiceLineCharge
+        {
+            InvoiceLineChargeAmount = invoiceLineChargeAmount,
+            InvoiceLineChargeBaseAmount = invoiceLineChargeBaseAmount,
+            InvoiceLineChargePercentage = invoiceLineChargePercentage,
+            InvoiceLineChargeReason = invoiceLineChargeReason,
+            InvoiceLineChargeReasonCode = invoiceLineChargeReasonCode,
+        };
+    }
+}
+
+public readonly record struct XRechnungExtensionSubInvoiceLinePeriod : IIRDeserializable<XRechnungExtensionSubInvoiceLinePeriod>, IIRSerializable
+{
+    // BT-134
+    public required Date? InvoiceLinePeriodStartDate { get; init; }
+
+    // BT-135
+    public required Date? InvoiceLinePeriodEndDate { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("sub-invoice-line-period", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-dex-05");
+
+        if (InvoiceLinePeriodStartDate is not null)
+        {
+            writer.WriteStartElement("invoice-line-period-start-date");
+            writer.WriteAttributeString("id", "bt-134");
+            InvoiceLinePeriodStartDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (InvoiceLinePeriodEndDate is not null)
+        {
+            writer.WriteStartElement("invoice-line-period-end-date");
+            writer.WriteAttributeString("id", "bt-135");
+            InvoiceLinePeriodEndDate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
+
+    public static XRechnungExtensionSubInvoiceLinePeriod Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("sub-invoice-line-period", IRConfig.NS);
+        reader.MoveToContent();
+
+        Date? invoiceLinePeriodStartDate = null;
+
+        if (reader.IsStartElement("invoice-line-period-start-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLinePeriodStartDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Date? invoiceLinePeriodEndDate = null;
+
+        if (reader.IsStartElement("invoice-line-period-end-date", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoiceLinePeriodEndDate = Date.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new XRechnungExtensionSubInvoiceLinePeriod
+        {
+            InvoiceLinePeriodStartDate = invoiceLinePeriodStartDate,
+            InvoiceLinePeriodEndDate = invoiceLinePeriodEndDate,
+        };
+    }
+}
+
+public readonly record struct XRechnungExtensionSubInvoiceLineVatInformation : IIRDeserializable<XRechnungExtensionSubInvoiceLineVatInformation>, IIRSerializable
+{
+    // BT-151
+    // UNTDID 5305
+    public required Code InvoicedItemVatCategoryCode { get; init; }
+
+    // BT-152
+    public required Percentage? InvoicedItemVatRate { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("sub-invoice-line-vat-information", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-dex-06");
+
+        writer.WriteStartElement("invoiced-item-vat-category-code", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-151");
+        InvoicedItemVatCategoryCode.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (InvoicedItemVatRate is not null)
+        {
+            writer.WriteStartElement("invoiced-item-vat-rate", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-152");
+            InvoicedItemVatRate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
+
+    public static XRechnungExtensionSubInvoiceLineVatInformation Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("sub-invoice-line-vat-information", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("invoiced-item-vat-category-code", IRConfig.NS);
+        reader.MoveToContent();
+
+        Code invoicedItemVatCategoryCode = Code.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        Percentage? invoicedItemVatRate = null;
+
+        if (reader.IsStartElement("invoiced-item-vat-rate", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            invoicedItemVatRate = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new XRechnungExtensionSubInvoiceLineVatInformation
+        {
+            InvoicedItemVatCategoryCode = invoicedItemVatCategoryCode,
+            InvoicedItemVatRate = invoicedItemVatRate,
+        };
+    }
+}
+
+public readonly record struct XRechnungExtensionSubInvoiceLinePriceDetails : IIRDeserializable<XRechnungExtensionSubInvoiceLinePriceDetails>, IIRSerializable
+{
+    // BT-146
+    public required UnitPriceAmount ItemNetPrice { get; init; }
+
+    // BT-147
+    public required UnitPriceAmount? ItemPriceDiscount { get; init; }
+
+    // BT-148
+    public required UnitPriceAmount? ItemGrossPrice { get; init; }
+
+    // BT-149
+    public required Quantity? ItemPriceBaseQuantity { get; init; }
+
+    // BT-150
+    // UN/ECE Rec No 20,21
+    public required Code? ItemPriceBaseQuantityUnitOfMeasureCode { get; init; }
+
+    public void Serialize(XmlWriter writer)
+    {
+        writer.WriteStartElement("sub-invoice-line-price-details", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-dex-07");
+
+        writer.WriteStartElement("item-net-price", IRConfig.NS);
+        writer.WriteAttributeString("id", "bt-146");
+        ItemNetPrice.Serialize(writer);
+        writer.WriteEndElement();
+
+        if (ItemPriceDiscount is not null)
+        {
+            writer.WriteStartElement("item-price-discount", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-147");
+            ItemPriceDiscount.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemGrossPrice is not null)
+        {
+            writer.WriteStartElement("item-gross-price", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-148");
+            ItemGrossPrice.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemPriceBaseQuantity is not null)
+        {
+            writer.WriteStartElement("item-price-base-quantity", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-149");
+            ItemPriceBaseQuantity.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        if (ItemPriceBaseQuantityUnitOfMeasureCode is not null)
+        {
+            writer.WriteStartElement("item-price-base-quantity-unit-of-measure-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-150");
+            ItemPriceBaseQuantityUnitOfMeasureCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
+
+        writer.WriteEndElement();
+    }
+
+    public static XRechnungExtensionSubInvoiceLinePriceDetails Deserialize(XmlReader reader)
+    {
+        reader.ReadStartElement("sub-invoice-line-price-details", IRConfig.NS);
+        reader.MoveToContent();
+
+        reader.ReadStartElement("item-net-price", IRConfig.NS);
+        reader.MoveToContent();
+
+        UnitPriceAmount itemNetPrice = UnitPriceAmount.Deserialize(reader);
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        UnitPriceAmount? itemPriceDiscount = null;
+
+        if (reader.IsStartElement("item-price-discount", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemPriceDiscount = UnitPriceAmount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        UnitPriceAmount? itemGrossPrice = null;
+
+        if (reader.IsStartElement("item-gross-price", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemGrossPrice = UnitPriceAmount.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Quantity? itemPriceBaseQuantity = null;
+
+        if (reader.IsStartElement("item-price-base-quantity", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemPriceBaseQuantity = Quantity.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        Code? itemPriceBaseQuantityUnitOfMeasureCode = null;
+
+        if (reader.IsStartElement("item-price-base-quantity-unit-of-measure-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            itemPriceBaseQuantityUnitOfMeasureCode = Code.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
+
+        reader.ReadEndElement();
+        reader.MoveToContent();
+
+        return new XRechnungExtensionSubInvoiceLinePriceDetails
+        {
+            ItemNetPrice = itemNetPrice,
+            ItemPriceDiscount = itemPriceDiscount,
+            ItemGrossPrice = itemGrossPrice,
+            ItemPriceBaseQuantity = itemPriceBaseQuantity,
+            ItemPriceBaseQuantityUnitOfMeasureCode = itemPriceBaseQuantityUnitOfMeasureCode,
+        };
     }
 }
