@@ -6,16 +6,16 @@ using System.Xml.Linq;
 using En16931.Collections.Immutable;
 using En16931.Model;
 using En16931.Model.Primitives;
-using XRE = En16931.Model.XRechnungExtension;
 using En16931.Spec;
 using En16931.Spec.Utils;
 using En16931.Utils;
+using XRE = En16931.Model.XRechnungExtension;
 
 namespace En16931.Specs;
 
-// TODO: serialization tests for ExtensionInvoice type
 // TODO: ir xslt files for ExtensionInvoice (by hand for now)
 // TODO: Tests for XRechnung extension
+// TODO: fill out outstanding test combinations (issue #12)
 
 // TODO: Core Spec
 

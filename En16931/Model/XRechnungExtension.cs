@@ -1105,6 +1105,19 @@ public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>, IIRS
 
         ItemInformation.Serialize(writer);
 
+        if (SubInvoiceLines.Length > 0)
+        {
+            writer.WriteStartElement("sub-invoice-lines", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-dex-01");
+
+            foreach (SubInvoiceLine il in SubInvoiceLines)
+            {
+                il.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
+
         writer.WriteEndElement();
     }
 
