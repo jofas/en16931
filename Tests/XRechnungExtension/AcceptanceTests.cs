@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Xml.Schema;
 using En16931;
-using En16931.Model;
+using En16931.Model.XRechnungExtension;
 using Xunit;
 using S = En16931.Specs;
 
@@ -23,7 +23,7 @@ public class AcceptanceTests
         {
             ValidationException e = Assert.Throws<ValidationException>(() =>
             {
-                parser.Parse<S.XRechnungExtension>(test);
+                parser.Parse<XRechnungExtensionInvoice>(test);
             });
 
             Assert.Contains(Path.GetFileNameWithoutExtension(test), e.Errors);

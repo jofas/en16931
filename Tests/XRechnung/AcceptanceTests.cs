@@ -24,7 +24,7 @@ public class AcceptanceTests
         {
             ValidationException e = Assert.Throws<ValidationException>(() =>
             {
-                parser.Parse<S.XRechnung>(test);
+                parser.Parse<Invoice<S.XRechnung>>(test);
             });
 
             Assert.Contains(Path.GetFileNameWithoutExtension(test), e.Errors);
@@ -43,7 +43,7 @@ public class AcceptanceTests
 
         foreach (string test in testFiles)
         {
-            parser.Parse<S.XRechnung>(test);
+            parser.Parse<Invoice<S.XRechnung>>(test);
         }
     }
 }

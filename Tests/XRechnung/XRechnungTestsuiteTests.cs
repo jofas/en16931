@@ -21,7 +21,7 @@ public class XRechnungTestsuiteTests
 
         foreach (string test in testFiles)
         {
-            parser.Parse<S.XRechnung>(test);
+            parser.Parse<Invoice<S.XRechnung>>(test);
         }
     }
 }

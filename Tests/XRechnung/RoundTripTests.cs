@@ -48,7 +48,7 @@ public class RoundTripTests
 
             using StringReader reader = new(writer.ToString());
 
-            Assert.Equal(invoice, parser.Parse<S.XRechnung>(reader));
+            Assert.Equal(invoice, parser.Parse<Invoice<S.XRechnung>>(reader));
         }
     }
 }

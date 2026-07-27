@@ -61,34 +61,34 @@ public class Parser
         return parser.Parse(in document);
     }
 
-    public Invoice<T> Parse<T>(string filepath) where T : ISpecification
+    public T Parse<T>(string filepath) where T : IInvoice
     {
         using StreamReader reader = new(filepath);
         return Parse<T>(reader);
     }
 
-    public Invoice<T> Parse<T>(TextReader reader) where T : ISpecification
+    public T Parse<T>(TextReader reader) where T : IInvoice
     {
         using XmlTextReader xmlReader = new(reader);
         return Parse<T>(xmlReader);
     }
 
-    public Invoice<T> Parse<T>(XmlReader reader) where T : ISpecification
+    public T Parse<T>(XmlReader reader) where T : IInvoice
     {
         Document doc = new(reader);
         return Parse<T>(in doc);
     }
 
-    public Invoice<T> Parse<T>(XDocument document) where T : ISpecification
+    public T Parse<T>(XDocument document) where T : IInvoice
     {
         Document doc = new(document);
         return Parse<T>(in doc);
     }
 
-    public Invoice<T> Parse<T>(ref readonly Document document) where T : ISpecification
+    public T Parse<T>(ref readonly Document document) where T : IInvoice
     {
         ISpecificationParser parser = _specs[document.Specification];
-        ISpecificationParser<Invoice<T>, T> typedParser = (ISpecificationParser<Invoice<T>, T>)parser;
+        ISpecificationParser<T> typedParser = (ISpecificationParser<T>)parser;
 
         parser.Validate(in document);
 
@@ -154,28 +154,28 @@ public class Parser
         return doc;
     }
 
-    public void Serialize<T>(ref readonly Invoice<T> invoice, Schema schema, string filepath) where T : ISpecification
+    public void Serialize<T>(ref readonly T invoice, Schema schema, string filepath) where T : IInvoice
     {
         using StreamWriter writer = new(filepath);
         Serialize(in invoice, schema, writer);
     }
 
-    public void Serialize<T>(ref readonly Invoice<T> invoice, Schema schema, TextWriter writer) where T : ISpecification
+    public void Serialize<T>(ref readonly T invoice, Schema schema, TextWriter writer) where T : IInvoice
     {
         using XmlTextWriter xmlWriter = new(writer);
         Serialize(in invoice, schema, xmlWriter);
     }
 
-    public void Serialize<T>(ref readonly Invoice<T> invoice, Schema schema, XmlWriter writer) where T : ISpecification
+    public void Serialize<T>(ref readonly T invoice, Schema schema, XmlWriter writer) where T : IInvoice
     {
         Document doc = Serialize(in invoice, schema);
         doc.WriteTo(writer);
     }
 
-    public Document Serialize<T>(scoped ref readonly Invoice<T> invoice, Schema schema) where T : ISpecification
+    public Document Serialize<T>(scoped ref readonly T invoice, Schema schema) where T : IInvoice
     {
         ISpecificationParser parser = _specs[invoice.ProcessControl.SpecificationIdentifier];
-        ISpecificationParser<Invoice<T>, T> typedParser = (ISpecificationParser<Invoice<T>, T>)parser;
+        ISpecificationParser<T> typedParser = (ISpecificationParser<T>)parser;
 
         Document doc = typedParser.Serialize(in invoice, schema);
 

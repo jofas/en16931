@@ -30,9 +30,9 @@ public interface ISpecificationParser : ISpecificationValidator
     public Document Serialize(IInvoice invoice, Schema schema);
 }
 
-public interface ISpecificationParser<TInvoice, TSpec> where TInvoice : IInvoice<TSpec> where TSpec : ISpecification
+public interface ISpecificationParser<T> where T : IInvoice
 {
-    public TInvoice Parse(ref readonly Document doc);
+    public T Parse(ref readonly Document doc);
 
-    public Document Serialize(scoped ref readonly TInvoice invoice, Schema schema);
+    public Document Serialize(scoped ref readonly T invoice, Schema schema);
 }

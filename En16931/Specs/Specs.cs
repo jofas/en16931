@@ -6,16 +6,16 @@ using System.Xml.Linq;
 using En16931.Collections.Immutable;
 using En16931.Model;
 using En16931.Model.Primitives;
+using En16931.Model.XRechnungExtension;
 using En16931.Spec;
 using En16931.Spec.Utils;
 using En16931.Utils;
 
 namespace En16931.Specs;
 
-// TODO: ExtensionInvoice type for XRechnungExtension (by hand for now)
+// TODO: Remove XRechnungExtension prefix from extension model
+// TODO: serialization tests for ExtensionInvoice type
 // TODO: ir xslt files for ExtensionInvoice (by hand for now)
-//
-// TODO: Parser interface: add support for ExtensionInvoice
 // TODO: Tests for XRechnung extension
 
 // TODO: Core Spec
@@ -25,7 +25,7 @@ public static class BuiltinSpecs
     public static readonly RefArray<ISpecificationParser> All = [XRechnung.Instance, XRechnungExtension.Instance];
 }
 
-public class XRechnung : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<Invoice<XRechnung>, XRechnung>
+public class XRechnung : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<Invoice<XRechnung>>
 {
     private enum TransformerId
     {
@@ -45,6 +45,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
 
     private XRechnung() { }
 
+    // TODO: can we reduce startup time even more by sharing transformers between sets / specs? This should be benchmarked
     private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, string>() {
         { TransformerId.En16931Ubl, "Resources/En16931/EN16931-UBL-validation.xslt" },
         { TransformerId.En16931Cii, "Resources/En16931/EN16931-CII-validation.xslt" },
@@ -161,7 +162,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
     }
 }
 
-public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<Invoice<XRechnungExtension>, XRechnungExtension>
+public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<XRechnungExtensionInvoice>
 {
     private enum TransformerId
     {
@@ -245,11 +246,11 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
 
     public Document Serialize(IInvoice invoice, Schema schema)
     {
-        Invoice<XRechnungExtension> unboxed = (Invoice<XRechnungExtension>)invoice;
+        XRechnungExtensionInvoice unboxed = (XRechnungExtensionInvoice)invoice;
         return Serialize(in unboxed, schema);
     }
 
-    public Invoice<XRechnungExtension> Parse(ref readonly Document doc)
+    public XRechnungExtensionInvoice Parse(ref readonly Document doc)
     {
         TransformerId transformerId = doc.Schema switch
         {
@@ -260,10 +261,10 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
 
         XDocument ir = _transformers[transformerId].Transform(doc.Doc);
 
-        return Invoice<XRechnungExtension>.Deserialize(ir.CreateReader());
+        return XRechnungExtensionInvoice.Deserialize(ir.CreateReader());
     }
 
-    public Document Serialize(scoped ref readonly Invoice<XRechnungExtension> invoice, Schema schema)
+    public Document Serialize(scoped ref readonly XRechnungExtensionInvoice invoice, Schema schema)
     {
         XDocument ir = new();
 

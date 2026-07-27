@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Xml.Schema;
 using En16931;
-using En16931.Model;
+using En16931.Model.XRechnungExtension;
 using Xunit;
 using S = En16931.Specs;
 
@@ -20,7 +20,7 @@ public class XRechnungTestsuiteTests
 
         foreach (string test in testFiles)
         {
-            parser.Parse<S.XRechnungExtension>(test);
+            parser.Parse<XRechnungExtensionInvoice>(test);
         }
     }
 }

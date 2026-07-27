@@ -46,7 +46,7 @@ public class UnitTests
 
             Invoice<S.XRechnung> expected = InvoiceExtractor.Invoice<Invoice<S.XRechnung>>(invoiceCollection, invoiceName);
 
-            Invoice<S.XRechnung> invoice = parser.Parse<S.XRechnung>(test);
+            Invoice<S.XRechnung> invoice = parser.Parse<Invoice<S.XRechnung>>(test);
 
             Assert.Equal(expected, invoice);
         }
