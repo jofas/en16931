@@ -20,7 +20,7 @@ public class XRechnungTestsuiteTests
 
         foreach (string test in testFiles)
         {
-            parser.Parse<XRechnungExtensionInvoice>(test);
+            parser.Parse<Invoice>(test);
         }
     }
 }

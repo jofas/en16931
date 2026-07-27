@@ -6,14 +6,13 @@ using System.Xml.Linq;
 using En16931.Collections.Immutable;
 using En16931.Model;
 using En16931.Model.Primitives;
-using En16931.Model.XRechnungExtension;
+using XRE = En16931.Model.XRechnungExtension;
 using En16931.Spec;
 using En16931.Spec.Utils;
 using En16931.Utils;
 
 namespace En16931.Specs;
 
-// TODO: Remove XRechnungExtension prefix from extension model
 // TODO: serialization tests for ExtensionInvoice type
 // TODO: ir xslt files for ExtensionInvoice (by hand for now)
 // TODO: Tests for XRechnung extension
@@ -162,7 +161,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
     }
 }
 
-public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<XRechnungExtensionInvoice>
+public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<XRE.Invoice>
 {
     private enum TransformerId
     {
@@ -246,11 +245,11 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
 
     public Document Serialize(IInvoice invoice, Schema schema)
     {
-        XRechnungExtensionInvoice unboxed = (XRechnungExtensionInvoice)invoice;
+        XRE.Invoice unboxed = (XRE.Invoice)invoice;
         return Serialize(in unboxed, schema);
     }
 
-    public XRechnungExtensionInvoice Parse(ref readonly Document doc)
+    public XRE.Invoice Parse(ref readonly Document doc)
     {
         TransformerId transformerId = doc.Schema switch
         {
@@ -261,10 +260,10 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
 
         XDocument ir = _transformers[transformerId].Transform(doc.Doc);
 
-        return XRechnungExtensionInvoice.Deserialize(ir.CreateReader());
+        return XRE.Invoice.Deserialize(ir.CreateReader());
     }
 
-    public Document Serialize(scoped ref readonly XRechnungExtensionInvoice invoice, Schema schema)
+    public Document Serialize(scoped ref readonly XRE.Invoice invoice, Schema schema)
     {
         XDocument ir = new();
 

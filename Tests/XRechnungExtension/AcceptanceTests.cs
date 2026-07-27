@@ -23,7 +23,7 @@ public class AcceptanceTests
         {
             ValidationException e = Assert.Throws<ValidationException>(() =>
             {
-                parser.Parse<XRechnungExtensionInvoice>(test);
+                parser.Parse<Invoice>(test);
             });
 
             Assert.Contains(Path.GetFileNameWithoutExtension(test), e.Errors);
