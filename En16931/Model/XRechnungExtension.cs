@@ -119,7 +119,6 @@ public readonly record struct XRechnungExtensionInvoice : IInvoice, IIRDeseriali
     public required NonEmptyArray<XRechnungExtensionInvoiceLine> InvoiceLines { get; init; }
 
     // BG-DEX-09
-    // TODO: Serialization
     public required Array<XRechnungExtensionThirdPartyPayment> ThirdPartyPayments { get; init; }
 
     public void Serialize(XmlWriter writer)
