@@ -29,4 +29,18 @@ public class AcceptanceTests
             Assert.Contains(Path.GetFileNameWithoutExtension(test), e.Errors);
         }
     }
+
+    [Theory]
+    [InlineData("Resources/XRechnungExtension/Cii/Success")]
+    public void Successes(string testsLocation)
+    {
+        Parser parser = new Parser();
+
+        string[] testFiles = Directory.GetFiles(testsLocation);
+
+        foreach (string test in testFiles)
+        {
+            parser.Parse<Invoice>(test);
+        }
+    }
 }
