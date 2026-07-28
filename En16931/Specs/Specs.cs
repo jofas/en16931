@@ -185,10 +185,9 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         { TransformerId.En16931Cii, "Resources/En16931/EN16931-CII-validation.xslt" },
         { TransformerId.XRechnungUbl, "Resources/XRechnung/XRechnung-UBL-validation.xsl" },
         { TransformerId.XRechnungCii, "Resources/XRechnung/XRechnung-CII-validation.xsl" },
-        // TODO: these files must be created for extension to work (cii ignores additional fields -- the core files can be reused)
-        { TransformerId.UblToIr, "Resources/IR/ubl2ir.xslt" },
+        { TransformerId.UblToIr, "Resources/IR/ubl2ir_XRechnungExtension.xslt" },
         { TransformerId.CiiToIr, "Resources/IR/cii2ir.xslt" },
-        { TransformerId.IrToUbl, "Resources/IR/ir2ubl.xslt" },
+        { TransformerId.IrToUbl, "Resources/IR/ir2ubl_XRechnungExtension.xslt" },
         { TransformerId.IrToCii, "Resources/IR/ir2cii.xslt" },
     });
 
