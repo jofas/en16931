@@ -102,20 +102,16 @@
   </xsl:template>
 
   <xsl:template name="common-invoice-line-bg-dex-01">
-      <!--<xsl:if test="exists(./cac:SubInvoiceLine) or exists(./cac:SubCreditNoteLine)">-->
-    <xsl:if test="exists(./cac:SubInvoiceLine)">
+    <xsl:if test="exists(./cac:SubInvoiceLine) or exists(./cac:SubCreditNoteLine)">
       <sub-invoice-lines id="bg-dex-01">
-          <!--<xsl:for-each select="./(cac:SubInvoiceLine | cac:SubCreditNoteLine)">-->
-        <xsl:for-each select="./cac:SubInvoiceLine">
+        <xsl:for-each select="./(cac:SubInvoiceLine | cac:SubCreditNoteLine)">
           <sub-invoice-line id="bg-dex-01">
             <xsl:call-template name="common-invoice-line-bt-126-128"/>
             <invoiced-quantity id="bt-129">
-              <xsl:value-of select="./cbc:InvoicedQuantity"/>
-              <!--<xsl:value-of select="./(cbc:InvoicedQuantity | cbc:CreditedQuantity)"/>-->
+              <xsl:value-of select="./(cbc:InvoicedQuantity | cbc:CreditedQuantity)"/>
             </invoiced-quantity>
             <invoiced-quantity-unit-of-measure-code id="bt-130">
-              <xsl:value-of select="./cbc:InvoicedQuantity/@unitCode"/>
-              <!--<xsl:value-of select="./(cbc:InvoicedQuantity | cbc:CreditedQuantity)/@unitCode"/>-->
+              <xsl:value-of select="./(cbc:InvoicedQuantity | cbc:CreditedQuantity)/@unitCode"/>
             </invoiced-quantity-unit-of-measure-code>
             <xsl:call-template name="common-invoice-line-bt-131-133"/>
             <sub-invoice-line-item-information id="bg-dex-02">
