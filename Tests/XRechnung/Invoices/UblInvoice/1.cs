@@ -5,7 +5,7 @@ using S = En16931.Specs;
 
 namespace Tests.XRechnung.Invoices;
 
-public static partial class UblInvoices
+public partial class UblInvoices
 {
     public static readonly Invoice<S.XRechnung> Invoice1 = new Invoice<S.XRechnung>
     {
