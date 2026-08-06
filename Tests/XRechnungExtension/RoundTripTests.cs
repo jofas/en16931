@@ -18,17 +18,17 @@ public class RoundTripTests
     [Fact]
     public void UblInvoiceRoundTrip()
     {
-        Array<Invoice> invoices = InvoiceExtractor.Invoices<Invoice<S.XRechnung>>(typeof(UblInvoices));
+        Array<Invoice> invoices = InvoiceExtractor.Invoices<Invoice>(typeof(UblInvoices));
         RoundTrip(invoices, Schema.UblInvoice);
     }
+    */
 
     [Fact]
     public void UblCreditNoteRoundTrip()
     {
-        Array<Invoice> invoices = InvoiceExtractor.Invoices<Invoice<S.XRechnung>>(typeof(UblCreditNotes));
+        Array<Invoice> invoices = InvoiceExtractor.Invoices<Invoice>(typeof(UblCreditNotes));
         RoundTrip(invoices, Schema.UblCreditNote);
     }
-    */
 
     [Fact]
     public void CiiRoundTrip()

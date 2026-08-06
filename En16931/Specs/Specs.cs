@@ -13,10 +13,7 @@ using XRE = En16931.Model.XRechnungExtension;
 
 namespace En16931.Specs;
 
-// TODO: ir xslt files for ExtensionInvoice (by hand for now)
 // TODO: Tests for XRechnung extension (acceptance tests: every combination, unit tests, round trip tests)
-
-// TODO: Core Spec
 
 public static class BuiltinSpecs
 {

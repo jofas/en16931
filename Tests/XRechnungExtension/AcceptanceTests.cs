@@ -12,6 +12,7 @@ public class AcceptanceTests
 {
     [Theory]
     [InlineData("Resources/XRechnungExtension/UblInvoice/Failure")]
+    [InlineData("Resources/XRechnungExtension/UblCreditNote/Failure")]
     [InlineData("Resources/XRechnungExtension/Cii/Failure")]
     public void Failures(string testsLocation)
     {
@@ -31,6 +32,7 @@ public class AcceptanceTests
     }
 
     [Theory]
+    [InlineData("Resources/XRechnungExtension/UblCreditNote/Success")]
     [InlineData("Resources/XRechnungExtension/Cii/Success")]
     public void Successes(string testsLocation)
     {

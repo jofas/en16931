@@ -46,11 +46,11 @@
             </invoiced-quantity-unit-of-measure-code>
             <xsl:call-template name="common-invoice-line-bt-131-133"/>
             <xsl:call-template name="common-invoice-line-bg-26-31"/>
-            <xsl:call-template name="common-invoice-line-bg-dex-01"/>
+            <xsl:call-template name="bg-dex-01"/>
           </invoice-line>
         </xsl:for-each>
       </invoice-lines>
-      <xsl:call-template name="common-invoice-bg-dex-09"/>
+      <xsl:call-template name="bg-dex-09"/>
     </invoice>
   </xsl:template>
 
@@ -93,28 +93,29 @@
             </invoiced-quantity-unit-of-measure-code>
             <xsl:call-template name="common-invoice-line-bt-131-133"/>
             <xsl:call-template name="common-invoice-line-bg-26-31"/>
-            <xsl:call-template name="common-invoice-line-bg-dex-01"/>
           </invoice-line>
         </xsl:for-each>
       </invoice-lines>
-      <xsl:call-template name="common-invoice-bg-dex-09"/>
     </invoice>
   </xsl:template>
 
-  <xsl:template name="common-invoice-line-bg-dex-01">
-    <xsl:if test="exists(./cac:SubInvoiceLine) or exists(./cac:SubCreditNoteLine)">
+  <!-- TODO: abstract items of Line-BGs into their respective templates and share them between invoice-lines and sub-invoice-lines -->
+
+  <xsl:template name="bg-dex-01">
+    <xsl:if test="exists(./cac:SubInvoiceLine)">
       <sub-invoice-lines id="bg-dex-01">
-        <xsl:for-each select="./(cac:SubInvoiceLine | cac:SubCreditNoteLine)">
+        <xsl:for-each select="./cac:SubInvoiceLine">
           <sub-invoice-line id="bg-dex-01">
             <xsl:call-template name="common-invoice-line-bt-126-128"/>
             <invoiced-quantity id="bt-129">
-              <xsl:value-of select="./(cbc:InvoicedQuantity | cbc:CreditedQuantity)"/>
+              <xsl:value-of select="./cbc:InvoicedQuantity"/>
             </invoiced-quantity>
             <invoiced-quantity-unit-of-measure-code id="bt-130">
-              <xsl:value-of select="./(cbc:InvoicedQuantity | cbc:CreditedQuantity)/@unitCode"/>
+              <xsl:value-of select="./cbc:InvoicedQuantity/@unitCode"/>
             </invoiced-quantity-unit-of-measure-code>
             <xsl:call-template name="common-invoice-line-bt-131-133"/>
             <sub-invoice-line-item-information id="bg-dex-02">
+              <!-- TODO: template -->
               <item-name id="bt-153">
                 <xsl:value-of select="./cac:Item/cbc:Name"/>
               </item-name>
@@ -175,6 +176,7 @@
                 <sub-invoice-line-item-attributes id="bg-dex-08">
                   <xsl:for-each select="./cac:Item/cac:AdditionalItemProperty">
                     <sub-invoice-line-item-attribute id="bg-dex-08">
+                      <!-- TODO: template -->
                       <item-attribute-name id="bt-160">
                         <xsl:value-of select="./cbc:Name"/>
                       </item-attribute-name>
@@ -189,7 +191,8 @@
             <xsl:if test="exists(./cac:AllowanceCharge[cbc:ChargeIndicator = 'false']/cbc:Amount)">
               <sub-invoice-line-allowances id="bg-dex-03">
                 <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = 'false']">
-                  <invoice-line-allowance id="bg-27">
+                  <sub-invoice-line-allowance id="bg-dex-03">
+                    <!-- TODO: template -->
                     <invoice-line-allowance-amount id="bt-136">
                       <xsl:value-of select="./cbc:Amount"/>
                     </invoice-line-allowance-amount>
@@ -213,14 +216,15 @@
                         <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
                       </invoice-line-allowance-reason-code>
                     </xsl:if>
-                  </invoice-line-allowance>
+                  </sub-invoice-line-allowance>
                 </xsl:for-each>
               </sub-invoice-line-allowances>
             </xsl:if>
             <xsl:if test="exists(./cac:AllowanceCharge[cbc:ChargeIndicator = 'true']/cbc:Amount)">
               <sub-invoice-line-charges id="bg-dex-04">
                 <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = 'true']">
-                  <invoice-line-charge id="bg-28">
+                  <sub-invoice-line-charge id="bg-dex-04">
+                    <!-- TODO: template -->
                     <invoice-line-charge-amount id="bt-141">
                       <xsl:value-of select="./cbc:Amount"/>
                     </invoice-line-charge-amount>
@@ -244,12 +248,13 @@
                         <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
                       </invoice-line-charge-reason-code>
                     </xsl:if>
-                  </invoice-line-charge>
+                  </sub-invoice-line-charge>
                 </xsl:for-each>
               </sub-invoice-line-charges>
             </xsl:if>
             <xsl:if test="exists(./cac:InvoicePeriod/cbc:StartDate) or exists(./cac:InvoicePeriod/cbc:EndDate)">
               <sub-invoice-line-period id="bg-dex-05">
+                <!-- TODO: template -->
                 <xsl:if test="exists(./cac:InvoicePeriod/cbc:StartDate)">
                   <invoice-line-period-start-date id="bt-134">
                     <xsl:value-of select="./cac:InvoicePeriod/cbc:StartDate"/>
@@ -263,6 +268,7 @@
               </sub-invoice-line-period>
             </xsl:if>
             <sub-invoice-line-vat-information id="bg-dex-06">
+              <!-- TODO: template -->
               <invoiced-item-vat-category-code id="bt-151">
                 <xsl:value-of select="./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:ID"/>
               </invoiced-item-vat-category-code>
@@ -273,6 +279,7 @@
               </xsl:if>
             </sub-invoice-line-vat-information>
             <sub-invoice-line-price-details id="bg-dex-07">
+              <!-- TODO: template -->
               <item-net-price id="bt-146">
                 <xsl:value-of select="./cac:Price/cbc:PriceAmount"/>
               </item-net-price>
@@ -297,14 +304,14 @@
                 </item-price-base-quantity-unit-of-measure-code>
               </xsl:if>
             </sub-invoice-line-price-details>
-            <xsl:call-template name="common-invoice-line-bg-dex-01"/>
+            <xsl:call-template name="bg-dex-01"/>
           </sub-invoice-line>
         </xsl:for-each>
       </sub-invoice-lines>
     </xsl:if>
   </xsl:template>
 
-  <xsl:template name="common-invoice-bg-dex-09">
+  <xsl:template name="bg-dex-09">
     <xsl:if test="exists(cac:PrepaidPayment/cbc:ID)">
       <third-party-payments id="bg-dex-09">
         <xsl:for-each select="cac:PrepaidPayment">

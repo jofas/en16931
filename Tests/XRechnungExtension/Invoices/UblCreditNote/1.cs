@@ -5,13 +5,13 @@ using M = En16931.Model;
 
 namespace Tests.XRechnungExtension.Invoices;
 
-public static partial class Ciis
+public static partial class UblCreditNotes
 {
-    public static readonly Invoice Invoice2 = new Invoice
+    public static readonly Invoice Invoice1 = new Invoice
     {
         InvoiceNumber = new Identifier("1234567"),
         InvoiceIssueDate = new Date(new DateTime(2018, 4, 13)),
-        InvoiceTypeCode = new Code("380"),
+        InvoiceTypeCode = new Code("381"),
         InvoiceCurrencyCode = new Code("EUR"),
         VatAccountingCurrencyCode = new Code("GBP"),
         ValueAddedTaxPointDate = new Date(new DateTime(2018, 4, 13)),
@@ -46,6 +46,10 @@ public static partial class Ciis
             new M.PrecedingInvoiceReference {
                 Reference = new DocumentReference("PIR1234567890"),
                 PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 2, 4)),
+            },
+            new M.PrecedingInvoiceReference {
+                Reference = new DocumentReference("PIR0987654321"),
+                PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 3, 5)),
             },
         ],
         Seller = new M.Seller
@@ -373,4 +377,5 @@ public static partial class Ciis
         ],
         ThirdPartyPayments = [],
     };
+
 }

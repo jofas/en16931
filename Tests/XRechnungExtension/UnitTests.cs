@@ -19,6 +19,7 @@ public class UnitTests
     {
         TestInvoices(testsLocation, typeof(UblInvoices));
     }
+    */
 
     [Theory]
     [InlineData("Resources/XRechnungExtension/UblCreditNote/Success")]
@@ -26,7 +27,6 @@ public class UnitTests
     {
         TestInvoices(testsLocation, typeof(UblCreditNotes));
     }
-    */
 
     [Theory]
     [InlineData("Resources/XRechnungExtension/Cii/Success")]
