@@ -110,7 +110,7 @@
   <cac:AccountingSupplierParty>
     <cac:Party>
       <!-- bt-34 -->
-      <cbc:EndpointID schemeID="EM">rechnungsausgang@test.com</cbc:EndpointID>
+      <cbc:EndpointID schemeID="XR03">123456789</cbc:EndpointID>
       <cac:PartyIdentification>
         <!-- bt-29 -->
         <cbc:ID>9876543217894897438</cbc:ID>
@@ -121,7 +121,7 @@
       </cac:PartyIdentification>
       <cac:PartyIdentification>
         <!-- bt-29 -->
-        <cbc:ID schemeID="0088">987654321</cbc:ID>
+        <cbc:ID schemeID="XR01">987654321</cbc:ID>
       </cac:PartyIdentification>
       <cac:PartyName>
         <!-- bt-28 -->
@@ -165,7 +165,7 @@
         <!-- bt-27 -->
         <cbc:RegistrationName>[Seller name]</cbc:RegistrationName>
         <!-- bt-30 -->
-        <cbc:CompanyID schemeID="0088">123456789</cbc:CompanyID>
+        <cbc:CompanyID schemeID="XR02">123456789</cbc:CompanyID>
         <!-- bt-33 -->
         <cbc:CompanyLegalForm>Amtsgericht […], Geschäftsführer: […], Sitz der Gesellschaft […], Aufsichtsratvorsitzender: […]</cbc:CompanyLegalForm>
       </cac:PartyLegalEntity>
@@ -182,10 +182,10 @@
   <cac:AccountingCustomerParty>
     <cac:Party>
       <!-- bt-49 -->
-      <cbc:EndpointID schemeID="EM">rechnungseingang@test.de</cbc:EndpointID>
+      <cbc:EndpointID schemeID="XR03">123456789</cbc:EndpointID>
       <cac:PartyIdentification>
         <!-- bt-46 -->
-        <cbc:ID>138</cbc:ID>
+        <cbc:ID schemeID="XR01">138</cbc:ID>
       </cac:PartyIdentification>
       <cac:PartyName>
         <!-- bt-45 -->
@@ -222,7 +222,7 @@
         <!-- bt-44 -->
         <cbc:RegistrationName>[Buyer name]</cbc:RegistrationName>
         <!-- bt-47 -->
-        <cbc:CompanyID schemeID="0204">90000000-03083-72</cbc:CompanyID>
+        <cbc:CompanyID schemeID="XR02">90000000-03083-72</cbc:CompanyID>
       </cac:PartyLegalEntity>
       <cac:Contact>
         <!-- bt-56 -->
@@ -237,7 +237,7 @@
   <cac:PayeeParty>
     <cac:PartyIdentification>
       <!-- bt-60 -->
-      <cbc:ID>74</cbc:ID>
+      <cbc:ID schemeID="XR01">74</cbc:ID>
     </cac:PartyIdentification>
     <cac:PartyName>
       <!-- bt-59 -->
@@ -245,7 +245,7 @@
     </cac:PartyName>
     <cac:PartyLegalEntity>
       <!-- bt-61 -->
-      <cbc:CompanyID schemeID="0204">90000000-03083-72</cbc:CompanyID>
+      <cbc:CompanyID schemeID="XR02">90000000-03083-72</cbc:CompanyID>
     </cac:PartyLegalEntity>
   </cac:PayeeParty>
   <cac:TaxRepresentativeParty>
@@ -286,7 +286,7 @@
     <cbc:ActualDeliveryDate>2018-04-13</cbc:ActualDeliveryDate>
     <cac:DeliveryLocation>
       <!-- bt-71 -->
-      <cbc:ID>68</cbc:ID>
+      <cbc:ID schemeID="XR02">68</cbc:ID>
       <cac:Address>
         <!-- bt-75 -->
         <cbc:StreetName>[Deliver to street]</cbc:StreetName>
@@ -577,7 +577,7 @@
       </cac:SellersItemIdentification>
       <cac:StandardItemIdentification>
         <!-- bt-157 -->
-        <cbc:ID schemeID="0088">123456789</cbc:ID>
+        <cbc:ID schemeID="XR03">123456789</cbc:ID>
       </cac:StandardItemIdentification>
       <cac:OriginCountry>
         <!-- bt-159 -->

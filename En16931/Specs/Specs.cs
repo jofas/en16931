@@ -14,8 +14,6 @@ using XRE = En16931.Model.XRechnungExtension;
 namespace En16931.Specs;
 
 // TODO: Tests for XRechnung extension UblInvoice:
-//  * copy 1.cs with XR0X scheme identifiers
-//  * copy 2.cs with XR0X scheme identifiers + sub invoice line + third party payments
 //  * copy xrechnung testsuite files (all 5)
 
 public static class BuiltinSpecs
