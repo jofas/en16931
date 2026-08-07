@@ -12,6 +12,22 @@ public class UnitTests
     [InlineData("Resources/XRechnungExtension/UblInvoice/Success")]
     public void UblInvoicesTest(string testsLocation)
     {
+        Parser parser = new Parser();
+
+        string[] testFiles = System.IO.Directory.GetFiles(testsLocation);
+
+        foreach (string test in testFiles)
+        {
+            string invoiceName = System.IO.Path.GetFileNameWithoutExtension(test);
+
+            Invoice expected = InvoiceExtractor<UblInvoices, Invoice>.Invoice(invoiceName);
+
+            Invoice invoice = parser.Parse<Invoice>(test);
+
+            Debug.RefinedXRechnungExtensionInvoiceComparison(expected, invoice);
+            Assert.Equal(expected, invoice);
+        }
+
         TestHarness.UnitTest<UblInvoices, Invoice>(testsLocation);
     }
 

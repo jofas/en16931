@@ -758,9 +758,9 @@
                   <!-- bt-30-1 -->
                   <xsl:value-of select="ir:seller/ir:seller-legal-registration-identifier/ir:scheme-identifier"/>
                 </xsl:attribute>
-                <!-- bt-30 -->
-                <xsl:value-of select="ir:seller/ir:seller-legal-registration-identifier/ir:content"/>
               </xsl:if>
+              <!-- bt-30 -->
+              <xsl:value-of select="ir:seller/ir:seller-legal-registration-identifier/ir:content"/>
             </cbc:CompanyID>
           </xsl:if>
           <xsl:if test="exists(ir:seller/ir:seller-additional-legal-information)">
