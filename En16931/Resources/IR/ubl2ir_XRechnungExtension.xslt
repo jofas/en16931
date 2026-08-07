@@ -99,8 +99,6 @@
     </invoice>
   </xsl:template>
 
-  <!-- TODO: abstract items of Line-BGs into their respective templates and share them between invoice-lines and sub-invoice-lines -->
-
   <xsl:template name="bg-dex-01">
     <xsl:if test="exists(./cac:SubInvoiceLine)">
       <sub-invoice-lines id="bg-dex-01">
@@ -115,74 +113,12 @@
             </invoiced-quantity-unit-of-measure-code>
             <xsl:call-template name="common-invoice-line-bt-131-133"/>
             <sub-invoice-line-item-information id="bg-dex-02">
-              <!-- TODO: template -->
-              <item-name id="bt-153">
-                <xsl:value-of select="./cac:Item/cbc:Name"/>
-              </item-name>
-              <xsl:if test="exists(./cac:Item/cbc:Description)">
-                <item-description id="bt-154">
-                  <xsl:value-of select="./cac:Item/cbc:Description"/>
-                </item-description>
-              </xsl:if>
-              <xsl:if test="exists(./cac:Item/cac:SellersItemIdentification/cbc:ID)">
-                <item-sellers-identifier id="bt-155">
-                  <content>
-                    <xsl:value-of select="./cac:Item/cac:SellersItemIdentification/cbc:ID"/>
-                  </content>
-                </item-sellers-identifier>
-              </xsl:if>
-              <xsl:if test="exists(./cac:Item/cac:BuyersItemIdentification/cbc:ID)">
-                <item-buyers-identifier id="bt-156">
-                  <content>
-                    <xsl:value-of select="./cac:Item/cac:BuyersItemIdentification/cbc:ID"/>
-                  </content>
-                </item-buyers-identifier>
-              </xsl:if>
-              <xsl:if test="exists(./cac:Item/cac:StandardItemIdentification/cbc:ID)">
-                <item-standard-identifier id="bt-157">
-                  <content>
-                    <xsl:value-of select="./cac:Item/cac:StandardItemIdentification/cbc:ID"/>
-                  </content>
-                  <scheme-identifier>
-                    <xsl:value-of select="./cac:Item/cac:StandardItemIdentification/cbc:ID/@schemeID"/>
-                  </scheme-identifier>
-                </item-standard-identifier>
-              </xsl:if>
-              <xsl:if test="exists(./cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode)">
-                <item-classification-identifiers id="bt-158">
-                  <xsl:for-each select="./cac:Item/cac:CommodityClassification">
-                    <item-classification-identifier id="bt-158">
-                      <content>
-                        <xsl:value-of select="./cbc:ItemClassificationCode"/>
-                      </content>
-                      <scheme-identifier>
-                        <xsl:value-of select="./cbc:ItemClassificationCode/@listID"/>
-                      </scheme-identifier>
-                      <xsl:if test="exists(./cbc:ItemClassificationCode[@listVersionID])">
-                        <scheme-version-identifier>
-                          <xsl:value-of select="./cbc:ItemClassificationCode/@listVersionID"/>
-                        </scheme-version-identifier>
-                      </xsl:if>
-                    </item-classification-identifier>
-                  </xsl:for-each>
-                </item-classification-identifiers>
-              </xsl:if>
-              <xsl:if test="exists(./cac:Item/cac:OriginCountry/cbc:IdentificationCode)">
-                <item-country-of-origin id="bt-159">
-                  <xsl:value-of select="./cac:Item/cac:OriginCountry/cbc:IdentificationCode"/>
-                </item-country-of-origin>
-              </xsl:if>
+              <xsl:call-template name="common-invoice-line-bt-153-159"/>
               <xsl:if test="exists(./cac:Item/cac:AdditionalItemProperty/cbc:Name)">
                 <sub-invoice-line-item-attributes id="bg-dex-08">
                   <xsl:for-each select="./cac:Item/cac:AdditionalItemProperty">
                     <sub-invoice-line-item-attribute id="bg-dex-08">
-                      <!-- TODO: template -->
-                      <item-attribute-name id="bt-160">
-                        <xsl:value-of select="./cbc:Name"/>
-                      </item-attribute-name>
-                      <item-attribute-value id="bt-161">
-                        <xsl:value-of select="./cbc:Value"/>
-                      </item-attribute-value>
+                      <xsl:call-template name="common-invoice-line-bt-160-161"/>
                     </sub-invoice-line-item-attribute>
                   </xsl:for-each>
                 </sub-invoice-line-item-attributes>
@@ -192,30 +128,7 @@
               <sub-invoice-line-allowances id="bg-dex-03">
                 <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = 'false']">
                   <sub-invoice-line-allowance id="bg-dex-03">
-                    <!-- TODO: template -->
-                    <invoice-line-allowance-amount id="bt-136">
-                      <xsl:value-of select="./cbc:Amount"/>
-                    </invoice-line-allowance-amount>
-                    <xsl:if test="exists(./cbc:BaseAmount)">
-                      <invoice-line-allowance-base-amount id="bt-137">
-                        <xsl:value-of select="./cbc:BaseAmount"/>
-                      </invoice-line-allowance-base-amount>
-                    </xsl:if>
-                    <xsl:if test="exists(./cbc:MultiplierFactorNumeric)">
-                      <invoice-line-allowance-percentage id="bt-138">
-                        <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
-                      </invoice-line-allowance-percentage>
-                    </xsl:if>
-                    <xsl:if test="exists(./cbc:AllowanceChargeReason)">
-                      <invoice-line-allowance-reason id="bt-139">
-                        <xsl:value-of select="./cbc:AllowanceChargeReason"/>
-                      </invoice-line-allowance-reason>
-                    </xsl:if>
-                    <xsl:if test="exists(./cbc:AllowanceChargeReasonCode)">
-                      <invoice-line-allowance-reason-code id="bt-140">
-                        <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
-                      </invoice-line-allowance-reason-code>
-                    </xsl:if>
+                    <xsl:call-template name="common-invoice-line-bt-136-140"/>
                   </sub-invoice-line-allowance>
                 </xsl:for-each>
               </sub-invoice-line-allowances>
@@ -224,85 +137,21 @@
               <sub-invoice-line-charges id="bg-dex-04">
                 <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = 'true']">
                   <sub-invoice-line-charge id="bg-dex-04">
-                    <!-- TODO: template -->
-                    <invoice-line-charge-amount id="bt-141">
-                      <xsl:value-of select="./cbc:Amount"/>
-                    </invoice-line-charge-amount>
-                    <xsl:if test="exists(./cbc:BaseAmount)">
-                      <invoice-line-charge-base-amount id="bt-142">
-                        <xsl:value-of select="./cbc:BaseAmount"/>
-                      </invoice-line-charge-base-amount>
-                    </xsl:if>
-                    <xsl:if test="exists(./cbc:MultiplierFactorNumeric)">
-                      <invoice-line-charge-percentage id="bt-143">
-                        <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
-                      </invoice-line-charge-percentage>
-                    </xsl:if>
-                    <xsl:if test="exists(./cbc:AllowanceChargeReason)">
-                      <invoice-line-charge-reason id="bt-144">
-                        <xsl:value-of select="./cbc:AllowanceChargeReason"/>
-                      </invoice-line-charge-reason>
-                    </xsl:if>
-                    <xsl:if test="exists(./cbc:AllowanceChargeReasonCode)">
-                      <invoice-line-charge-reason-code id="bt-145">
-                        <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
-                      </invoice-line-charge-reason-code>
-                    </xsl:if>
+                    <xsl:call-template name="common-invoice-line-bt-141-145"/>
                   </sub-invoice-line-charge>
                 </xsl:for-each>
               </sub-invoice-line-charges>
             </xsl:if>
             <xsl:if test="exists(./cac:InvoicePeriod/cbc:StartDate) or exists(./cac:InvoicePeriod/cbc:EndDate)">
               <sub-invoice-line-period id="bg-dex-05">
-                <!-- TODO: template -->
-                <xsl:if test="exists(./cac:InvoicePeriod/cbc:StartDate)">
-                  <invoice-line-period-start-date id="bt-134">
-                    <xsl:value-of select="./cac:InvoicePeriod/cbc:StartDate"/>
-                  </invoice-line-period-start-date>
-                </xsl:if>
-                <xsl:if test="exists(./cac:InvoicePeriod/cbc:EndDate)">
-                  <invoice-line-period-end-date id="bt-135">
-                    <xsl:value-of select="./cac:InvoicePeriod/cbc:EndDate"/>
-                  </invoice-line-period-end-date>
-                </xsl:if>
+                <xsl:call-template name="common-invoice-line-bt-134-135"/>
               </sub-invoice-line-period>
             </xsl:if>
             <sub-invoice-line-vat-information id="bg-dex-06">
-              <!-- TODO: template -->
-              <invoiced-item-vat-category-code id="bt-151">
-                <xsl:value-of select="./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:ID"/>
-              </invoiced-item-vat-category-code>
-              <xsl:if test="exists(./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:Percent)">
-                <invoiced-item-vat-rate id="bt-152">
-                  <xsl:value-of select="./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:Percent"/>
-                </invoiced-item-vat-rate>
-              </xsl:if>
+              <xsl:call-template name="common-invoice-line-bt-151-152"/>
             </sub-invoice-line-vat-information>
             <sub-invoice-line-price-details id="bg-dex-07">
-              <!-- TODO: template -->
-              <item-net-price id="bt-146">
-                <xsl:value-of select="./cac:Price/cbc:PriceAmount"/>
-              </item-net-price>
-              <xsl:if test="exists(./cac:Price/cac:AllowanceCharge/cbc:Amount)">
-                <item-price-discount id="bt-147">
-                  <xsl:value-of select="./cac:Price/cac:AllowanceCharge/cbc:Amount"/>
-                </item-price-discount>
-              </xsl:if>
-              <xsl:if test="exists(./cac:Price/cac:AllowanceCharge/cbc:BaseAmount)">
-                <item-gross-price id="bt-148">
-                  <xsl:value-of select="./cac:Price/cac:AllowanceCharge/cbc:BaseAmount"/>
-                </item-gross-price>
-              </xsl:if>
-              <xsl:if test="exists(./cac:Price/cbc:BaseQuantity)">
-                <item-price-base-quantity id="bt-149">
-                  <xsl:value-of select="./cac:Price/cbc:BaseQuantity"/>
-                </item-price-base-quantity>
-              </xsl:if>
-              <xsl:if test="exists(./cac:Price/cbc:BaseQuantity[@unitCode])">
-                <item-price-base-quantity-unit-of-measure-code id="bt-150">
-                  <xsl:value-of select="./cac:Price/cbc:BaseQuantity/@unitCode"/>
-                </item-price-base-quantity-unit-of-measure-code>
-              </xsl:if>
+              <xsl:call-template name="common-invoice-line-bt-146-150"/>
             </sub-invoice-line-price-details>
             <xsl:call-template name="bg-dex-01"/>
           </sub-invoice-line>
@@ -1138,45 +987,14 @@
   <xsl:template name="common-invoice-line-bg-26-31">
     <xsl:if test="exists(./cac:InvoicePeriod/cbc:StartDate) or exists(./cac:InvoicePeriod/cbc:EndDate)">
       <invoice-line-period id="bg-26">
-        <xsl:if test="exists(./cac:InvoicePeriod/cbc:StartDate)">
-          <invoice-line-period-start-date id="bt-134">
-            <xsl:value-of select="./cac:InvoicePeriod/cbc:StartDate"/>
-          </invoice-line-period-start-date>
-        </xsl:if>
-        <xsl:if test="exists(./cac:InvoicePeriod/cbc:EndDate)">
-          <invoice-line-period-end-date id="bt-135">
-            <xsl:value-of select="./cac:InvoicePeriod/cbc:EndDate"/>
-          </invoice-line-period-end-date>
-        </xsl:if>
+        <xsl:call-template name="common-invoice-line-bt-134-135"/>
       </invoice-line-period>
     </xsl:if>
     <xsl:if test="exists(./cac:AllowanceCharge[cbc:ChargeIndicator = 'false']/cbc:Amount)">
       <invoice-line-allowances id="bg-27">
         <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = 'false']">
           <invoice-line-allowance id="bg-27">
-            <invoice-line-allowance-amount id="bt-136">
-              <xsl:value-of select="./cbc:Amount"/>
-            </invoice-line-allowance-amount>
-            <xsl:if test="exists(./cbc:BaseAmount)">
-              <invoice-line-allowance-base-amount id="bt-137">
-                <xsl:value-of select="./cbc:BaseAmount"/>
-              </invoice-line-allowance-base-amount>
-            </xsl:if>
-            <xsl:if test="exists(./cbc:MultiplierFactorNumeric)">
-              <invoice-line-allowance-percentage id="bt-138">
-                <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
-              </invoice-line-allowance-percentage>
-            </xsl:if>
-            <xsl:if test="exists(./cbc:AllowanceChargeReason)">
-              <invoice-line-allowance-reason id="bt-139">
-                <xsl:value-of select="./cbc:AllowanceChargeReason"/>
-              </invoice-line-allowance-reason>
-            </xsl:if>
-            <xsl:if test="exists(./cbc:AllowanceChargeReasonCode)">
-              <invoice-line-allowance-reason-code id="bt-140">
-                <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
-              </invoice-line-allowance-reason-code>
-            </xsl:if>
+            <xsl:call-template name="common-invoice-line-bt-136-140"/>
           </invoice-line-allowance>
         </xsl:for-each>
       </invoice-line-allowances>
@@ -1185,139 +1003,198 @@
       <invoice-line-charges id="bg-28">
         <xsl:for-each select="./cac:AllowanceCharge[cbc:ChargeIndicator = 'true']">
           <invoice-line-charge id="bg-28">
-            <invoice-line-charge-amount id="bt-141">
-              <xsl:value-of select="./cbc:Amount"/>
-            </invoice-line-charge-amount>
-            <xsl:if test="exists(./cbc:BaseAmount)">
-              <invoice-line-charge-base-amount id="bt-142">
-                <xsl:value-of select="./cbc:BaseAmount"/>
-              </invoice-line-charge-base-amount>
-            </xsl:if>
-            <xsl:if test="exists(./cbc:MultiplierFactorNumeric)">
-              <invoice-line-charge-percentage id="bt-143">
-                <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
-              </invoice-line-charge-percentage>
-            </xsl:if>
-            <xsl:if test="exists(./cbc:AllowanceChargeReason)">
-              <invoice-line-charge-reason id="bt-144">
-                <xsl:value-of select="./cbc:AllowanceChargeReason"/>
-              </invoice-line-charge-reason>
-            </xsl:if>
-            <xsl:if test="exists(./cbc:AllowanceChargeReasonCode)">
-              <invoice-line-charge-reason-code id="bt-145">
-                <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
-              </invoice-line-charge-reason-code>
-            </xsl:if>
+            <xsl:call-template name="common-invoice-line-bt-141-145"/>
           </invoice-line-charge>
         </xsl:for-each>
       </invoice-line-charges>
     </xsl:if>
     <price-details id="bg-29">
-      <item-net-price id="bt-146">
-        <xsl:value-of select="./cac:Price/cbc:PriceAmount"/>
-      </item-net-price>
-      <xsl:if test="exists(./cac:Price/cac:AllowanceCharge/cbc:Amount)">
-        <item-price-discount id="bt-147">
-          <xsl:value-of select="./cac:Price/cac:AllowanceCharge/cbc:Amount"/>
-        </item-price-discount>
-      </xsl:if>
-      <xsl:if test="exists(./cac:Price/cac:AllowanceCharge/cbc:BaseAmount)">
-        <item-gross-price id="bt-148">
-          <xsl:value-of select="./cac:Price/cac:AllowanceCharge/cbc:BaseAmount"/>
-        </item-gross-price>
-      </xsl:if>
-      <xsl:if test="exists(./cac:Price/cbc:BaseQuantity)">
-        <item-price-base-quantity id="bt-149">
-          <xsl:value-of select="./cac:Price/cbc:BaseQuantity"/>
-        </item-price-base-quantity>
-      </xsl:if>
-      <xsl:if test="exists(./cac:Price/cbc:BaseQuantity[@unitCode])">
-        <item-price-base-quantity-unit-of-measure-code id="bt-150">
-          <xsl:value-of select="./cac:Price/cbc:BaseQuantity/@unitCode"/>
-        </item-price-base-quantity-unit-of-measure-code>
-      </xsl:if>
+      <xsl:call-template name="common-invoice-line-bt-146-150"/>
     </price-details>
     <line-vat-information id="bg-30">
-      <invoiced-item-vat-category-code id="bt-151">
-        <xsl:value-of select="./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:ID"/>
-      </invoiced-item-vat-category-code>
-      <xsl:if test="exists(./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:Percent)">
-        <invoiced-item-vat-rate id="bt-152">
-          <xsl:value-of select="./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:Percent"/>
-        </invoiced-item-vat-rate>
-      </xsl:if>
+      <xsl:call-template name="common-invoice-line-bt-151-152"/>
     </line-vat-information>
     <item-information id="bg-31">
-      <item-name id="bt-153">
-        <xsl:value-of select="./cac:Item/cbc:Name"/>
-      </item-name>
-      <xsl:if test="exists(./cac:Item/cbc:Description)">
-        <item-description id="bt-154">
-          <xsl:value-of select="./cac:Item/cbc:Description"/>
-        </item-description>
-      </xsl:if>
-      <xsl:if test="exists(./cac:Item/cac:SellersItemIdentification/cbc:ID)">
-        <item-sellers-identifier id="bt-155">
-          <content>
-            <xsl:value-of select="./cac:Item/cac:SellersItemIdentification/cbc:ID"/>
-          </content>
-        </item-sellers-identifier>
-      </xsl:if>
-      <xsl:if test="exists(./cac:Item/cac:BuyersItemIdentification/cbc:ID)">
-        <item-buyers-identifier id="bt-156">
-          <content>
-            <xsl:value-of select="./cac:Item/cac:BuyersItemIdentification/cbc:ID"/>
-          </content>
-        </item-buyers-identifier>
-      </xsl:if>
-      <xsl:if test="exists(./cac:Item/cac:StandardItemIdentification/cbc:ID)">
-        <item-standard-identifier id="bt-157">
-          <content>
-            <xsl:value-of select="./cac:Item/cac:StandardItemIdentification/cbc:ID"/>
-          </content>
-          <scheme-identifier>
-            <xsl:value-of select="./cac:Item/cac:StandardItemIdentification/cbc:ID/@schemeID"/>
-          </scheme-identifier>
-        </item-standard-identifier>
-      </xsl:if>
-      <xsl:if test="exists(./cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode)">
-        <item-classification-identifiers id="bt-158">
-          <xsl:for-each select="./cac:Item/cac:CommodityClassification">
-            <item-classification-identifier id="bt-158">
-              <content>
-                <xsl:value-of select="./cbc:ItemClassificationCode"/>
-              </content>
-              <scheme-identifier>
-                <xsl:value-of select="./cbc:ItemClassificationCode/@listID"/>
-              </scheme-identifier>
-              <xsl:if test="exists(./cbc:ItemClassificationCode[@listVersionID])">
-                <scheme-version-identifier>
-                  <xsl:value-of select="./cbc:ItemClassificationCode/@listVersionID"/>
-                </scheme-version-identifier>
-              </xsl:if>
-            </item-classification-identifier>
-          </xsl:for-each>
-        </item-classification-identifiers>
-      </xsl:if>
-      <xsl:if test="exists(./cac:Item/cac:OriginCountry/cbc:IdentificationCode)">
-        <item-country-of-origin id="bt-159">
-          <xsl:value-of select="./cac:Item/cac:OriginCountry/cbc:IdentificationCode"/>
-        </item-country-of-origin>
-      </xsl:if>
+      <xsl:call-template name="common-invoice-line-bt-153-159"/>
       <xsl:if test="exists(./cac:Item/cac:AdditionalItemProperty/cbc:Name)">
         <item-attributes id="bg-32">
           <xsl:for-each select="./cac:Item/cac:AdditionalItemProperty">
             <item-attribute id="bg-32">
-              <item-attribute-name id="bt-160">
-                <xsl:value-of select="./cbc:Name"/>
-              </item-attribute-name>
-              <item-attribute-value id="bt-161">
-                <xsl:value-of select="./cbc:Value"/>
-              </item-attribute-value>
+              <xsl:call-template name="common-invoice-line-bt-160-161"/>
             </item-attribute>
           </xsl:for-each>
         </item-attributes>
       </xsl:if>
     </item-information>
+  </xsl:template>
+
+  <xsl:template name="common-invoice-line-bt-134-135">
+    <xsl:if test="exists(./cac:InvoicePeriod/cbc:StartDate)">
+      <invoice-line-period-start-date id="bt-134">
+        <xsl:value-of select="./cac:InvoicePeriod/cbc:StartDate"/>
+      </invoice-line-period-start-date>
+    </xsl:if>
+    <xsl:if test="exists(./cac:InvoicePeriod/cbc:EndDate)">
+      <invoice-line-period-end-date id="bt-135">
+        <xsl:value-of select="./cac:InvoicePeriod/cbc:EndDate"/>
+      </invoice-line-period-end-date>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="common-invoice-line-bt-136-140">
+    <invoice-line-allowance-amount id="bt-136">
+      <xsl:value-of select="./cbc:Amount"/>
+    </invoice-line-allowance-amount>
+    <xsl:if test="exists(./cbc:BaseAmount)">
+      <invoice-line-allowance-base-amount id="bt-137">
+        <xsl:value-of select="./cbc:BaseAmount"/>
+      </invoice-line-allowance-base-amount>
+    </xsl:if>
+    <xsl:if test="exists(./cbc:MultiplierFactorNumeric)">
+      <invoice-line-allowance-percentage id="bt-138">
+        <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
+      </invoice-line-allowance-percentage>
+    </xsl:if>
+    <xsl:if test="exists(./cbc:AllowanceChargeReason)">
+      <invoice-line-allowance-reason id="bt-139">
+        <xsl:value-of select="./cbc:AllowanceChargeReason"/>
+      </invoice-line-allowance-reason>
+    </xsl:if>
+    <xsl:if test="exists(./cbc:AllowanceChargeReasonCode)">
+      <invoice-line-allowance-reason-code id="bt-140">
+        <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
+      </invoice-line-allowance-reason-code>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="common-invoice-line-bt-141-145">
+    <invoice-line-charge-amount id="bt-141">
+      <xsl:value-of select="./cbc:Amount"/>
+    </invoice-line-charge-amount>
+    <xsl:if test="exists(./cbc:BaseAmount)">
+      <invoice-line-charge-base-amount id="bt-142">
+        <xsl:value-of select="./cbc:BaseAmount"/>
+      </invoice-line-charge-base-amount>
+    </xsl:if>
+    <xsl:if test="exists(./cbc:MultiplierFactorNumeric)">
+      <invoice-line-charge-percentage id="bt-143">
+        <xsl:value-of select="./cbc:MultiplierFactorNumeric"/>
+      </invoice-line-charge-percentage>
+    </xsl:if>
+    <xsl:if test="exists(./cbc:AllowanceChargeReason)">
+      <invoice-line-charge-reason id="bt-144">
+        <xsl:value-of select="./cbc:AllowanceChargeReason"/>
+      </invoice-line-charge-reason>
+    </xsl:if>
+    <xsl:if test="exists(./cbc:AllowanceChargeReasonCode)">
+      <invoice-line-charge-reason-code id="bt-145">
+        <xsl:value-of select="./cbc:AllowanceChargeReasonCode"/>
+      </invoice-line-charge-reason-code>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="common-invoice-line-bt-146-150">
+    <item-net-price id="bt-146">
+      <xsl:value-of select="./cac:Price/cbc:PriceAmount"/>
+    </item-net-price>
+    <xsl:if test="exists(./cac:Price/cac:AllowanceCharge/cbc:Amount)">
+      <item-price-discount id="bt-147">
+        <xsl:value-of select="./cac:Price/cac:AllowanceCharge/cbc:Amount"/>
+      </item-price-discount>
+    </xsl:if>
+    <xsl:if test="exists(./cac:Price/cac:AllowanceCharge/cbc:BaseAmount)">
+      <item-gross-price id="bt-148">
+        <xsl:value-of select="./cac:Price/cac:AllowanceCharge/cbc:BaseAmount"/>
+      </item-gross-price>
+    </xsl:if>
+    <xsl:if test="exists(./cac:Price/cbc:BaseQuantity)">
+      <item-price-base-quantity id="bt-149">
+        <xsl:value-of select="./cac:Price/cbc:BaseQuantity"/>
+      </item-price-base-quantity>
+    </xsl:if>
+    <xsl:if test="exists(./cac:Price/cbc:BaseQuantity[@unitCode])">
+      <item-price-base-quantity-unit-of-measure-code id="bt-150">
+        <xsl:value-of select="./cac:Price/cbc:BaseQuantity/@unitCode"/>
+      </item-price-base-quantity-unit-of-measure-code>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="common-invoice-line-bt-151-152">
+    <invoiced-item-vat-category-code id="bt-151">
+      <xsl:value-of select="./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:ID"/>
+    </invoiced-item-vat-category-code>
+    <xsl:if test="exists(./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:Percent)">
+      <invoiced-item-vat-rate id="bt-152">
+        <xsl:value-of select="./cac:Item/cac:ClassifiedTaxCategory[cac:TaxScheme/(normalize-space(upper-case(cbc:ID)) = 'VAT')]/cbc:Percent"/>
+      </invoiced-item-vat-rate>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="common-invoice-line-bt-153-159">
+    <item-name id="bt-153">
+      <xsl:value-of select="./cac:Item/cbc:Name"/>
+    </item-name>
+    <xsl:if test="exists(./cac:Item/cbc:Description)">
+      <item-description id="bt-154">
+        <xsl:value-of select="./cac:Item/cbc:Description"/>
+      </item-description>
+    </xsl:if>
+    <xsl:if test="exists(./cac:Item/cac:SellersItemIdentification/cbc:ID)">
+      <item-sellers-identifier id="bt-155">
+        <content>
+          <xsl:value-of select="./cac:Item/cac:SellersItemIdentification/cbc:ID"/>
+        </content>
+      </item-sellers-identifier>
+    </xsl:if>
+    <xsl:if test="exists(./cac:Item/cac:BuyersItemIdentification/cbc:ID)">
+      <item-buyers-identifier id="bt-156">
+        <content>
+          <xsl:value-of select="./cac:Item/cac:BuyersItemIdentification/cbc:ID"/>
+        </content>
+      </item-buyers-identifier>
+    </xsl:if>
+    <xsl:if test="exists(./cac:Item/cac:StandardItemIdentification/cbc:ID)">
+      <item-standard-identifier id="bt-157">
+        <content>
+          <xsl:value-of select="./cac:Item/cac:StandardItemIdentification/cbc:ID"/>
+        </content>
+        <scheme-identifier>
+          <xsl:value-of select="./cac:Item/cac:StandardItemIdentification/cbc:ID/@schemeID"/>
+        </scheme-identifier>
+      </item-standard-identifier>
+    </xsl:if>
+    <xsl:if test="exists(./cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode)">
+      <item-classification-identifiers id="bt-158">
+        <xsl:for-each select="./cac:Item/cac:CommodityClassification">
+          <item-classification-identifier id="bt-158">
+            <content>
+              <xsl:value-of select="./cbc:ItemClassificationCode"/>
+            </content>
+            <scheme-identifier>
+              <xsl:value-of select="./cbc:ItemClassificationCode/@listID"/>
+            </scheme-identifier>
+            <xsl:if test="exists(./cbc:ItemClassificationCode[@listVersionID])">
+              <scheme-version-identifier>
+                <xsl:value-of select="./cbc:ItemClassificationCode/@listVersionID"/>
+              </scheme-version-identifier>
+            </xsl:if>
+          </item-classification-identifier>
+        </xsl:for-each>
+      </item-classification-identifiers>
+    </xsl:if>
+    <xsl:if test="exists(./cac:Item/cac:OriginCountry/cbc:IdentificationCode)">
+      <item-country-of-origin id="bt-159">
+        <xsl:value-of select="./cac:Item/cac:OriginCountry/cbc:IdentificationCode"/>
+      </item-country-of-origin>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="common-invoice-line-bt-160-161">
+    <item-attribute-name id="bt-160">
+      <xsl:value-of select="./cbc:Name"/>
+    </item-attribute-name>
+    <item-attribute-value id="bt-161">
+      <xsl:value-of select="./cbc:Value"/>
+    </item-attribute-value>
   </xsl:template>
 </xsl:stylesheet>
