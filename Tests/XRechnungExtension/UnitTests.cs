@@ -8,14 +8,12 @@ namespace Tests.XRechnungExtension;
 
 public class UnitTests
 {
-    /* TODO
     [Theory]
     [InlineData("Resources/XRechnungExtension/UblInvoice/Success")]
     public void UblInvoicesTest(string testsLocation)
     {
         TestHarness.UnitTest<UblInvoices, Invoice>(testsLocation);
     }
-    */
 
     [Theory]
     [InlineData("Resources/XRechnungExtension/UblCreditNote/Success")]

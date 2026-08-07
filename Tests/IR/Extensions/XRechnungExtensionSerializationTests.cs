@@ -7,6 +7,7 @@ using En16931.Model.Primitives;
 using En16931.Model.XRechnungExtension;
 using Xunit;
 using M = En16931.Model;
+using S = En16931.Specs;
 
 namespace Tests.IR.Extensions;
 
@@ -617,7 +618,7 @@ public class SerializationTests
                     Note = new Text("Invoice Note Description 2"),
                 },
             ],
-            ProcessControl = new ProcessControl
+            ProcessControl = new M.ProcessControl<S.XRechnungExtension>
             {
                 BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
             },
@@ -1197,7 +1198,7 @@ public class SerializationTests
             </process-control>
             """;
 
-        ProcessControl expected = new ProcessControl
+        M.ProcessControl<S.XRechnungExtension> expected = new M.ProcessControl<S.XRechnungExtension>
         {
             BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
         };
@@ -1217,7 +1218,7 @@ public class SerializationTests
         using StringReader reader = new(xml);
         using XmlTextReader xmlReader = new(reader);
 
-        var actual = ProcessControl.Deserialize(xmlReader);
+        var actual = M.ProcessControl<S.XRechnungExtension>.Deserialize(xmlReader);
 
         Assert.Equal(expected, actual);
     }

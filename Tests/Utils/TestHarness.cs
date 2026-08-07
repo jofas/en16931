@@ -5,10 +5,12 @@ using Xunit;
 
 namespace Tests.Utils;
 
-public static class TestHarness {
+public static class TestHarness
+{
     private static Parser parser = new Parser();
 
-    public static void AcceptSuccess<I>(string testsLocation) where I: IInvoice {
+    public static void AcceptSuccess<I>(string testsLocation) where I : IInvoice
+    {
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
@@ -17,7 +19,8 @@ public static class TestHarness {
         }
     }
 
-    public static void AcceptFailure<I>(string testsLocation) where I: IInvoice {
+    public static void AcceptFailure<I>(string testsLocation) where I : IInvoice
+    {
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
@@ -31,7 +34,8 @@ public static class TestHarness {
         }
     }
 
-    public static void UnitTest<P, I>(string testsLocation) where I: IInvoice {
+    public static void UnitTest<P, I>(string testsLocation) where I : IInvoice
+    {
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
@@ -46,7 +50,7 @@ public static class TestHarness {
         }
     }
 
-    public static void RoundTrip<P, I>(Schema schema) where I: IInvoice
+    public static void RoundTrip<P, I>(Schema schema) where I : IInvoice
     {
         foreach (I invoice in InvoiceExtractor<P, I>.Invoices)
         {

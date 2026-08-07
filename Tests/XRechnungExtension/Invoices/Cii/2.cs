@@ -2,6 +2,7 @@ using System;
 using En16931.Model.Primitives;
 using En16931.Model.XRechnungExtension;
 using M = En16931.Model;
+using S = En16931.Specs;
 
 namespace Tests.XRechnungExtension.Invoices;
 
@@ -38,7 +39,7 @@ public partial class Ciis
                 Note = new Text("Invoice Note Description 2"),
             },
         ],
-        ProcessControl = new ProcessControl
+        ProcessControl = new M.ProcessControl<S.XRechnungExtension>
         {
             BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
         },

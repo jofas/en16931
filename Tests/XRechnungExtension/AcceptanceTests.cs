@@ -7,6 +7,7 @@ namespace Tests.XRechnungExtension;
 public class AcceptanceTests
 {
     [Theory]
+    [InlineData("Resources/XRechnungExtension/UblInvoice/Success")]
     [InlineData("Resources/XRechnungExtension/UblCreditNote/Success")]
     [InlineData("Resources/XRechnungExtension/Cii/Success")]
     public void Successes(string testsLocation)

@@ -77,7 +77,7 @@ public readonly record struct Invoice : IInvoice, IIRDeserializable<Invoice>, II
     public required Array<InvoiceNote> InvoiceNotes { get; init; }
 
     // BG-2
-    public required ProcessControl ProcessControl { get; init; }
+    public required ProcessControl<S.XRechnungExtension> ProcessControl { get; init; }
 
     // BG-3
     public required Array<PrecedingInvoiceReference> PrecedingInvoiceReferences { get; init; }
@@ -629,7 +629,7 @@ public readonly record struct Invoice : IInvoice, IIRDeserializable<Invoice>, II
             reader.MoveToContent();
         }
 
-        ProcessControl processControl = ProcessControl.Deserialize(reader);
+        ProcessControl<S.XRechnungExtension> processControl = ProcessControl<S.XRechnungExtension>.Deserialize(reader);
 
         Array<PrecedingInvoiceReference> precedingInvoiceReferences = Array<PrecedingInvoiceReference>.Empty;
 
@@ -823,68 +823,6 @@ public readonly record struct Invoice : IInvoice, IIRDeserializable<Invoice>, II
             AdditionalSupportingDocuments = additionalSupportingDocuments,
             InvoiceLines = invoiceLines,
             ThirdPartyPayments = thirdPartyPayments,
-        };
-    }
-}
-
-public readonly record struct ProcessControl : IProcessControl, IIRDeserializable<ProcessControl>, IIRSerializable
-{
-    // BT-23
-    public required Text BusinessProcessType { get; init; }
-
-    // BT-24
-    public Identifier SpecificationIdentifier { get => S.XRechnungExtension.SpecificationIdentifier; }
-
-    public void Serialize(XmlWriter writer)
-    {
-        writer.WriteStartElement("process-control", IRConfig.NS);
-        writer.WriteAttributeString("id", "bg-2");
-
-        writer.WriteStartElement("business-process-type", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-23");
-        BusinessProcessType.Serialize(writer);
-        writer.WriteEndElement();
-
-        writer.WriteStartElement("specification-identifier", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-24");
-        SpecificationIdentifier.Serialize(writer);
-        writer.WriteEndElement();
-
-        writer.WriteEndElement();
-    }
-
-    public static ProcessControl Deserialize(XmlReader reader)
-    {
-        reader.ReadStartElement("process-control", IRConfig.NS);
-        reader.MoveToContent();
-
-        reader.ReadStartElement("business-process-type", IRConfig.NS);
-        reader.MoveToContent();
-
-        Text businessProcessType = Text.Deserialize(reader);
-
-        reader.ReadEndElement();
-        reader.MoveToContent();
-
-        reader.ReadStartElement("specification-identifier", IRConfig.NS);
-        reader.MoveToContent();
-
-        Identifier specificationIdentifier = Identifier.Deserialize(reader);
-
-        if (specificationIdentifier != S.XRechnungExtension.SpecificationIdentifier)
-        {
-            ThrowHelper.ThrowInvalidOperationException($"`specification-identifier` field value `{specificationIdentifier.Content}` from the xml document does not match the identifier from the specification {nameof(S.XRechnungExtension)}, which is: {S.XRechnungExtension.SpecificationIdentifier.Content}");
-        }
-
-        reader.ReadEndElement();
-        reader.MoveToContent();
-
-        reader.ReadEndElement();
-        reader.MoveToContent();
-
-        return new ProcessControl
-        {
-            BusinessProcessType = businessProcessType,
         };
     }
 }
