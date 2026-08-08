@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -50,10 +51,7 @@ public class Transformer
 
         using Stream stream = resource.Open();
 
-        Assert.ArgIsNotNull(stream);
-
         _executable = _xsltCompiler.Compile(stream);
-        //new Uri(new FileInfo(path).FullName));
     }
 
     public void Transform(XDocument doc, XmlWriter writer, string? initialMode = null)
@@ -88,23 +86,47 @@ public interface IResource
     public Stream Open();
 }
 
-// TODO: null-safety
-public class EmbeddedResource : IResource
+public readonly record struct EmbeddedResource : IResource
 {
-    private Assembly _assembly;
-    private string _name;
+    public required Assembly Assembly {
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
+    }
 
+    public required string Name {
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
+    }
+
+    [SetsRequiredMembers]
     public EmbeddedResource(string name) : this(typeof(EmbeddedResource).Assembly, name) { }
 
+    [SetsRequiredMembers]
     public EmbeddedResource(Assembly assembly, string name)
     {
-        _assembly = assembly;
-        _name = name;
+        Assembly = assembly;
+        Name = name;
     }
 
     public Stream Open()
     {
-        Stream? result = _assembly.GetManifestResourceStream(_name);
+        Stream? result = Assembly.GetManifestResourceStream(Name);
 
         Assert.IsNotNull(result);
 
@@ -112,18 +134,29 @@ public class EmbeddedResource : IResource
     }
 }
 
-// TODO: null-safety
-public class FileResource : IResource
+public readonly record struct FileResource : IResource
 {
-    private string _path;
+    public required string Path {
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
+    }
 
+    [SetsRequiredMembers]
     public FileResource(string path)
     {
-        _path = path;
+        Path = path;
     }
 
     public Stream Open()
     {
-        return File.OpenRead(_path);
+        return File.OpenRead(Path);
     }
 }
