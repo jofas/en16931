@@ -17,9 +17,13 @@
     <ProjectReference Include="..\En16931\En16931.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Resources\**\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+  <Target Name="CopyResources" AfterTargets="Build">
+    <ItemGroup>
+      <TestResources Include="..\Tests.Resources\**\*.*" />
+      <ExternTestResources Include="..\Tests.Resources.Extern\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(TestResources)" DestinationFolder="$(OutDir)\Tests.Resources\%(RecursiveDir)" />
+    <Copy SourceFiles="@(ExternTestResources)" DestinationFolder="$(OutDir)\Tests.Resources.Extern\%(RecursiveDir)" />
+  </Target>
+
 </Project>

@@ -1,3 +1,4 @@
+using System.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -14,7 +15,7 @@ public class TransformerSet<K> where K : notnull
 {
     private readonly ImmutableDictionary<K, Transformer> _transformers;
 
-    public TransformerSet(IDictionary<K, string> transformers)
+    public TransformerSet(IDictionary<K, IResource> transformers)
     {
         _transformers = transformers
             .Select(kvp => KeyValuePair.Create(kvp.Key, new Transformer(kvp.Value)))
@@ -43,11 +44,16 @@ public class Transformer
 
     private readonly XsltExecutable _executable;
 
-    public Transformer(string path)
+    public Transformer(IResource resource)
     {
-        Assert.ArgIsNotNull(path);
+        Assert.ArgIsNotNull(resource);
 
-        _executable = _xsltCompiler.Compile(new Uri(new FileInfo(path).FullName));
+        using Stream stream = resource.Open();
+
+        Assert.ArgIsNotNull(stream);
+
+        _executable = _xsltCompiler.Compile(stream);
+        //new Uri(new FileInfo(path).FullName));
     }
 
     public void Transform(XDocument doc, XmlWriter writer, string? initialMode = null)
@@ -74,5 +80,43 @@ public class Transformer
         transformer.GlobalContextItem = xdm;
 
         transformer.ApplyTemplates(xdm, destination);
+    }
+}
+
+public interface IResource {
+    public Stream Open();
+}
+
+// TODO: null-safety
+public class EmbeddedResource : IResource {
+    private Assembly _assembly;
+    private string _name;
+
+    public EmbeddedResource(string name) : this (typeof(EmbeddedResource).Assembly, name) { }
+
+    public EmbeddedResource(Assembly assembly, string name) {
+        _assembly = assembly;
+        _name = name;
+    }
+
+    public Stream Open() {
+        Stream? result = _assembly.GetManifestResourceStream(_name);
+
+        Assert.IsNotNull(result);
+
+        return result!;
+    }
+}
+
+// TODO: null-safety
+public class FileResource : IResource {
+    private string _path;
+
+    public FileResource(string path) {
+        _path = path;
+    }
+
+    public Stream Open() {
+        return File.OpenRead(_path);
     }
 }

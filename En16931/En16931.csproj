@@ -16,13 +16,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\**\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <InternalsVisibleTo Include="Tests" />
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Tests" />
+    <EmbeddedResource Include="..\En16931.Resources.Extern\**\*.*">
+      <LogicalName>$([System.String]::new('%(RelativeDir)').Remove(0,3).Replace('\','/'))%(FileName)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\IR\**\*.*">
+      <LogicalName>$([System.String]::new('%(RelativeDir)').Remove(0,3).Replace('\','/'))%(FileName)%(Extension)</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

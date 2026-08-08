@@ -38,16 +38,15 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
 
     private XRechnung() { }
 
-    // TODO: can we reduce startup time even more by sharing transformers between sets / specs? This should be benchmarked
-    private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, string>() {
-        { TransformerId.En16931Ubl, "Resources/En16931/EN16931-UBL-validation.xslt" },
-        { TransformerId.En16931Cii, "Resources/En16931/EN16931-CII-validation.xslt" },
-        { TransformerId.XRechnungUbl, "Resources/XRechnung/XRechnung-UBL-validation.xsl" },
-        { TransformerId.XRechnungCii, "Resources/XRechnung/XRechnung-CII-validation.xsl" },
-        { TransformerId.UblToIr, "Resources/IR/ubl2ir.xslt" },
-        { TransformerId.CiiToIr, "Resources/IR/cii2ir.xslt" },
-        { TransformerId.IrToUbl, "Resources/IR/ir2ubl.xslt" },
-        { TransformerId.IrToCii, "Resources/IR/ir2cii.xslt" },
+    private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, IResource>() {
+        { TransformerId.En16931Ubl, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-UBL-validation.xslt") },
+        { TransformerId.En16931Cii, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-CII-validation.xslt") },
+        { TransformerId.XRechnungUbl, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-UBL-validation.xsl") },
+        { TransformerId.XRechnungCii, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-CII-validation.xsl") },
+        { TransformerId.UblToIr, new EmbeddedResource("IR/ubl2ir.xslt") },
+        { TransformerId.CiiToIr, new EmbeddedResource("IR/cii2ir.xslt") },
+        { TransformerId.IrToUbl, new EmbeddedResource("IR/ir2ubl.xslt") },
+        { TransformerId.IrToCii, new EmbeddedResource("IR/ir2cii.xslt") },
     });
 
     Identifier ISpecificationValidator.SpecificationIdentifier { get => SpecificationIdentifier; }
@@ -175,15 +174,15 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
 
     private XRechnungExtension() { }
 
-    private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, string>() {
-        { TransformerId.En16931Ubl, "Resources/En16931/EN16931-UBL-validation.xslt" },
-        { TransformerId.En16931Cii, "Resources/En16931/EN16931-CII-validation.xslt" },
-        { TransformerId.XRechnungUbl, "Resources/XRechnung/XRechnung-UBL-validation.xsl" },
-        { TransformerId.XRechnungCii, "Resources/XRechnung/XRechnung-CII-validation.xsl" },
-        { TransformerId.UblToIr, "Resources/IR/XRechnungExtension/ubl2ir.xslt" },
-        { TransformerId.CiiToIr, "Resources/IR/cii2ir.xslt" },
-        { TransformerId.IrToUbl, "Resources/IR/XRechnungExtension/ir2ubl.xslt" },
-        { TransformerId.IrToCii, "Resources/IR/ir2cii.xslt" },
+    private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, IResource>() {
+        { TransformerId.En16931Ubl, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-UBL-validation.xslt") },
+        { TransformerId.En16931Cii, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-CII-validation.xslt") },
+        { TransformerId.XRechnungUbl, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-UBL-validation.xsl") },
+        { TransformerId.XRechnungCii, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-CII-validation.xsl") },
+        { TransformerId.UblToIr, new EmbeddedResource("IR/XRechnungExtension/ubl2ir.xslt") },
+        { TransformerId.CiiToIr, new EmbeddedResource("IR/cii2ir.xslt") },
+        { TransformerId.IrToUbl, new EmbeddedResource("IR/XRechnungExtension/ir2ubl.xslt") },
+        { TransformerId.IrToCii, new EmbeddedResource("IR/ir2cii.xslt") },
     });
 
     Identifier ISpecificationValidator.SpecificationIdentifier { get => SpecificationIdentifier; }
