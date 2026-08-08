@@ -1,9 +1,9 @@
-using System.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using En16931.Utils;
@@ -83,23 +83,27 @@ public class Transformer
     }
 }
 
-public interface IResource {
+public interface IResource
+{
     public Stream Open();
 }
 
 // TODO: null-safety
-public class EmbeddedResource : IResource {
+public class EmbeddedResource : IResource
+{
     private Assembly _assembly;
     private string _name;
 
-    public EmbeddedResource(string name) : this (typeof(EmbeddedResource).Assembly, name) { }
+    public EmbeddedResource(string name) : this(typeof(EmbeddedResource).Assembly, name) { }
 
-    public EmbeddedResource(Assembly assembly, string name) {
+    public EmbeddedResource(Assembly assembly, string name)
+    {
         _assembly = assembly;
         _name = name;
     }
 
-    public Stream Open() {
+    public Stream Open()
+    {
         Stream? result = _assembly.GetManifestResourceStream(_name);
 
         Assert.IsNotNull(result);
@@ -109,14 +113,17 @@ public class EmbeddedResource : IResource {
 }
 
 // TODO: null-safety
-public class FileResource : IResource {
+public class FileResource : IResource
+{
     private string _path;
 
-    public FileResource(string path) {
+    public FileResource(string path)
+    {
         _path = path;
     }
 
-    public Stream Open() {
+    public Stream Open()
+    {
         return File.OpenRead(_path);
     }
 }

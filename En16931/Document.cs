@@ -1,7 +1,7 @@
 using System;
-using System.Reflection;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -82,9 +82,9 @@ static class Xsd
         SchemaSet = new XmlSchemaSet();
         SchemaSet.XmlResolver = new XmlEmbeddedResourceResolver();
 
-        SchemaSet.Add(null, "ressource:///En16931.Resources.Extern/Ubl/maindoc/UBL-Invoice-2.1.xsd");
-        SchemaSet.Add(null, "ressource:///En16931.Resources.Extern/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
-        SchemaSet.Add(null, "ressource:///En16931.Resources.Extern/Cii/CrossIndustryInvoice_100pD16B.xsd");
+        SchemaSet.Add(null, "resource:///En16931.Resources.Extern/Ubl/maindoc/UBL-Invoice-2.1.xsd");
+        SchemaSet.Add(null, "resource:///En16931.Resources.Extern/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
+        SchemaSet.Add(null, "resource:///En16931.Resources.Extern/Cii/CrossIndustryInvoice_100pD16B.xsd");
 
         // Schema is DTD annotated, which is why we have to add it like this,
         // instead of adding the file directly with `SchemaSet.Add`
@@ -98,8 +98,8 @@ static class Xsd
 
 class XmlEmbeddedResourceResolver : XmlUrlResolver
 {
-	public override object GetEntity( Uri absoluteUri, string? role, Type? ofObjectToReturn )
-	{
+    public override object GetEntity(Uri absoluteUri, string? role, Type? ofObjectToReturn)
+    {
         Assert.ArgIsNotNull(absoluteUri);
 
         Stream? result = typeof(XmlEmbeddedResourceResolver)
@@ -109,5 +109,5 @@ class XmlEmbeddedResourceResolver : XmlUrlResolver
         Assert.IsNotNull(result);
 
         return result!;
-	}
+    }
 }
