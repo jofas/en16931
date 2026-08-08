@@ -392,6 +392,100 @@
         <cbc:BaseQuantity unitCode="XPP">1</cbc:BaseQuantity>
       </cac:Price>
     </cac:SubInvoiceLine>
+    <!-- bg-dex-01 -->
+    <cac:SubInvoiceLine>
+      <cbc:ID>1.2</cbc:ID>
+      <cbc:Note>Die letzte Lieferung im Rahmen des abgerechneten Abonnements erfolgt in 12/2016 Lieferung erfolgt / erfolgte direkt vom Verlag</cbc:Note>
+      <cbc:InvoicedQuantity unitCode="XPP">30</cbc:InvoicedQuantity>
+      <cbc:LineExtensionAmount currencyID="EUR">4743.75</cbc:LineExtensionAmount>
+      <cbc:AccountingCost>Konto 1</cbc:AccountingCost>
+      <cac:InvoicePeriod>
+        <cbc:StartDate>2018-04-13</cbc:StartDate>
+        <cbc:EndDate>2018-04-13</cbc:EndDate>
+      </cac:InvoicePeriod>
+      <cac:OrderLineReference>
+        <cbc:LineID>6171175.1</cbc:LineID>
+      </cac:OrderLineReference>
+      <cac:DocumentReference>
+        <cbc:ID schemeID="ABZ">ANG987654321</cbc:ID>
+        <cbc:DocumentTypeCode>130</cbc:DocumentTypeCode>
+      </cac:DocumentReference>
+      <cac:AllowanceCharge>
+        <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+        <cbc:AllowanceChargeReasonCode>TAC</cbc:AllowanceChargeReasonCode>
+        <cbc:AllowanceChargeReason>Testing</cbc:AllowanceChargeReason>
+        <cbc:MultiplierFactorNumeric>0</cbc:MultiplierFactorNumeric>
+        <cbc:Amount currencyID="EUR">0</cbc:Amount>
+        <cbc:BaseAmount currencyID="EUR">0</cbc:BaseAmount>
+      </cac:AllowanceCharge>
+      <cac:AllowanceCharge>
+        <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+        <cbc:AllowanceChargeReasonCode>102</cbc:AllowanceChargeReasonCode>
+        <cbc:AllowanceChargeReason>Fixed long term</cbc:AllowanceChargeReason>
+        <cbc:MultiplierFactorNumeric>0</cbc:MultiplierFactorNumeric>
+        <cbc:Amount currencyID="EUR">0</cbc:Amount>
+        <cbc:BaseAmount currencyID="EUR">0</cbc:BaseAmount>
+      </cac:AllowanceCharge>
+      <cac:Item>
+        <cbc:Description>Anforderungsmanagement</cbc:Description>
+        <cbc:Name>Beratung</cbc:Name>
+        <cac:BuyersItemIdentification>
+          <cbc:ID>5034</cbc:ID>
+        </cac:BuyersItemIdentification>
+        <cac:SellersItemIdentification>
+          <cbc:ID>1034</cbc:ID>
+        </cac:SellersItemIdentification>
+        <cac:StandardItemIdentification>
+          <cbc:ID schemeID="XR03">123456789</cbc:ID>
+        </cac:StandardItemIdentification>
+        <cac:OriginCountry>
+          <cbc:IdentificationCode>DE</cbc:IdentificationCode>
+        </cac:OriginCountry>
+        <cac:CommodityClassification>
+          <cbc:ItemClassificationCode listID="IB" listVersionID="88">0721-880X</cbc:ItemClassificationCode>
+        </cac:CommodityClassification>
+        <cac:ClassifiedTaxCategory>
+          <cbc:ID>S</cbc:ID>
+          <cbc:Percent>19</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:ClassifiedTaxCategory>
+        <cac:AdditionalItemProperty>
+          <cbc:Name>[Description]</cbc:Name>
+          <cbc:Value>[Value]</cbc:Value>
+        </cac:AdditionalItemProperty>
+      </cac:Item>
+      <cac:Price>
+        <cbc:PriceAmount currencyID="EUR">158.125</cbc:PriceAmount>
+        <cbc:BaseQuantity unitCode="XPP">1</cbc:BaseQuantity>
+        <cac:AllowanceCharge>
+          <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+          <cbc:Amount currencyID="EUR">10</cbc:Amount>
+          <cbc:BaseAmount currencyID="EUR">168.125</cbc:BaseAmount>
+        </cac:AllowanceCharge>
+      </cac:Price>
+      <!-- bg-dex-01 -->
+      <cac:SubInvoiceLine>
+        <cbc:ID>1.2.1</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="XPP">42</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="EUR">6037.5</cbc:LineExtensionAmount>
+        <cac:Item>
+          <cbc:Name>Beratung</cbc:Name>
+          <cac:ClassifiedTaxCategory>
+            <cbc:ID>S</cbc:ID>
+            <cbc:Percent>19</cbc:Percent>
+            <cac:TaxScheme>
+              <cbc:ID>VAT</cbc:ID>
+            </cac:TaxScheme>
+          </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+          <cbc:PriceAmount currencyID="EUR">143.75</cbc:PriceAmount>
+          <cbc:BaseQuantity unitCode="XPP">1</cbc:BaseQuantity>
+        </cac:Price>
+      </cac:SubInvoiceLine>
+    </cac:SubInvoiceLine>
   </cac:InvoiceLine>
   <cac:InvoiceLine>
     <cbc:ID>2</cbc:ID>
