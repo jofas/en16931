@@ -10,21 +10,21 @@ namespace Tests.XRechnung;
 public class UnitTests
 {
     [Theory]
-    [InlineData("Resources/XRechnung/UblInvoice/Success")]
+    [InlineData("Tests.Resources/XRechnung/UblInvoice/Success")]
     public void UblInvoicesTest(string testsLocation)
     {
         TestHarness.UnitTest<UblInvoices, Invoice<S.XRechnung>>(testsLocation);
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/UblCreditNote/Success")]
+    [InlineData("Tests.Resources/XRechnung/UblCreditNote/Success")]
     public void UblCreditNotesTest(string testsLocation)
     {
         TestHarness.UnitTest<UblCreditNotes, Invoice<S.XRechnung>>(testsLocation);
     }
 
     [Theory]
-    [InlineData("Resources/XRechnung/Cii/Success")]
+    [InlineData("Tests.Resources/XRechnung/Cii/Success")]
     public void CiisTest(string testsLocation)
     {
         TestHarness.UnitTest<Ciis, Invoice<S.XRechnung>>(testsLocation);

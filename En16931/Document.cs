@@ -1,5 +1,7 @@
+using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -78,15 +80,15 @@ static class Xsd
     static Xsd()
     {
         SchemaSet = new XmlSchemaSet();
-        SchemaSet.XmlResolver = new XmlUrlResolver();
+        SchemaSet.XmlResolver = new XmlEmbeddedResourceResolver();
 
-        SchemaSet.Add(null, "Resources/Ubl/maindoc/UBL-Invoice-2.1.xsd");
-        SchemaSet.Add(null, "Resources/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
-        SchemaSet.Add(null, "Resources/Cii/CrossIndustryInvoice_100pD16B.xsd");
+        SchemaSet.Add(null, "resource:///En16931.Resources.Extern/Ubl/maindoc/UBL-Invoice-2.1.xsd");
+        SchemaSet.Add(null, "resource:///En16931.Resources.Extern/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
+        SchemaSet.Add(null, "resource:///En16931.Resources.Extern/Cii/CrossIndustryInvoice_100pD16B.xsd");
 
         // Schema is DTD annotated, which is why we have to add it like this,
         // instead of adding the file directly with `SchemaSet.Add`
-        FileStream w3XmlSigSchemaFile = File.OpenRead("Resources/W3/xmldsig-core-schema.xsd");
+        using Stream w3XmlSigSchemaFile = new En16931.Spec.Utils.EmbeddedResource("En16931.Resources.Extern/W3/xmldsig-core-schema.xsd").Open();
         XmlSchema w3XmlSigSchema = XmlSchema.Read(w3XmlSigSchemaFile, null)!;
         SchemaSet.Add(w3XmlSigSchema);
 
@@ -94,3 +96,18 @@ static class Xsd
     }
 }
 
+class XmlEmbeddedResourceResolver : XmlUrlResolver
+{
+    public override object GetEntity(Uri absoluteUri, string? role, Type? ofObjectToReturn)
+    {
+        Assert.ArgIsNotNull(absoluteUri);
+
+        Stream? result = typeof(XmlEmbeddedResourceResolver)
+            .Assembly
+            .GetManifestResourceStream(absoluteUri.AbsolutePath.Remove(0, 1));
+
+        Assert.IsNotNull(result);
+
+        return result!;
+    }
+}

@@ -11,7 +11,7 @@ namespace Tests.XRechnungExtension;
 public class XRechnungTestsuiteTests
 {
     [Theory]
-    [InlineData("Resources/Extern/xrechnung-testsuite/extension")]
+    [InlineData("Tests.Resources.Extern/xrechnung-testsuite/extension")]
     public void ValidateXRechnungTestsuite(string testsLocation)
     {
         Parser parser = new Parser();

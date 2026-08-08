@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using En16931.Utils;
@@ -14,7 +16,7 @@ public class TransformerSet<K> where K : notnull
 {
     private readonly ImmutableDictionary<K, Transformer> _transformers;
 
-    public TransformerSet(IDictionary<K, string> transformers)
+    public TransformerSet(IDictionary<K, IResource> transformers)
     {
         _transformers = transformers
             .Select(kvp => KeyValuePair.Create(kvp.Key, new Transformer(kvp.Value)))
@@ -43,11 +45,13 @@ public class Transformer
 
     private readonly XsltExecutable _executable;
 
-    public Transformer(string path)
+    public Transformer(IResource resource)
     {
-        Assert.ArgIsNotNull(path);
+        Assert.ArgIsNotNull(resource);
 
-        _executable = _xsltCompiler.Compile(new Uri(new FileInfo(path).FullName));
+        using Stream stream = resource.Open();
+
+        _executable = _xsltCompiler.Compile(stream);
     }
 
     public void Transform(XDocument doc, XmlWriter writer, string? initialMode = null)
@@ -74,5 +78,85 @@ public class Transformer
         transformer.GlobalContextItem = xdm;
 
         transformer.ApplyTemplates(xdm, destination);
+    }
+}
+
+public interface IResource
+{
+    public Stream Open();
+}
+
+public readonly record struct EmbeddedResource : IResource
+{
+    public required Assembly Assembly {
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
+    }
+
+    public required string Name {
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
+    }
+
+    [SetsRequiredMembers]
+    public EmbeddedResource(string name) : this(typeof(EmbeddedResource).Assembly, name) { }
+
+    [SetsRequiredMembers]
+    public EmbeddedResource(Assembly assembly, string name)
+    {
+        Assembly = assembly;
+        Name = name;
+    }
+
+    public Stream Open()
+    {
+        Stream? result = Assembly.GetManifestResourceStream(Name);
+
+        Assert.IsNotNull(result);
+
+        return result!;
+    }
+}
+
+public readonly record struct FileResource : IResource
+{
+    public required string Path {
+        get
+        {
+            Assert.IsNotNull(field);
+            return field;
+        }
+        init
+        {
+            Assert.ArgIsNotNull(value);
+            field = value;
+        }
+    }
+
+    [SetsRequiredMembers]
+    public FileResource(string path)
+    {
+        Path = path;
+    }
+
+    public Stream Open()
+    {
+        return File.OpenRead(Path);
     }
 }
