@@ -88,7 +88,8 @@ public interface IResource
 
 public readonly record struct EmbeddedResource : IResource
 {
-    public required Assembly Assembly {
+    public required Assembly Assembly
+    {
         get
         {
             Assert.IsNotNull(field);
@@ -101,7 +102,8 @@ public readonly record struct EmbeddedResource : IResource
         }
     }
 
-    public required string Name {
+    public required string Name
+    {
         get
         {
             Assert.IsNotNull(field);
@@ -136,7 +138,8 @@ public readonly record struct EmbeddedResource : IResource
 
 public readonly record struct FileResource : IResource
 {
-    public required string Path {
+    public required string Path
+    {
         get
         {
             Assert.IsNotNull(field);
