@@ -6,6 +6,8 @@ using System.IO.Compression;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+const string BaseResourceDir = "En16931.Resources.Extern";
+
 Command downloadW3Schemas = new("w3", "Download schmema files from W3.");
 
 Command downloadUblSchema = new("ubl", "Download UBL 2.1 schema files.");
@@ -101,7 +103,7 @@ async Task DownloadXRechnungSchematron(ParseResult args)
         {
             File.Copy(
                 file,
-                Path.Combine("En16931/Resources/XRechnung", Path.GetFileName(file)),
+                Path.Combine(BaseResourceDir, "XRechnung", Path.GetFileName(file)),
                 overwrite: true
             );
         }
@@ -135,7 +137,7 @@ async Task DownloadEn16931Schematron(ParseResult args)
     {
         File.Copy(
             file,
-            Path.Combine("En16931/Resources/En16931", Path.GetFileName(file)),
+            Path.Combine(BaseResourceDir, "En16931", Path.GetFileName(file)),
             overwrite: true
         );
     }
@@ -163,20 +165,20 @@ async Task DownloadUblSchema(ParseResult args)
     {
         File.Copy(
             file,
-            Path.Combine("En16931/Resources/Ubl/common", Path.GetFileName(file)),
+            Path.Combine(BaseResourceDir, "Ubl/common", Path.GetFileName(file)),
             overwrite: true
         );
     }
 
     File.Copy(
         $"{temp.FullName}/xsd/maindoc/UBL-CreditNote-2.1.xsd",
-        "En16931/Resources/Ubl/maindoc/UBL-CreditNote-2.1.xsd",
+        $"{BaseResourceDir}/Ubl/maindoc/UBL-CreditNote-2.1.xsd",
         overwrite: true
     );
 
     File.Copy(
         $"{temp.FullName}/xsd/maindoc/UBL-Invoice-2.1.xsd",
-        "En16931/Resources/Ubl/maindoc/UBL-Invoice-2.1.xsd",
+        $"{BaseResourceDir}/Ubl/maindoc/UBL-Invoice-2.1.xsd",
         overwrite: true
     );
 
@@ -197,7 +199,7 @@ async Task DownloadW3Schemas(ParseResult args)
 
     string content = await response.Content.ReadAsStringAsync();
 
-    File.WriteAllText("En16931/Resources/W3/xmldsig-core-schema.xsd", content);
+    File.WriteAllText($"{BaseResourceDir}/W3/xmldsig-core-schema.xsd", content);
 
     Console.WriteLine($"Successfully downloaded W3 schemas.");
 }
@@ -226,7 +228,7 @@ void InstallCiiSchema(ParseResult args)
     {
         File.Copy(
             file,
-            Path.Combine("En16931/Resources/Cii", Path.GetFileName(file)),
+            Path.Combine(BaseResourceDir, "Cii", Path.GetFileName(file)),
             overwrite: true
         );
     }
