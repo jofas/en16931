@@ -216,7 +216,7 @@ public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>, II
     public void Serialize(XmlWriter writer)
     {
         writer.WriteStartElement("content", IRConfig.NS);
-        writer.WriteBase64(Content.ToMutable(), 0, Content.Length);
+        writer.WriteString(Convert.ToBase64String(Content.ToMutable()));
         writer.WriteEndElement();
 
         writer.WriteStartElement("mime-code", IRConfig.NS);
@@ -233,21 +233,7 @@ public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>, II
         reader.ReadStartElement("content", IRConfig.NS);
         reader.MoveToContent();
 
-        const int size = 4096;
-
-        var result = ImmutableArray.CreateBuilder<byte>();
-
-        byte[] buffer = new byte[size];
-
-        int bytesRead = -1;
-
-        while (bytesRead != 0)
-        {
-            bytesRead = reader.ReadContentAsBase64(buffer, 0, size);
-            result.AddRange(buffer, bytesRead);
-        }
-
-        Array<byte> content = new(result.ToImmutable());
+        Array<byte> content = new(Convert.FromBase64String(reader.ReadContentAsString()));
 
         reader.ReadEndElement();
         reader.MoveToContent();

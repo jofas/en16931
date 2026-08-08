@@ -7,7 +7,7 @@
     <cbc:ID>17794</cbc:ID>
     <cbc:IssueDate>2021-07-14</cbc:IssueDate>
     <cbc:InvoiceTypeCode>877</cbc:InvoiceTypeCode>
-    <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>    
+    <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
     <cbc:BuyerReference>992-90009-96</cbc:BuyerReference>
     <cac:AccountingSupplierParty>
         <cac:Party>
@@ -27,7 +27,7 @@
                 </cac:TaxScheme>
             </cac:PartyTaxScheme>
             <cac:PartyLegalEntity>
-                <cbc:RegistrationName>Test Gerüstbau GmbH</cbc:RegistrationName>                
+                <cbc:RegistrationName>Test Gerüstbau GmbH</cbc:RegistrationName>
                 <cbc:CompanyLegalForm>176/77/1508</cbc:CompanyLegalForm>
             </cac:PartyLegalEntity>
             <cac:Contact>
@@ -78,7 +78,7 @@
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>
             </cac:TaxCategory>
-        </cac:TaxSubtotal>        
+        </cac:TaxSubtotal>
     </cac:TaxTotal>
     <cac:LegalMonetaryTotal>
         <cbc:LineExtensionAmount currencyID="EUR">3508.77</cbc:LineExtensionAmount>
@@ -117,6 +117,9 @@
                     </cac:TaxScheme>
                 </cac:ClassifiedTaxCategory>
             </cac:Item>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="EUR">3508.77</cbc:PriceAmount>
+            </cac:Price>
             <cac:SubInvoiceLine>
                 <cbc:ID>1.02.005</cbc:ID>
                 <cbc:InvoicedQuantity unitCode="MTK">277.290</cbc:InvoicedQuantity>

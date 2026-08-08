@@ -213,6 +213,7 @@
     </cac:Price>
     <cac:SubInvoiceLine>
       <cbc:ID>3.</cbc:ID>
+      <cbc:InvoicedQuantity unitCode="C62">210</cbc:InvoicedQuantity>
       <cbc:LineExtensionAmount currencyID="EUR">21165166.39</cbc:LineExtensionAmount>
       <cac:Item>
         <cbc:Name>Ortbetonstützwand Los 15/16 bahnrechts, km 5,910..</cbc:Name>
@@ -229,6 +230,7 @@
       </cac:Price>
       <cac:SubInvoiceLine>
         <cbc:ID>3.1.</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="C62">210</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">19715327.10</cbc:LineExtensionAmount>
         <cac:Item>
           <cbc:Name>Baustelleneinrichtung</cbc:Name>
@@ -240,6 +242,9 @@
             </cac:TaxScheme>
           </cac:ClassifiedTaxCategory>
         </cac:Item>
+        <cac:Price>
+          <cbc:PriceAmount currencyID="EUR">36415.06</cbc:PriceAmount>
+        </cac:Price>
         <cac:SubInvoiceLine>
           <cbc:ID>3.1.10.</cbc:ID>
           <cbc:InvoicedQuantity unitCode="C62">210</cbc:InvoicedQuantity>
@@ -262,6 +267,7 @@
       </cac:SubInvoiceLine>
       <cac:SubInvoiceLine>
         <cbc:ID>3.3.</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="MTR">1025.5</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">42227.17</cbc:LineExtensionAmount>
         <cac:Item>
           <cbc:Name>Abbruch / Rückbau</cbc:Name>
@@ -273,6 +279,9 @@
             </cac:TaxScheme>
           </cac:ClassifiedTaxCategory>
         </cac:Item>
+        <cac:Price>
+          <cbc:PriceAmount currencyID="EUR">36415.06</cbc:PriceAmount>
+        </cac:Price>
         <cac:SubInvoiceLine>
           <cbc:ID>3.3.70.</cbc:ID>
           <cbc:InvoicedQuantity unitCode="MTR">1025.5</cbc:InvoicedQuantity>
@@ -314,6 +323,7 @@
       </cac:SubInvoiceLine>
       <cac:SubInvoiceLine>
         <cbc:ID>3.4.</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="MTQ">86.561</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">542076.10</cbc:LineExtensionAmount>
         <cac:Item>
           <cbc:Name>Erdarbeiten</cbc:Name>
@@ -325,6 +335,9 @@
             </cac:TaxScheme>
           </cac:ClassifiedTaxCategory>
         </cac:Item>
+        <cac:Price>
+          <cbc:PriceAmount currencyID="EUR">36415.06</cbc:PriceAmount>
+        </cac:Price>
         <cac:SubInvoiceLine>
           <cbc:ID>3.4.10.</cbc:ID>
           <cbc:InvoicedQuantity unitCode="MTQ">86.561</cbc:InvoicedQuantity>
@@ -346,7 +359,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.4.20.</cbc:ID>
-          <cbc:InvoicedQuantity>1</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTQ">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">3000</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Aufmaß und Dokumentation</cbc:Name>
@@ -460,7 +473,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.4.120.</cbc:ID>
-          <cbc:InvoicedQuantity>1</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTQ">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">2032.60</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>*** Bedarfsposition mit GB Bereitstellungsfläche herstellen</cbc:Name>
@@ -518,6 +531,7 @@
       </cac:SubInvoiceLine>
       <cac:SubInvoiceLine>
         <cbc:ID>3.5.</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="MTQ">179.949</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">217257.09</cbc:LineExtensionAmount>
         <cac:Item>
           <cbc:Name>Steinkorbverkleidung / Betonwand</cbc:Name>
@@ -529,6 +543,9 @@
             </cac:TaxScheme>
           </cac:ClassifiedTaxCategory>
         </cac:Item>
+        <cac:Price>
+          <cbc:PriceAmount currencyID="EUR">36415.06</cbc:PriceAmount>
+        </cac:Price>
         <cac:SubInvoiceLine>
           <cbc:ID>3.5.110.</cbc:ID>
           <cbc:InvoicedQuantity unitCode="MTQ">179.949</cbc:InvoicedQuantity>
@@ -608,6 +625,7 @@
       </cac:SubInvoiceLine>
       <cac:SubInvoiceLine>
         <cbc:ID>3.6.</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="MTQ">1</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">396839.57</cbc:LineExtensionAmount>
         <cac:Item>
           <cbc:Name>Bohrpfahlgründung, Stahlbau</cbc:Name>
@@ -619,9 +637,12 @@
             </cac:TaxScheme>
           </cac:ClassifiedTaxCategory>
         </cac:Item>
+        <cac:Price>
+          <cbc:PriceAmount currencyID="EUR">36415.06</cbc:PriceAmount>
+        </cac:Price>
         <cac:SubInvoiceLine>
           <cbc:ID>3.6.5.</cbc:ID>
-          <cbc:InvoicedQuantity>1</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTQ">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">38362.40</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Geräteeinsatz für Herst. Ortbetonbohrpfähle</cbc:Name>
@@ -678,7 +699,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.6.9.</cbc:ID>
-          <cbc:InvoicedQuantity>159</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTR">159</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">30162.30</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Ortbeton-Pfahlkopf herrichten</cbc:Name>
@@ -754,7 +775,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.6.160.</cbc:ID>
-          <cbc:InvoicedQuantity>148</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTR">148</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">5014.24</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Geländer-Verankerung an Kopfbalken herstellen</cbc:Name>
@@ -773,7 +794,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.6.170.</cbc:ID>
-          <cbc:InvoicedQuantity>112</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTR">112</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">6829.76</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Erdungslasche für Geländer</cbc:Name>
@@ -850,6 +871,7 @@
       </cac:SubInvoiceLine>
       <cac:SubInvoiceLine>
         <cbc:ID>3.7.</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="MTR">709.90</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">150109.20</cbc:LineExtensionAmount>
         <cac:Item>
           <cbc:Name>Entwässerung</cbc:Name>
@@ -861,6 +883,9 @@
             </cac:TaxScheme>
           </cac:ClassifiedTaxCategory>
         </cac:Item>
+        <cac:Price>
+          <cbc:PriceAmount currencyID="EUR">36415.06</cbc:PriceAmount>
+        </cac:Price>
         <cac:SubInvoiceLine>
           <cbc:ID>3.7.10.</cbc:ID>
           <cbc:InvoicedQuantity unitCode="MTR">709.90</cbc:InvoicedQuantity>
@@ -882,7 +907,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.7.50.</cbc:ID>
-          <cbc:InvoicedQuantity>18</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTQ">18</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">16447.50</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Reinigungs- und Inspektionsschacht (Durchgangssc.. Tiefenentwässerung hinter
@@ -902,7 +927,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.7.60.</cbc:ID>
-          <cbc:InvoicedQuantity>2</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTQ">2</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">4065.10</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Übergangsschacht Beton-/Stahlbetonfertigteil DN1..</cbc:Name>
@@ -921,7 +946,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.7.90.</cbc:ID>
-          <cbc:InvoicedQuantity>2</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTQ">2</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">948.52</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Anschluß an bestehenden Schacht</cbc:Name>
@@ -941,6 +966,7 @@
       </cac:SubInvoiceLine>
       <cac:SubInvoiceLine>
         <cbc:ID>3.8.</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="MTR">380.70</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">3612.84</cbc:LineExtensionAmount>
         <cac:Item>
           <cbc:Name>Wege</cbc:Name>
@@ -952,6 +978,9 @@
             </cac:TaxScheme>
           </cac:ClassifiedTaxCategory>
         </cac:Item>
+        <cac:Price>
+          <cbc:PriceAmount currencyID="EUR">36415.06</cbc:PriceAmount>
+        </cac:Price>
         <cac:SubInvoiceLine>
           <cbc:ID>3.8.20.</cbc:ID>
           <cbc:InvoicedQuantity unitCode="MTR">380.70</cbc:InvoicedQuantity>
@@ -974,6 +1003,7 @@
       </cac:SubInvoiceLine>
       <cac:SubInvoiceLine>
         <cbc:ID>3.9.</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="MTQ">1</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">36415.06</cbc:LineExtensionAmount>
         <cac:Item>
           <cbc:Name>Sonstiges</cbc:Name>
@@ -985,9 +1015,12 @@
             </cac:TaxScheme>
           </cac:ClassifiedTaxCategory>
         </cac:Item>
+        <cac:Price>
+          <cbc:PriceAmount currencyID="EUR">36415.06</cbc:PriceAmount>
+        </cac:Price>
         <cac:SubInvoiceLine>
           <cbc:ID>3.9.5.</cbc:ID>
-          <cbc:InvoicedQuantity>1</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTQ">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">725.45</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Baustelleneinrichtung Mattenverlegung</cbc:Name>
@@ -1025,7 +1058,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.9.8.</cbc:ID>
-          <cbc:InvoicedQuantity>1</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTQ">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">554.39</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Baustelleneinrichtung Spritzfass</cbc:Name>
@@ -1101,7 +1134,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.9.20.</cbc:ID>
-          <cbc:InvoicedQuantity>14</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTR">14</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">2737.84</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Fundament für Beleuchtungsmast</cbc:Name>
@@ -1120,7 +1153,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.9.40.</cbc:ID>
-          <cbc:InvoicedQuantity>14</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTR">14</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">2371.32</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Lampenmasten (neu) einbauen.</cbc:Name>
@@ -1139,7 +1172,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.9.40.</cbc:ID>
-          <cbc:InvoicedQuantity>14</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTR">14</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">4173.54</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>Leuchtkörper einbauen.</cbc:Name>
@@ -1178,6 +1211,7 @@
       </cac:SubInvoiceLine>
       <cac:SubInvoiceLine>
         <cbc:ID>3.10.</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="MTR">1</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">61302.26</cbc:LineExtensionAmount>
         <cac:Item>
           <cbc:Name>Ausführungsplanung</cbc:Name>
@@ -1189,9 +1223,12 @@
             </cac:TaxScheme>
           </cac:ClassifiedTaxCategory>
         </cac:Item>
+        <cac:Price>
+          <cbc:PriceAmount currencyID="EUR">61302.26</cbc:PriceAmount>
+        </cac:Price>
         <cac:SubInvoiceLine>
           <cbc:ID>3.10.10.</cbc:ID>
-          <cbc:InvoicedQuantity>1</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTR">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">46518.26</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>*** Nachtragsposition zum Nachtrag 1 Ausführungsstatik und Zeichnungen für das
@@ -1211,7 +1248,7 @@
         </cac:SubInvoiceLine>
         <cac:SubInvoiceLine>
           <cbc:ID>3.10.160.</cbc:ID>
-          <cbc:InvoicedQuantity>1</cbc:InvoicedQuantity>
+          <cbc:InvoicedQuantity unitCode="MTR">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">14784.00</cbc:LineExtensionAmount>
           <cac:Item>
             <cbc:Name>*** Nachtragsposition zum Nachtrag 1 Bauausführungsvermessung</cbc:Name>
