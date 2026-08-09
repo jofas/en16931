@@ -1206,68 +1206,68 @@
                 </ram:DirectDebitMandateID>
               </xsl:if>
             </ram:SpecifiedTradePaymentTerms>
-            <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
-              <ram:LineTotalAmount>
-                <!-- bt-106 -->
-                <xsl:value-of select="ir:document-totals/ir:sum-of-invoice-line-net-amount"/>
-              </ram:LineTotalAmount>
-              <xsl:if test="exists(ir:document-totals/ir:sum-of-charges-on-document-level)">
-                <ram:ChargeTotalAmount>
-                  <!-- bt-108 -->
-                  <xsl:value-of select="ir:document-totals/ir:sum-of-charges-on-document-level"/>
-                </ram:ChargeTotalAmount>
-              </xsl:if>
-              <xsl:if test="exists(ir:document-totals/ir:sum-of-allowances-on-document-level)">
-                <ram:AllowanceTotalAmount>
-                  <!-- bt-107 -->
-                  <xsl:value-of select="ir:document-totals/ir:sum-of-allowances-on-document-level"/>
-                </ram:AllowanceTotalAmount>
-              </xsl:if>
-              <ram:TaxBasisTotalAmount>
-                <!-- bt-109 -->
-                <xsl:value-of select="ir:document-totals/ir:invoice-total-amount-without-vat"/>
-              </ram:TaxBasisTotalAmount>
-              <xsl:if test="exists(ir:document-totals/ir:invoice-total-vat-amount)">
-                <ram:TaxTotalAmount>
-                  <xsl:attribute name="currencyID">
-                    <xsl:value-of select="ir:invoice-currency-code"/>
-                  </xsl:attribute>
-                  <!-- bt-110 -->
-                  <xsl:value-of select="ir:document-totals/ir:invoice-total-vat-amount"/>
-                </ram:TaxTotalAmount>
-              </xsl:if>
-              <xsl:if test="exists(ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency)
-                  and exists(ir:vat-accounting-currency-code)">
-                <ram:TaxTotalAmount>
-                  <xsl:attribute name="currencyID">
-                    <xsl:value-of select="ir:vat-accounting-currency-code"/>
-                  </xsl:attribute>
-                  <!-- bt-111 -->
-                  <xsl:value-of select="ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency"/>
-                </ram:TaxTotalAmount>
-              </xsl:if>
-              <xsl:if test="exists(ir:document-totals/ir:rounding-amount)">
-                <ram:RoundingAmount>
-                  <!-- bt-114 -->
-                  <xsl:value-of select="ir:document-totals/ir:rounding-amount"/>
-                </ram:RoundingAmount>
-              </xsl:if>
-              <ram:GrandTotalAmount>
-                <!-- bt-112 -->
-                <xsl:value-of select="ir:document-totals/ir:invoice-total-amount-with-vat"/>
-              </ram:GrandTotalAmount>
-              <xsl:if test="exists(ir:document-totals/ir:paid-amount)">
-                <ram:TotalPrepaidAmount>
-                  <!-- bt-113 -->
-                  <xsl:value-of select="ir:document-totals/ir:paid-amount"/>
-                </ram:TotalPrepaidAmount>
-              </xsl:if>
-              <ram:DuePayableAmount>
-                <!-- bt-115 -->
-                <xsl:value-of select="ir:document-totals/ir:amount-due-for-payment"/>
-              </ram:DuePayableAmount>
-            </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
           </xsl:if>
+          <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+            <ram:LineTotalAmount>
+              <!-- bt-106 -->
+              <xsl:value-of select="ir:document-totals/ir:sum-of-invoice-line-net-amount"/>
+            </ram:LineTotalAmount>
+            <xsl:if test="exists(ir:document-totals/ir:sum-of-charges-on-document-level)">
+              <ram:ChargeTotalAmount>
+                <!-- bt-108 -->
+                <xsl:value-of select="ir:document-totals/ir:sum-of-charges-on-document-level"/>
+              </ram:ChargeTotalAmount>
+            </xsl:if>
+            <xsl:if test="exists(ir:document-totals/ir:sum-of-allowances-on-document-level)">
+              <ram:AllowanceTotalAmount>
+                <!-- bt-107 -->
+                <xsl:value-of select="ir:document-totals/ir:sum-of-allowances-on-document-level"/>
+              </ram:AllowanceTotalAmount>
+            </xsl:if>
+            <ram:TaxBasisTotalAmount>
+              <!-- bt-109 -->
+              <xsl:value-of select="ir:document-totals/ir:invoice-total-amount-without-vat"/>
+            </ram:TaxBasisTotalAmount>
+            <xsl:if test="exists(ir:document-totals/ir:invoice-total-vat-amount)">
+              <ram:TaxTotalAmount>
+                <xsl:attribute name="currencyID">
+                  <xsl:value-of select="ir:invoice-currency-code"/>
+                </xsl:attribute>
+                <!-- bt-110 -->
+                <xsl:value-of select="ir:document-totals/ir:invoice-total-vat-amount"/>
+              </ram:TaxTotalAmount>
+            </xsl:if>
+            <xsl:if test="exists(ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency)
+                and exists(ir:vat-accounting-currency-code)">
+              <ram:TaxTotalAmount>
+                <xsl:attribute name="currencyID">
+                  <xsl:value-of select="ir:vat-accounting-currency-code"/>
+                </xsl:attribute>
+                <!-- bt-111 -->
+                <xsl:value-of select="ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency"/>
+              </ram:TaxTotalAmount>
+            </xsl:if>
+            <xsl:if test="exists(ir:document-totals/ir:rounding-amount)">
+              <ram:RoundingAmount>
+                <!-- bt-114 -->
+                <xsl:value-of select="ir:document-totals/ir:rounding-amount"/>
+              </ram:RoundingAmount>
+            </xsl:if>
+            <ram:GrandTotalAmount>
+              <!-- bt-112 -->
+              <xsl:value-of select="ir:document-totals/ir:invoice-total-amount-with-vat"/>
+            </ram:GrandTotalAmount>
+            <xsl:if test="exists(ir:document-totals/ir:paid-amount)">
+              <ram:TotalPrepaidAmount>
+                <!-- bt-113 -->
+                <xsl:value-of select="ir:document-totals/ir:paid-amount"/>
+              </ram:TotalPrepaidAmount>
+            </xsl:if>
+            <ram:DuePayableAmount>
+              <!-- bt-115 -->
+              <xsl:value-of select="ir:document-totals/ir:amount-due-for-payment"/>
+            </ram:DuePayableAmount>
+          </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
           <xsl:if test="exists(ir:preceding-invoice-references/ir:preceding-invoice-reference)">
             <ram:InvoiceReferencedDocument>
               <ram:IssuerAssignedID>

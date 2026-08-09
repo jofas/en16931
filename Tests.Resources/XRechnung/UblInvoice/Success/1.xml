@@ -584,11 +584,11 @@
         <cbc:IdentificationCode>DE</cbc:IdentificationCode>
       </cac:OriginCountry>
       <cac:CommodityClassification>
-          <!-- bt-158 -->
+        <!-- bt-158 -->
         <cbc:ItemClassificationCode listID="IB" listVersionID="88">0721-880X</cbc:ItemClassificationCode>
       </cac:CommodityClassification>
       <cac:CommodityClassification>
-          <!-- bt-158 -->
+        <!-- bt-158 -->
         <cbc:ItemClassificationCode listID="IB" listVersionID="88">0721-880XYZ</cbc:ItemClassificationCode>
       </cac:CommodityClassification>
       <cac:ClassifiedTaxCategory>

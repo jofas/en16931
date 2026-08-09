@@ -15,7 +15,7 @@ namespace En16931.Specs;
 
 public static class BuiltinSpecs
 {
-    public static readonly RefArray<ISpecificationParser> All = [XRechnung.Instance, XRechnungExtension.Instance];
+    public static readonly RefArray<ISpecificationParser> All = [XRechnung.Instance, XRechnungExtension.Instance, XRechnungCvd.Instance];
 }
 
 public class XRechnung : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<Invoice<XRechnung>>
@@ -256,6 +256,157 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
     }
 
     public Document Serialize(scoped ref readonly XRE.Invoice invoice, Schema schema)
+    {
+        XDocument ir = new();
+
+        using (XmlWriter irWriter = ir.CreateWriter())
+        {
+            invoice.Serialize(irWriter);
+        }
+
+        TransformerId transformerId = schema switch
+        {
+            Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
+            Schema.CiiCrossIndustryInvoice => TransformerId.IrToCii,
+            _ => throw new UnreachableException(),
+        };
+
+        string? initialMode = schema switch
+        {
+            Schema.UblInvoice => "invoice",
+            Schema.UblCreditNote => "credit-note",
+            _ => null,
+        };
+
+        XDocument result = _transformers[transformerId].Transform(ir, initialMode);
+
+        return new Document(result);
+    }
+
+    private void ValidateEn16931(ref readonly Document doc)
+    {
+        TransformerId transformerId = doc.Schema switch
+        {
+            Schema.UblInvoice or Schema.UblCreditNote => TransformerId.En16931Ubl,
+            Schema.CiiCrossIndustryInvoice => TransformerId.En16931Cii,
+            _ => throw new UnreachableException(),
+        };
+
+        SchematronResult result = Svrl.Validate(doc.Doc, _transformers[transformerId]);
+
+        if (result.Errors.Count > 0)
+        {
+            throw new ValidationException
+            {
+                Errors = new RefArray<string>(result.Errors),
+            };
+        }
+    }
+
+    private void ValidateXRechnung(ref readonly Document doc)
+    {
+        TransformerId transformerId = doc.Schema switch
+        {
+            Schema.UblInvoice or Schema.UblCreditNote => TransformerId.XRechnungUbl,
+            Schema.CiiCrossIndustryInvoice => TransformerId.XRechnungCii,
+            _ => throw new UnreachableException(),
+        };
+
+        SchematronResult result = Svrl.Validate(doc.Doc, _transformers[transformerId]);
+
+        if (result.Errors.Count > 0)
+        {
+            throw new ValidationException
+            {
+                Errors = new RefArray<string>(result.Errors),
+            };
+        }
+    }
+}
+
+public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<Invoice<XRechnungCvd>>
+{
+    private enum TransformerId
+    {
+        En16931Ubl,
+        En16931Cii,
+        XRechnungUbl,
+        XRechnungCii,
+        UblToIr,
+        CiiToIr,
+        IrToUbl,
+        IrToCii,
+    }
+
+    public static XRechnungCvd Instance = new();
+
+    public static Identifier SpecificationIdentifier { get; } = new("urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#compliant#urn:xeinkauf.de:kosit:xrechnung:cvd_0.9");
+
+    private XRechnungCvd() { }
+
+    private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, IResource>() {
+        { TransformerId.En16931Ubl, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-UBL-validation.xslt") },
+        { TransformerId.En16931Cii, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-CII-validation.xslt") },
+        { TransformerId.XRechnungUbl, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-UBL-validation.xsl") },
+        { TransformerId.XRechnungCii, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-CII-validation.xsl") },
+        { TransformerId.UblToIr, new EmbeddedResource("IR/ubl2ir.xslt") },
+        { TransformerId.CiiToIr, new EmbeddedResource("IR/cii2ir.xslt") },
+        { TransformerId.IrToUbl, new EmbeddedResource("IR/ir2ubl.xslt") },
+        { TransformerId.IrToCii, new EmbeddedResource("IR/ir2cii.xslt") },
+    });
+
+    Identifier ISpecificationValidator.SpecificationIdentifier { get => SpecificationIdentifier; }
+
+    IInvoice ISpecificationParser.Parse(ref readonly Document doc)
+    {
+        return (IInvoice)Parse(in doc);
+    }
+
+    public void Validate(ref readonly Document doc)
+    {
+        try
+        {
+            ValidateEn16931(in doc);
+        }
+        catch (ValidationException e)
+        {
+            // * BR-CL-13 => BR-TMP-CVD-01
+            //
+            if (!e.Errors.All(e =>
+            {
+                return ((string[])[
+                    "BR-CL-13",
+                ]).Contains(e);
+            }))
+            {
+                throw;
+            }
+        }
+
+        ValidateXRechnung(in doc);
+    }
+
+    public Document Serialize(IInvoice invoice, Schema schema)
+    {
+        Invoice<XRechnungCvd> unboxed = (Invoice<XRechnungCvd>)invoice;
+        return Serialize(ref unboxed, schema);
+    }
+
+    public Invoice<XRechnungCvd> Parse(ref readonly Document doc)
+    {
+        TransformerId transformerId = doc.Schema switch
+        {
+            Schema.UblInvoice or Schema.UblCreditNote => TransformerId.UblToIr,
+            Schema.CiiCrossIndustryInvoice => TransformerId.CiiToIr,
+            _ => throw new UnreachableException(),
+        };
+
+        XDocument ir = _transformers[transformerId].Transform(doc.Doc);
+
+        return Invoice<XRechnungCvd>.Deserialize(ir.CreateReader());
+    }
+
+    public Document Serialize(scoped ref readonly Invoice<XRechnungCvd> invoice, Schema schema)
     {
         XDocument ir = new();
 
