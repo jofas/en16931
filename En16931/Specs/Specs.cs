@@ -324,10 +324,6 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
     }
 }
 
-// TODO: tests: cvd standard is small enough to completely validate (only six business rules (all implemented in the schematrons for every syntax) for seven fields).
-//   Take a minimal invoice and transform it to best represent every possible outcome.
-// TODO: test BR-TMP-CVD-01
-
 public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<Invoice<XRechnungCvd>>
 {
     private enum TransformerId
@@ -368,9 +364,12 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
 
     public void Validate(ref readonly Document doc)
     {
-        try {
-        ValidateEn16931(in doc);
-        } catch (ValidationException e) {
+        try
+        {
+            ValidateEn16931(in doc);
+        }
+        catch (ValidationException e)
+        {
             // * BR-CL-13 => BR-TMP-CVD-01
             //
             if (!e.Errors.All(e =>

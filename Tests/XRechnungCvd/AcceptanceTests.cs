@@ -16,7 +16,6 @@ public class AcceptanceTests
         TestHarness.AcceptSuccess<Invoice<S.XRechnungCvd>>(testsLocation);
     }
 
-    /* TODO
     [Theory]
     [InlineData("Tests.Resources/XRechnungCvd/UblInvoice/Failure")]
     [InlineData("Tests.Resources/XRechnungCvd/UblCreditNote/Failure")]
@@ -25,5 +24,4 @@ public class AcceptanceTests
     {
         TestHarness.AcceptFailure<Invoice<S.XRechnungCvd>>(testsLocation);
     }
-    */
 }
