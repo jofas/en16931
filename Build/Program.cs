@@ -7,43 +7,33 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 const string BaseResourceDir = "En16931.Resources.Extern";
+const string BaseResourceDirTests = "Tests.Resources.Extern";
+const string BaseResourceDirBuild = "Build.Resources.Extern";
+
+const string En16931SchematronVersion = "1.3.16";
+const string XRechnungVersion = "3.0.2";
+const string XRechnungSchematronVersion = "2.5.0";
+const string SchXslt2Version = "1.11.2";
 
 Command downloadW3Schemas = new("w3", "Download schmema files from W3.");
 
 Command downloadUblSchema = new("ubl", "Download UBL 2.1 schema files.");
 
-Option<string> en16931SchematronVersionOption = new("--en16931-schematron-version")
-{
-    Description = "The version of the En16931 schmematron file.",
-    DefaultValueFactory = (_) => "1.3.16",
-    Required = true,
-};
+Command downloadEn16931Schematron = new("en16931", "Download schematron files with EN16931 rules.");
 
-Command downloadEn16931Schematron = new("en16931", "Download schematron files with EN16931 rules.") {
-    en16931SchematronVersionOption,
-};
+Command downloadXRechnungSchematron = new("xrechnung", "Download schematron files with XRechnung rules.");
 
-Option<string> xRechnungSchematronVersionOption = new("--xrechnung-schematron-version")
-{
-    Description = "The version of the XRechnung schmematron file.",
-    DefaultValueFactory = (_) => "2.5.0",
-    Required = true,
-};
+Command downloadSchXslt2 = new("schxslt2", "Download SchXslt2 compiler.");
 
-Command downloadXRechnungSchematron = new("xrechnung", "Download schematron files with XRechnung rules.") {
-    xRechnungSchematronVersionOption,
-};
-
-Command downloadAll = new("all", "Download all external resources.") {
-    en16931SchematronVersionOption,
-    xRechnungSchematronVersionOption,
-};
+Command downloadAll = new("all", "Download all external resources.");
 
 Command download = new("download", "Download external resources.");
+
 download.Subcommands.Add(downloadW3Schemas);
 download.Subcommands.Add(downloadUblSchema);
 download.Subcommands.Add(downloadEn16931Schematron);
 download.Subcommands.Add(downloadXRechnungSchematron);
+download.Subcommands.Add(downloadSchXslt2);
 download.Subcommands.Add(downloadAll);
 
 Argument<string> ciiZipFileArgument = new("file")
@@ -59,6 +49,7 @@ Command install = new("install", "Install external resources.");
 install.Subcommands.Add(installCiiSchema);
 
 RootCommand cmd = new("Build commands for the En16931 project.");
+
 cmd.Subcommands.Add(download);
 cmd.Subcommands.Add(install);
 
@@ -66,6 +57,7 @@ downloadW3Schemas.SetAction(DownloadW3Schemas);
 downloadUblSchema.SetAction(DownloadUblSchema);
 downloadEn16931Schematron.SetAction(DownloadEn16931Schematron);
 downloadXRechnungSchematron.SetAction(DownloadXRechnungSchematron);
+downloadSchXslt2.SetAction(DownloadSchXslt2);
 downloadAll.SetAction(DownloadAll);
 
 installCiiSchema.SetAction(InstallCiiSchema);
@@ -74,77 +66,28 @@ cmd.Parse(args).Invoke();
 
 async Task DownloadAll(ParseResult args)
 {
-    await DownloadXRechnungSchematron(args);
-    await DownloadEn16931Schematron(args);
-    await DownloadUblSchema(args);
     await DownloadW3Schemas(args);
+    await DownloadUblSchema(args);
+    await DownloadEn16931Schematron(args);
+    await DownloadXRechnungSchematron(args);
+    await DownloadSchXslt2(args);
 }
 
-async Task DownloadXRechnungSchematron(ParseResult args)
+async Task DownloadW3Schemas(ParseResult args)
 {
-    string xRechnungVersion = "3.0.2";
-    string schematronVersion = args.GetRequiredValue(xRechnungSchematronVersionOption);
-
-    DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Download_XRechnung_Schematron_");
-
     using HttpClient client = new();
 
-    string url = $"https://github.com/itplr-kosit/xrechnung-schematron/releases/download/v{schematronVersion}/xrechnung-{xRechnungVersion}-schematron-{schematronVersion}.zip";
+    string url = "https://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd";
 
     using HttpResponseMessage response = await client.GetAsync(url);
 
     response.EnsureSuccessStatusCode();
 
-    ZipFile.ExtractToDirectory(await response.Content.ReadAsStreamAsync(), temp.FullName);
+    string content = await response.Content.ReadAsStringAsync();
 
-    foreach (string syntax in (string[])["cii", "ubl"])
-    {
-        foreach (string file in Directory.GetFiles($"{temp.FullName}/schematron/{syntax}", "*.xsl"))
-        {
-            File.Copy(
-                file,
-                Path.Combine(BaseResourceDir, "XRechnung", Path.GetFileName(file)),
-                overwrite: true
-            );
-        }
-    }
+    File.WriteAllText($"{BaseResourceDir}/W3/xmldsig-core-schema.xsd", content);
 
-    Directory.Delete(temp.FullName, recursive: true);
-
-    Console.WriteLine($"Successfully downloaded XRechnung schematron files.");
-}
-
-async Task DownloadEn16931Schematron(ParseResult args)
-{
-    string schematronVersion = args.GetRequiredValue(en16931SchematronVersionOption);
-
-    DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Download_En16931_Schematron_");
-
-    using HttpClient client = new();
-
-    foreach (string syntax in (string[])["cii", "ubl"])
-    {
-        string url = $"https://github.com/ConnectingEurope/eInvoicing-EN16931/releases/download/validation-{schematronVersion}/en16931-{syntax}-{schematronVersion}.zip";
-
-        using HttpResponseMessage response = await client.GetAsync(url);
-
-        response.EnsureSuccessStatusCode();
-
-        ZipFile.ExtractToDirectory(await response.Content.ReadAsStreamAsync(), temp.FullName);
-    }
-
-    foreach (string file in Directory.GetFiles($"{temp.FullName}/xslt"))
-    {
-        File.Copy(
-            file,
-            Path.Combine(BaseResourceDir, "En16931", Path.GetFileName(file)),
-            overwrite: true
-        );
-    }
-
-    Directory.Delete(temp.FullName, recursive: true);
-
-    Console.WriteLine($"Successfully downloaded En16931 schematron files.");
+    Console.WriteLine($"Successfully downloaded W3 schemas.");
 }
 
 async Task DownloadUblSchema(ParseResult args)
@@ -187,21 +130,91 @@ async Task DownloadUblSchema(ParseResult args)
     Console.WriteLine($"Successfully downloaded UBL 2.1 schema files.");
 }
 
-async Task DownloadW3Schemas(ParseResult args)
+async Task DownloadEn16931Schematron(ParseResult args)
 {
+    DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Download_En16931_Schematron_");
+
     using HttpClient client = new();
 
-    string url = "https://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd";
+    foreach (string syntax in (string[])["cii", "ubl"])
+    {
+        string url = $"https://github.com/ConnectingEurope/eInvoicing-EN16931/releases/download/validation-{En16931SchematronVersion}/en16931-{syntax}-{En16931SchematronVersion}.zip";
+
+        using HttpResponseMessage response = await client.GetAsync(url);
+
+        response.EnsureSuccessStatusCode();
+
+        ZipFile.ExtractToDirectory(await response.Content.ReadAsStreamAsync(), temp.FullName);
+    }
+
+    foreach (string file in Directory.GetFiles($"{temp.FullName}/xslt"))
+    {
+        File.Copy(
+            file,
+            Path.Combine(BaseResourceDir, "En16931", Path.GetFileName(file)),
+            overwrite: true
+        );
+    }
+
+    Directory.Delete(temp.FullName, recursive: true);
+
+    Console.WriteLine($"Successfully downloaded En16931 schematron files.");
+}
+
+async Task DownloadXRechnungSchematron(ParseResult args)
+{
+    DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Download_XRechnung_Schematron_");
+
+    using HttpClient client = new();
+
+    string url = $"https://github.com/itplr-kosit/xrechnung-schematron/releases/download/v{XRechnungSchematronVersion}/xrechnung-{XRechnungVersion}-schematron-{XRechnungSchematronVersion}.zip";
 
     using HttpResponseMessage response = await client.GetAsync(url);
 
     response.EnsureSuccessStatusCode();
 
-    string content = await response.Content.ReadAsStringAsync();
+    ZipFile.ExtractToDirectory(await response.Content.ReadAsStreamAsync(), temp.FullName);
 
-    File.WriteAllText($"{BaseResourceDir}/W3/xmldsig-core-schema.xsd", content);
+    foreach (string syntax in (string[])["cii", "ubl"])
+    {
+        foreach (string file in Directory.GetFiles($"{temp.FullName}/schematron/{syntax}", "*.xsl"))
+        {
+            File.Copy(
+                file,
+                Path.Combine(BaseResourceDir, "XRechnung", Path.GetFileName(file)),
+                overwrite: true
+            );
+        }
+    }
 
-    Console.WriteLine($"Successfully downloaded W3 schemas.");
+    Directory.Delete(temp.FullName, recursive: true);
+
+    Console.WriteLine($"Successfully downloaded XRechnung schematron files.");
+}
+
+async Task DownloadSchXslt2(ParseResult args)
+{
+    DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Download_SchXslt2_");
+
+    using HttpClient client = new();
+
+    string url = $"https://codeberg.org/SchXslt/schxslt2/releases/download/v{SchXslt2Version}/schxslt2-{SchXslt2Version}.zip";
+
+    using HttpResponseMessage response = await client.GetAsync(url);
+
+    response.EnsureSuccessStatusCode();
+
+    ZipFile.ExtractToDirectory(await response.Content.ReadAsStreamAsync(), temp.FullName);
+
+    File.Copy(
+        $"{temp.FullName}/schxslt2-{SchXslt2Version}/transpile.xsl",
+        Path.Combine(BaseResourceDirBuild, "SchXslt2/transpile.xsl"),
+        overwrite: true
+    );
+
+    Directory.Delete(temp.FullName, recursive: true);
+
+    Console.WriteLine($"Successfully downloaded SchXslt2 compiler.");
 }
 
 void InstallCiiSchema(ParseResult args)
