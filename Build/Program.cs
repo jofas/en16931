@@ -5,15 +5,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
 using System.Threading.Tasks;
-
-const string BaseResourceDir = "En16931.Resources.Extern";
-const string BaseResourceDirTests = "Tests.Resources.Extern";
-const string BaseResourceDirBuild = "Build.Resources.Extern";
-
-const string En16931SchematronVersion = "1.3.16";
-const string XRechnungVersion = "3.0.2";
-const string XRechnungSchematronVersion = "2.5.0";
-const string SchXslt2Version = "1.11.2";
+using Build;
+using static Build.Constants;
 
 Command downloadW3Schemas = new("w3", "Download schmema files from W3.");
 
@@ -22,6 +15,8 @@ Command downloadUblSchema = new("ubl", "Download UBL 2.1 schema files.");
 Command downloadEn16931Schematron = new("en16931", "Download schematron files with EN16931 rules.");
 
 Command downloadXRechnungSchematron = new("xrechnung", "Download schematron files with XRechnung rules.");
+
+Command downloadPeppolBisBillingSchematron = new("peppol", "Downliad schematron files with PEPPOL BIS Billing rules.");
 
 Command downloadSchXslt2 = new("schxslt2", "Download SchXslt2 compiler.");
 
@@ -33,6 +28,7 @@ download.Subcommands.Add(downloadW3Schemas);
 download.Subcommands.Add(downloadUblSchema);
 download.Subcommands.Add(downloadEn16931Schematron);
 download.Subcommands.Add(downloadXRechnungSchematron);
+download.Subcommands.Add(downloadPeppolBisBillingSchematron);
 download.Subcommands.Add(downloadSchXslt2);
 download.Subcommands.Add(downloadAll);
 
@@ -57,6 +53,7 @@ downloadW3Schemas.SetAction(DownloadW3Schemas);
 downloadUblSchema.SetAction(DownloadUblSchema);
 downloadEn16931Schematron.SetAction(DownloadEn16931Schematron);
 downloadXRechnungSchematron.SetAction(DownloadXRechnungSchematron);
+downloadPeppolBisBillingSchematron.SetAction(DownloadPeppolBisBillingSchematron);
 downloadSchXslt2.SetAction(DownloadSchXslt2);
 downloadAll.SetAction(DownloadAll);
 
@@ -70,6 +67,7 @@ async Task DownloadAll(ParseResult args)
     await DownloadUblSchema(args);
     await DownloadEn16931Schematron(args);
     await DownloadXRechnungSchematron(args);
+    await DownloadPeppolBisBillingSchematron(args);
     await DownloadSchXslt2(args);
 }
 
@@ -192,6 +190,60 @@ async Task DownloadXRechnungSchematron(ParseResult args)
     Console.WriteLine($"Successfully downloaded XRechnung schematron files.");
 }
 
+async Task DownloadPeppolBisBillingSchematron(ParseResult args)
+{
+    DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Download_PeppolBisBilling_");
+
+    using HttpClient client = new();
+
+    string url = $"https://github.com/OpenPEPPOL/peppol-bis-invoice-3/archive/refs/tags/v{PeppolBisBillingVersion}.zip";
+
+    using HttpResponseMessage response = await client.GetAsync(url);
+
+    response.EnsureSuccessStatusCode();
+
+    ZipFile.ExtractToDirectory(await response.Content.ReadAsStreamAsync(), temp.FullName);
+
+    SchXslt2.Compile(
+        $"{temp.FullName}/peppol-bis-invoice-3-{PeppolBisBillingVersion}/rules/sch/PEPPOL-EN16931-CII.sch",
+        $"{BaseResourceDir}/PeppolBisBilling/PEPPOL-CII-validation.xslt"
+    );
+
+    SchXslt2.Compile(
+        $"{temp.FullName}/peppol-bis-invoice-3-{PeppolBisBillingVersion}/rules/sch/PEPPOL-EN16931-UBL.sch",
+        $"{BaseResourceDir}/PeppolBisBilling/PEPPOL-UBL-validation.xslt"
+    );
+
+    string exampleDir = $"{temp.FullName}/peppol-bis-invoice-3-{PeppolBisBillingVersion}/rules/examples";
+
+    foreach (string file in Directory.GetFiles(exampleDir))
+    {
+        File.Copy(
+            file,
+            Path.Combine(BaseResourceDirTests, "PeppolBisBilling/examples", Path.GetFileName(file)),
+            overwrite: true
+        );
+    }
+
+    string nationalExamplesDir = $"{temp.FullName}/peppol-bis-invoice-3-{PeppolBisBillingVersion}/rules/national-examples";
+
+    foreach (string dir in Directory.GetDirectories(nationalExamplesDir))
+    {
+        foreach (string file in Directory.GetFiles(dir))
+        {
+            File.Copy(
+                file,
+                Path.Combine(BaseResourceDirTests, "PeppolBisBilling/national-examples", new DirectoryInfo(dir).Name, Path.GetFileName(file)),
+                overwrite: true
+            );
+        }
+    }
+
+    Directory.Delete(temp.FullName, recursive: true);
+
+    Console.WriteLine($"Successfully downloaded and compiled PEPPOL BIS Billing schematron files.");
+}
+
 async Task DownloadSchXslt2(ParseResult args)
 {
     DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Download_SchXslt2_");
@@ -208,7 +260,7 @@ async Task DownloadSchXslt2(ParseResult args)
 
     File.Copy(
         $"{temp.FullName}/schxslt2-{SchXslt2Version}/transpile.xsl",
-        Path.Combine(BaseResourceDirBuild, "SchXslt2/transpile.xsl"),
+        SchXslt2Location,
         overwrite: true
     );
 
