@@ -12,5 +12,6 @@ public static class Constants
     public static string XRechnungVersion = "3.0.2";
     public static string XRechnungSchematronVersion = "2.5.0";
     public static string PeppolBisBillingVersion = "3.0.20";
+    public static string FacturXVersion = "1.09.2";
     public static string SchXslt2Version = "1.11.2";
 }

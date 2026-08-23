@@ -41,8 +41,19 @@ Command installCiiSchema = new("cii", "Install CII D16B schema files from Zip Ar
     ciiZipFileArgument,
 };
 
+Argument<string> facturXZipFileArgument = new("file")
+{
+    Description = "Zip Archive downloaded from https://www.ferd-net.de/.",
+};
+
+Command installFacturX = new("factur-x", "Install Factur-X files from Zip Archive downloaded from https://www.ferd-net.de/.") {
+    facturXZipFileArgument,
+};
+
 Command install = new("install", "Install external resources.");
+
 install.Subcommands.Add(installCiiSchema);
+install.Subcommands.Add(installFacturX);
 
 RootCommand cmd = new("Build commands for the En16931 project.");
 
@@ -58,6 +69,7 @@ downloadSchXslt2.SetAction(DownloadSchXslt2);
 downloadAll.SetAction(DownloadAll);
 
 installCiiSchema.SetAction(InstallCiiSchema);
+installFacturX.SetAction(InstallFacturX);
 
 cmd.Parse(args).Invoke();
 
@@ -301,4 +313,39 @@ void InstallCiiSchema(ParseResult args)
     Directory.Delete(temp.FullName, recursive: true);
 
     Console.WriteLine($"Successfully installed CII D16B schema files.");
+}
+
+void InstallFacturX(ParseResult args)
+{
+    string archive = args.GetRequiredValue(facturXZipFileArgument);
+
+    DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Install_Factur_X_");
+
+    ZipFile.ExtractToDirectory(archive, temp.FullName);
+
+    string basicDir = $"{temp.FullName}/Schema/2_Factur-X_{FacturXVersion}_BASIC/_XSLT_BASIC";
+
+    foreach (string file in Directory.GetFiles(basicDir))
+    {
+        File.Copy(
+            file,
+            Path.Combine(BaseResourceDir, "FacturX", Path.GetFileName(file)),
+            overwrite: true
+        );
+    }
+
+    string basicExamplesDir = $"{temp.FullName}/Beispiele/2. BASIC";
+
+    foreach (string file in Directory.GetFiles(basicExamplesDir, "*.xml", SearchOption.AllDirectories))
+    {
+        File.Copy(
+            file,
+            Path.Combine(BaseResourceDirTests, "FacturX/Basic", Path.GetFileName(file)),
+            overwrite: true
+        );
+    }
+
+    Directory.Delete(temp.FullName, recursive: true);
+
+    Console.WriteLine($"Successfully installed Factur-X files.");
 }
