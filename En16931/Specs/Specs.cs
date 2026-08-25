@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -38,15 +39,15 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
 
     private XRechnung() { }
 
-    private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, IResource>() {
-        { TransformerId.En16931Ubl, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-UBL-validation.xslt") },
-        { TransformerId.En16931Cii, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-CII-validation.xslt") },
-        { TransformerId.XRechnungUbl, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-UBL-validation.xsl") },
-        { TransformerId.XRechnungCii, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-CII-validation.xsl") },
-        { TransformerId.UblToIr, new EmbeddedResource("IR/ubl2ir.xslt") },
-        { TransformerId.CiiToIr, new EmbeddedResource("IR/cii2ir.xslt") },
-        { TransformerId.IrToUbl, new EmbeddedResource("IR/ir2ubl.xslt") },
-        { TransformerId.IrToCii, new EmbeddedResource("IR/ir2cii.xslt") },
+    private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, string>() {
+        { TransformerId.En16931Ubl, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/En16931/EN16931-UBL-validation.xslt" },
+        { TransformerId.En16931Cii, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/En16931/EN16931-CII-validation.xslt" },
+        { TransformerId.XRechnungUbl, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/XRechnung/XRechnung-UBL-validation.xsl" },
+        { TransformerId.XRechnungCii, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/XRechnung/XRechnung-CII-validation.xsl" },
+        { TransformerId.UblToIr, $"{AppContext.BaseDirectory}/IR/ubl2ir.xslt" },
+        { TransformerId.CiiToIr, $"{AppContext.BaseDirectory}/IR/cii2ir.xslt" },
+        { TransformerId.IrToUbl, $"{AppContext.BaseDirectory}/IR/ir2ubl.xslt" },
+        { TransformerId.IrToCii, $"{AppContext.BaseDirectory}/IR/ir2cii.xslt" },
     });
 
     Identifier ISpecificationValidator.SpecificationIdentifier { get => SpecificationIdentifier; }
@@ -174,15 +175,15 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
 
     private XRechnungExtension() { }
 
-    private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, IResource>() {
-        { TransformerId.En16931Ubl, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-UBL-validation.xslt") },
-        { TransformerId.En16931Cii, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-CII-validation.xslt") },
-        { TransformerId.XRechnungUbl, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-UBL-validation.xsl") },
-        { TransformerId.XRechnungCii, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-CII-validation.xsl") },
-        { TransformerId.UblToIr, new EmbeddedResource("IR/XRechnungExtension/ubl2ir.xslt") },
-        { TransformerId.CiiToIr, new EmbeddedResource("IR/cii2ir.xslt") },
-        { TransformerId.IrToUbl, new EmbeddedResource("IR/XRechnungExtension/ir2ubl.xslt") },
-        { TransformerId.IrToCii, new EmbeddedResource("IR/ir2cii.xslt") },
+    private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, string>() {
+        { TransformerId.En16931Ubl, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/En16931/EN16931-UBL-validation.xslt" },
+        { TransformerId.En16931Cii, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/En16931/EN16931-CII-validation.xslt" },
+        { TransformerId.XRechnungUbl, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/XRechnung/XRechnung-UBL-validation.xsl" },
+        { TransformerId.XRechnungCii, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/XRechnung/XRechnung-CII-validation.xsl" },
+        { TransformerId.UblToIr, $"{AppContext.BaseDirectory}/IR/XRechnungExtension/ubl2ir.xslt" },
+        { TransformerId.CiiToIr, $"{AppContext.BaseDirectory}/IR/cii2ir.xslt" },
+        { TransformerId.IrToUbl, $"{AppContext.BaseDirectory}/IR/XRechnungExtension/ir2ubl.xslt" },
+        { TransformerId.IrToCii, $"{AppContext.BaseDirectory}/IR/ir2cii.xslt" },
     });
 
     Identifier ISpecificationValidator.SpecificationIdentifier { get => SpecificationIdentifier; }
@@ -344,15 +345,15 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
 
     private XRechnungCvd() { }
 
-    private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, IResource>() {
-        { TransformerId.En16931Ubl, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-UBL-validation.xslt") },
-        { TransformerId.En16931Cii, new EmbeddedResource("En16931.Resources.Extern/En16931/EN16931-CII-validation.xslt") },
-        { TransformerId.XRechnungUbl, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-UBL-validation.xsl") },
-        { TransformerId.XRechnungCii, new EmbeddedResource("En16931.Resources.Extern/XRechnung/XRechnung-CII-validation.xsl") },
-        { TransformerId.UblToIr, new EmbeddedResource("IR/ubl2ir.xslt") },
-        { TransformerId.CiiToIr, new EmbeddedResource("IR/cii2ir.xslt") },
-        { TransformerId.IrToUbl, new EmbeddedResource("IR/ir2ubl.xslt") },
-        { TransformerId.IrToCii, new EmbeddedResource("IR/ir2cii.xslt") },
+    private readonly TransformerSet<TransformerId> _transformers = new(new Dictionary<TransformerId, string>() {
+        { TransformerId.En16931Ubl, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/En16931/EN16931-UBL-validation.xslt" },
+        { TransformerId.En16931Cii, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/En16931/EN16931-CII-validation.xslt" },
+        { TransformerId.XRechnungUbl, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/XRechnung/XRechnung-UBL-validation.xsl" },
+        { TransformerId.XRechnungCii, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/XRechnung/XRechnung-CII-validation.xsl" },
+        { TransformerId.UblToIr, $"{AppContext.BaseDirectory}/IR/ubl2ir.xslt" },
+        { TransformerId.CiiToIr, $"{AppContext.BaseDirectory}/IR/cii2ir.xslt" },
+        { TransformerId.IrToUbl, $"{AppContext.BaseDirectory}/IR/ir2ubl.xslt" },
+        { TransformerId.IrToCii, $"{AppContext.BaseDirectory}/IR/ir2cii.xslt" },
     });
 
     Identifier ISpecificationValidator.SpecificationIdentifier { get => SpecificationIdentifier; }
