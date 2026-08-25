@@ -21,9 +21,13 @@
     <ItemGroup>
       <TestResources Include="..\Tests.Resources\**\*.*" />
       <ExternTestResources Include="..\Tests.Resources.Extern\**\*.*" />
+      <ExternResources Include="..\En16931.Resources.Extern\**\*.*" />
+      <IRResources Include="..\IR\**\*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(TestResources)" DestinationFolder="$(OutDir)\Tests.Resources\%(RecursiveDir)" />
     <Copy SourceFiles="@(ExternTestResources)" DestinationFolder="$(OutDir)\Tests.Resources.Extern\%(RecursiveDir)" />
+    <Copy SourceFiles="@(ExternResources)" DestinationFolder="$(OutDir)\En16931.Resources.Extern\%(RecursiveDir)" />
+    <Copy SourceFiles="@(IRResources)" DestinationFolder="$(OutDir)\IR\%(RecursiveDir)" />
   </Target>
 
 </Project>

@@ -16,7 +16,7 @@ public class TransformerSet<K> where K : notnull
 {
     private readonly ImmutableDictionary<K, Transformer> _transformers;
 
-    public TransformerSet(IDictionary<K, IResource> transformers)
+    public TransformerSet(IDictionary<K, string> transformers)
     {
         _transformers = transformers
             .Select(kvp => KeyValuePair.Create(kvp.Key, new Transformer(kvp.Value)))
@@ -45,13 +45,11 @@ public class Transformer
 
     private readonly XsltExecutable _executable;
 
-    public Transformer(IResource resource)
+    public Transformer(string resource)
     {
         Assert.ArgIsNotNull(resource);
 
-        using Stream stream = resource.Open();
-
-        _executable = _xsltCompiler.Compile(stream);
+        _executable = _xsltCompiler.Compile(new Uri(new FileInfo(resource).FullName));
     }
 
     public void Transform(XDocument doc, XmlWriter writer, string? initialMode = null)
@@ -78,88 +76,5 @@ public class Transformer
         transformer.GlobalContextItem = xdm;
 
         transformer.ApplyTemplates(xdm, destination);
-    }
-}
-
-public interface IResource
-{
-    public Stream Open();
-}
-
-public readonly record struct EmbeddedResource : IResource
-{
-    public required Assembly Assembly
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        init
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
-
-    public required string Name
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        init
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
-
-    [SetsRequiredMembers]
-    public EmbeddedResource(string name) : this(typeof(EmbeddedResource).Assembly, name) { }
-
-    [SetsRequiredMembers]
-    public EmbeddedResource(Assembly assembly, string name)
-    {
-        Assembly = assembly;
-        Name = name;
-    }
-
-    public Stream Open()
-    {
-        Stream? result = Assembly.GetManifestResourceStream(Name);
-
-        Assert.IsNotNull(result);
-
-        return result!;
-    }
-}
-
-public readonly record struct FileResource : IResource
-{
-    public required string Path
-    {
-        get
-        {
-            Assert.IsNotNull(field);
-            return field;
-        }
-        init
-        {
-            Assert.ArgIsNotNull(value);
-            field = value;
-        }
-    }
-
-    [SetsRequiredMembers]
-    public FileResource(string path)
-    {
-        Path = path;
-    }
-
-    public Stream Open()
-    {
-        return File.OpenRead(Path);
     }
 }
