@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using Build;
 using static Build.Constants;
 
-Command downloadW3Schemas = new("w3", "Download schmema files from W3.");
-
 Command downloadUblSchema = new("ubl", "Download UBL 2.1 schema files.");
 
 Command downloadEn16931Schematron = new("en16931", "Download schematron files with EN16931 rules.");
@@ -24,7 +22,6 @@ Command downloadAll = new("all", "Download all external resources.");
 
 Command download = new("download", "Download external resources.");
 
-download.Subcommands.Add(downloadW3Schemas);
 download.Subcommands.Add(downloadUblSchema);
 download.Subcommands.Add(downloadEn16931Schematron);
 download.Subcommands.Add(downloadXRechnungSchematron);
@@ -74,7 +71,6 @@ RootCommand cmd = new("Build commands for the En16931 project.");
 cmd.Subcommands.Add(download);
 cmd.Subcommands.Add(install);
 
-downloadW3Schemas.SetAction(DownloadW3Schemas);
 downloadUblSchema.SetAction(DownloadUblSchema);
 downloadEn16931Schematron.SetAction(DownloadEn16931Schematron);
 downloadXRechnungSchematron.SetAction(DownloadXRechnungSchematron);
@@ -90,29 +86,11 @@ cmd.Parse(args).Invoke();
 
 async Task DownloadAll(ParseResult args)
 {
-    await DownloadW3Schemas(args);
     await DownloadUblSchema(args);
     await DownloadEn16931Schematron(args);
     await DownloadXRechnungSchematron(args);
     await DownloadPeppolBisBillingSchematron(args);
     await DownloadSchXslt2(args);
-}
-
-async Task DownloadW3Schemas(ParseResult args)
-{
-    using HttpClient client = new();
-
-    string url = "https://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd";
-
-    using HttpResponseMessage response = await client.GetAsync(url);
-
-    response.EnsureSuccessStatusCode();
-
-    string content = await response.Content.ReadAsStringAsync();
-
-    File.WriteAllText($"{BaseResourceDir}/W3/xmldsig-core-schema.xsd", content);
-
-    Console.WriteLine($"Successfully downloaded W3 schemas.");
 }
 
 async Task DownloadUblSchema(ParseResult args)
