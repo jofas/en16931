@@ -32,14 +32,28 @@ download.Subcommands.Add(downloadPeppolBisBillingSchematron);
 download.Subcommands.Add(downloadSchXslt2);
 download.Subcommands.Add(downloadAll);
 
-Argument<string> ciiZipFileArgument = new("file")
+Argument<string> ciiD16bZipFileArgument = new("file")
 {
     Description = "Zip Archive downloaded from https://unece.org/DAM/cefact/xml_schemas/D16B_SCRDM__Subset__CII.zip.",
 };
 
-Command installCiiSchema = new("cii", "Install CII D16B schema files from Zip Archive downloaded from https://unece.org/DAM/cefact/xml_schemas/D16B_SCRDM__Subset__CII.zip.") {
-    ciiZipFileArgument,
+Command installCiiD16b = new("d16b", "Install CII D16B schema files from Zip Archive downloaded from https://unece.org/DAM/cefact/xml_schemas/D16B_SCRDM__Subset__CII.zip.") {
+    ciiD16bZipFileArgument,
 };
+
+Argument<string> ciiD22bZipFileArgument = new("file")
+{
+    Description = "Zip Archive downloaded from https://unece.org/sites/default/files/2025-01/XMLSchemas-D22B_0.zip.",
+};
+
+Command installCiiD22b = new("d22b", "Install CII D22B schema files from Zip Archive downloaded from https://unece.org/sites/default/files/2025-01/XMLSchemas-D22B_0.zip.") {
+    ciiD22bZipFileArgument,
+};
+
+Command installCii = new("cii", "Install CII schemas.");
+
+installCii.Subcommands.Add(installCiiD16b);
+installCii.Subcommands.Add(installCiiD22b);
 
 Argument<string> facturXZipFileArgument = new("file")
 {
@@ -52,7 +66,7 @@ Command installFacturX = new("factur-x", "Install Factur-X files from Zip Archiv
 
 Command install = new("install", "Install external resources.");
 
-install.Subcommands.Add(installCiiSchema);
+install.Subcommands.Add(installCii);
 install.Subcommands.Add(installFacturX);
 
 RootCommand cmd = new("Build commands for the En16931 project.");
@@ -68,7 +82,8 @@ downloadPeppolBisBillingSchematron.SetAction(DownloadPeppolBisBillingSchematron)
 downloadSchXslt2.SetAction(DownloadSchXslt2);
 downloadAll.SetAction(DownloadAll);
 
-installCiiSchema.SetAction(InstallCiiSchema);
+installCiiD16b.SetAction(InstallCiiD16b);
+installCiiD22b.SetAction(InstallCiiD22b);
 installFacturX.SetAction(InstallFacturX);
 
 cmd.Parse(args).Invoke();
@@ -281,11 +296,11 @@ async Task DownloadSchXslt2(ParseResult args)
     Console.WriteLine($"Successfully downloaded SchXslt2 compiler.");
 }
 
-void InstallCiiSchema(ParseResult args)
+void InstallCiiD16b(ParseResult args)
 {
-    string archive = args.GetRequiredValue(ciiZipFileArgument);
+    string archive = args.GetRequiredValue(ciiD16bZipFileArgument);
 
-    DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Install_Cii_Schema_");
+    DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Install_Cii_D16b_");
 
     ZipFile.ExtractToDirectory(archive, temp.FullName);
 
@@ -305,7 +320,7 @@ void InstallCiiSchema(ParseResult args)
     {
         File.Copy(
             file,
-            Path.Combine(BaseResourceDir, "Cii", Path.GetFileName(file)),
+            Path.Combine(BaseResourceDir, "Cii/D16b", Path.GetFileName(file)),
             overwrite: true
         );
     }
@@ -313,6 +328,65 @@ void InstallCiiSchema(ParseResult args)
     Directory.Delete(temp.FullName, recursive: true);
 
     Console.WriteLine($"Successfully installed CII D16B schema files.");
+}
+
+void InstallCiiD22b(ParseResult args)
+{
+    string archive = args.GetRequiredValue(ciiD22bZipFileArgument);
+
+    DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Install_Cii_D22b_");
+
+    ZipFile.ExtractToDirectory(archive, temp.FullName);
+
+    string codelistsDir = $"{temp.FullName}/10DEC22/uncefact/codelist/standard/";
+
+    foreach (string file in Directory.GetFiles(codelistsDir))
+    {
+        File.Copy(
+            file,
+            Path.Combine(BaseResourceDir, "Cii/D22b/codelist/standard", Path.GetFileName(file)),
+            overwrite: true
+        );
+    }
+
+    string identifierDir = $"{temp.FullName}/10DEC22/uncefact/identifierlist/standard/";
+
+    foreach (string file in Directory.GetFiles(identifierDir))
+    {
+        File.Copy(
+            file,
+            Path.Combine(BaseResourceDir, "Cii/D22b/identifierlist/standard", Path.GetFileName(file)),
+            overwrite: true
+        );
+    }
+
+    File.Copy(
+        $"{temp.FullName}/10DEC22/uncefact/data/standard/CrossIndustryInvoice_24p1.xsd",
+        $"{BaseResourceDir}/Cii/D22b/data/standard/CrossIndustryInvoice_24p1.xsd",
+        overwrite: true
+    );
+
+    File.Copy(
+        $"{temp.FullName}/10DEC22/uncefact/data/standard/ReusableAggregateBusinessInformationEntity_32p0.xsd",
+        $"{BaseResourceDir}/Cii/D22b/data/standard/ReusableAggregateBusinessInformationEntity_32p0.xsd",
+        overwrite: true
+    );
+
+    File.Copy(
+        $"{temp.FullName}/10DEC22/uncefact/data/standard/UnqualifiedDataType_32p0.xsd",
+        $"{BaseResourceDir}/Cii/D22b/data/standard/UnqualifiedDataType_32p0.xsd",
+        overwrite: true
+    );
+
+    File.Copy(
+        $"{temp.FullName}/10DEC22/uncefact/data/standard/QualifiedDataType_32p0.xsd",
+        $"{BaseResourceDir}/Cii/D22b/data/standard/QualifiedDataType_32p0.xsd",
+        overwrite: true
+    );
+
+    Directory.Delete(temp.FullName, recursive: true);
+
+    Console.WriteLine($"Successfully installed CII D22B schema files.");
 }
 
 void InstallFacturX(ParseResult args)
