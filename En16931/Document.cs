@@ -88,9 +88,11 @@ static class Xsd
 
         // Schema is DTD annotated, which is why we have to add it like this,
         // instead of adding the file directly with `SchemaSet.Add`
-        using Stream w3XmlSigSchemaFile = File.OpenRead($"{AppContext.BaseDirectory}/En16931.Resources.Extern/W3/xmldsig-core-schema.xsd");
-        XmlSchema w3XmlSigSchema = XmlSchema.Read(w3XmlSigSchemaFile, null)!;
-        SchemaSet.Add(w3XmlSigSchema);
+        using XmlReader w3XmlSigSchemaFile = XmlReader.Create(
+            $"{AppContext.BaseDirectory}/En16931.Resources.Extern/Ubl/common/UBL-xmldsig-core-schema-2.1.xsd",
+            new() { DtdProcessing = DtdProcessing.Ignore }
+        );
+        SchemaSet.Add(null, w3XmlSigSchemaFile);
 
         SchemaSet.Compile();
     }
