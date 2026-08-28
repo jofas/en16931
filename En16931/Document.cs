@@ -84,7 +84,7 @@ static class Xsd
 
         SchemaSet.Add(null, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/Ubl/maindoc/UBL-Invoice-2.1.xsd");
         SchemaSet.Add(null, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
-        SchemaSet.Add(null, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/Cii/CrossIndustryInvoice_100pD16B.xsd");
+        SchemaSet.Add(null, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/Cii/D16b/CrossIndustryInvoice_100pD16B.xsd");
 
         // Schema is DTD annotated, which is why we have to add it like this,
         // instead of adding the file directly with `SchemaSet.Add`
