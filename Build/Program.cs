@@ -40,10 +40,10 @@ Command installCiiD16b = new("d16b", "Install CII D16B schema files from Zip Arc
 
 Argument<string> ciiD22bZipFileArgument = new("file")
 {
-    Description = "Zip Archive downloaded from https://unece.org/sites/default/files/2025-01/XMLSchemas-D22B_0.zip.",
+    Description = "Zip Archive downloaded from https://unece.org/sites/default/files/2025-07/CII_D22B.zip.",
 };
 
-Command installCiiD22b = new("d22b", "Install CII D22B schema files from Zip Archive downloaded from https://unece.org/sites/default/files/2025-01/XMLSchemas-D22B_0.zip.") {
+Command installCiiD22b = new("d22b", "Install CII D22B schema files from Zip Archive downloaded from https://unece.org/sites/default/files/2025-07/CII_D22B.zip.") {
     ciiD22bZipFileArgument,
 };
 
@@ -316,51 +316,26 @@ void InstallCiiD22b(ParseResult args)
 
     ZipFile.ExtractToDirectory(archive, temp.FullName);
 
-    string codelistsDir = $"{temp.FullName}/10DEC22/uncefact/codelist/standard/";
+    string schemaZip = Path.Combine(
+        temp.FullName,
+        "CII_D22B/XSD/uncoupled/Schema.zip"
+    );
 
-    foreach (string file in Directory.GetFiles(codelistsDir))
+    ZipFile.ExtractToDirectory(schemaZip, temp.FullName);
+
+    string schemaDir = Path.Combine(
+        temp.FullName,
+        "uncefact"
+    );
+
+    foreach (string file in Directory.GetFiles(schemaDir))
     {
         File.Copy(
             file,
-            Path.Combine(BaseResourceDir, "Cii/D22b/codelist/standard", Path.GetFileName(file)),
+            Path.Combine(BaseResourceDir, "Cii/D22b", Path.GetFileName(file)),
             overwrite: true
         );
     }
-
-    string identifierDir = $"{temp.FullName}/10DEC22/uncefact/identifierlist/standard/";
-
-    foreach (string file in Directory.GetFiles(identifierDir))
-    {
-        File.Copy(
-            file,
-            Path.Combine(BaseResourceDir, "Cii/D22b/identifierlist/standard", Path.GetFileName(file)),
-            overwrite: true
-        );
-    }
-
-    File.Copy(
-        $"{temp.FullName}/10DEC22/uncefact/data/standard/CrossIndustryInvoice_24p1.xsd",
-        $"{BaseResourceDir}/Cii/D22b/data/standard/CrossIndustryInvoice_24p1.xsd",
-        overwrite: true
-    );
-
-    File.Copy(
-        $"{temp.FullName}/10DEC22/uncefact/data/standard/ReusableAggregateBusinessInformationEntity_32p0.xsd",
-        $"{BaseResourceDir}/Cii/D22b/data/standard/ReusableAggregateBusinessInformationEntity_32p0.xsd",
-        overwrite: true
-    );
-
-    File.Copy(
-        $"{temp.FullName}/10DEC22/uncefact/data/standard/UnqualifiedDataType_32p0.xsd",
-        $"{BaseResourceDir}/Cii/D22b/data/standard/UnqualifiedDataType_32p0.xsd",
-        overwrite: true
-    );
-
-    File.Copy(
-        $"{temp.FullName}/10DEC22/uncefact/data/standard/QualifiedDataType_32p0.xsd",
-        $"{BaseResourceDir}/Cii/D22b/data/standard/QualifiedDataType_32p0.xsd",
-        overwrite: true
-    );
 
     Directory.Delete(temp.FullName, recursive: true);
 
