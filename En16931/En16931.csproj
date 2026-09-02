@@ -11,7 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Transient dependency of SaxonCS-HE; added here to avoid vulnerability warnings -->
+    <PackageReference Include="AngleSharp" Version="1.7.1" />
     <PackageReference Include="SaxonCS-HE" Version="13.0.0" />
+    <!-- Transient dependency of SaxonCS-HE; added here to avoid vulnerability warnings -->
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.11" />
   </ItemGroup>
 
   <ItemGroup>
