@@ -10,6 +10,41 @@ namespace Tests;
 public class SchemaTests
 {
     [Fact]
+    public void InvalidXml()
+    {
+        string notXml = """
+            <Invoice>
+            </NotInvoice>
+            """;
+
+        using StringReader reader = new(notXml);
+
+        Assert.Throws<XmlException>(() =>
+        {
+            Document document = new(reader);
+        });
+    }
+
+    [Fact]
+    public void UnsupportedSchema()
+    {
+        string xml = """
+            <?xml version="1.0" encoding="UTF-16"?>
+            <Invoice>
+            </Invoice>
+            """;
+
+        using StringReader reader = new(xml);
+
+        Exception e = Assert.Throws<Exception>(() =>
+        {
+            Document document = new(reader);
+        });
+
+        Assert.Equal("Unknown root node: Invoice.", e.Message);
+    }
+
+    [Fact]
     public void UblInvoiceSchemaViolation()
     {
         string xml = """
