@@ -14,7 +14,7 @@ public enum Schema
 {
     UblInvoice,
     UblCreditNote,
-    CiiCrossIndustryInvoice,
+    CiiD16b,
 }
 
 public readonly ref struct Document
@@ -42,7 +42,7 @@ public readonly ref struct Document
         {
             XName n when n == _ublInvoice + "Invoice" => Schema.UblInvoice,
             XName n when n == _ublCreditNote + "CreditNote" => Schema.UblCreditNote,
-            XName n when n == _cii + "CrossIndustryInvoice" => Schema.CiiCrossIndustryInvoice,
+            XName n when n == _cii + "CrossIndustryInvoice" => Schema.CiiD16b,
             _ => throw new System.Exception($"Unknown root node: {root.Name}."),
         };
 
@@ -51,7 +51,7 @@ public readonly ref struct Document
             Schema.UblInvoice or Schema.UblCreditNote => root
                 .Element(_ublCbc + "CustomizationID")!
                 .Value,
-            Schema.CiiCrossIndustryInvoice => root
+            Schema.CiiD16b => root
                 .Element(_cii + "ExchangedDocumentContext")!
                 .Element(_ciiRam + "GuidelineSpecifiedDocumentContextParameter")!
                 .Element(_ciiRam + "ID")!

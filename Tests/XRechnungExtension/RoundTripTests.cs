@@ -13,6 +13,6 @@ public class RoundTripTests
     {
         TestHarness.RoundTrip<UblInvoices, Invoice>(Schema.UblInvoice);
         TestHarness.RoundTrip<UblCreditNotes, Invoice>(Schema.UblCreditNote);
-        TestHarness.RoundTrip<Ciis, Invoice>(Schema.CiiCrossIndustryInvoice);
+        TestHarness.RoundTrip<CiiD16bs, Invoice>(Schema.CiiD16b);
     }
 }

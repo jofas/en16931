@@ -6,7 +6,7 @@ using S = En16931.Specs;
 
 namespace Tests.XRechnungExtension.Invoices;
 
-public partial class Ciis
+public partial class CiiD16bs
 {
     public static readonly Invoice Invoice1 = new Invoice
     {

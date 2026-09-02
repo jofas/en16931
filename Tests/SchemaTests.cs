@@ -9,6 +9,7 @@ namespace Tests;
 
 public class SchemaTests
 {
+    // TODO: add test for D22b <-> D16b documents (
     [Fact]
     public void UblInvoiceSchemaViolation()
     {

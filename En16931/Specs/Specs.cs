@@ -74,7 +74,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         TransformerId transformerId = doc.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.UblToIr,
-            Schema.CiiCrossIndustryInvoice => TransformerId.CiiToIr,
+            Schema.CiiD16b => TransformerId.CiiToIr,
             _ => throw new UnreachableException(),
         };
 
@@ -98,7 +98,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiCrossIndustryInvoice => TransformerId.IrToCii,
+            Schema.CiiD16b => TransformerId.IrToCii,
             _ => throw new UnreachableException(),
         };
 
@@ -119,7 +119,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         TransformerId transformerId = doc.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.En16931Ubl,
-            Schema.CiiCrossIndustryInvoice => TransformerId.En16931Cii,
+            Schema.CiiD16b => TransformerId.En16931Cii,
             _ => throw new UnreachableException(),
         };
 
@@ -139,7 +139,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         TransformerId transformerId = doc.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.XRechnungUbl,
-            Schema.CiiCrossIndustryInvoice => TransformerId.XRechnungCii,
+            Schema.CiiD16b => TransformerId.XRechnungCii,
             _ => throw new UnreachableException(),
         };
 
@@ -247,7 +247,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         TransformerId transformerId = doc.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.UblToIr,
-            Schema.CiiCrossIndustryInvoice => TransformerId.CiiToIr,
+            Schema.CiiD16b => TransformerId.CiiToIr,
             _ => throw new UnreachableException(),
         };
 
@@ -268,7 +268,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiCrossIndustryInvoice => TransformerId.IrToCii,
+            Schema.CiiD16b => TransformerId.IrToCii,
             _ => throw new UnreachableException(),
         };
 
@@ -289,7 +289,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         TransformerId transformerId = doc.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.En16931Ubl,
-            Schema.CiiCrossIndustryInvoice => TransformerId.En16931Cii,
+            Schema.CiiD16b => TransformerId.En16931Cii,
             _ => throw new UnreachableException(),
         };
 
@@ -309,7 +309,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         TransformerId transformerId = doc.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.XRechnungUbl,
-            Schema.CiiCrossIndustryInvoice => TransformerId.XRechnungCii,
+            Schema.CiiD16b => TransformerId.XRechnungCii,
             _ => throw new UnreachableException(),
         };
 
@@ -398,7 +398,7 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         TransformerId transformerId = doc.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.UblToIr,
-            Schema.CiiCrossIndustryInvoice => TransformerId.CiiToIr,
+            Schema.CiiD16b => TransformerId.CiiToIr,
             _ => throw new UnreachableException(),
         };
 
@@ -419,7 +419,7 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiCrossIndustryInvoice => TransformerId.IrToCii,
+            Schema.CiiD16b => TransformerId.IrToCii,
             _ => throw new UnreachableException(),
         };
 
@@ -440,7 +440,7 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         TransformerId transformerId = doc.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.En16931Ubl,
-            Schema.CiiCrossIndustryInvoice => TransformerId.En16931Cii,
+            Schema.CiiD16b => TransformerId.En16931Cii,
             _ => throw new UnreachableException(),
         };
 
@@ -460,7 +460,7 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         TransformerId transformerId = doc.Schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.XRechnungUbl,
-            Schema.CiiCrossIndustryInvoice => TransformerId.XRechnungCii,
+            Schema.CiiD16b => TransformerId.XRechnungCii,
             _ => throw new UnreachableException(),
         };
 

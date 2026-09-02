@@ -23,9 +23,9 @@ public class UnitTests
     }
 
     [Theory]
-    [InlineData("Tests.Resources/XRechnungExtension/Cii/Success")]
-    public void CiisTest(string testsLocation)
+    [InlineData("Tests.Resources/XRechnungExtension/CiiD16b/Success")]
+    public void CiiD16bsTest(string testsLocation)
     {
-        TestHarness.UnitTest<Ciis, Invoice>(testsLocation);
+        TestHarness.UnitTest<CiiD16bs, Invoice>(testsLocation);
     }
 }

@@ -1,13 +1,14 @@
 using System;
-using En16931.Model;
 using En16931.Model.Primitives;
+using En16931.Model.XRechnungExtension;
+using M = En16931.Model;
 using S = En16931.Specs;
 
-namespace Tests.XRechnung.Invoices;
+namespace Tests.XRechnungExtension.Invoices;
 
-public partial class Ciis
+public partial class CiiD16bs
 {
-    public static readonly Invoice<S.XRechnung> Invoice1 = new Invoice<S.XRechnung>
+    public static readonly Invoice Invoice2 = new Invoice
     {
         InvoiceNumber = new Identifier("1234567"),
         InvoiceIssueDate = new Date(new DateTime(2018, 4, 13)),
@@ -29,40 +30,40 @@ public partial class Ciis
         BuyerAccountingReference = new Text("Buchungscode1"),
         PaymentTerms = new Text("Beschreibung 1: Bitte überweisen Sie bis zum 13.04.2018 auf das unten aufgeführte Konto."),
         InvoiceNotes = [
-            new InvoiceNote {
+            new M.InvoiceNote {
                 InvoiceNoteSubjectCode = new Code("AAC"),
                 Note = new Text("Invoice Note Description"),
             },
-            new InvoiceNote {
+            new M.InvoiceNote {
                 InvoiceNoteSubjectCode = new Code("AAC"),
                 Note = new Text("Invoice Note Description 2"),
             },
         ],
-        ProcessControl = new ProcessControl<S.XRechnung>
+        ProcessControl = new M.ProcessControl<S.XRechnungExtension>
         {
             BusinessProcessType = new Text("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"),
         },
         PrecedingInvoiceReferences = [
-            new PrecedingInvoiceReference {
+            new M.PrecedingInvoiceReference {
                 Reference = new DocumentReference("PIR1234567890"),
                 PrecedingInvoiceIssueDate = new Date(new DateTime(2018, 2, 4)),
             },
         ],
-        Seller = new Seller
+        Seller = new M.Seller
         {
             SellerName = new Text("[Seller name]"),
             SellerTradingName = new Text("[Seller trading name]"),
             SellerIdentifiers = [
                 new Identifier("9876543217894897438"),
                 new Identifier("748387437438"),
-                new Identifier("987654321", "0088")
+                new Identifier("987654321", "XR01")
             ],
-            SellerLegalRegistrationIdentifier = new Identifier("123456789", "0088"),
+            SellerLegalRegistrationIdentifier = new Identifier("123456789", "XR02"),
             SellerVatIdentifier = new Identifier("ATU123456789"),
             SellerTaxRegistrationIdentifier = new Identifier("123/456/789"),
             SellerAdditionalLegalInformation = new Text("Amtsgericht […], Geschäftsführer: […], Sitz der Gesellschaft […], Aufsichtsratvorsitzender: […]"),
-            SellerElectronicAddress = new Identifier("rechnungsausgang@test.com", "EM"),
-            SellerPostalAddress = new SellerPostalAddress
+            SellerElectronicAddress = new Identifier("123456789", "XR03"),
+            SellerPostalAddress = new M.SellerPostalAddress
             {
                 SellerAddressLine1 = new Text("[Seller address line 1]"),
                 SellerAddressLine2 = new Text("[Seller address line 2]"),
@@ -72,22 +73,22 @@ public partial class Ciis
                 SellerCountrySubdivision = new Text("Bayern"),
                 SellerCountryCode = new Code("DE"),
             },
-            SellerContact = new SellerContact
+            SellerContact = new M.SellerContact
             {
                 SellerContactPoint = new Text("Tim Tester"),
                 SellerContactTelephoneNumber = new Text("012 3456789"),
                 SellerContactEmailAddress = new Text("tim.tester@test.com"),
             },
         },
-        Buyer = new Buyer
+        Buyer = new M.Buyer
         {
             BuyerName = new Text("[Buyer name]"),
             BuyerTradingName = new Text("[Buyer trading name]"),
-            BuyerIdentifier = new Identifier("138"),
-            BuyerLegalRegistrationIdentifier = new Identifier("90000000-03083-72", "0204"),
+            BuyerIdentifier = new Identifier("138", "XR01"),
+            BuyerLegalRegistrationIdentifier = new Identifier("90000000-03083-72", "XR02"),
             BuyerVatIdentifier = new Identifier("DE12345ABC"),
-            BuyerElectronicAddress = new Identifier("rechnungseingang@test.de", "EM"),
-            BuyerPostalAddress = new BuyerPostalAddress
+            BuyerElectronicAddress = new Identifier("123456789", "XR03"),
+            BuyerPostalAddress = new M.BuyerPostalAddress
             {
                 BuyerAddressLine1 = new Text("[Buyer address line 1]"),
                 BuyerAddressLine2 = new Text("[Buyer address line 2]"),
@@ -97,24 +98,24 @@ public partial class Ciis
                 BuyerCountrySubdivision = new Text("Bayern"),
                 BuyerCountryCode = new Code("DE"),
             },
-            BuyerContact = new BuyerContact
+            BuyerContact = new M.BuyerContact
             {
                 BuyerContactPoint = new Text("Tina Tester"),
                 BuyerContactTelephoneNumber = new Text("0800 123456"),
                 BuyerContactEmailAddress = new Text("tester@test.de"),
             },
         },
-        Payee = new Payee
+        Payee = new M.Payee
         {
             PayeeName = new Text("[Payee name]"),
-            PayeeIdentifier = new Identifier("74"),
-            PayeeLegalRegistrationIdentifier = new Identifier("90000000-03083-72", "0204"),
+            PayeeIdentifier = new Identifier("74", "XR01"),
+            PayeeLegalRegistrationIdentifier = new Identifier("90000000-03083-72", "XR02"),
         },
-        SellerTaxRepresentativeParty = new SellerTaxRepresentativeParty
+        SellerTaxRepresentativeParty = new M.SellerTaxRepresentativeParty
         {
             SellerTaxRepresentativeName = new Text("[Seller tax representative name]"),
             SellerTaxRepresentativeVatIdentifier = new Identifier("DE124567"),
-            SellerTaxRepresentativePostalAddress = new SellerTaxRepresentativePostalAddress
+            SellerTaxRepresentativePostalAddress = new M.SellerTaxRepresentativePostalAddress
             {
                 TaxRepresentativeAddressLine1 = new Text("[Seller tax representative address line 1]"),
                 TaxRepresentativeAddressLine2 = new Text("[Seller tax representative address line 2]"),
@@ -125,17 +126,17 @@ public partial class Ciis
                 TaxRepresentativeCountryCode = new Code("DE"),
             },
         },
-        DeliveryInformation = new DeliveryInformation
+        DeliveryInformation = new M.DeliveryInformation
         {
             DeliverToPartyName = new Text("[Deliver to party name]"),
-            DeliverToLocationIdentifier = new Identifier("68"),
+            DeliverToLocationIdentifier = new Identifier("68", "XR02"),
             ActualDeliveryDate = new Date(new DateTime(2018, 4, 13)),
-            InvoicingPeriod = new InvoicingPeriod
+            InvoicingPeriod = new M.InvoicingPeriod
             {
                 InvoicingPeriodStartDate = new Date(new DateTime(2018, 4, 13)),
                 InvoicingPeriodEndDate = new Date(new DateTime(2018, 4, 13)),
             },
-            DeliverToAddress = new DeliverToAddress
+            DeliverToAddress = new M.DeliverToAddress
             {
                 DeliverToAddressLine1 = new Text("[Deliver to street]"),
                 DeliverToAddressLine2 = new Text("4. OG"),
@@ -146,13 +147,13 @@ public partial class Ciis
                 DeliverToCountryCode = new Code("DE"),
             },
         },
-        PaymentInstructions = new PaymentInstructions
+        PaymentInstructions = new M.PaymentInstructions
         {
             PaymentMeansTypeCode = new Code("58"),
             PaymentMeansText = new Text("[Payment means text]"),
             RemittanceInformation = new Text("Deb. 12345 / Fact. 9876543"),
             CreditTransfers = [
-                new CreditTransfer {
+                new M.CreditTransfer {
                     PaymentAccountIdentifier = new Identifier("DE75512108001245126199"),
                     PaymentAccountName = new Text("[Payment account name]"),
                     PaymentServiceProviderIdentifier = new Identifier("[BIC]"),
@@ -162,7 +163,7 @@ public partial class Ciis
             DirectDebit = null,
         },
         DocumentLevelAllowances = [
-            new DocumentLevelAllowance {
+            new M.DocumentLevelAllowance {
                 DocumentLevelAllowanceAmount = new Amount(10m),
                 DocumentLevelAllowanceBaseAmount = new Amount(100m),
                 DocumentLevelAllowancePercentage = new Percentage(10m),
@@ -171,7 +172,7 @@ public partial class Ciis
                 DocumentLevelAllowanceReason = new Text("Fixed long term"),
                 DocumentLevelAllowanceReasonCode = new Code("102"),
             },
-            new DocumentLevelAllowance {
+            new M.DocumentLevelAllowance {
                 DocumentLevelAllowanceAmount = new Amount(10m),
                 DocumentLevelAllowanceBaseAmount = new Amount(100m),
                 DocumentLevelAllowancePercentage = new Percentage(10m),
@@ -182,7 +183,7 @@ public partial class Ciis
             },
         ],
         DocumentLevelCharges = [
-            new DocumentLevelCharge {
+            new M.DocumentLevelCharge {
                 DocumentLevelChargeAmount = new Amount(10m),
                 DocumentLevelChargeBaseAmount = new Amount(100m),
                 DocumentLevelChargePercentage = new Percentage(10m),
@@ -191,7 +192,7 @@ public partial class Ciis
                 DocumentLevelChargeReason = new Text("Testing"),
                 DocumentLevelChargeReasonCode = new Code("TAC"),
             },
-            new DocumentLevelCharge {
+            new M.DocumentLevelCharge {
                 DocumentLevelChargeAmount = new Amount(10m),
                 DocumentLevelChargeBaseAmount = new Amount(100m),
                 DocumentLevelChargePercentage = new Percentage(10m),
@@ -201,7 +202,7 @@ public partial class Ciis
                 DocumentLevelChargeReasonCode = new Code("TAC"),
             },
         ],
-        DocumentTotals = new DocumentTotals
+        DocumentTotals = new M.DocumentTotals
         {
             SumOfInvoiceLineNetAmount = new Amount(10781.25m),
             SumOfAllowancesOnDocumentLevel = new Amount(20m),
@@ -215,7 +216,7 @@ public partial class Ciis
             AmountDueForPayment = new Amount(12829.69m),
         },
         VatBreakdown = [
-            new VatBreakdown {
+            new M.VatBreakdown {
                 VatCategoryTaxableAmount = new Amount(10781.25m),
                 VatCategoryTaxAmount = new Amount(2048.44m),
                 VatCategoryCode = new Code("S"),
@@ -223,7 +224,7 @@ public partial class Ciis
                 VatExemptionReasonText = null,
                 VatExemptionReasonCode = null,
             },
-            new VatBreakdown {
+            new M.VatBreakdown {
                 VatCategoryTaxableAmount = new Amount(0m),
                 VatCategoryTaxAmount = new Amount(0m),
                 VatCategoryCode = new Code("E"),
@@ -233,7 +234,7 @@ public partial class Ciis
             },
         ],
         AdditionalSupportingDocuments = [
-            new AdditionalSupportingDocument {
+            new M.AdditionalSupportingDocument {
                 SupportingDocumentReference = new DocumentReference("01_15_Anhang_01.pdf"),
                 SupportingDocumentDescription = new Text("Aufschlüsselung der einzelnen Leistungspositionen"),
                 ExternalDocumentLocation = new Text("https://xeinkauf.de/xrechnung/"),
@@ -243,7 +244,7 @@ public partial class Ciis
                     "01_15_Anhang_01.pdf"
                 ),
             },
-            new AdditionalSupportingDocument {
+            new M.AdditionalSupportingDocument {
                 SupportingDocumentReference = new DocumentReference("01_15_Anhang_02.pdf"),
                 SupportingDocumentDescription = new Text("Aufschlüsselung der einzelnen Leistungspositionen"),
                 ExternalDocumentLocation = new Text("https://xeinkauf.de/xrechnung/"),
@@ -264,19 +265,19 @@ public partial class Ciis
                 InvoiceLineNetAmount = new Amount(4743.75m),
                 ReferencedPurchaseOrderLineReference = new DocumentReference("6171175.1"),
                 InvoiceLineBuyerAccountingReference = new Text("Konto 1"),
-                InvoiceLinePeriod = new InvoiceLinePeriod {
+                InvoiceLinePeriod = new M.InvoiceLinePeriod {
                     InvoiceLinePeriodStartDate = new Date(new DateTime(2018, 04, 13)),
                     InvoiceLinePeriodEndDate = new Date(new DateTime(2018, 04, 13)),
                 },
                 InvoiceLineAllowances = [
-                    new InvoiceLineAllowance {
+                    new M.InvoiceLineAllowance {
                         InvoiceLineAllowanceAmount = new Amount(20m),
                         InvoiceLineAllowanceBaseAmount = new Amount(200m),
                         InvoiceLineAllowancePercentage = new Percentage(10m),
                         InvoiceLineAllowanceReason = new Text("Fixed long term"),
                         InvoiceLineAllowanceReasonCode = new Code("102"),
                     },
-                    new InvoiceLineAllowance {
+                    new M.InvoiceLineAllowance {
                         InvoiceLineAllowanceAmount = new Amount(20m),
                         InvoiceLineAllowanceBaseAmount = new Amount(200m),
                         InvoiceLineAllowancePercentage = new Percentage(10m),
@@ -285,14 +286,14 @@ public partial class Ciis
                     }
                 ],
                 InvoiceLineCharges = [
-                    new InvoiceLineCharge {
+                    new M.InvoiceLineCharge {
                         InvoiceLineChargeAmount = new Amount(20m),
                         InvoiceLineChargeBaseAmount = new Amount(200m),
                         InvoiceLineChargePercentage = new Percentage(10m),
                         InvoiceLineChargeReason = new Text("Testing"),
                         InvoiceLineChargeReasonCode = new Code("TAC"),
                     },
-                    new InvoiceLineCharge {
+                    new M.InvoiceLineCharge {
                         InvoiceLineChargeAmount = new Amount(20m),
                         InvoiceLineChargeBaseAmount = new Amount(200m),
                         InvoiceLineChargePercentage = new Percentage(10m),
@@ -300,39 +301,40 @@ public partial class Ciis
                         InvoiceLineChargeReasonCode = new Code("TAC"),
                     },
                 ],
-                PriceDetails = new PriceDetails {
+                PriceDetails = new M.PriceDetails {
                     ItemNetPrice = new UnitPriceAmount(158.125m),
                     ItemPriceDiscount = new UnitPriceAmount(10m),
                     ItemGrossPrice = new UnitPriceAmount(168.125m),
                     ItemPriceBaseQuantity = new Quantity(1m),
                     ItemPriceBaseQuantityUnitOfMeasureCode = new Code("XPP"),
                 },
-                LineVatInformation = new LineVatInformation {
+                LineVatInformation = new M.LineVatInformation {
                     InvoicedItemVatCategoryCode = new Code("S"),
                     InvoicedItemVatRate = new Percentage(19m),
                 },
-                ItemInformation = new ItemInformation {
+                ItemInformation = new M.ItemInformation {
                     ItemName = new Text("Beratung"),
                     ItemDescription = new Text("Anforderungsmanagement"),
                     ItemSellersIdentifier = new Identifier("1034"),
                     ItemBuyersIdentifier = new Identifier("5034"),
-                    ItemStandardIdentifier = new Identifier("123456789", "0088"),
+                    ItemStandardIdentifier = new Identifier("123456789", "XR03"),
                     ItemClassificationIdentifiers = [
                         new Identifier("0721-880X", "IB", "88"),
                         new Identifier("0721-880XYZ", "IB", "88"),
                     ],
                     ItemCountryOfOrigin = new Code("DE"),
                     ItemAttributes = [
-                        new ItemAttribute {
+                        new M.ItemAttribute {
                             ItemAttributeName = new Text("[Description]"),
                             ItemAttributeValue = new Text ("[Value]"),
                         },
-                        new ItemAttribute {
+                        new M.ItemAttribute {
                             ItemAttributeName = new Text("[Description 2]"),
                             ItemAttributeValue = new Text("[Value 2]"),
                         },
                     ],
                 },
+                SubInvoiceLines = [],
             },
             new InvoiceLine {
                 InvoiceLineIdentifier = new Identifier("2"),
@@ -346,18 +348,18 @@ public partial class Ciis
                 InvoiceLinePeriod = null,
                 InvoiceLineAllowances = [],
                 InvoiceLineCharges = [],
-                PriceDetails = new PriceDetails {
+                PriceDetails = new M.PriceDetails {
                     ItemNetPrice = new UnitPriceAmount(143.75m),
                     ItemPriceDiscount = null,
                     ItemGrossPrice = null,
                     ItemPriceBaseQuantity = null,
                     ItemPriceBaseQuantityUnitOfMeasureCode = null,
                 },
-                LineVatInformation = new LineVatInformation {
+                LineVatInformation = new M.LineVatInformation {
                     InvoicedItemVatCategoryCode = new Code("S"),
                     InvoicedItemVatRate = new Percentage(19m),
                 },
-                ItemInformation = new ItemInformation {
+                ItemInformation = new M.ItemInformation {
                     ItemName = new Text("Beratung"),
                     ItemDescription = null,
                     ItemSellersIdentifier = null,
@@ -367,8 +369,9 @@ public partial class Ciis
                     ItemCountryOfOrigin = null,
                     ItemAttributes = [],
                 },
+                SubInvoiceLines = [],
             },
         ],
+        ThirdPartyPayments = [],
     };
-
 }
