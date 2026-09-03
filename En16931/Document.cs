@@ -10,14 +10,6 @@ using En16931.Utils;
 
 namespace En16931;
 
-public enum Schema
-{
-    UblInvoice,
-    UblCreditNote,
-    CiiD16b,
-    CiiD22b,
-}
-
 public readonly ref struct Document
 {
     private static XNamespace _ublInvoice = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2";

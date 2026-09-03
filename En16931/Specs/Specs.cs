@@ -75,7 +75,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.UblToIr,
             Schema.CiiD16b => TransformerId.CiiToIr,
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(doc.Schema, "XRechnung.Parse"),
         };
 
         // TODO: have tranformer participate in `Document` API once IR become fully
@@ -122,7 +122,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.En16931Ubl,
             Schema.CiiD16b => TransformerId.En16931Cii,
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(doc.Schema, "XRechnung.Validate"),
         };
 
         SchematronResult result = Svrl.Validate(doc.Doc, _transformers[transformerId]);
@@ -142,7 +142,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.XRechnungUbl,
             Schema.CiiD16b => TransformerId.XRechnungCii,
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(doc.Schema, "XRechnung.Validate"),
         };
 
         SchematronResult result = Svrl.Validate(doc.Doc, _transformers[transformerId]);
@@ -250,7 +250,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.UblToIr,
             Schema.CiiD16b => TransformerId.CiiToIr,
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(doc.Schema, "XRechnungExtension.Parse"),
         };
 
         XDocument ir = _transformers[transformerId].Transform(doc.Doc);
@@ -294,7 +294,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.En16931Ubl,
             Schema.CiiD16b => TransformerId.En16931Cii,
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(doc.Schema, "XRechnungExtension.Validate"),
         };
 
         SchematronResult result = Svrl.Validate(doc.Doc, _transformers[transformerId]);
@@ -314,7 +314,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.XRechnungUbl,
             Schema.CiiD16b => TransformerId.XRechnungCii,
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(doc.Schema, "XRechnungExtension.Validate"),
         };
 
         SchematronResult result = Svrl.Validate(doc.Doc, _transformers[transformerId]);
@@ -403,7 +403,7 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.UblToIr,
             Schema.CiiD16b => TransformerId.CiiToIr,
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(doc.Schema, "XRechnungCvd.Parse"),
         };
 
         XDocument ir = _transformers[transformerId].Transform(doc.Doc);
@@ -447,7 +447,7 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.En16931Ubl,
             Schema.CiiD16b => TransformerId.En16931Cii,
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(doc.Schema, "XRechnungCvd.Validate"),
         };
 
         SchematronResult result = Svrl.Validate(doc.Doc, _transformers[transformerId]);
@@ -467,7 +467,7 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.XRechnungUbl,
             Schema.CiiD16b => TransformerId.XRechnungCii,
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(doc.Schema, "XRechnungCvd.Validate"),
         };
 
         SchematronResult result = Svrl.Validate(doc.Doc, _transformers[transformerId]);
