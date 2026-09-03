@@ -6,8 +6,8 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:ir="urn:todo"
     exclude-result-prefixes="xsl ir"
-    version="1.0">
-  <xsl:template match="/ir:invoice">
+    version="2.0">
+  <xsl:template match="/ir:invoice" mode="#all">
     <rsm:CrossIndustryInvoice>
       <rsm:ExchangedDocumentContext>
         <ram:BusinessProcessSpecifiedDocumentContextParameter>
@@ -1269,22 +1269,7 @@
             </ram:DuePayableAmount>
           </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
           <xsl:if test="exists(ir:preceding-invoice-references/ir:preceding-invoice-reference)">
-            <ram:InvoiceReferencedDocument>
-              <ram:IssuerAssignedID>
-                <!-- bt-25 -->
-                <xsl:value-of select="ir:preceding-invoice-references/ir:preceding-invoice-reference[1]/ir:preceding-invoice-reference"/>
-              </ram:IssuerAssignedID>
-              <xsl:if test="exists(ir:preceding-invoice-references/ir:preceding-invoice-reference[1]/ir:preceding-invoice-issue-date)">
-                <ram:FormattedIssueDateTime>
-                  <qdt:DateTimeString format="102">
-                    <!-- bt-26 -->
-                    <xsl:call-template name="date">
-                      <xsl:with-param name="node" select="ir:preceding-invoice-references/ir:preceding-invoice-reference[1]/ir:preceding-invoice-issue-date"/>
-                    </xsl:call-template>
-                  </qdt:DateTimeString>
-                </ram:FormattedIssueDateTime>
-              </xsl:if>
-            </ram:InvoiceReferencedDocument>
+            <xsl:apply-templates select="ir:preceding-invoice-references" mode="#current"/>
           </xsl:if>
           <xsl:if test="exists(ir:buyer-accounting-reference)">
             <ram:ReceivableSpecifiedTradeAccountingAccount>
@@ -1297,6 +1282,46 @@
         </ram:ApplicableHeaderTradeSettlement>
       </rsm:SupplyChainTradeTransaction>
     </rsm:CrossIndustryInvoice>
+  </xsl:template>
+
+  <xsl:template match="ir:preceding-invoice-references" mode="d16b">
+    <ram:InvoiceReferencedDocument>
+      <ram:IssuerAssignedID>
+        <!-- bt-25 -->
+        <xsl:value-of select="./ir:preceding-invoice-reference[1]/ir:preceding-invoice-reference"/>
+      </ram:IssuerAssignedID>
+      <xsl:if test="exists(./ir:preceding-invoice-reference[1]/ir:preceding-invoice-issue-date)">
+        <ram:FormattedIssueDateTime>
+          <qdt:DateTimeString format="102">
+            <!-- bt-26 -->
+            <xsl:call-template name="date">
+              <xsl:with-param name="node" select="./ir:preceding-invoice-reference[1]/ir:preceding-invoice-issue-date"/>
+            </xsl:call-template>
+          </qdt:DateTimeString>
+        </ram:FormattedIssueDateTime>
+      </xsl:if>
+    </ram:InvoiceReferencedDocument>
+  </xsl:template>
+
+  <xsl:template match="ir:preceding-invoice-references" mode="d22b">
+    <xsl:for-each select="./ir:preceding-invoice-reference">
+      <ram:InvoiceReferencedDocument>
+        <ram:IssuerAssignedID>
+          <!-- bt-25 -->
+          <xsl:value-of select="./ir:preceding-invoice-reference"/>
+        </ram:IssuerAssignedID>
+        <xsl:if test="exists(./ir:preceding-invoice-issue-date)">
+          <ram:FormattedIssueDateTime>
+            <qdt:DateTimeString format="102">
+              <!-- bt-26 -->
+              <xsl:call-template name="date">
+                <xsl:with-param name="node" select="./ir:preceding-invoice-issue-date"/>
+              </xsl:call-template>
+            </qdt:DateTimeString>
+          </ram:FormattedIssueDateTime>
+        </xsl:if>
+      </ram:InvoiceReferencedDocument>
+    </xsl:for-each>
   </xsl:template>
 
   <!-- TODO: support for format codes 610 and 616. 102 already implemented. See https://github.com/itplr-kosit/validator-configuration-xrechnung/issues/56 -->
