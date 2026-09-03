@@ -137,7 +137,6 @@
       </process-control>
       <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceReferencedDocument)">
         <preceding-invoice-references id="bg-3">
-          <!-- Note that CII does not actually support multiple bg-3 instances -->
           <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceReferencedDocument">
             <preceding-invoice-reference id="bg-3">
               <preceding-invoice-reference id="bt-25">

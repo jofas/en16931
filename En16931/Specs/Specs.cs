@@ -98,7 +98,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiD16b => TransformerId.IrToCii,
+            Schema.CiiD16b or Schema.CiiD22b => TransformerId.IrToCii,
             _ => throw new UnreachableException(),
         };
 
@@ -106,7 +106,9 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         {
             Schema.UblInvoice => "invoice",
             Schema.UblCreditNote => "credit-note",
-            _ => null,
+            Schema.CiiD16b => "d16b",
+            Schema.CiiD22b => "d22b",
+            _ => throw new UnreachableException(),
         };
 
         XDocument result = _transformers[transformerId].Transform(ir, initialMode);
@@ -268,7 +270,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiD16b => TransformerId.IrToCii,
+            Schema.CiiD16b or Schema.CiiD22b => TransformerId.IrToCii,
             _ => throw new UnreachableException(),
         };
 
@@ -276,7 +278,9 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         {
             Schema.UblInvoice => "invoice",
             Schema.UblCreditNote => "credit-note",
-            _ => null,
+            Schema.CiiD16b => "d16b",
+            Schema.CiiD22b => "d22b",
+            _ => throw new UnreachableException(),
         };
 
         XDocument result = _transformers[transformerId].Transform(ir, initialMode);
@@ -419,7 +423,7 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiD16b => TransformerId.IrToCii,
+            Schema.CiiD16b or Schema.CiiD22b => TransformerId.IrToCii,
             _ => throw new UnreachableException(),
         };
 
@@ -427,7 +431,9 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         {
             Schema.UblInvoice => "invoice",
             Schema.UblCreditNote => "credit-note",
-            _ => null,
+            Schema.CiiD16b => "d16b",
+            Schema.CiiD22b => "d22b",
+            _ => throw new UnreachableException(),
         };
 
         XDocument result = _transformers[transformerId].Transform(ir, initialMode);
