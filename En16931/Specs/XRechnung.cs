@@ -9,15 +9,9 @@ using En16931.Model;
 using En16931.Model.Primitives;
 using En16931.Spec;
 using En16931.Spec.Utils;
-using En16931.Utils;
 using XRE = En16931.Model.XRechnungExtension;
 
 namespace En16931.Specs;
-
-public static class BuiltinSpecs
-{
-    public static readonly RefArray<ISpecificationParser> All = [XRechnung.Instance, XRechnungExtension.Instance, XRechnungCvd.Instance];
-}
 
 public class XRechnung : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<Invoice<XRechnung>>
 {
@@ -95,6 +89,8 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
             invoice.Serialize(irWriter);
         }
 
+        // TODO: don't implement CII D22B serialization if we can't
+        //       deserialize it again
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
