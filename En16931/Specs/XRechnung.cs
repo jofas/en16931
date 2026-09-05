@@ -72,9 +72,6 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
             _ => throw new SchemaNotSupportedException(doc.Schema, "XRechnung.Parse"),
         };
 
-        // TODO: have tranformer participate in `Document` API once IR become fully
-        //   a first-class syntax... That would require supporting SVRL documents as well
-        //
         XDocument ir = _transformers[transformerId].Transform(doc.Doc);
 
         return Invoice<XRechnung>.Deserialize(ir.CreateReader());
