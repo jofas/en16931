@@ -89,12 +89,11 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
             invoice.Serialize(irWriter);
         }
 
-        // TODO: don't implement CII D22B serialization if we can't
-        //       deserialize it again
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiD16b or Schema.CiiD22b => TransformerId.IrToCii,
+            Schema.CiiD16b => TransformerId.IrToCii,
+            Schema.CiiD22b => throw new SchemaNotSupportedException(schema, "XRechnung.Serialize"),
             _ => throw new UnreachableException(),
         };
 
@@ -266,7 +265,8 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiD16b or Schema.CiiD22b => TransformerId.IrToCii,
+            Schema.CiiD16b => TransformerId.IrToCii,
+            Schema.CiiD22b => throw new SchemaNotSupportedException(schema, "XRechnungExtension.Serialize"),
             _ => throw new UnreachableException(),
         };
 
@@ -419,7 +419,8 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiD16b or Schema.CiiD22b => TransformerId.IrToCii,
+            Schema.CiiD16b => TransformerId.IrToCii,
+            Schema.CiiD22b => throw new SchemaNotSupportedException(schema, "XRechnungCvd.Serialize"),
             _ => throw new UnreachableException(),
         };
 
