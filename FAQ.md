@@ -24,5 +24,5 @@ As of right now, the policy of this library is: as long as the standard
 doesn't explicitly state support for D22B, this library does not try to 
 implement support for D22B for that standard, even though extrapolating support 
 from D16B to D22B should be as easy as making sure the schematrons support 
-multiple BG-3 elements and disallows multiple 
+multiple BG-3 elements and disallow multiple 
 `ram:PayeePartyCreditorFinancialAccount` elements.
