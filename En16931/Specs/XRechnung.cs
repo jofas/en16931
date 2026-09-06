@@ -90,8 +90,7 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
             Schema.CiiD16b => TransformerId.IrToCii,
-            Schema.CiiD22b => throw new SchemaNotSupportedException(schema, "XRechnung.Serialize"),
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(schema, "XRechnung.Serialize"),
         };
 
         string? initialMode = schema switch
@@ -99,7 +98,6 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
             Schema.UblInvoice => "invoice",
             Schema.UblCreditNote => "credit-note",
             Schema.CiiD16b => "d16b",
-            Schema.CiiD22b => "d22b",
             _ => throw new UnreachableException(),
         };
 
@@ -263,8 +261,7 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
             Schema.CiiD16b => TransformerId.IrToCii,
-            Schema.CiiD22b => throw new SchemaNotSupportedException(schema, "XRechnungExtension.Serialize"),
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(schema, "XRechnungExtension.Serialize"),
         };
 
         string? initialMode = schema switch
@@ -272,7 +269,6 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
             Schema.UblInvoice => "invoice",
             Schema.UblCreditNote => "credit-note",
             Schema.CiiD16b => "d16b",
-            Schema.CiiD22b => "d22b",
             _ => throw new UnreachableException(),
         };
 
@@ -417,8 +413,7 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
             Schema.CiiD16b => TransformerId.IrToCii,
-            Schema.CiiD22b => throw new SchemaNotSupportedException(schema, "XRechnungCvd.Serialize"),
-            _ => throw new UnreachableException(),
+            _ => throw new SchemaNotSupportedException(schema, "XRechnungCvd.Serialize"),
         };
 
         string? initialMode = schema switch
@@ -426,7 +421,6 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
             Schema.UblInvoice => "invoice",
             Schema.UblCreditNote => "credit-note",
             Schema.CiiD16b => "d16b",
-            Schema.CiiD22b => "d22b",
             _ => throw new UnreachableException(),
         };
 
