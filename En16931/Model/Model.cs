@@ -1047,7 +1047,7 @@ public readonly record struct Seller : IIRDeserializable<Seller>, IIRSerializabl
     public required SellerPostalAddress SellerPostalAddress { get; init; }
 
     // BG-6
-    public required SellerContact SellerContact { get; init; }
+    public required SellerContact? SellerContact { get; init; }
 
     public void Serialize(XmlWriter writer)
     {
@@ -1125,7 +1125,7 @@ public readonly record struct Seller : IIRDeserializable<Seller>, IIRSerializabl
 
         SellerPostalAddress.Serialize(writer);
 
-        SellerContact.Serialize(writer);
+        SellerContact?.Serialize(writer);
 
         writer.WriteEndElement();
     }
@@ -1248,7 +1248,12 @@ public readonly record struct Seller : IIRDeserializable<Seller>, IIRSerializabl
 
         SellerPostalAddress sellerPostalAddress = SellerPostalAddress.Deserialize(reader);
 
-        SellerContact sellerContact = SellerContact.Deserialize(reader);
+        SellerContact? sellerContact = null;
+
+        if (reader.IsStartElement("seller-contact", IRConfig.NS))
+        {
+            sellerContact = Model.SellerContact.Deserialize(reader);
+        }
 
         reader.ReadEndElement();
         reader.MoveToContent();
@@ -1448,33 +1453,42 @@ public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPost
 public readonly record struct SellerContact : IIRDeserializable<SellerContact>, IIRSerializable
 {
     // BT-41
-    public required Text SellerContactPoint { get; init; }
+    public required Text? SellerContactPoint { get; init; }
 
     // BT-42
-    public required Text SellerContactTelephoneNumber { get; init; }
+    public required Text? SellerContactTelephoneNumber { get; init; }
 
     // BT-43
-    public required Text SellerContactEmailAddress { get; init; }
+    public required Text? SellerContactEmailAddress { get; init; }
 
     public void Serialize(XmlWriter writer)
     {
         writer.WriteStartElement("seller-contact", IRConfig.NS);
         writer.WriteAttributeString("id", "bg-6");
 
-        writer.WriteStartElement("seller-contact-point", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-41");
-        SellerContactPoint.Serialize(writer);
-        writer.WriteEndElement();
+        if (SellerContactPoint is not null)
+        {
+            writer.WriteStartElement("seller-contact-point", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-41");
+            SellerContactPoint.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
 
-        writer.WriteStartElement("seller-contact-telephone-number", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-42");
-        SellerContactTelephoneNumber.Serialize(writer);
-        writer.WriteEndElement();
+        if (SellerContactTelephoneNumber is not null)
+        {
+            writer.WriteStartElement("seller-contact-telephone-number", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-42");
+            SellerContactTelephoneNumber.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
 
-        writer.WriteStartElement("seller-contact-email-address", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-43");
-        SellerContactEmailAddress.Serialize(writer);
-        writer.WriteEndElement();
+        if (SellerContactEmailAddress is not null)
+        {
+            writer.WriteStartElement("seller-contact-email-address", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-43");
+            SellerContactEmailAddress.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
 
         writer.WriteEndElement();
     }
@@ -1484,29 +1498,44 @@ public readonly record struct SellerContact : IIRDeserializable<SellerContact>, 
         reader.ReadStartElement("seller-contact", IRConfig.NS);
         reader.MoveToContent();
 
-        reader.ReadStartElement("seller-contact-point", IRConfig.NS);
-        reader.MoveToContent();
+        Text? sellerContactPoint = null;
 
-        Text sellerContactPoint = Text.Deserialize(reader);
+        if (reader.IsStartElement("seller-contact-point", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+            sellerContactPoint = Text.Deserialize(reader);
 
-        reader.ReadStartElement("seller-contact-telephone-number", IRConfig.NS);
-        reader.MoveToContent();
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
-        Text sellerContactTelephoneNumber = Text.Deserialize(reader);
+        Text? sellerContactTelephoneNumber = null;
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+        if (reader.IsStartElement("seller-contact-telephone-number", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
 
-        reader.ReadStartElement("seller-contact-email-address", IRConfig.NS);
-        reader.MoveToContent();
+            sellerContactTelephoneNumber = Text.Deserialize(reader);
 
-        Text sellerContactEmailAddress = Text.Deserialize(reader);
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+        Text? sellerContactEmailAddress = null;
+
+        if (reader.IsStartElement("seller-contact-email-address", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerContactEmailAddress = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
         reader.ReadEndElement();
         reader.MoveToContent();
