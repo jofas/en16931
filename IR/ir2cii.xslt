@@ -10,12 +10,14 @@
   <xsl:template match="/ir:invoice" mode="#all">
     <rsm:CrossIndustryInvoice>
       <rsm:ExchangedDocumentContext>
-        <ram:BusinessProcessSpecifiedDocumentContextParameter>
-          <ram:ID>
-            <!-- bt-23 -->
-            <xsl:value-of select="ir:process-control/ir:business-process-type"/>
-          </ram:ID>
-        </ram:BusinessProcessSpecifiedDocumentContextParameter>
+        <xsl:if test="exists(ir:process-control/ir:business-process-type)">
+          <ram:BusinessProcessSpecifiedDocumentContextParameter>
+            <ram:ID>
+              <!-- bt-23 -->
+              <xsl:value-of select="ir:process-control/ir:business-process-type"/>
+            </ram:ID>
+          </ram:BusinessProcessSpecifiedDocumentContextParameter>
+        </xsl:if>
         <ram:GuidelineSpecifiedDocumentContextParameter>
           <ram:ID>
             <!-- bt-24 -->
@@ -458,16 +460,18 @@
                 </ram:CountrySubDivisionName>
               </xsl:if>
             </ram:PostalTradeAddress>
-            <ram:URIUniversalCommunication>
-              <ram:URIID>
-                <xsl:attribute name="schemeID">
-                  <!-- bt-34-1 -->
-                  <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:scheme-identifier"/>
-                </xsl:attribute>
-                <!-- bt-34 -->
-                <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:content"/>
-              </ram:URIID>
-            </ram:URIUniversalCommunication>
+            <xsl:if test="exists(ir:seller/ir:seller-electronic-address)">
+              <ram:URIUniversalCommunication>
+                <ram:URIID>
+                  <xsl:attribute name="schemeID">
+                    <!-- bt-34-1 -->
+                    <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:scheme-identifier"/>
+                  </xsl:attribute>
+                  <!-- bt-34 -->
+                  <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:content"/>
+                </ram:URIID>
+              </ram:URIUniversalCommunication>
+            </xsl:if>
             <xsl:if test="exists(ir:seller/ir:seller-vat-identifier)">
               <ram:SpecifiedTaxRegistration>
                 <ram:ID schemeID="VA">

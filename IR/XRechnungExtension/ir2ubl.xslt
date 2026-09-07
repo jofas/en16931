@@ -175,10 +175,12 @@
       <!-- bt-24 -->
       <xsl:value-of select="ir:process-control/ir:specification-identifier/ir:content"/>
     </cbc:CustomizationID>
-    <cbc:ProfileID>
-      <!-- bt-23 -->
-      <xsl:value-of select="ir:process-control/ir:business-process-type"/>
-    </cbc:ProfileID>
+    <xsl:if test="exists(ir:process-control/ir:business-process-type)">
+      <cbc:ProfileID>
+        <!-- bt-23 -->
+        <xsl:value-of select="ir:process-control/ir:business-process-type"/>
+      </cbc:ProfileID>
+    </xsl:if>
     <cbc:ID>
 	  <!-- bt-1 -->
       <xsl:value-of select="ir:invoice-number"/>
@@ -392,14 +394,16 @@
   <xsl:template name="common-invoice-3">
     <cac:AccountingSupplierParty>
       <cac:Party>
-        <cbc:EndpointID>
-          <xsl:attribute name="schemeID">
-            <!-- bt-34-1 -->
-            <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:scheme-identifier"/>
-          </xsl:attribute>
-          <!-- bt-34 -->
-          <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:content"/>
-        </cbc:EndpointID>
+        <xsl:if test="exists(ir:seller/ir:seller-electronic-address)">
+          <cbc:EndpointID>
+            <xsl:attribute name="schemeID">
+              <!-- bt-34-1 -->
+              <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:scheme-identifier"/>
+            </xsl:attribute>
+            <!-- bt-34 -->
+            <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:content"/>
+          </cbc:EndpointID>
+        </xsl:if>
         <xsl:for-each select="ir:seller/ir:seller-identifiers/ir:seller-identifier">
           <cac:PartyIdentification>
             <cbc:ID>
