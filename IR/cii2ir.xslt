@@ -338,14 +338,16 @@
             </content>
           </buyer-vat-identifier>
         </xsl:if>
-        <buyer-electronic-address id="bt-49">
-          <content>
-            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:URIUniversalCommunication/ram:URIID"/>
-          </content>
-          <scheme-identifier>
-            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:URIUniversalCommunication/ram:URIID/@schemeID"/>
-          </scheme-identifier>
-        </buyer-electronic-address>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:URIUniversalCommunication/ram:URIID)">
+          <buyer-electronic-address id="bt-49">
+            <content>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:URIUniversalCommunication/ram:URIID"/>
+            </content>
+            <scheme-identifier>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:URIUniversalCommunication/ram:URIID/@schemeID"/>
+            </scheme-identifier>
+          </buyer-electronic-address>
+        </xsl:if>
         <buyer-postal-address id="bg-8">
           <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:LineOne)">
             <buyer-address-line-1 id="bt-50">
