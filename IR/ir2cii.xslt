@@ -346,10 +346,12 @@
           </ram:IncludedSupplyChainTradeLineItem>
         </xsl:for-each>
         <ram:ApplicableHeaderTradeAgreement>
-          <ram:BuyerReference>
-            <!-- bt-10 -->
-            <xsl:value-of select="ir:buyer-reference"/>
-          </ram:BuyerReference>
+          <xsl:if test="exists(ir:buyer-reference)">
+            <ram:BuyerReference>
+              <!-- bt-10 -->
+              <xsl:value-of select="ir:buyer-reference"/>
+            </ram:BuyerReference>
+          </xsl:if>
           <ram:SellerTradeParty>
             <xsl:for-each select="ir:seller/ir:seller-identifiers/ir:seller-identifier[not(ir:scheme-identifier)]">
               <ram:ID>

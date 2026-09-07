@@ -213,9 +213,11 @@
   </xsl:template>
 
   <xsl:template name="common-invoice-bt-10">
-    <buyer-reference id="bt-10">
-      <xsl:value-of select="cbc:BuyerReference"/>
-    </buyer-reference>
+    <xsl:if test="exists(cbc:BuyerReference)">
+      <buyer-reference id="bt-10">
+        <xsl:value-of select="cbc:BuyerReference"/>
+      </buyer-reference>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template name="common-invoice-bt-12-20">
