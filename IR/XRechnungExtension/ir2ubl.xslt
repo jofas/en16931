@@ -230,10 +230,12 @@
         <xsl:value-of select="ir:buyer-accounting-reference"/>
       </cbc:AccountingCost>
     </xsl:if>
-    <cbc:BuyerReference>
-      <!-- bt-10 -->
-      <xsl:value-of select="ir:buyer-reference"/>
-    </cbc:BuyerReference>
+    <xsl:if test="exists(ir:buyer-reference)">
+      <cbc:BuyerReference>
+        <!-- bt-10 -->
+        <xsl:value-of select="ir:buyer-reference"/>
+      </cbc:BuyerReference>
+    </xsl:if>
     <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)
         or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)
         or exists(ir:value-added-tax-point-date-code)">

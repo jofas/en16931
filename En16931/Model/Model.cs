@@ -57,7 +57,7 @@ public readonly record struct Invoice<T> : IInvoice, IInvoice<T>, IIRDeserializa
     public required Date? PaymentDueDate { get; init; }
 
     // BT-10
-    public required Text BuyerReference { get; init; }
+    public required Text? BuyerReference { get; init; }
 
     // BT-11
     public required DocumentReference? ProjectReference { get; init; }
@@ -192,10 +192,13 @@ public readonly record struct Invoice<T> : IInvoice, IInvoice<T>, IIRDeserializa
             writer.WriteEndElement();
         }
 
-        writer.WriteStartElement("buyer-reference", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-10");
-        BuyerReference.Serialize(writer);
-        writer.WriteEndElement();
+        if (BuyerReference is not null)
+        {
+            writer.WriteStartElement("buyer-reference", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-10");
+            BuyerReference.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
 
         if (ProjectReference is not null)
         {
@@ -472,13 +475,18 @@ public readonly record struct Invoice<T> : IInvoice, IInvoice<T>, IIRDeserializa
             reader.MoveToContent();
         }
 
-        reader.ReadStartElement("buyer-reference", IRConfig.NS);
-        reader.MoveToContent();
+        Text? buyerReference = null;
 
-        Text buyerReference = Text.Deserialize(reader);
+        if (reader.IsStartElement("buyer-reference", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+            buyerReference = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
         DocumentReference? projectReference = null;
 
