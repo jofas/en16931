@@ -404,24 +404,34 @@
                 </xsl:if>
               </ram:SpecifiedLegalOrganization>
             </xsl:if>
-            <ram:DefinedTradeContact>
-              <ram:PersonName>
-                <!-- bt-41 -->
-                <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-point"/>
-              </ram:PersonName>
-              <ram:TelephoneUniversalCommunication>
-                <ram:CompleteNumber>
-                  <!-- bt-42 -->
-                  <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-telephone-number"/>
-                </ram:CompleteNumber>
-              </ram:TelephoneUniversalCommunication>
-              <ram:EmailURIUniversalCommunication>
-                <ram:URIID>
-                  <!-- bt-43 -->
-                  <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-email-address"/>
-                </ram:URIID>
-              </ram:EmailURIUniversalCommunication>
-            </ram:DefinedTradeContact>
+            <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point)
+                or exists(ir:seller/ir:seller-contact/ir:seller-contact-telephone-number)
+                or exists(ir:seller/ir:seller-contact/ir:seller-contact-email-address)">
+              <ram:DefinedTradeContact>
+                <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point)">
+                  <ram:PersonName>
+                    <!-- bt-41 -->
+                    <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-point"/>
+                  </ram:PersonName>
+                </xsl:if>
+                <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-telephone-number)">
+                  <ram:TelephoneUniversalCommunication>
+                    <ram:CompleteNumber>
+                      <!-- bt-42 -->
+                      <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-telephone-number"/>
+                    </ram:CompleteNumber>
+                  </ram:TelephoneUniversalCommunication>
+                </xsl:if>
+                <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-email-address)">
+                  <ram:EmailURIUniversalCommunication>
+                    <ram:URIID>
+                      <!-- bt-43 -->
+                      <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-email-address"/>
+                    </ram:URIID>
+                  </ram:EmailURIUniversalCommunication>
+                </xsl:if>
+              </ram:DefinedTradeContact>
+            </xsl:if>
             <ram:PostalTradeAddress>
               <ram:PostcodeCode>
                 <!-- bt-38 -->

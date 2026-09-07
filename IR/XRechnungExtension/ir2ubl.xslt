@@ -522,20 +522,24 @@
             </cbc:CompanyLegalForm>
           </xsl:if>
         </cac:PartyLegalEntity>
-        <cac:Contact>
-          <cbc:Name>
-            <!-- bt-41 -->
-            <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-point"/>
-          </cbc:Name>
-          <cbc:Telephone>
-            <!-- bt-42 -->
-            <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-telephone-number"/>
-          </cbc:Telephone>
-          <cbc:ElectronicMail>
-            <!-- bt-43 -->
-            <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-email-address"/>
-          </cbc:ElectronicMail>
-        </cac:Contact>
+        <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point)
+            or exists(ir:seller/ir:seller-contact/ir:seller-contact-telephone-number)
+            or exists(ir:seller/ir:seller-contact/ir:seller-contact-email-address)">
+          <cac:Contact>
+            <cbc:Name>
+              <!-- bt-41 -->
+              <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-point"/>
+            </cbc:Name>
+            <cbc:Telephone>
+              <!-- bt-42 -->
+              <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-telephone-number"/>
+            </cbc:Telephone>
+            <cbc:ElectronicMail>
+              <!-- bt-43 -->
+              <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-email-address"/>
+            </cbc:ElectronicMail>
+          </cac:Contact>
+        </xsl:if>
       </cac:Party>
     </cac:AccountingSupplierParty>
     <cac:AccountingCustomerParty>

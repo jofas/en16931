@@ -342,17 +342,27 @@
           <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"/>
         </seller-country-code>
       </seller-postal-address>
-      <seller-contact id="bg-6">
-        <seller-contact-point id="bt-41">
-          <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name"/>
-        </seller-contact-point>
-        <seller-contact-telephone-number id="bt-42">
-          <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telephone"/>
-        </seller-contact-telephone-number>
-        <seller-contact-email-address id="bt-43">
-          <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail"/>
-        </seller-contact-email-address>
-      </seller-contact>
+      <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name)
+          or exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telephone)
+          or exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
+        <seller-contact id="bg-6">
+          <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name)">
+            <seller-contact-point id="bt-41">
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name"/>
+            </seller-contact-point>
+          </xsl:if>
+          <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telephone)">
+            <seller-contact-telephone-number id="bt-42">
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telephone"/>
+            </seller-contact-telephone-number>
+          </xsl:if>
+          <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
+            <seller-contact-email-address id="bt-43">
+              <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail"/>
+            </seller-contact-email-address>
+          </xsl:if>
+        </seller-contact>
+      </xsl:if>
     </seller>
     <buyer id="bg-7">
       <buyer-name id="bt-44">
