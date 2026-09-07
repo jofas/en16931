@@ -128,9 +128,11 @@
         </invoice-notes>
       </xsl:if>
       <process-control id="bg-2">
-        <business-process-type id="bt-23">
-          <xsl:value-of select="rsm:ExchangedDocumentContext/ram:BusinessProcessSpecifiedDocumentContextParameter/ram:ID"/>
-        </business-process-type>
+        <xsl:if test="exists(rsm:ExchangedDocumentContext/ram:BusinessProcessSpecifiedDocumentContextParameter/ram:ID)">
+          <business-process-type id="bt-23">
+            <xsl:value-of select="rsm:ExchangedDocumentContext/ram:BusinessProcessSpecifiedDocumentContextParameter/ram:ID"/>
+          </business-process-type>
+        </xsl:if>
         <specification-identifier id="bt-24">
           <content>
             <xsl:value-of select="rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID"/>
@@ -217,14 +219,16 @@
             <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:Description"/>
           </seller-additional-legal-information>
         </xsl:if>
-        <seller-electronic-address id="bt-34">
-          <content>
-            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:URIUniversalCommunication/ram:URIID"/>
-          </content>
-          <scheme-identifier>
-            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:URIUniversalCommunication/ram:URIID/@schemeID"/>
-          </scheme-identifier>
-        </seller-electronic-address>
+        <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:URIUniversalCommunication/ram:URIID)">
+          <seller-electronic-address id="bt-34">
+            <content>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:URIUniversalCommunication/ram:URIID"/>
+            </content>
+            <scheme-identifier>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:URIUniversalCommunication/ram:URIID/@schemeID"/>
+            </scheme-identifier>
+          </seller-electronic-address>
+        </xsl:if>
         <seller-postal-address id="bg-5">
           <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:LineOne)">
             <seller-address-line-1 id="bt-35">

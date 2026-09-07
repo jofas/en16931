@@ -218,16 +218,18 @@
       </invoice-notes>
     </xsl:if>
     <process-control id="bg-2">
-      <business-process-type id="bt-23">
-        <xsl:value-of select="cbc:ProfileID"/>
-      </business-process-type>
+      <xsl:if test="exists(cbc:ProfileID)">
+        <business-process-type id="bt-23">
+          <xsl:value-of select="cbc:ProfileID"/>
+        </business-process-type>
+      </xsl:if>
       <specification-identifier id="bt-24">
         <content>
           <xsl:value-of select="cbc:CustomizationID"/>
         </content>
       </specification-identifier>
     </process-control>
-    <xsl:if test="cac:BillingReference">
+    <xsl:if test="exists(cac:BillingReference)">
       <preceding-invoice-references id="bg-3">
         <xsl:for-each select="cac:BillingReference">
           <preceding-invoice-reference id="bg-3">
@@ -299,14 +301,16 @@
           <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyLegalForm"/>
         </seller-additional-legal-information>
       </xsl:if>
-      <seller-electronic-address id="bt-34">
-        <content>
-          <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID"/>
-        </content>
-        <scheme-identifier>
-          <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID/@schemeID"/>
-        </scheme-identifier>
-      </seller-electronic-address>
+      <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cbc:EndpointID)">
+        <seller-electronic-address id="bt-34">
+          <content>
+            <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID"/>
+          </content>
+          <scheme-identifier>
+            <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID/@schemeID"/>
+          </scheme-identifier>
+        </seller-electronic-address>
+      </xsl:if>
       <seller-postal-address id="bg-5">
         <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:StreetName)">
           <seller-address-line-1 id="bt-35">

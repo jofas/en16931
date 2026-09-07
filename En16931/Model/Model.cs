@@ -884,7 +884,7 @@ public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>, IIRS
 public readonly record struct ProcessControl<T> : IProcessControl, IIRDeserializable<ProcessControl<T>>, IIRSerializable where T : ISpecification
 {
     // BT-23
-    public required Text BusinessProcessType { get; init; }
+    public required Text? BusinessProcessType { get; init; }
 
     // BT-24
     public Identifier SpecificationIdentifier { get => T.SpecificationIdentifier; }
@@ -894,10 +894,13 @@ public readonly record struct ProcessControl<T> : IProcessControl, IIRDeserializ
         writer.WriteStartElement("process-control", IRConfig.NS);
         writer.WriteAttributeString("id", "bg-2");
 
-        writer.WriteStartElement("business-process-type", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-23");
-        BusinessProcessType.Serialize(writer);
-        writer.WriteEndElement();
+        if (BusinessProcessType is not null)
+        {
+            writer.WriteStartElement("business-process-type", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-23");
+            BusinessProcessType.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
 
         writer.WriteStartElement("specification-identifier", IRConfig.NS);
         writer.WriteAttributeString("id", "bt-24");
@@ -912,13 +915,18 @@ public readonly record struct ProcessControl<T> : IProcessControl, IIRDeserializ
         reader.ReadStartElement("process-control", IRConfig.NS);
         reader.MoveToContent();
 
-        reader.ReadStartElement("business-process-type", IRConfig.NS);
-        reader.MoveToContent();
+        Text? businessProcessType = null;
 
-        Text businessProcessType = Text.Deserialize(reader);
+        if (reader.IsStartElement("business-process-type", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+            businessProcessType = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
         reader.ReadStartElement("specification-identifier", IRConfig.NS);
         reader.MoveToContent();
@@ -1033,7 +1041,7 @@ public readonly record struct Seller : IIRDeserializable<Seller>, IIRSerializabl
     public required Text? SellerAdditionalLegalInformation { get; init; }
 
     // BT-34
-    public required Identifier SellerElectronicAddress { get; init; }
+    public required Identifier? SellerElectronicAddress { get; init; }
 
     // BG-5
     public required SellerPostalAddress SellerPostalAddress { get; init; }
@@ -1107,10 +1115,13 @@ public readonly record struct Seller : IIRDeserializable<Seller>, IIRSerializabl
             writer.WriteEndElement();
         }
 
-        writer.WriteStartElement("seller-electronic-address", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-34");
-        SellerElectronicAddress.Serialize(writer);
-        writer.WriteEndElement();
+        if (SellerElectronicAddress is not null)
+        {
+            writer.WriteStartElement("seller-electronic-address", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-34");
+            SellerElectronicAddress.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
 
         SellerPostalAddress.Serialize(writer);
 
@@ -1222,13 +1233,18 @@ public readonly record struct Seller : IIRDeserializable<Seller>, IIRSerializabl
             reader.MoveToContent();
         }
 
-        reader.ReadStartElement("seller-electronic-address", IRConfig.NS);
-        reader.MoveToContent();
+        Identifier? sellerElectronicAddress = null;
 
-        Identifier sellerElectronicAddress = Identifier.Deserialize(reader);
+        if (reader.IsStartElement("seller-electronic-address", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+            sellerElectronicAddress = Identifier.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
         SellerPostalAddress sellerPostalAddress = SellerPostalAddress.Deserialize(reader);
 
