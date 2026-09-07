@@ -404,14 +404,16 @@
           </content>
         </buyer-vat-identifier>
       </xsl:if>
-      <buyer-electronic-address id="bt-49">
-        <content>
-          <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID"/>
-        </content>
-        <scheme-identifier>
-          <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID/@schemeID"/>
-        </scheme-identifier>
-      </buyer-electronic-address>
+      <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cbc:EndpointID)">
+        <buyer-electronic-address id="bt-49">
+          <content>
+            <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID"/>
+          </content>
+          <scheme-identifier>
+            <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID/@schemeID"/>
+          </scheme-identifier>
+        </buyer-electronic-address>
+      </xsl:if>
       <buyer-postal-address id="bg-8">
         <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:StreetName)">
           <buyer-address-line-1 id="bt-50">
