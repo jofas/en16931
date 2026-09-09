@@ -114,7 +114,7 @@ public readonly record struct Invoice<T> : IInvoice, IInvoice<T>, IIRDeserializa
     public required DeliveryInformation? DeliveryInformation { get; init; }
 
     // BG-16
-    public required PaymentInstructions PaymentInstructions { get; init; }
+    public required PaymentInstructions? PaymentInstructions { get; init; }
 
     // BG-20
     public required Array<DocumentLevelAllowance> DocumentLevelAllowances { get; init; }
@@ -318,7 +318,7 @@ public readonly record struct Invoice<T> : IInvoice, IInvoice<T>, IIRDeserializa
 
         DeliveryInformation?.Serialize(writer);
 
-        PaymentInstructions.Serialize(writer);
+        PaymentInstructions?.Serialize(writer);
 
         if (DocumentLevelAllowances.Length > 0)
         {
@@ -683,7 +683,12 @@ public readonly record struct Invoice<T> : IInvoice, IInvoice<T>, IIRDeserializa
             deliveryInformation = Model.DeliveryInformation.Deserialize(reader);
         }
 
-        PaymentInstructions paymentInstructions = PaymentInstructions.Deserialize(reader);
+        PaymentInstructions? paymentInstructions = null;
+
+        if (reader.IsStartElement("payment-instructions", IRConfig.NS))
+        {
+            paymentInstructions = Model.PaymentInstructions.Deserialize(reader);
+        }
 
         Array<DocumentLevelAllowance> documentLevelAllowances = Array<DocumentLevelAllowance>.Empty;
 
