@@ -12,7 +12,7 @@ public class AcceptanceTests
     [Theory]
     [InlineData("Tests.Resources/XRechnungCvd/UblInvoice/Success")]
     [InlineData("Tests.Resources/XRechnungCvd/UblCreditNote/Success")]
-    [InlineData("Tests.Resources/XRechnungCvd/Cii/Success")]
+    [InlineData("Tests.Resources/XRechnungCvd/CiiD16b/Success")]
     public void Successes(string testsLocation)
     {
         _harness.AcceptSuccess<Invoice<S.XRechnungCvd>>(testsLocation);
@@ -21,7 +21,7 @@ public class AcceptanceTests
     [Theory]
     [InlineData("Tests.Resources/XRechnungCvd/UblInvoice/Failure")]
     [InlineData("Tests.Resources/XRechnungCvd/UblCreditNote/Failure")]
-    [InlineData("Tests.Resources/XRechnungCvd/Cii/Failure")]
+    [InlineData("Tests.Resources/XRechnungCvd/CiiD16b/Failure")]
     public void Failures(string testsLocation)
     {
         _harness.AcceptFailure<Invoice<S.XRechnungCvd>>(testsLocation);
