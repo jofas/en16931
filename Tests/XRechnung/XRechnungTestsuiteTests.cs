@@ -15,7 +15,7 @@ public class XRechnungTestsuiteTests
     [InlineData("Tests.Resources.Extern/xrechnung-testsuite/technical-cases")]
     public void ValidateXRechnungTestsuite(string testsLocation)
     {
-        Parser parser = new Parser();
+        Parser parser = Parser.Create(S.XRechnung.Instance);
 
         string[] testFiles = Directory.GetFiles(testsLocation);
 

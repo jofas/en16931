@@ -7,7 +7,7 @@ namespace Tests.Utils;
 
 public static class TestHarness
 {
-    private static Parser parser = new Parser();
+    private static Parser parser = Parser.WithAllSpecs();
 
     public static void AcceptSuccess<I>(string testsLocation) where I : IInvoice
     {
