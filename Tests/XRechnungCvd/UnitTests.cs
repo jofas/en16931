@@ -9,24 +9,26 @@ namespace Tests.XRechnungCvd;
 
 public class UnitTests
 {
+    private static TestHarness _harness = new(S.XRechnungCvd.Instance);
+
     [Theory]
     [InlineData("Tests.Resources/XRechnungCvd/UblInvoice/Success")]
     public void UblInvoicesTest(string testsLocation)
     {
-        TestHarness.UnitTest<UblInvoices, Invoice<S.XRechnungCvd>>(testsLocation);
+        _harness.UnitTest<UblInvoices, Invoice<S.XRechnungCvd>>(testsLocation);
     }
 
     [Theory]
     [InlineData("Tests.Resources/XRechnungCvd/UblCreditNote/Success")]
     public void UblCreditNotesTest(string testsLocation)
     {
-        TestHarness.UnitTest<UblCreditNotes, Invoice<S.XRechnungCvd>>(testsLocation);
+        _harness.UnitTest<UblCreditNotes, Invoice<S.XRechnungCvd>>(testsLocation);
     }
 
     [Theory]
     [InlineData("Tests.Resources/XRechnungCvd/CiiD16b/Success")]
     public void CiiD16bsTest(string testsLocation)
     {
-        TestHarness.UnitTest<CiiD16bs, Invoice<S.XRechnungCvd>>(testsLocation);
+        _harness.UnitTest<CiiD16bs, Invoice<S.XRechnungCvd>>(testsLocation);
     }
 }

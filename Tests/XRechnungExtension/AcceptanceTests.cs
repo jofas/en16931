@@ -1,18 +1,21 @@
 using En16931.Model.XRechnungExtension;
 using Tests.Utils;
 using Xunit;
+using S = En16931.Specs;
 
 namespace Tests.XRechnungExtension;
 
 public class AcceptanceTests
 {
+    private static TestHarness _harness = new(S.XRechnungExtension.Instance);
+
     [Theory]
     [InlineData("Tests.Resources/XRechnungExtension/UblInvoice/Success")]
     [InlineData("Tests.Resources/XRechnungExtension/UblCreditNote/Success")]
     [InlineData("Tests.Resources/XRechnungExtension/Cii/Success")]
     public void Successes(string testsLocation)
     {
-        TestHarness.AcceptSuccess<Invoice>(testsLocation);
+        _harness.AcceptSuccess<Invoice>(testsLocation);
     }
 
     [Theory]
@@ -21,6 +24,6 @@ public class AcceptanceTests
     [InlineData("Tests.Resources/XRechnungExtension/Cii/Failure")]
     public void Failures(string testsLocation)
     {
-        TestHarness.AcceptFailure<Invoice>(testsLocation);
+        _harness.AcceptFailure<Invoice>(testsLocation);
     }
 }

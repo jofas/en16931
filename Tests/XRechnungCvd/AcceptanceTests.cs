@@ -7,13 +7,15 @@ namespace Tests.XRechnungCvd;
 
 public class AcceptanceTests
 {
+    private static TestHarness _harness = new(S.XRechnungCvd.Instance);
+
     [Theory]
     [InlineData("Tests.Resources/XRechnungCvd/UblInvoice/Success")]
     [InlineData("Tests.Resources/XRechnungCvd/UblCreditNote/Success")]
     [InlineData("Tests.Resources/XRechnungCvd/Cii/Success")]
     public void Successes(string testsLocation)
     {
-        TestHarness.AcceptSuccess<Invoice<S.XRechnungCvd>>(testsLocation);
+        _harness.AcceptSuccess<Invoice<S.XRechnungCvd>>(testsLocation);
     }
 
     [Theory]
@@ -22,6 +24,6 @@ public class AcceptanceTests
     [InlineData("Tests.Resources/XRechnungCvd/Cii/Failure")]
     public void Failures(string testsLocation)
     {
-        TestHarness.AcceptFailure<Invoice<S.XRechnungCvd>>(testsLocation);
+        _harness.AcceptFailure<Invoice<S.XRechnungCvd>>(testsLocation);
     }
 }

@@ -1,25 +1,31 @@
 using System.IO;
 using En16931;
 using En16931.Model;
+using En16931.Spec;
 using Xunit;
 
 namespace Tests.Utils;
 
-public static class TestHarness
+public class TestHarness
 {
-    private static Parser parser = Parser.WithAllSpecs();
+    private readonly Parser _parser;
 
-    public static void AcceptSuccess<I>(string testsLocation) where I : IInvoice
+    public TestHarness(ISpecificationParser spec)
+    {
+        _parser = Parser.Create(spec);
+    }
+
+    public void AcceptSuccess<I>(string testsLocation) where I : IInvoice
     {
         string[] testFiles = Directory.GetFiles(testsLocation);
 
         foreach (string test in testFiles)
         {
-            parser.Parse<I>(test);
+            _parser.Parse<I>(test);
         }
     }
 
-    public static void AcceptFailure<I>(string testsLocation) where I : IInvoice
+    public void AcceptFailure<I>(string testsLocation) where I : IInvoice
     {
         string[] testFiles = Directory.GetFiles(testsLocation);
 
@@ -27,14 +33,14 @@ public static class TestHarness
         {
             ValidationException e = Assert.Throws<ValidationException>(() =>
             {
-                parser.Parse<I>(test);
+                _parser.Parse<I>(test);
             });
 
             Assert.Contains(Path.GetFileNameWithoutExtension(test), e.Errors);
         }
     }
 
-    public static void UnitTest<P, I>(string testsLocation) where I : IInvoice
+    public void UnitTest<P, I>(string testsLocation) where I : IInvoice
     {
         string[] testFiles = Directory.GetFiles(testsLocation);
 
@@ -44,23 +50,23 @@ public static class TestHarness
 
             I expected = InvoiceExtractor<P, I>.Invoice(invoiceName);
 
-            I invoice = parser.Parse<I>(test);
+            I invoice = _parser.Parse<I>(test);
 
             Assert.Equal(expected, invoice);
         }
     }
 
-    public static void RoundTrip<P, I>(Schema schema) where I : IInvoice
+    public void RoundTrip<P, I>(Schema schema) where I : IInvoice
     {
         foreach (I invoice in InvoiceExtractor<P, I>.Invoices)
         {
             using StringWriter writer = new();
 
-            parser.Serialize(in invoice, schema, writer);
+            _parser.Serialize(in invoice, schema, writer);
 
             using StringReader reader = new(writer.ToString());
 
-            Assert.Equal(invoice, parser.Parse<I>(reader));
+            Assert.Equal(invoice, _parser.Parse<I>(reader));
         }
     }
 }
