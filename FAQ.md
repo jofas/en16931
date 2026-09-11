@@ -1,9 +1,9 @@
 # FAQ
 
-## Does CII D22B support multiple BG-17 elements? (I.e. is it fully compliant with the EN16931:2017 data model?)
+## Is CII D22B fully compliant with the EN16931:2017 data model?
 
-Yes. It allows multiple BG-3, which CII D16B didn't. Otherwise, D16B is
-able to fully represent the EN16931:2017 data model.
+Yes. It allows multiple BG-3, which CII D16B doesn't. 
+Otherwise, D16B is able to fully represent the EN16931:2017 data model.
 However, that does not mean that a standard automatically also 
 supports D22B, if it is only meant to target D16B.
 D22B is more expansive in what documents it allows, beyond multiple BG-3.
