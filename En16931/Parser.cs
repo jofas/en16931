@@ -14,16 +14,26 @@ namespace En16931;
 
 public class Parser
 {
+    public static Parser Create(IEnumerable<ISpecificationParser> specs) {
+        return new(specs);
+    }
+
+    public static Parser Create(ISpecificationParser spec) {
+        return new([spec]);
+    }
+
+    public static Parser WithAllSpecs() {
+        return new(BuiltinSpecs.All);
+    }
+
     private readonly ImmutableDictionary<Identifier, ISpecificationParser> _specs;
 
-    public Parser(IEnumerable<ISpecificationParser> specs)
+    private Parser(IEnumerable<ISpecificationParser> specs)
     {
         _specs = specs
             .Select(s => KeyValuePair.Create(s.SpecificationIdentifier, s))
             .ToImmutableDictionary();
     }
-
-    public Parser() : this(BuiltinSpecs.All) { }
 
     public IInvoice Parse(string filepath)
     {
