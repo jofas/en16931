@@ -9,11 +9,13 @@ namespace Tests.XRechnung;
 
 public class RoundTripTests
 {
+    private static TestHarness _harness = new(S.XRechnung.Instance);
+
     [Fact]
     public void RoundTrips()
     {
-        TestHarness.RoundTrip<UblInvoices, Invoice<S.XRechnung>>(Schema.UblInvoice);
-        TestHarness.RoundTrip<UblCreditNotes, Invoice<S.XRechnung>>(Schema.UblCreditNote);
-        TestHarness.RoundTrip<CiiD16bs, Invoice<S.XRechnung>>(Schema.CiiD16b);
+        _harness.RoundTrip<UblInvoices, Invoice<S.XRechnung>>(Schema.UblInvoice);
+        _harness.RoundTrip<UblCreditNotes, Invoice<S.XRechnung>>(Schema.UblCreditNote);
+        _harness.RoundTrip<CiiD16bs, Invoice<S.XRechnung>>(Schema.CiiD16b);
     }
 }
