@@ -14,15 +14,18 @@ namespace En16931;
 
 public class Parser
 {
-    public static Parser Create(IEnumerable<ISpecificationParser> specs) {
+    public static Parser Create(IEnumerable<ISpecificationParser> specs)
+    {
         return new(specs);
     }
 
-    public static Parser Create(ISpecificationParser spec) {
+    public static Parser Create(ISpecificationParser spec)
+    {
         return new([spec]);
     }
 
-    public static Parser WithAllSpecs() {
+    public static Parser WithAllSpecs()
+    {
         return new(BuiltinSpecs.All);
     }
 
