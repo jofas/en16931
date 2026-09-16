@@ -1,7 +1,7 @@
 using En16931;
 using En16931.Model;
-using Tests.Utils;
 using Tests.Core.Invoices;
+using Tests.Utils;
 using Xunit;
 using S = En16931.Specs;
 
