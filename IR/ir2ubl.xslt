@@ -124,10 +124,12 @@
       <!-- bt-24 -->
       <xsl:value-of select="ir:process-control/ir:specification-identifier/ir:content"/>
     </cbc:CustomizationID>
-    <cbc:ProfileID>
-      <!-- bt-23 -->
-      <xsl:value-of select="ir:process-control/ir:business-process-type"/>
-    </cbc:ProfileID>
+    <xsl:if test="exists(ir:process-control/ir:business-process-type)">
+      <cbc:ProfileID>
+        <!-- bt-23 -->
+        <xsl:value-of select="ir:process-control/ir:business-process-type"/>
+      </cbc:ProfileID>
+    </xsl:if>
     <cbc:ID>
 	  <!-- bt-1 -->
       <xsl:value-of select="ir:invoice-number"/>
@@ -179,10 +181,12 @@
         <xsl:value-of select="ir:buyer-accounting-reference"/>
       </cbc:AccountingCost>
     </xsl:if>
-    <cbc:BuyerReference>
-      <!-- bt-10 -->
-      <xsl:value-of select="ir:buyer-reference"/>
-    </cbc:BuyerReference>
+    <xsl:if test="exists(ir:buyer-reference)">
+      <cbc:BuyerReference>
+        <!-- bt-10 -->
+        <xsl:value-of select="ir:buyer-reference"/>
+      </cbc:BuyerReference>
+    </xsl:if>
     <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)
         or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)
         or exists(ir:value-added-tax-point-date-code)">
@@ -339,14 +343,16 @@
   <xsl:template name="common-invoice-3">
     <cac:AccountingSupplierParty>
       <cac:Party>
-        <cbc:EndpointID>
-          <xsl:attribute name="schemeID">
-            <!-- bt-34-1 -->
-            <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:scheme-identifier"/>
-          </xsl:attribute>
-          <!-- bt-34 -->
-          <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:content"/>
-        </cbc:EndpointID>
+        <xsl:if test="exists(ir:seller/ir:seller-electronic-address)">
+          <cbc:EndpointID>
+            <xsl:attribute name="schemeID">
+              <!-- bt-34-1 -->
+              <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:scheme-identifier"/>
+            </xsl:attribute>
+            <!-- bt-34 -->
+            <xsl:value-of select="ir:seller/ir:seller-electronic-address/ir:content"/>
+          </cbc:EndpointID>
+        </xsl:if>
         <xsl:for-each select="ir:seller/ir:seller-identifiers/ir:seller-identifier">
           <cac:PartyIdentification>
             <cbc:ID>
@@ -465,20 +471,24 @@
             </cbc:CompanyLegalForm>
           </xsl:if>
         </cac:PartyLegalEntity>
-        <cac:Contact>
-          <cbc:Name>
-            <!-- bt-41 -->
-            <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-point"/>
-          </cbc:Name>
-          <cbc:Telephone>
-            <!-- bt-42 -->
-            <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-telephone-number"/>
-          </cbc:Telephone>
-          <cbc:ElectronicMail>
-            <!-- bt-43 -->
-            <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-email-address"/>
-          </cbc:ElectronicMail>
-        </cac:Contact>
+        <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point)
+            or exists(ir:seller/ir:seller-contact/ir:seller-contact-telephone-number)
+            or exists(ir:seller/ir:seller-contact/ir:seller-contact-email-address)">
+          <cac:Contact>
+            <cbc:Name>
+              <!-- bt-41 -->
+              <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-point"/>
+            </cbc:Name>
+            <cbc:Telephone>
+              <!-- bt-42 -->
+              <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-telephone-number"/>
+            </cbc:Telephone>
+            <cbc:ElectronicMail>
+              <!-- bt-43 -->
+              <xsl:value-of select="ir:seller/ir:seller-contact/ir:seller-contact-email-address"/>
+            </cbc:ElectronicMail>
+          </cac:Contact>
+        </xsl:if>
       </cac:Party>
     </cac:AccountingSupplierParty>
     <cac:AccountingCustomerParty>

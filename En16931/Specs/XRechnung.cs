@@ -9,15 +9,9 @@ using En16931.Model;
 using En16931.Model.Primitives;
 using En16931.Spec;
 using En16931.Spec.Utils;
-using En16931.Utils;
 using XRE = En16931.Model.XRechnungExtension;
 
 namespace En16931.Specs;
-
-public static class BuiltinSpecs
-{
-    public static readonly RefArray<ISpecificationParser> All = [XRechnung.Instance, XRechnungExtension.Instance, XRechnungCvd.Instance];
-}
 
 public class XRechnung : ISpecification, ISpecificationValidator, ISpecificationParser, ISpecificationParser<Invoice<XRechnung>>
 {
@@ -78,9 +72,6 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
             _ => throw new SchemaNotSupportedException(doc.Schema, "XRechnung.Parse"),
         };
 
-        // TODO: have tranformer participate in `Document` API once IR become fully
-        //   a first-class syntax... That would require supporting SVRL documents as well
-        //
         XDocument ir = _transformers[transformerId].Transform(doc.Doc);
 
         return Invoice<XRechnung>.Deserialize(ir.CreateReader());
@@ -98,8 +89,8 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiD16b or Schema.CiiD22b => TransformerId.IrToCii,
-            _ => throw new UnreachableException(),
+            Schema.CiiD16b => TransformerId.IrToCii,
+            _ => throw new SchemaNotSupportedException(schema, "XRechnung.Serialize"),
         };
 
         string? initialMode = schema switch
@@ -107,7 +98,6 @@ public class XRechnung : ISpecification, ISpecificationValidator, ISpecification
             Schema.UblInvoice => "invoice",
             Schema.UblCreditNote => "credit-note",
             Schema.CiiD16b => "d16b",
-            Schema.CiiD22b => "d22b",
             _ => throw new UnreachableException(),
         };
 
@@ -270,8 +260,8 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiD16b or Schema.CiiD22b => TransformerId.IrToCii,
-            _ => throw new UnreachableException(),
+            Schema.CiiD16b => TransformerId.IrToCii,
+            _ => throw new SchemaNotSupportedException(schema, "XRechnungExtension.Serialize"),
         };
 
         string? initialMode = schema switch
@@ -279,7 +269,6 @@ public class XRechnungExtension : ISpecification, ISpecificationValidator, ISpec
             Schema.UblInvoice => "invoice",
             Schema.UblCreditNote => "credit-note",
             Schema.CiiD16b => "d16b",
-            Schema.CiiD22b => "d22b",
             _ => throw new UnreachableException(),
         };
 
@@ -423,8 +412,8 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
         TransformerId transformerId = schema switch
         {
             Schema.UblInvoice or Schema.UblCreditNote => TransformerId.IrToUbl,
-            Schema.CiiD16b or Schema.CiiD22b => TransformerId.IrToCii,
-            _ => throw new UnreachableException(),
+            Schema.CiiD16b => TransformerId.IrToCii,
+            _ => throw new SchemaNotSupportedException(schema, "XRechnungCvd.Serialize"),
         };
 
         string? initialMode = schema switch
@@ -432,7 +421,6 @@ public class XRechnungCvd : ISpecification, ISpecificationValidator, ISpecificat
             Schema.UblInvoice => "invoice",
             Schema.UblCreditNote => "credit-note",
             Schema.CiiD16b => "d16b",
-            Schema.CiiD22b => "d22b",
             _ => throw new UnreachableException(),
         };
 
