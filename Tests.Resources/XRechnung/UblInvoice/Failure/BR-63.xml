@@ -126,8 +126,8 @@
   </cac:AccountingSupplierParty>
   <cac:AccountingCustomerParty>
     <cac:Party>
-        <!-- BR-63 (missing @schemeID) -->
-        <cbc:EndpointID>rechnungseingang@test.de</cbc:EndpointID>
+      <!-- BR-63 (missing @schemeID) -->
+      <cbc:EndpointID>rechnungseingang@test.de</cbc:EndpointID>
       <cac:PartyIdentification>
         <cbc:ID>138</cbc:ID>
       </cac:PartyIdentification>

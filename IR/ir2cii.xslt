@@ -1,12 +1,5 @@
-<xsl:stylesheet
-    xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
-    xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
-    xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
-    xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:ir="urn:todo"
-    exclude-result-prefixes="xsl ir"
-    version="2.0">
+<?xml version="1.0"?>
+<xsl:stylesheet xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ir="urn:todo" exclude-result-prefixes="xsl ir" version="2.0">
   <xsl:template match="/ir:invoice" mode="#all">
     <rsm:CrossIndustryInvoice>
       <rsm:ExchangedDocumentContext>
@@ -27,16 +20,16 @@
       </rsm:ExchangedDocumentContext>
       <rsm:ExchangedDocument>
         <ram:ID>
-		  <!-- bt-1 -->
+          <!-- bt-1 -->
           <xsl:value-of select="ir:invoice-number"/>
         </ram:ID>
         <ram:TypeCode>
-		  <!-- bt-3 -->
+          <!-- bt-3 -->
           <xsl:value-of select="ir:invoice-type-code"/>
         </ram:TypeCode>
         <ram:IssueDateTime>
           <udt:DateTimeString format="102">
-		    <!-- bt-2 -->
+            <!-- bt-2 -->
             <xsl:call-template name="date">
               <xsl:with-param name="node" select="ir:invoice-issue-date"/>
             </xsl:call-template>
@@ -45,12 +38,12 @@
         <xsl:for-each select="ir:invoice-notes/ir:invoice-note">
           <ram:IncludedNote>
             <ram:Content>
-	          <!-- bt-22 -->
+              <!-- bt-22 -->
               <xsl:value-of select="./ir:invoice-note"/>
             </ram:Content>
             <xsl:if test="exists(./ir:invoice-note-subject-code)">
               <ram:SubjectCode>
-		        <!-- bt-21 -->
+                <!-- bt-21 -->
                 <xsl:value-of select="./ir:invoice-note-subject-code"/>
               </ram:SubjectCode>
             </xsl:if>
@@ -155,8 +148,7 @@
                   </ram:LineID>
                 </ram:BuyerOrderReferencedDocument>
               </xsl:if>
-              <xsl:if test="exists(./ir:price-details/ir:item-price-discount)
-                  or exists(./ir:price-details/ir:item-gross-price)">
+              <xsl:if test="exists(./ir:price-details/ir:item-price-discount)                   or exists(./ir:price-details/ir:item-gross-price)">
                 <ram:GrossPriceProductTradePrice>
                   <xsl:if test="exists(./ir:price-details/ir:item-gross-price)">
                     <ram:ChargeAmount>
@@ -220,8 +212,7 @@
                   </ram:RateApplicablePercent>
                 </xsl:if>
               </ram:ApplicableTradeTax>
-              <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)
-                  or exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
+              <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)                   or exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
                 <ram:BillingSpecifiedPeriod>
                   <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)">
                     <ram:StartDateTime>
@@ -381,8 +372,7 @@
                 <xsl:value-of select="ir:seller/ir:seller-additional-legal-information"/>
               </ram:Description>
             </xsl:if>
-            <xsl:if test="exists(ir:seller/ir:seller-trading-name)
-                or exists(ir:seller/ir:seller-legal-registration-identifier)">
+            <xsl:if test="exists(ir:seller/ir:seller-trading-name)                 or exists(ir:seller/ir:seller-legal-registration-identifier)">
               <ram:SpecifiedLegalOrganization>
                 <xsl:if test="exists(ir:seller/ir:seller-legal-registration-identifier)">
                   <ram:ID>
@@ -404,9 +394,7 @@
                 </xsl:if>
               </ram:SpecifiedLegalOrganization>
             </xsl:if>
-            <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point)
-                or exists(ir:seller/ir:seller-contact/ir:seller-contact-telephone-number)
-                or exists(ir:seller/ir:seller-contact/ir:seller-contact-email-address)">
+            <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point)                 or exists(ir:seller/ir:seller-contact/ir:seller-contact-telephone-number)                 or exists(ir:seller/ir:seller-contact/ir:seller-contact-email-address)">
               <ram:DefinedTradeContact>
                 <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point)">
                   <ram:PersonName>
@@ -520,8 +508,7 @@
               <!-- bt-44 -->
               <xsl:value-of select="ir:buyer/ir:buyer-name"/>
             </ram:Name>
-            <xsl:if test="exists(ir:buyer/ir:buyer-trading-name)
-                or exists(ir:buyer/ir:buyer-legal-registration-identifier)">
+            <xsl:if test="exists(ir:buyer/ir:buyer-trading-name)                 or exists(ir:buyer/ir:buyer-legal-registration-identifier)">
               <ram:SpecifiedLegalOrganization>
                 <xsl:if test="exists(ir:buyer/ir:buyer-legal-registration-identifier)">
                   <ram:ID>
@@ -543,9 +530,7 @@
                 </xsl:if>
               </ram:SpecifiedLegalOrganization>
             </xsl:if>
-            <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)
-                or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number)
-                or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address)">
+            <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)                 or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number)                 or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address)">
               <ram:DefinedTradeContact>
                 <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)">
                   <ram:PersonName>
@@ -774,9 +759,7 @@
           </xsl:if>
         </ram:ApplicableHeaderTradeAgreement>
         <ram:ApplicableHeaderTradeDelivery>
-          <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)
-              or exists(ir:delivery-information/ir:deliver-to-location-identifier)
-              or exists(ir:delivery-information/ir:deliver-to-address)">
+          <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)               or exists(ir:delivery-information/ir:deliver-to-location-identifier)               or exists(ir:delivery-information/ir:deliver-to-address)">
             <ram:ShipToTradeParty>
               <xsl:choose>
                 <xsl:when test="exists(ir:delivery-information/ir:deliver-to-location-identifier/ir:scheme-identifier)">
@@ -1044,7 +1027,7 @@
               <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-rate"/>
             </ram:RateApplicablePercent>
           </ram:ApplicableTradeTax>
-          <xsl:for-each select="ir:vat-breakdown/ir:vat-breakdown[position() > 1]">
+          <xsl:for-each select="ir:vat-breakdown/ir:vat-breakdown[position() &gt; 1]">
             <ram:ApplicableTradeTax>
               <ram:CalculatedAmount>
                 <!-- bt-117 -->
@@ -1077,8 +1060,7 @@
               </ram:RateApplicablePercent>
             </ram:ApplicableTradeTax>
           </xsl:for-each>
-          <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)
-              or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)">
+          <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)               or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)">
             <ram:BillingSpecifiedPeriod>
               <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)">
                 <ram:StartDateTime>
@@ -1198,8 +1180,7 @@
               </ram:CategoryTradeTax>
             </ram:SpecifiedTradeAllowanceCharge>
           </xsl:for-each>
-          <xsl:if test="exists(ir:payment-terms)
-              or exists(ir:payment-due-date)">
+          <xsl:if test="exists(ir:payment-terms)               or exists(ir:payment-due-date)">
             <ram:SpecifiedTradePaymentTerms>
               <xsl:if test="exists(ir:payment-terms)">
                 <ram:Description>
@@ -1255,8 +1236,7 @@
                 <xsl:value-of select="ir:document-totals/ir:invoice-total-vat-amount"/>
               </ram:TaxTotalAmount>
             </xsl:if>
-            <xsl:if test="exists(ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency)
-                and exists(ir:vat-accounting-currency-code)">
+            <xsl:if test="exists(ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency)                 and exists(ir:vat-accounting-currency-code)">
               <ram:TaxTotalAmount>
                 <xsl:attribute name="currencyID">
                   <xsl:value-of select="ir:vat-accounting-currency-code"/>
@@ -1301,7 +1281,6 @@
       </rsm:SupplyChainTradeTransaction>
     </rsm:CrossIndustryInvoice>
   </xsl:template>
-
   <xsl:template match="ir:preceding-invoice-references" mode="d16b">
     <ram:InvoiceReferencedDocument>
       <ram:IssuerAssignedID>
@@ -1320,7 +1299,6 @@
       </xsl:if>
     </ram:InvoiceReferencedDocument>
   </xsl:template>
-
   <xsl:template match="ir:preceding-invoice-references" mode="d22b">
     <xsl:for-each select="./ir:preceding-invoice-reference">
       <ram:InvoiceReferencedDocument>
@@ -1341,13 +1319,13 @@
       </ram:InvoiceReferencedDocument>
     </xsl:for-each>
   </xsl:template>
-
   <!-- TODO: support for format codes 610 and 616. 102 already implemented. See https://github.com/itplr-kosit/validator-configuration-xrechnung/issues/56 -->
   <xsl:template name="date">
     <xsl:param name="node"/>
-    <xsl:value-of select="substring($node, 1, 4)"/><xsl:value-of select="substring($node, 6, 2)"/><xsl:value-of select="substring($node, 9, 2)"/>
+    <xsl:value-of select="substring($node, 1, 4)"/>
+    <xsl:value-of select="substring($node, 6, 2)"/>
+    <xsl:value-of select="substring($node, 9, 2)"/>
   </xsl:template>
-
   <!--
       BT-8 is mapped to a different code list (UNTDID 2475) in CII than in EN16931 (UNTDID 2005).
 

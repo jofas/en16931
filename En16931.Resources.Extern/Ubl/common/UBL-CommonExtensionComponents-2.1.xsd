@@ -7,19 +7,13 @@
   Generated on:      2013-04-20 18:40(UTC)
   Copyright (c) OASIS Open 2013. All Rights Reserved.
 -->
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" 
-xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-xmlns:udt="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2"
-targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" 
-            elementFormDefault="qualified" attributeFormDefault="unqualified" 
-            version="2.1">
-<!-- ===== Imports ===== -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:udt="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2" targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.1">
+  <!-- ===== Imports ===== -->
   <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2" schemaLocation="UBL-UnqualifiedDataTypes-2.1.xsd"/>
   <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" schemaLocation="UBL-CommonBasicComponents-2.1.xsd"/>
-<!-- ===== Includes ===== -->
-<xsd:include schemaLocation="UBL-ExtensionContentDataType-2.1.xsd"/>
-<!-- ===== Aggregate Element and Type Declarations ===== -->
+  <!-- ===== Includes ===== -->
+  <xsd:include schemaLocation="UBL-ExtensionContentDataType-2.1.xsd"/>
+  <!-- ===== Aggregate Element and Type Declarations ===== -->
   <xsd:element name="UBLExtensions" type="UBLExtensionsType">
     <xsd:annotation>
       <xsd:documentation>
@@ -129,7 +123,7 @@ targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionCom
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-<!-- ===== Basic Element and Type Declarations ===== -->
+  <!-- ===== Basic Element and Type Declarations ===== -->
   <xsd:element name="ExtensionAgencyID" type="ExtensionAgencyIDType"/>
   <xsd:element name="ExtensionAgencyName" type="ExtensionAgencyNameType"/>
   <xsd:element name="ExtensionAgencyURI" type="ExtensionAgencyURIType"/>

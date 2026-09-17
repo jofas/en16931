@@ -9,7 +9,7 @@
   <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
   <cbc:BuyerReference>90000000-03083-72</cbc:BuyerReference>
   <cac:InvoicePeriod>
-     <!-- Should fail BR-CO-19
+    <!-- Should fail BR-CO-19
     <cbc:StartDate>2018-04-13</cbc:StartDate>
     <cbc:EndDate>2018-04-13</cbc:EndDate>
     <cbc:DescriptionCode>3</cbc:DescriptionCode>

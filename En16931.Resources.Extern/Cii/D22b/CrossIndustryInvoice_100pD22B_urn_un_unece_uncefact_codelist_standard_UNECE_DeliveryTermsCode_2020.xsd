@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:clm64053="urn:un:unece:uncefact:codelist:standard:UNECE:DeliveryTermsCode:2020"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="urn:un:unece:uncefact:codelist:standard:UNECE:DeliveryTermsCode:2020"
-    elementFormDefault="qualified"
-    version="3.0">
+<xsd:schema xmlns:clm64053="urn:un:unece:uncefact:codelist:standard:UNECE:DeliveryTermsCode:2020" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:un:unece:uncefact:codelist:standard:UNECE:DeliveryTermsCode:2020" elementFormDefault="qualified" version="3.0">
   <xsd:simpleType name="DeliveryTermsCodeContentType">
     <xsd:restriction base="xsd:token">
       <xsd:enumeration value="1"/>

@@ -45,17 +45,10 @@
   All other unqualified data types inherit the core component types complete
   with their supplementary components.
 -->
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2" 
-xmlns:ccts-cct="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2"
-            xmlns:ccts="urn:un:unece:uncefact:documentation:2" 
-            elementFormDefault="qualified" 
-            attributeFormDefault="unqualified"
-            version="2.1">
-<!-- ===== Imports ===== -->
-  <xsd:import schemaLocation="CCTS_CCT_SchemaModule-2.1.xsd"
-namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2"/>
-<!-- ===== Type Definitions ===== -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ccts-cct="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2" xmlns:ccts="urn:un:unece:uncefact:documentation:2" targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.1">
+  <!-- ===== Imports ===== -->
+  <xsd:import schemaLocation="CCTS_CCT_SchemaModule-2.1.xsd" namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2"/>
+  <!-- ===== Type Definitions ===== -->
   <xsd:complexType name="AmountType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -70,24 +63,23 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
     <xsd:simpleContent>
       <xsd:restriction base="ccts-cct:AmountType">
         <xsd:attribute name="currencyID" type="xsd:normalizedString" use="required">
-           <xsd:annotation>
-              <xsd:documentation xml:lang="en">
-                 <ccts:UniqueID>UNDT000001-SC2</ccts:UniqueID>
-                 <ccts:CategoryCode>SC</ccts:CategoryCode>
-                 <ccts:DictionaryEntryName>Amount. Currency. Identifier</ccts:DictionaryEntryName>
-                 <ccts:Definition>The currency of the amount.</ccts:Definition>
-                 <ccts:ObjectClass>Amount Currency</ccts:ObjectClass>
-                 <ccts:PropertyTermName>Identification</ccts:PropertyTermName>
-                 <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
-                 <ccts:PrimitiveType>string</ccts:PrimitiveType>
-                 <ccts:UsageRule>Reference UNECE Rec 9, using 3-letter alphabetic codes.</ccts:UsageRule>
-              </xsd:documentation>
-           </xsd:annotation>
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              <ccts:UniqueID>UNDT000001-SC2</ccts:UniqueID>
+              <ccts:CategoryCode>SC</ccts:CategoryCode>
+              <ccts:DictionaryEntryName>Amount. Currency. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>The currency of the amount.</ccts:Definition>
+              <ccts:ObjectClass>Amount Currency</ccts:ObjectClass>
+              <ccts:PropertyTermName>Identification</ccts:PropertyTermName>
+              <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+              <ccts:PrimitiveType>string</ccts:PrimitiveType>
+              <ccts:UsageRule>Reference UNECE Rec 9, using 3-letter alphabetic codes.</ccts:UsageRule>
+            </xsd:documentation>
+          </xsd:annotation>
         </xsd:attribute>
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="BinaryObjectType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -103,23 +95,22 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
     <xsd:simpleContent>
       <xsd:restriction base="ccts-cct:BinaryObjectType">
         <xsd:attribute name="mimeCode" type="xsd:normalizedString" use="required">
-           <xsd:annotation>
-              <xsd:documentation xml:lang="en">
-                 <ccts:UniqueID>UNDT000002-SC3</ccts:UniqueID>
-                 <ccts:CategoryCode>SC</ccts:CategoryCode>
-                 <ccts:DictionaryEntryName>Binary Object. Mime. Code</ccts:DictionaryEntryName>
-                 <ccts:Definition>The mime type of the binary object.</ccts:Definition>
-                 <ccts:ObjectClass>Binary Object</ccts:ObjectClass>
-                 <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
-                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
-                 <ccts:PrimitiveType>string</ccts:PrimitiveType>
-              </xsd:documentation>
-           </xsd:annotation>
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              <ccts:UniqueID>UNDT000002-SC3</ccts:UniqueID>
+              <ccts:CategoryCode>SC</ccts:CategoryCode>
+              <ccts:DictionaryEntryName>Binary Object. Mime. Code</ccts:DictionaryEntryName>
+              <ccts:Definition>The mime type of the binary object.</ccts:Definition>
+              <ccts:ObjectClass>Binary Object</ccts:ObjectClass>
+              <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
+              <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+              <ccts:PrimitiveType>string</ccts:PrimitiveType>
+            </xsd:documentation>
+          </xsd:annotation>
         </xsd:attribute>
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="GraphicType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -135,23 +126,22 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
     <xsd:simpleContent>
       <xsd:restriction base="ccts-cct:BinaryObjectType">
         <xsd:attribute name="mimeCode" type="xsd:normalizedString" use="required">
-           <xsd:annotation>
-              <xsd:documentation xml:lang="en">
-                 <ccts:UniqueID>UNDT000003-SC3</ccts:UniqueID>
-                 <ccts:CategoryCode>SC</ccts:CategoryCode>
-                 <ccts:DictionaryEntryName>Graphic. Mime. Code</ccts:DictionaryEntryName>
-                 <ccts:Definition>The mime type of the graphic object.</ccts:Definition>
-                 <ccts:ObjectClass>Graphic</ccts:ObjectClass>
-                 <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
-                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
-                 <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
-              </xsd:documentation>
-           </xsd:annotation>
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              <ccts:UniqueID>UNDT000003-SC3</ccts:UniqueID>
+              <ccts:CategoryCode>SC</ccts:CategoryCode>
+              <ccts:DictionaryEntryName>Graphic. Mime. Code</ccts:DictionaryEntryName>
+              <ccts:Definition>The mime type of the graphic object.</ccts:Definition>
+              <ccts:ObjectClass>Graphic</ccts:ObjectClass>
+              <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
+              <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+              <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
+            </xsd:documentation>
+          </xsd:annotation>
         </xsd:attribute>
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="PictureType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -167,23 +157,22 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
     <xsd:simpleContent>
       <xsd:restriction base="ccts-cct:BinaryObjectType">
         <xsd:attribute name="mimeCode" type="xsd:normalizedString" use="required">
-           <xsd:annotation>
-              <xsd:documentation xml:lang="en">
-                 <ccts:UniqueID>UNDT000004-SC3</ccts:UniqueID>
-                 <ccts:CategoryCode>SC</ccts:CategoryCode>
-                 <ccts:DictionaryEntryName>Picture. Mime. Code</ccts:DictionaryEntryName>
-                 <ccts:Definition>The mime type of the picture object.</ccts:Definition>
-                 <ccts:ObjectClass>Picture</ccts:ObjectClass>
-                 <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
-                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
-                 <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
-              </xsd:documentation>
-           </xsd:annotation>
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              <ccts:UniqueID>UNDT000004-SC3</ccts:UniqueID>
+              <ccts:CategoryCode>SC</ccts:CategoryCode>
+              <ccts:DictionaryEntryName>Picture. Mime. Code</ccts:DictionaryEntryName>
+              <ccts:Definition>The mime type of the picture object.</ccts:Definition>
+              <ccts:ObjectClass>Picture</ccts:ObjectClass>
+              <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
+              <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+              <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
+            </xsd:documentation>
+          </xsd:annotation>
         </xsd:attribute>
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="SoundType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -199,23 +188,22 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
     <xsd:simpleContent>
       <xsd:restriction base="ccts-cct:BinaryObjectType">
         <xsd:attribute name="mimeCode" type="xsd:normalizedString" use="required">
-           <xsd:annotation>
-              <xsd:documentation xml:lang="en">
-                 <ccts:UniqueID>UNDT000005-SC3</ccts:UniqueID>
-                 <ccts:CategoryCode>SC</ccts:CategoryCode>
-                 <ccts:DictionaryEntryName>Sound. Mime. Code</ccts:DictionaryEntryName>
-                 <ccts:Definition>The mime type of the sound object.</ccts:Definition>
-                 <ccts:ObjectClass>Sound</ccts:ObjectClass>
-                 <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
-                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
-                 <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
-              </xsd:documentation>
-           </xsd:annotation>
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              <ccts:UniqueID>UNDT000005-SC3</ccts:UniqueID>
+              <ccts:CategoryCode>SC</ccts:CategoryCode>
+              <ccts:DictionaryEntryName>Sound. Mime. Code</ccts:DictionaryEntryName>
+              <ccts:Definition>The mime type of the sound object.</ccts:Definition>
+              <ccts:ObjectClass>Sound</ccts:ObjectClass>
+              <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
+              <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+              <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
+            </xsd:documentation>
+          </xsd:annotation>
         </xsd:attribute>
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="VideoType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -231,23 +219,22 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
     <xsd:simpleContent>
       <xsd:restriction base="ccts-cct:BinaryObjectType">
         <xsd:attribute name="mimeCode" type="xsd:normalizedString" use="required">
-           <xsd:annotation>
-              <xsd:documentation xml:lang="en">
-                 <ccts:UniqueID>UNDT000006-SC3</ccts:UniqueID>
-                 <ccts:CategoryCode>SC</ccts:CategoryCode>
-                 <ccts:DictionaryEntryName>Video. Mime. Code</ccts:DictionaryEntryName>
-                 <ccts:Definition>The mime type of the video object.</ccts:Definition>
-                 <ccts:ObjectClass>Video</ccts:ObjectClass>
-                 <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
-                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
-                 <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
-              </xsd:documentation>
-           </xsd:annotation>
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              <ccts:UniqueID>UNDT000006-SC3</ccts:UniqueID>
+              <ccts:CategoryCode>SC</ccts:CategoryCode>
+              <ccts:DictionaryEntryName>Video. Mime. Code</ccts:DictionaryEntryName>
+              <ccts:Definition>The mime type of the video object.</ccts:Definition>
+              <ccts:ObjectClass>Video</ccts:ObjectClass>
+              <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
+              <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+              <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
+            </xsd:documentation>
+          </xsd:annotation>
         </xsd:attribute>
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="CodeType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -265,7 +252,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="ccts-cct:CodeType"/>
     </xsd:simpleContent>
   </xsd:complexType>
-  
   <xsd:complexType name="DateTimeType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -283,7 +269,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="xsd:dateTime"/>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="DateType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -300,7 +285,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="xsd:date"/>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="TimeType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -317,7 +301,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="xsd:time"/>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="IdentifierType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -335,7 +318,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="ccts-cct:IdentifierType"/>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="IndicatorType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -352,7 +334,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="xsd:boolean"/>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="MeasureType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -369,24 +350,23 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
     <xsd:simpleContent>
       <xsd:restriction base="ccts-cct:MeasureType">
         <xsd:attribute name="unitCode" type="xsd:normalizedString" use="required">
-           <xsd:annotation>
-              <xsd:documentation xml:lang="en">
-                 <ccts:UniqueID>UNDT000013-SC2</ccts:UniqueID>
-                 <ccts:CategoryCode>SC</ccts:CategoryCode>
-                 <ccts:DictionaryEntryName>Measure. Unit. Code</ccts:DictionaryEntryName>
-                 <ccts:Definition>The type of unit of measure.</ccts:Definition>
-                 <ccts:ObjectClass>Measure Unit</ccts:ObjectClass>
-                 <ccts:PropertyTermName>Code</ccts:PropertyTermName>
-                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
-                 <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
-                 <ccts:UsageRule>Reference UNECE Rec. 20 and X12 355</ccts:UsageRule>
-              </xsd:documentation>
-           </xsd:annotation>
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              <ccts:UniqueID>UNDT000013-SC2</ccts:UniqueID>
+              <ccts:CategoryCode>SC</ccts:CategoryCode>
+              <ccts:DictionaryEntryName>Measure. Unit. Code</ccts:DictionaryEntryName>
+              <ccts:Definition>The type of unit of measure.</ccts:Definition>
+              <ccts:ObjectClass>Measure Unit</ccts:ObjectClass>
+              <ccts:PropertyTermName>Code</ccts:PropertyTermName>
+              <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+              <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
+              <ccts:UsageRule>Reference UNECE Rec. 20 and X12 355</ccts:UsageRule>
+            </xsd:documentation>
+          </xsd:annotation>
         </xsd:attribute>
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
-  
   <xsd:complexType name="NumericType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -403,7 +383,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="ccts-cct:NumericType"/>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="ValueType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -420,7 +399,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="ccts-cct:NumericType"/>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="PercentType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -437,7 +415,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="ccts-cct:NumericType"/>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="RateType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -454,7 +431,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="ccts-cct:NumericType"/>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="QuantityType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -471,7 +447,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="ccts-cct:QuantityType"/>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="TextType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -488,7 +463,6 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="ccts-cct:TextType"/>
     </xsd:simpleContent>
   </xsd:complexType>
-
   <xsd:complexType name="NameType">
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
@@ -505,7 +479,9 @@ namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModul
       <xsd:extension base="ccts-cct:TextType"/>
     </xsd:simpleContent>
   </xsd:complexType>
-</xsd:schema><!-- ===== Copyright Notice ===== --><!--
+</xsd:schema>
+<!-- ===== Copyright Notice ===== -->
+<!--
   OASIS takes no position regarding the validity or scope of any 
   intellectual property or other rights that might be claimed to pertain 
   to the implementation or use of the technology described in this 
