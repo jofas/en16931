@@ -98,22 +98,14 @@ static class Xsd
 
     static Xsd()
     {
-        using XmlReader ublXmlSigSchemaFile = XmlReader.Create(
-            $"{AppContext.BaseDirectory}/En16931.Resources.Extern/Ubl/common/UBL-xmldsig-core-schema-2.1.xsd",
-            new() { DtdProcessing = DtdProcessing.Ignore }
-        );
-        XmlSchema ublXmlSigSchema = XmlSchema.Read(ublXmlSigSchemaFile, null)!;
-
         XmlSchemaSet ublInvoice = new();
         ublInvoice.XmlResolver = new XmlUrlResolver();
-        ublInvoice.Add(ublXmlSigSchema);
         ublInvoice.Add(null, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/Ubl/maindoc/UBL-Invoice-2.1.xsd");
         ublInvoice.Compile();
         UblInvoice = ublInvoice;
 
         XmlSchemaSet ublCreditNote = new();
         ublCreditNote.XmlResolver = new XmlUrlResolver();
-        ublCreditNote.Add(ublXmlSigSchema);
         ublCreditNote.Add(null, $"{AppContext.BaseDirectory}/En16931.Resources.Extern/Ubl/maindoc/UBL-CreditNote-2.1.xsd");
         ublCreditNote.Compile();
         UblCreditNote = ublCreditNote;
