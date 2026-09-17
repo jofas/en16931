@@ -809,75 +809,77 @@
         </xsl:if>
       </cac:Delivery>
     </xsl:if>
-    <cac:PaymentMeans>
-      <cbc:PaymentMeansCode>
-        <xsl:if test="exists(ir:payment-instructions/ir:payment-means-text)">
-          <xsl:attribute name="name">
-            <!-- bt-82 -->
-            <xsl:value-of select="ir:payment-instructions/ir:payment-means-text"/>
-          </xsl:attribute>
+    <xsl:if test="exists(ir:payment-instructions)">
+      <cac:PaymentMeans>
+        <cbc:PaymentMeansCode>
+          <xsl:if test="exists(ir:payment-instructions/ir:payment-means-text)">
+            <xsl:attribute name="name">
+              <!-- bt-82 -->
+              <xsl:value-of select="ir:payment-instructions/ir:payment-means-text"/>
+            </xsl:attribute>
+          </xsl:if>
+          <!-- bt-81 -->
+          <xsl:value-of select="ir:payment-instructions/ir:payment-means-type-code"/>
+        </cbc:PaymentMeansCode>
+        <xsl:if test="exists(ir:payment-instructions/ir:remittance-information)">
+          <cbc:PaymentID>
+            <!-- bt-83 -->
+            <xsl:value-of select="ir:payment-instructions/ir:remittance-information"/>
+          </cbc:PaymentID>
         </xsl:if>
-        <!-- bt-81 -->
-        <xsl:value-of select="ir:payment-instructions/ir:payment-means-type-code"/>
-      </cbc:PaymentMeansCode>
-      <xsl:if test="exists(ir:payment-instructions/ir:remittance-information)">
-        <cbc:PaymentID>
-          <!-- bt-83 -->
-          <xsl:value-of select="ir:payment-instructions/ir:remittance-information"/>
-        </cbc:PaymentID>
-      </xsl:if>
-      <xsl:if test="exists(ir:payment-instructions/ir:payment-card-information)">
-        <cac:CardAccount>
-          <cbc:PrimaryAccountNumberID>
-            <!-- bt-87 -->
-            <xsl:value-of select="ir:payment-instructions/ir:payment-card-information/ir:payment-card-primary-account-number"/>
-          </cbc:PrimaryAccountNumberID>
-          <cbc:NetworkID>required-but-unmapped-field</cbc:NetworkID>
-          <xsl:if test="exists(ir:payment-instructions/ir:payment-card-information/ir:payment-card-holder-name)">
-            <cbc:HolderName>
-              <!-- bt-88 -->
-              <xsl:value-of select="ir:payment-instructions/ir:payment-card-information/ir:payment-card-holder-name"/>
-            </cbc:HolderName>
-          </xsl:if>
-        </cac:CardAccount>
-      </xsl:if>
-      <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer)">
-        <cac:PayeeFinancialAccount>
-          <cbc:ID>
-            <!-- bt-84 -->
-            <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-identifier"/>
-          </cbc:ID>
-          <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-name)">
-            <cbc:Name>
-              <!-- bt-85 -->
-              <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-name"/>
-            </cbc:Name>
-          </xsl:if>
-          <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-service-provider-identifier)">
-            <cac:FinancialInstitutionBranch>
-              <cbc:ID>
-                <!-- bt-86 -->
-                <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-service-provider-identifier"/>
-              </cbc:ID>
-            </cac:FinancialInstitutionBranch>
-          </xsl:if>
-        </cac:PayeeFinancialAccount>
-      </xsl:if>
-      <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
-        <cac:PaymentMandate>
-          <cbc:ID>
-            <!-- bt-89 -->
-            <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:mandate-reference-identifier/ir:content"/>
-          </cbc:ID>
-          <cac:PayerFinancialAccount>
+        <xsl:if test="exists(ir:payment-instructions/ir:payment-card-information)">
+          <cac:CardAccount>
+            <cbc:PrimaryAccountNumberID>
+              <!-- bt-87 -->
+              <xsl:value-of select="ir:payment-instructions/ir:payment-card-information/ir:payment-card-primary-account-number"/>
+            </cbc:PrimaryAccountNumberID>
+            <cbc:NetworkID>required-but-unmapped-field</cbc:NetworkID>
+            <xsl:if test="exists(ir:payment-instructions/ir:payment-card-information/ir:payment-card-holder-name)">
+              <cbc:HolderName>
+                <!-- bt-88 -->
+                <xsl:value-of select="ir:payment-instructions/ir:payment-card-information/ir:payment-card-holder-name"/>
+              </cbc:HolderName>
+            </xsl:if>
+          </cac:CardAccount>
+        </xsl:if>
+        <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer)">
+          <cac:PayeeFinancialAccount>
             <cbc:ID>
-              <!-- bt-91 -->
-              <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:debited-account-identifier/ir:content"/>
+              <!-- bt-84 -->
+              <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-identifier"/>
             </cbc:ID>
-          </cac:PayerFinancialAccount>
-        </cac:PaymentMandate>
-      </xsl:if>
-    </cac:PaymentMeans>
+            <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-name)">
+              <cbc:Name>
+                <!-- bt-85 -->
+                <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-account-name"/>
+              </cbc:Name>
+            </xsl:if>
+            <xsl:if test="exists(ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-service-provider-identifier)">
+              <cac:FinancialInstitutionBranch>
+                <cbc:ID>
+                  <!-- bt-86 -->
+                  <xsl:value-of select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[1]/ir:payment-service-provider-identifier"/>
+                </cbc:ID>
+              </cac:FinancialInstitutionBranch>
+            </xsl:if>
+          </cac:PayeeFinancialAccount>
+        </xsl:if>
+        <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
+          <cac:PaymentMandate>
+            <cbc:ID>
+              <!-- bt-89 -->
+              <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:mandate-reference-identifier/ir:content"/>
+            </cbc:ID>
+            <cac:PayerFinancialAccount>
+              <cbc:ID>
+                <!-- bt-91 -->
+                <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:debited-account-identifier/ir:content"/>
+              </cbc:ID>
+            </cac:PayerFinancialAccount>
+          </cac:PaymentMandate>
+        </xsl:if>
+      </cac:PaymentMeans>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template name="common-invoice-4">
