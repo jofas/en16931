@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:clm69303="urn:un:unece:uncefact:codelist:standard:UNECE:SealingPartyRoleCode:D22A"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="urn:un:unece:uncefact:codelist:standard:UNECE:SealingPartyRoleCode:D22A"
-    elementFormDefault="qualified"
-    version="3.1">
+<xsd:schema xmlns:clm69303="urn:un:unece:uncefact:codelist:standard:UNECE:SealingPartyRoleCode:D22A" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:un:unece:uncefact:codelist:standard:UNECE:SealingPartyRoleCode:D22A" elementFormDefault="qualified" version="3.1">
   <xsd:simpleType name="SealingPartyRoleCodeContentType">
     <xsd:restriction base="xsd:token">
       <xsd:enumeration value="AA"/>

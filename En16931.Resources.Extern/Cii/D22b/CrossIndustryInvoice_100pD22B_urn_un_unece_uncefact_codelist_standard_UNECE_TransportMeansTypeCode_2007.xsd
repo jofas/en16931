@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:clm6Recommendation28="urn:un:unece:uncefact:codelist:standard:UNECE:TransportMeansTypeCode:2007"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="urn:un:unece:uncefact:codelist:standard:UNECE:TransportMeansTypeCode:2007"
-    elementFormDefault="qualified"
-    version="3.4">
+<xsd:schema xmlns:clm6Recommendation28="urn:un:unece:uncefact:codelist:standard:UNECE:TransportMeansTypeCode:2007" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:un:unece:uncefact:codelist:standard:UNECE:TransportMeansTypeCode:2007" elementFormDefault="qualified" version="3.4">
   <xsd:simpleType name="TransportMeansTypeCodeContentType">
     <xsd:restriction base="xsd:token">
       <xsd:enumeration value="1501"/>

@@ -1,10 +1,5 @@
-<xsl:stylesheet
-    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:ir="urn:todo"
-    exclude-result-prefixes="xsl ir"
-    version="1.0">
+<?xml version="1.0"?>
+<xsl:stylesheet xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ir="urn:todo" exclude-result-prefixes="xsl ir" version="1.0">
   <xsl:template match="/ir:invoice" mode="invoice">
     <invoice:Invoice xmlns:invoice="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
       <xsl:call-template name="common-invoice-1"/>
@@ -15,7 +10,7 @@
         </cbc:DueDate>
       </xsl:if>
       <cbc:InvoiceTypeCode>
-		<!-- bt-3 -->
+        <!-- bt-3 -->
         <xsl:value-of select="ir:invoice-type-code"/>
       </cbc:InvoiceTypeCode>
       <xsl:call-template name="common-invoice-notes"/>
@@ -59,13 +54,12 @@
       </xsl:for-each>
     </invoice:Invoice>
   </xsl:template>
-
   <xsl:template match="/ir:invoice" mode="credit-note">
     <credit-note:CreditNote xmlns:credit-note="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2">
       <xsl:call-template name="common-invoice-1"/>
       <xsl:call-template name="common-invoice-tax-point-date"/>
       <cbc:CreditNoteTypeCode>
-		<!-- bt-3 -->
+        <!-- bt-3 -->
         <xsl:value-of select="ir:invoice-type-code"/>
       </cbc:CreditNoteTypeCode>
       <xsl:call-template name="common-invoice-notes"/>
@@ -84,8 +78,7 @@
       </xsl:if>
       <xsl:call-template name="common-invoice-originator-document-reference"/>
       <xsl:call-template name="common-invoice-3"/>
-      <xsl:if test="exists(ir:payment-terms)
-          or exists(ir:payment-due-date)">
+      <xsl:if test="exists(ir:payment-terms)           or exists(ir:payment-due-date)">
         <cac:PaymentTerms>
           <xsl:if test="exists(ir:payment-terms)">
             <cbc:Note>
@@ -118,7 +111,6 @@
       </xsl:for-each>
     </credit-note:CreditNote>
   </xsl:template>
-
   <xsl:template name="common-invoice-1">
     <cbc:CustomizationID>
       <!-- bt-24 -->
@@ -131,7 +123,7 @@
       </cbc:ProfileID>
     </xsl:if>
     <cbc:ID>
-	  <!-- bt-1 -->
+      <!-- bt-1 -->
       <xsl:value-of select="ir:invoice-number"/>
     </cbc:ID>
     <cbc:IssueDate>
@@ -139,7 +131,6 @@
       <xsl:value-of select="ir:invoice-issue-date"/>
     </cbc:IssueDate>
   </xsl:template>
-
   <xsl:template name="common-invoice-notes">
     <xsl:for-each select="ir:invoice-notes/ir:invoice-note">
       <cbc:Note>
@@ -154,7 +145,6 @@
       </cbc:Note>
     </xsl:for-each>
   </xsl:template>
-
   <xsl:template name="common-invoice-tax-point-date">
     <xsl:if test="exists(ir:value-added-tax-point-date)">
       <cbc:TaxPointDate>
@@ -163,7 +153,6 @@
       </cbc:TaxPointDate>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-2">
     <cbc:DocumentCurrencyCode>
       <!-- bt-5 -->
@@ -187,9 +176,7 @@
         <xsl:value-of select="ir:buyer-reference"/>
       </cbc:BuyerReference>
     </xsl:if>
-    <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)
-        or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)
-        or exists(ir:value-added-tax-point-date-code)">
+    <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)         or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)         or exists(ir:value-added-tax-point-date-code)">
       <cac:InvoicePeriod>
         <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)">
           <cbc:StartDate>
@@ -211,8 +198,7 @@
         </xsl:if>
       </cac:InvoicePeriod>
     </xsl:if>
-    <xsl:if test="exists(ir:purchase-order-reference)
-        or exists(ir:sales-order-reference)">
+    <xsl:if test="exists(ir:purchase-order-reference)         or exists(ir:sales-order-reference)">
       <cac:OrderReference>
         <xsl:if test="exists(ir:purchase-order-reference)">
           <cbc:ID>
@@ -261,7 +247,6 @@
       </cac:ReceiptDocumentReference>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-originator-document-reference">
     <xsl:if test="exists(ir:tender-or-lot-reference)">
       <cac:OriginatorDocumentReference>
@@ -272,7 +257,6 @@
       </cac:OriginatorDocumentReference>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-contract-document-reference">
     <xsl:if test="exists(ir:contract-reference)">
       <cac:ContractDocumentReference>
@@ -283,7 +267,6 @@
       </cac:ContractDocumentReference>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-additional-supporting-documents">
     <xsl:for-each select="ir:additional-supporting-documents/ir:additional-supporting-document">
       <cac:AdditionalDocumentReference>
@@ -297,8 +280,7 @@
             <xsl:value-of select="./ir:supporting-document-description"/>
           </cbc:DocumentDescription>
         </xsl:if>
-        <xsl:if test="exists(./ir:attached-document)
-            or exists(./ir:external-document-location)">
+        <xsl:if test="exists(./ir:attached-document)             or exists(./ir:external-document-location)">
           <cac:Attachment>
             <xsl:if test="exists(./ir:attached-document)">
               <cbc:EmbeddedDocumentBinaryObject>
@@ -327,7 +309,6 @@
       </cac:AdditionalDocumentReference>
     </xsl:for-each>
   </xsl:template>
-
   <xsl:template name="common-invoice-invoiced-object-identifier">
     <xsl:if test="exists(ir:invoiced-object-identifier)">
       <cac:AdditionalDocumentReference>
@@ -339,7 +320,6 @@
       </cac:AdditionalDocumentReference>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-3">
     <cac:AccountingSupplierParty>
       <cac:Party>
@@ -471,9 +451,7 @@
             </cbc:CompanyLegalForm>
           </xsl:if>
         </cac:PartyLegalEntity>
-        <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point)
-            or exists(ir:seller/ir:seller-contact/ir:seller-contact-telephone-number)
-            or exists(ir:seller/ir:seller-contact/ir:seller-contact-email-address)">
+        <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point)             or exists(ir:seller/ir:seller-contact/ir:seller-contact-telephone-number)             or exists(ir:seller/ir:seller-contact/ir:seller-contact-email-address)">
           <cac:Contact>
             <cbc:Name>
               <!-- bt-41 -->
@@ -596,9 +574,7 @@
             </cbc:CompanyID>
           </xsl:if>
         </cac:PartyLegalEntity>
-        <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)
-            or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number)
-            or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address)">
+        <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)             or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number)             or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address)">
           <cac:Contact>
             <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)">
               <cbc:Name>
@@ -725,10 +701,7 @@
         </cac:PartyTaxScheme>
       </cac:TaxRepresentativeParty>
     </xsl:if>
-    <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)
-        or exists(ir:delivery-information/ir:deliver-to-location-identifier)
-        or exists(ir:delivery-information/ir:actual-delivery-date)
-        or exists(ir:deliver-information/ir:deliver-to-address)">
+    <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)         or exists(ir:delivery-information/ir:deliver-to-location-identifier)         or exists(ir:delivery-information/ir:actual-delivery-date)         or exists(ir:deliver-information/ir:deliver-to-address)">
       <cac:Delivery>
         <xsl:if test="exists(ir:delivery-information/ir:actual-delivery-date)">
           <cbc:ActualDeliveryDate>
@@ -736,8 +709,7 @@
             <xsl:value-of select="ir:delivery-information/ir:actual-delivery-date"/>
           </cbc:ActualDeliveryDate>
         </xsl:if>
-        <xsl:if test="exists(ir:delivery-information/ir:deliver-to-location-identifier)
-            or exists(ir:deliver-information/ir:deliver-to-address)">
+        <xsl:if test="exists(ir:delivery-information/ir:deliver-to-location-identifier)             or exists(ir:deliver-information/ir:deliver-to-address)">
           <cac:DeliveryLocation>
             <xsl:if test="exists(ir:delivery-information/ir:deliver-to-location-identifier)">
               <cbc:ID>
@@ -881,7 +853,6 @@
       </cac:PaymentMeans>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-4">
     <xsl:for-each select="ir:document-level-charges/ir:document-level-charge">
       <cac:AllowanceCharge>
@@ -1051,8 +1022,7 @@
         </cac:TaxSubtotal>
       </xsl:for-each>
     </cac:TaxTotal>
-    <xsl:if test="exists(ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency)
-        and exists(ir:vat-accounting-currency-code)">
+    <xsl:if test="exists(ir:document-totals/ir:invoice-total-vat-amount-in-accounting-currency)         and exists(ir:vat-accounting-currency-code)">
       <cac:TaxTotal>
         <cbc:TaxAmount>
           <xsl:attribute name="currencyID">
@@ -1130,7 +1100,6 @@
       </cbc:PayableAmount>
     </cac:LegalMonetaryTotal>
   </xsl:template>
-
   <xsl:template name="common-invoice-line-1">
     <cbc:ID>
       <!-- bt-126 -->
@@ -1143,7 +1112,6 @@
       </cbc:Note>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-line-2">
     <cbc:LineExtensionAmount>
       <xsl:attribute name="currencyID">
@@ -1158,8 +1126,7 @@
         <xsl:value-of select="./ir:invoice-line-buyer-accounting-reference"/>
       </cbc:AccountingCost>
     </xsl:if>
-    <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)
-        or exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
+    <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)         or exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
       <cac:InvoicePeriod>
         <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)">
           <cbc:StartDate>
@@ -1389,8 +1356,7 @@
           <xsl:value-of select="./ir:price-details/ir:item-price-base-quantity"/>
         </cbc:BaseQuantity>
       </xsl:if>
-      <xsl:if test="exists(./ir:price-details/ir:item-price-discount)
-          or exists(./ir:price-details/ir:item-gross-price)">
+      <xsl:if test="exists(./ir:price-details/ir:item-price-discount)           or exists(./ir:price-details/ir:item-gross-price)">
         <cac:AllowanceCharge>
           <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
           <xsl:if test="exists(./ir:price-details/ir:item-price-discount)">

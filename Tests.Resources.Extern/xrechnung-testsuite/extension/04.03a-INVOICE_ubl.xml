@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <ubl:Invoice xmlns:ubl="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
   <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0</cbc:CustomizationID>
   <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
@@ -12,7 +13,7 @@
     Netto-Betrag 100.000,00; MwSt.-Betrag 19.000,00; Brutto-Betrag 119.000,00 </cbc:Note>
   <cbc:Note>Abrufnummer: XXXX</cbc:Note>
   <cbc:Note>Kettennummer: YYYYY</cbc:Note>
-  <cbc:Note>Kostenträger: 01 Leistungen Bund</cbc:Note>
+  <cbc:Note>Kostentr&#xE4;ger: 01 Leistungen Bund</cbc:Note>
   <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
   <cbc:BuyerReference>12345678-12345-83</cbc:BuyerReference>
   <cac:InvoicePeriod>
@@ -45,7 +46,7 @@
         <cbc:Name>M. Meier</cbc:Name>
       </cac:PartyName>
       <cac:PostalAddress>
-        <cbc:StreetName>Hauptstraße 2</cbc:StreetName>
+        <cbc:StreetName>Hauptstra&#xDF;e 2</cbc:StreetName>
         <cbc:CityName>Musterstadt</cbc:CityName>
         <cbc:PostalZone>12345</cbc:PostalZone>
         <cac:Country>
@@ -100,7 +101,7 @@
   <cac:AllowanceCharge>
     <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
     <cbc:AllowanceChargeReasonCode>104</cbc:AllowanceChargeReasonCode>
-    <cbc:AllowanceChargeReason>Standard - Gewährleistungseinbehalt auf Rechnungsbetrag
+    <cbc:AllowanceChargeReason>Standard - Gew&#xE4;hrleistungseinbehalt auf Rechnungsbetrag
       (Leistungssumme abzgl. Bauumlage abzgl. Bauleistungsversicherung)</cbc:AllowanceChargeReason>
     <cbc:MultiplierFactorNumeric>1.25</cbc:MultiplierFactorNumeric>
     <cbc:Amount currencyID="EUR">255384.19</cbc:Amount>
@@ -216,7 +217,7 @@
       <cbc:InvoicedQuantity unitCode="C62">210</cbc:InvoicedQuantity>
       <cbc:LineExtensionAmount currencyID="EUR">21165166.39</cbc:LineExtensionAmount>
       <cac:Item>
-        <cbc:Name>Ortbetonstützwand Los 15/16 bahnrechts, km 5,910..</cbc:Name>
+        <cbc:Name>Ortbetonst&#xFC;tzwand Los 15/16 bahnrechts, km 5,910..</cbc:Name>
         <cac:ClassifiedTaxCategory>
           <cbc:ID>S</cbc:ID>
           <cbc:Percent>19</cbc:Percent>
@@ -270,7 +271,7 @@
         <cbc:InvoicedQuantity unitCode="MTR">1025.5</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">42227.17</cbc:LineExtensionAmount>
         <cac:Item>
-          <cbc:Name>Abbruch / Rückbau</cbc:Name>
+          <cbc:Name>Abbruch / R&#xFC;ckbau</cbc:Name>
           <cac:ClassifiedTaxCategory>
             <cbc:ID>S</cbc:ID>
             <cbc:Percent>19</cbc:Percent>
@@ -287,7 +288,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">1025.5</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">11813.76</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Asphalt sägen</cbc:Name>
+            <cbc:Name>Asphalt s&#xE4;gen</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -306,7 +307,7 @@
           <cbc:InvoicedQuantity unitCode="MTK">1643.968</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">30413.41</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Asphaltfläche aufnehmen</cbc:Name>
+            <cbc:Name>Asphaltfl&#xE4;che aufnehmen</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -343,7 +344,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">86.561</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">13488.80</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Boden Suchgraben lösen, lagern BK 3/5</cbc:Name>
+            <cbc:Name>Boden Suchgraben l&#xF6;sen, lagern BK 3/5</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -362,7 +363,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">3000</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Aufmaß und Dokumentation</cbc:Name>
+            <cbc:Name>Aufma&#xDF; und Dokumentation</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -381,7 +382,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">1035.278</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">44030.37</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Boden aus Dammböschung abtragen (TE)</cbc:Name>
+            <cbc:Name>Boden aus Dammb&#xF6;schung abtragen (TE)</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -400,7 +401,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">4589.754</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">252436.47</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Boden liefern für Dammböschung, in den Auftragsb.. einbauen</cbc:Name>
+            <cbc:Name>Boden liefern f&#xFC;r Dammb&#xF6;schung, in den Auftragsb.. einbauen</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -419,7 +420,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">80.748</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">5650.75</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Geeigneten Boden für Randweg liefern und profilg..</cbc:Name>
+            <cbc:Name>Geeigneten Boden f&#xFC;r Randweg liefern und profilg..</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -457,7 +458,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">1366.486</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">52090.45</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Erdarbeiten für Fundament herstellen</cbc:Name>
+            <cbc:Name>Erdarbeiten f&#xFC;r Fundament herstellen</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -476,7 +477,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">2032.60</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>*** Bedarfsposition mit GB Bereitstellungsfläche herstellen</cbc:Name>
+            <cbc:Name>*** Bedarfsposition mit GB Bereitstellungsfl&#xE4;che herstellen</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -514,7 +515,7 @@
           <cbc:InvoicedQuantity unitCode="TNE">5081.928</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">62609.35</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Entsorgung von Aushubmaterial mit Z0-Qualität ..</cbc:Name>
+            <cbc:Name>Entsorgung von Aushubmaterial mit Z0-Qualit&#xE4;t ..</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -551,7 +552,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">179.949</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">119815.44</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Beton einschl. Schalung Stützwände C 30/37</cbc:Name>
+            <cbc:Name>Beton einschl. Schalung St&#xFC;tzw&#xE4;nde C 30/37</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -608,7 +609,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">45.500</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">6638.00</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Abschalelement incl. Abschluß-Fugenband</cbc:Name>
+            <cbc:Name>Abschalelement incl. Abschlu&#xDF;-Fugenband</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -628,7 +629,7 @@
         <cbc:InvoicedQuantity unitCode="MTQ">1</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">396839.57</cbc:LineExtensionAmount>
         <cac:Item>
-          <cbc:Name>Bohrpfahlgründung, Stahlbau</cbc:Name>
+          <cbc:Name>Bohrpfahlgr&#xFC;ndung, Stahlbau</cbc:Name>
           <cac:ClassifiedTaxCategory>
             <cbc:ID>S</cbc:ID>
             <cbc:Percent>19</cbc:Percent>
@@ -645,7 +646,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">38362.40</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Geräteeinsatz für Herst. Ortbetonbohrpfähle</cbc:Name>
+            <cbc:Name>Ger&#xE4;teeinsatz f&#xFC;r Herst. Ortbetonbohrpf&#xE4;hle</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -740,7 +741,7 @@
           <cbc:InvoicedQuantity unitCode="DAY">2.500</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">11477.25</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>*** Bedarfsposition mit GB Stillstandskosten Bohrgerät</cbc:Name>
+            <cbc:Name>*** Bedarfsposition mit GB Stillstandskosten Bohrger&#xE4;t</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -759,7 +760,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">286.050</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">69770.46</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Geschweißtes Stahlgeländer</cbc:Name>
+            <cbc:Name>Geschwei&#xDF;tes Stahlgel&#xE4;nder</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -778,7 +779,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">148</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">5014.24</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Geländer-Verankerung an Kopfbalken herstellen</cbc:Name>
+            <cbc:Name>Gel&#xE4;nder-Verankerung an Kopfbalken herstellen</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -797,7 +798,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">112</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">6829.76</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Erdungslasche für Geländer</cbc:Name>
+            <cbc:Name>Erdungslasche f&#xFC;r Gel&#xE4;nder</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -816,7 +817,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">286.05</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">3875.98</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Oberfläche mit metallischem Überzug versehen.</cbc:Name>
+            <cbc:Name>Oberfl&#xE4;che mit metallischem &#xDC;berzug versehen.</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -835,7 +836,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">286.05</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">3875.98</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Oberfläche zwischenbeschichten.</cbc:Name>
+            <cbc:Name>Oberfl&#xE4;che zwischenbeschichten.</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -854,7 +855,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">286.05</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">3875.98</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Oberfläche deckbeschichten, Farbton nach Angaben..</cbc:Name>
+            <cbc:Name>Oberfl&#xE4;che deckbeschichten, Farbton nach Angaben..</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -874,7 +875,7 @@
         <cbc:InvoicedQuantity unitCode="MTR">709.90</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">150109.20</cbc:LineExtensionAmount>
         <cac:Item>
-          <cbc:Name>Entwässerung</cbc:Name>
+          <cbc:Name>Entw&#xE4;sserung</cbc:Name>
           <cac:ClassifiedTaxCategory>
             <cbc:ID>S</cbc:ID>
             <cbc:Percent>19</cbc:Percent>
@@ -891,7 +892,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">709.90</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">128648.08</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Tiefenentwässerung</cbc:Name>
+            <cbc:Name>Tiefenentw&#xE4;sserung</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -910,7 +911,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">18</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">16447.50</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Reinigungs- und Inspektionsschacht (Durchgangssc.. Tiefenentwässerung hinter
+            <cbc:Name>Reinigungs- und Inspektionsschacht (Durchgangssc.. Tiefenentw&#xE4;sserung hinter
               Spundwand</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
@@ -930,7 +931,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">2</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">4065.10</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Übergangsschacht Beton-/Stahlbetonfertigteil DN1..</cbc:Name>
+            <cbc:Name>&#xDC;bergangsschacht Beton-/Stahlbetonfertigteil DN1..</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -949,7 +950,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">2</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">948.52</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Anschluß an bestehenden Schacht</cbc:Name>
+            <cbc:Name>Anschlu&#xDF; an bestehenden Schacht</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -1099,7 +1100,7 @@
           <cbc:InvoicedQuantity unitCode="MTQ">1765.105</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">123.56</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Zulage für Mehrpreis Wunschlieferant Fa. Rieger ..</cbc:Name>
+            <cbc:Name>Zulage f&#xFC;r Mehrpreis Wunschlieferant Fa. Rieger ..</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -1118,7 +1119,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">430</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">6991.80</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Kabel während der Bauzeit sichern</cbc:Name>
+            <cbc:Name>Kabel w&#xE4;hrend der Bauzeit sichern</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -1137,7 +1138,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">14</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">2737.84</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Fundament für Beleuchtungsmast</cbc:Name>
+            <cbc:Name>Fundament f&#xFC;r Beleuchtungsmast</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -1175,7 +1176,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">14</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">4173.54</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>Leuchtkörper einbauen.</cbc:Name>
+            <cbc:Name>Leuchtk&#xF6;rper einbauen.</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>
@@ -1214,7 +1215,7 @@
         <cbc:InvoicedQuantity unitCode="MTR">1</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">61302.26</cbc:LineExtensionAmount>
         <cac:Item>
-          <cbc:Name>Ausführungsplanung</cbc:Name>
+          <cbc:Name>Ausf&#xFC;hrungsplanung</cbc:Name>
           <cac:ClassifiedTaxCategory>
             <cbc:ID>S</cbc:ID>
             <cbc:Percent>19</cbc:Percent>
@@ -1231,7 +1232,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">46518.26</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>*** Nachtragsposition zum Nachtrag 1 Ausführungsstatik und Zeichnungen für das
+            <cbc:Name>*** Nachtragsposition zum Nachtrag 1 Ausf&#xFC;hrungsstatik und Zeichnungen f&#xFC;r das
               Bauwerk</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
@@ -1251,7 +1252,7 @@
           <cbc:InvoicedQuantity unitCode="MTR">1</cbc:InvoicedQuantity>
           <cbc:LineExtensionAmount currencyID="EUR">14784.00</cbc:LineExtensionAmount>
           <cac:Item>
-            <cbc:Name>*** Nachtragsposition zum Nachtrag 1 Bauausführungsvermessung</cbc:Name>
+            <cbc:Name>*** Nachtragsposition zum Nachtrag 1 Bauausf&#xFC;hrungsvermessung</cbc:Name>
             <cac:ClassifiedTaxCategory>
               <cbc:ID>S</cbc:ID>
               <cbc:Percent>19</cbc:Percent>

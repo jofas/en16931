@@ -7,24 +7,13 @@
   Generated on:      2013-04-20 18:40(UTC)
   Copyright (c) OASIS Open 2013. All Rights Reserved.
 -->
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns=
-     "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
-            targetNamespace=
-     "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
-            elementFormDefault="qualified" 
-            attributeFormDefault="unqualified" 
-            version="2.1">
-
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.1">
   <!--import here all extension schemas-->
-  <xsd:import namespace=
-     "urn:oasis:names:specification:ubl:schema:xsd:CommonSignatureComponents-2"
-              schemaLocation="UBL-CommonSignatureComponents-2.1.xsd"/>
-
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonSignatureComponents-2" schemaLocation="UBL-CommonSignatureComponents-2.1.xsd"/>
   <!-- ===== Type Declaration ===== -->
   <xsd:complexType name="ExtensionContentType">
     <xsd:sequence>
-      <xsd:any namespace="##other" processContents="lax"
-               minOccurs="1" maxOccurs="1">
+      <xsd:any namespace="##other" processContents="lax" minOccurs="1" maxOccurs="1">
         <xsd:annotation>
           <xsd:documentation>
             Any element in any namespace other than the UBL extension

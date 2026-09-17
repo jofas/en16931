@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:ids6Recommendation23="urn:un:unece:uncefact:identifierlist:standard:UNECE:FreightCostCode:4"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="urn:un:unece:uncefact:identifierlist:standard:UNECE:FreightCostCode:4"
-    elementFormDefault="qualified"
-    version="3.3">
+<xsd:schema xmlns:ids6Recommendation23="urn:un:unece:uncefact:identifierlist:standard:UNECE:FreightCostCode:4" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:un:unece:uncefact:identifierlist:standard:UNECE:FreightCostCode:4" elementFormDefault="qualified" version="3.3">
   <xsd:simpleType name="FreightCostCodeContentType">
     <xsd:restriction base="xsd:token">
       <xsd:enumeration value="100000"/>

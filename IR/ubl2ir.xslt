@@ -1,12 +1,5 @@
-<xsl:stylesheet
-    xmlns:invoice="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-    xmlns:credit-note="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
-    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns="urn:todo"
-    exclude-result-prefixes="invoice credit-note cac cbc xsl"
-    version="1.0">
+<?xml version="1.0"?>
+<xsl:stylesheet xmlns:invoice="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:credit-note="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="urn:todo" exclude-result-prefixes="invoice credit-note cac cbc xsl" version="1.0">
   <xsl:template match="/invoice:Invoice">
     <invoice>
       <xsl:call-template name="common-invoice-bt-1-2"/>
@@ -51,7 +44,6 @@
       </invoice-lines>
     </invoice>
   </xsl:template>
-
   <xsl:template match="/credit-note:CreditNote">
     <invoice>
       <xsl:call-template name="common-invoice-bt-1-2"/>
@@ -96,7 +88,6 @@
       </invoice-lines>
     </invoice>
   </xsl:template>
-
   <xsl:template name="common-invoice-bt-1-2">
     <invoice-number id="bt-1">
       <content>
@@ -107,7 +98,6 @@
       <xsl:value-of select="cbc:IssueDate"/>
     </invoice-issue-date>
   </xsl:template>
-
   <xsl:template name="common-invoice-bt-5-8">
     <invoice-currency-code id="bt-5">
       <xsl:value-of select="cbc:DocumentCurrencyCode"/>
@@ -128,7 +118,6 @@
       </value-added-tax-point-date-code>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-bt-10">
     <xsl:if test="exists(cbc:BuyerReference)">
       <buyer-reference id="bt-10">
@@ -136,7 +125,6 @@
       </buyer-reference>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-bt-12-20">
     <xsl:if test="exists(cac:ContractDocumentReference/cbc:ID)">
       <contract-reference id="bt-12">
@@ -191,7 +179,6 @@
       </payment-terms>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-bg-1-23">
     <xsl:variable name="root" select="."/>
     <xsl:if test="exists(cbc:Note)">
@@ -342,9 +329,7 @@
           <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"/>
         </seller-country-code>
       </seller-postal-address>
-      <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name)
-          or exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telephone)
-          or exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
+      <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name)           or exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telephone)           or exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
         <seller-contact id="bg-6">
           <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name)">
             <seller-contact-point id="bt-41">
@@ -445,9 +430,7 @@
           <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"/>
         </buyer-country-code>
       </buyer-postal-address>
-      <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name)
-          or exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Telephone)
-          or exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
+      <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name)           or exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Telephone)           or exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
         <buyer-contact id="bg-9">
           <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name)">
             <buyer-contact-point id="bt-56">
@@ -545,12 +528,7 @@
         </seller-tax-representative-postal-address>
       </seller-tax-representative-party>
     </xsl:if>
-    <xsl:if test="exists(cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name)
-          or exists(cac:Delivery/cac:DeliveryLocation/cbc:ID)
-          or exists(cac:Delivery/cbc:ActualDeliveryDate)
-          or exists(cac:InvoicePeriod/cbc:StartDate)
-          or exists(cac:InvoicePeriod/cbc:EndDate)
-          or exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName)">
+    <xsl:if test="exists(cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name)           or exists(cac:Delivery/cac:DeliveryLocation/cbc:ID)           or exists(cac:Delivery/cbc:ActualDeliveryDate)           or exists(cac:InvoicePeriod/cbc:StartDate)           or exists(cac:InvoicePeriod/cbc:EndDate)           or exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName)">
       <delivery-information id="bg-13">
         <xsl:if test="exists(cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name)">
           <deliver-to-party-name id="bt-70">
@@ -848,7 +826,6 @@
       </xsl:for-each>
     </vat-breakdown>
   </xsl:template>
-
   <xsl:template name="common-additional-supporting-document">
     <additional-supporting-document id="bg-24">
       <supporting-document-reference id="bt-122">
@@ -879,7 +856,6 @@
       </xsl:if>
     </additional-supporting-document>
   </xsl:template>
-
   <xsl:template name="common-invoice-line-bt-126-128">
     <invoice-line-identifier id="bt-126">
       <content>
@@ -904,7 +880,6 @@
       </invoice-line-object-identifier>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-line-bt-131-133">
     <invoice-line-net-amount id="bt-131">
       <xsl:value-of select="./cbc:LineExtensionAmount"/>
@@ -920,7 +895,6 @@
       </invoice-line-buyer-accounting-reference>
     </xsl:if>
   </xsl:template>
-
   <xsl:template name="common-invoice-line-bg-26-31">
     <xsl:if test="exists(./cac:InvoicePeriod/cbc:StartDate) or exists(./cac:InvoicePeriod/cbc:EndDate)">
       <invoice-line-period id="bg-26">
