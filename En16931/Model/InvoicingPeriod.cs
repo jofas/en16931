@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPeriod>, IIRSerializable
+public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPeriod>, IIRSerializable, ICanBeEmpty
 {
     // BT-73
     public required Date? InvoicingPeriodStartDate { get; init; }
@@ -13,8 +13,16 @@ public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPerio
     // BT-74
     public required Date? InvoicingPeriodEndDate { get; init; }
 
+    public bool IsEmpty
+    {
+        get => InvoicingPeriodStartDate is null
+            && InvoicingPeriodEndDate is null;
+    }
+
     public void Serialize(XmlWriter writer)
     {
+        if (IsEmpty) return;
+
         writer.WriteStartElement("invoicing-period", IRConfig.NS);
         writer.WriteAttributeString("id", "bg-14");
 

@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct SellerContact : IIRDeserializable<SellerContact>, IIRSerializable
+public readonly record struct SellerContact : IIRDeserializable<SellerContact>, IIRSerializable, ICanBeEmpty
 {
     // BT-41
     public required Text? SellerContactPoint { get; init; }
@@ -16,8 +16,17 @@ public readonly record struct SellerContact : IIRDeserializable<SellerContact>, 
     // BT-43
     public required Text? SellerContactEmailAddress { get; init; }
 
+    public bool IsEmpty
+    {
+        get => SellerContactPoint is null
+            && SellerContactTelephoneNumber is null
+            && SellerContactEmailAddress is null;
+    }
+
     public void Serialize(XmlWriter writer)
     {
+        if (IsEmpty) return;
+
         writer.WriteStartElement("seller-contact", IRConfig.NS);
         writer.WriteAttributeString("id", "bg-6");
 
