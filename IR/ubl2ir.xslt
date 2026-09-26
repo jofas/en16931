@@ -329,7 +329,7 @@
           <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"/>
         </seller-country-code>
       </seller-postal-address>
-      <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name)           or exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telephone)           or exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
+      <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name) or exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telephone) or exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
         <seller-contact id="bg-6">
           <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Name)">
             <seller-contact-point id="bt-41">
@@ -430,7 +430,7 @@
           <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode"/>
         </buyer-country-code>
       </buyer-postal-address>
-      <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name)           or exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Telephone)           or exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
+      <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name) or exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Telephone) or exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:ElectronicMail)">
         <buyer-contact id="bg-9">
           <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:Contact/cbc:Name)">
             <buyer-contact-point id="bt-56">
@@ -528,7 +528,7 @@
         </seller-tax-representative-postal-address>
       </seller-tax-representative-party>
     </xsl:if>
-    <xsl:if test="exists(cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name)           or exists(cac:Delivery/cac:DeliveryLocation/cbc:ID)           or exists(cac:Delivery/cbc:ActualDeliveryDate)           or exists(cac:InvoicePeriod/cbc:StartDate)           or exists(cac:InvoicePeriod/cbc:EndDate)           or exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName)">
+    <xsl:if test="exists(cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name) or exists(cac:Delivery/cac:DeliveryLocation/cbc:ID) or exists(cac:Delivery/cbc:ActualDeliveryDate) or exists(cac:InvoicePeriod/cbc:StartDate) or exists(cac:InvoicePeriod/cbc:EndDate) or exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName)">
       <delivery-information id="bg-13">
         <xsl:if test="exists(cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name)">
           <deliver-to-party-name id="bt-70">

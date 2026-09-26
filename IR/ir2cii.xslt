@@ -148,7 +148,7 @@
                   </ram:LineID>
                 </ram:BuyerOrderReferencedDocument>
               </xsl:if>
-              <xsl:if test="exists(./ir:price-details/ir:item-price-discount)                   or exists(./ir:price-details/ir:item-gross-price)">
+              <xsl:if test="exists(./ir:price-details/ir:item-price-discount) or exists(./ir:price-details/ir:item-gross-price)">
                 <ram:GrossPriceProductTradePrice>
                   <xsl:if test="exists(./ir:price-details/ir:item-gross-price)">
                     <ram:ChargeAmount>
@@ -212,7 +212,7 @@
                   </ram:RateApplicablePercent>
                 </xsl:if>
               </ram:ApplicableTradeTax>
-              <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)                   or exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
+              <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date) or exists(./ir:invoice-line-period/ir:invoice-line-period-end-date)">
                 <ram:BillingSpecifiedPeriod>
                   <xsl:if test="exists(./ir:invoice-line-period/ir:invoice-line-period-start-date)">
                     <ram:StartDateTime>
@@ -372,7 +372,7 @@
                 <xsl:value-of select="ir:seller/ir:seller-additional-legal-information"/>
               </ram:Description>
             </xsl:if>
-            <xsl:if test="exists(ir:seller/ir:seller-trading-name)                 or exists(ir:seller/ir:seller-legal-registration-identifier)">
+            <xsl:if test="exists(ir:seller/ir:seller-trading-name) or exists(ir:seller/ir:seller-legal-registration-identifier)">
               <ram:SpecifiedLegalOrganization>
                 <xsl:if test="exists(ir:seller/ir:seller-legal-registration-identifier)">
                   <ram:ID>
@@ -394,7 +394,7 @@
                 </xsl:if>
               </ram:SpecifiedLegalOrganization>
             </xsl:if>
-            <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point)                 or exists(ir:seller/ir:seller-contact/ir:seller-contact-telephone-number)                 or exists(ir:seller/ir:seller-contact/ir:seller-contact-email-address)">
+            <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point) or exists(ir:seller/ir:seller-contact/ir:seller-contact-telephone-number) or exists(ir:seller/ir:seller-contact/ir:seller-contact-email-address)">
               <ram:DefinedTradeContact>
                 <xsl:if test="exists(ir:seller/ir:seller-contact/ir:seller-contact-point)">
                   <ram:PersonName>
@@ -508,7 +508,7 @@
               <!-- bt-44 -->
               <xsl:value-of select="ir:buyer/ir:buyer-name"/>
             </ram:Name>
-            <xsl:if test="exists(ir:buyer/ir:buyer-trading-name)                 or exists(ir:buyer/ir:buyer-legal-registration-identifier)">
+            <xsl:if test="exists(ir:buyer/ir:buyer-trading-name) or exists(ir:buyer/ir:buyer-legal-registration-identifier)">
               <ram:SpecifiedLegalOrganization>
                 <xsl:if test="exists(ir:buyer/ir:buyer-legal-registration-identifier)">
                   <ram:ID>
@@ -530,7 +530,7 @@
                 </xsl:if>
               </ram:SpecifiedLegalOrganization>
             </xsl:if>
-            <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)                 or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number)                 or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address)">
+            <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point) or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-telephone-number) or exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-email-address)">
               <ram:DefinedTradeContact>
                 <xsl:if test="exists(ir:buyer/ir:buyer-contact/ir:buyer-contact-point)">
                   <ram:PersonName>
@@ -759,7 +759,7 @@
           </xsl:if>
         </ram:ApplicableHeaderTradeAgreement>
         <ram:ApplicableHeaderTradeDelivery>
-          <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name)               or exists(ir:delivery-information/ir:deliver-to-location-identifier)               or exists(ir:delivery-information/ir:deliver-to-address)">
+          <xsl:if test="exists(ir:delivery-information/ir:deliver-to-party-name) or exists(ir:delivery-information/ir:deliver-to-location-identifier) or exists(ir:delivery-information/ir:deliver-to-address)">
             <ram:ShipToTradeParty>
               <xsl:choose>
                 <xsl:when test="exists(ir:delivery-information/ir:deliver-to-location-identifier/ir:scheme-identifier)">
@@ -1060,7 +1060,7 @@
               </ram:RateApplicablePercent>
             </ram:ApplicableTradeTax>
           </xsl:for-each>
-          <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)               or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)">
+          <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date) or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)">
             <ram:BillingSpecifiedPeriod>
               <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date)">
                 <ram:StartDateTime>
@@ -1180,7 +1180,7 @@
               </ram:CategoryTradeTax>
             </ram:SpecifiedTradeAllowanceCharge>
           </xsl:for-each>
-          <xsl:if test="exists(ir:payment-terms)               or exists(ir:payment-due-date)">
+          <xsl:if test="exists(ir:payment-terms) or exists(ir:payment-due-date)">
             <ram:SpecifiedTradePaymentTerms>
               <xsl:if test="exists(ir:payment-terms)">
                 <ram:Description>
