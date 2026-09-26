@@ -18,3 +18,8 @@ public interface IProcessControl
 // Interface for cius/core data model, as it allows multiple implementations.
 // Extension invoices do not need to implement this and can instead store BT-24 as a constant inline.
 public interface IInvoice<TSpec> where TSpec : ISpecification { }
+
+public interface ICanBeEmpty
+{
+    public bool IsEmpty { get; }
+}

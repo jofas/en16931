@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryInformation>, IIRSerializable
+public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryInformation>, IIRSerializable, ICanBeEmpty
 {
     // BT-70
     public required Text? DeliverToPartyName { get; init; }
@@ -22,8 +22,19 @@ public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryIn
     // BG-15
     public required DeliverToAddress? DeliverToAddress { get; init; }
 
+    public bool IsEmpty
+    {
+        get => DeliverToPartyName is null
+            && DeliverToLocationIdentifier is null
+            && ActualDeliveryDate is null
+            && (InvoicingPeriod?.IsEmpty ?? true)
+            && DeliverToAddress is null;
+    }
+
     public void Serialize(XmlWriter writer)
     {
+        if (IsEmpty) return;
+
         writer.WriteStartElement("delivery-information", IRConfig.NS);
         writer.WriteAttributeString("id", "bg-13");
 
