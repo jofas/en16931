@@ -857,7 +857,7 @@
           </xsl:if>
         </ram:ApplicableHeaderTradeDelivery>
         <ram:ApplicableHeaderTradeSettlement>
-          <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
+          <xsl:if test="exists(ir:payment-instructions/ir:direct-debit/ir:bank-assigned-creditor-identifier/ir:content)">
             <ram:CreditorReferenceID>
               <!-- bt-90 -->
               <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:bank-assigned-creditor-identifier/ir:content"/>
@@ -945,7 +945,7 @@
                   </xsl:if>
                 </ram:ApplicableTradeSettlementFinancialCard>
               </xsl:if>
-              <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
+              <xsl:if test="exists(ir:payment-instructions/ir:direct-debit/ir:debited-account-identifier/ir:content)">
                 <ram:PayerPartyDebtorFinancialAccount>
                   <ram:IBANID>
                     <!-- bt-91 -->
@@ -1198,7 +1198,7 @@
                   </udt:DateTimeString>
                 </ram:DueDateDateTime>
               </xsl:if>
-              <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
+              <xsl:if test="exists(ir:payment-instructions/ir:direct-debit/ir:mandate-reference-identifier/ir:content)">
                 <ram:DirectDebitMandateID>
                   <!-- bt-89 -->
                   <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:mandate-reference-identifier/ir:content"/>

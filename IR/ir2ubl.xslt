@@ -347,7 +347,7 @@
             </cbc:ID>
           </cac:PartyIdentification>
         </xsl:for-each>
-        <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
+        <xsl:if test="exists(ir:payment-instructions/ir:direct-debit/ir:bank-assigned-creditor-identifier/ir:content)">
           <cac:PartyIdentification>
             <cbc:ID schemeID="SEPA">
               <!-- bt-90 -->
@@ -838,16 +838,20 @@
         </xsl:if>
         <xsl:if test="exists(ir:payment-instructions/ir:direct-debit)">
           <cac:PaymentMandate>
-            <cbc:ID>
-              <!-- bt-89 -->
-              <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:mandate-reference-identifier/ir:content"/>
-            </cbc:ID>
-            <cac:PayerFinancialAccount>
+            <xsl:if test="exists(ir:payment-instructions/ir:direct-debit/ir:mandate-reference-identifier/ir:content)">
               <cbc:ID>
-                <!-- bt-91 -->
-                <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:debited-account-identifier/ir:content"/>
+                <!-- bt-89 -->
+                <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:mandate-reference-identifier/ir:content"/>
               </cbc:ID>
-            </cac:PayerFinancialAccount>
+            </xsl:if>
+            <xsl:if test="exists(ir:payment-instructions/ir:direct-debit/ir:debited-account-identifier/ir:content)">
+              <cac:PayerFinancialAccount>
+                <cbc:ID>
+                  <!-- bt-91 -->
+                  <xsl:value-of select="ir:payment-instructions/ir:direct-debit/ir:debited-account-identifier/ir:content"/>
+                </cbc:ID>
+              </cac:PayerFinancialAccount>
+            </xsl:if>
           </cac:PaymentMandate>
         </xsl:if>
       </cac:PaymentMeans>
