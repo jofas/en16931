@@ -627,23 +627,29 @@
               </xsl:if>
             </payment-card-information>
           </xsl:if>
-          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DirectDebitMandateID)">
+          <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DirectDebitMandateID) or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:CreditorReferenceID) or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayerPartyDebtorFinancialAccount/ram:IBANID)">
             <direct-debit id="bg-19">
-              <mandate-reference-identifier id="bt-89">
-                <content>
-                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DirectDebitMandateID"/>
-                </content>
-              </mandate-reference-identifier>
-              <bank-assigned-creditor-identifier id="bt-90">
-                <content>
-                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:CreditorReferenceID"/>
-                </content>
-              </bank-assigned-creditor-identifier>
-              <debited-account-identifier id="bt-91">
-                <content>
-                  <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayerPartyDebtorFinancialAccount/ram:IBANID"/>
-                </content>
-              </debited-account-identifier>
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DirectDebitMandateID)">
+                <mandate-reference-identifier id="bt-89">
+                  <content>
+                    <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradePaymentTerms/ram:DirectDebitMandateID"/>
+                  </content>
+                </mandate-reference-identifier>
+              </xsl:if>
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:CreditorReferenceID)">
+                <bank-assigned-creditor-identifier id="bt-90">
+                  <content>
+                    <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:CreditorReferenceID"/>
+                  </content>
+                </bank-assigned-creditor-identifier>
+              </xsl:if>
+              <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayerPartyDebtorFinancialAccount/ram:IBANID)">
+                <debited-account-identifier id="bt-91">
+                  <content>
+                    <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayerPartyDebtorFinancialAccount/ram:IBANID"/>
+                  </content>
+                </debited-account-identifier>
+              </xsl:if>
             </direct-debit>
           </xsl:if>
         </payment-instructions>

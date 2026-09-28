@@ -67,6 +67,26 @@ public class EmptyTypeSerializationTests
     }
 
     [Fact]
+    public void SerializeEmptyDirectDebit()
+    {
+        DirectDebit directDebit = new DirectDebit
+        {
+            MandateReferenceIdentifier = null,
+            BankAssignedCreditorIdentifier = null,
+            DebitedAccountIdentifier = null,
+        };
+
+        using StringWriter writer = new();
+        using XmlTextWriter xmlWriter = new(writer);
+
+        directDebit.Serialize(xmlWriter);
+
+        string serializedXml = writer.ToString();
+
+        Assert.Equal("", serializedXml);
+    }
+
+    [Fact]
     public void SerializeEmptyDeliveryInformation()
     {
 

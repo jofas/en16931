@@ -654,23 +654,29 @@
             </xsl:if>
           </payment-card-information>
         </xsl:if>
-        <xsl:if test="exists(cac:PaymentMeans/cac:PaymentMandate/cbc:ID)">
+        <xsl:if test="exists(cac:PaymentMeans/cac:PaymentMandate/cbc:ID) or exists(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[normalize-space(upper-case(@schemeID)) = 'SEPA']) or exists(cac:PaymentMeans/cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID)">
           <direct-debit id="bg-19">
-            <mandate-reference-identifier id="bt-89">
-              <content>
-                <xsl:value-of select="cac:PaymentMeans/cac:PaymentMandate/cbc:ID"/>
-              </content>
-            </mandate-reference-identifier>
-            <bank-assigned-creditor-identifier id="bt-90">
-              <content>
-                <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[normalize-space(upper-case(@schemeID)) = 'SEPA']"/>
-              </content>
-            </bank-assigned-creditor-identifier>
-            <debited-account-identifier id="bt-91">
-              <content>
-                <xsl:value-of select="cac:PaymentMeans/cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID"/>
-              </content>
-            </debited-account-identifier>
+            <xsl:if test="exists(cac:PaymentMeans/cac:PaymentMandate/cbc:ID)">
+              <mandate-reference-identifier id="bt-89">
+                <content>
+                  <xsl:value-of select="cac:PaymentMeans/cac:PaymentMandate/cbc:ID"/>
+                </content>
+              </mandate-reference-identifier>
+            </xsl:if>
+            <xsl:if test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[normalize-space(upper-case(@schemeID)) = 'SEPA'])">
+              <bank-assigned-creditor-identifier id="bt-90">
+                <content>
+                  <xsl:value-of select="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[normalize-space(upper-case(@schemeID)) = 'SEPA']"/>
+                </content>
+              </bank-assigned-creditor-identifier>
+            </xsl:if>
+            <xsl:if test="exists(cac:PaymentMeans/cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID)">
+              <debited-account-identifier id="bt-91">
+                <content>
+                  <xsl:value-of select="cac:PaymentMeans/cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID"/>
+                </content>
+              </debited-account-identifier>
+            </xsl:if>
           </direct-debit>
         </xsl:if>
       </payment-instructions>
