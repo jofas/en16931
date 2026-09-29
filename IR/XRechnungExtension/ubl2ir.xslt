@@ -500,12 +500,16 @@
             <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:AddressLine/cbc:Line"/>
           </buyer-address-line-3>
         </xsl:if>
-        <buyer-city id="bt-52">
-          <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName"/>
-        </buyer-city>
-        <buyer-post-code id="bt-53">
-          <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:PostalZone"/>
-        </buyer-post-code>
+        <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName)">
+          <buyer-city id="bt-52">
+            <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName"/>
+          </buyer-city>
+        </xsl:if>
+        <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:PostalZone)">
+          <buyer-post-code id="bt-53">
+            <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:PostalZone"/>
+          </buyer-post-code>
+        </xsl:if>
         <xsl:if test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity)">
           <buyer-country-subdivision id="bt-54">
             <xsl:value-of select="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CountrySubentity"/>
