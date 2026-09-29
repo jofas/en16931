@@ -1034,10 +1034,12 @@
                 </xsl:call-template>
               </ram:DueDateTypeCode>
             </xsl:if>
-            <ram:RateApplicablePercent>
-              <!-- bt-119 -->
-              <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-rate"/>
-            </ram:RateApplicablePercent>
+            <xsl:if test="exists(ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-rate)">
+              <ram:RateApplicablePercent>
+                <!-- bt-119 -->
+                <xsl:value-of select="ir:vat-breakdown/ir:vat-breakdown[1]/ir:vat-category-rate"/>
+              </ram:RateApplicablePercent>
+            </xsl:if>
           </ram:ApplicableTradeTax>
           <xsl:for-each select="ir:vat-breakdown/ir:vat-breakdown[position() &gt; 1]">
             <ram:ApplicableTradeTax>
@@ -1066,10 +1068,12 @@
                   <xsl:value-of select="./ir:vat-exemption-reason-code"/>
                 </ram:ExemptionReasonCode>
               </xsl:if>
-              <ram:RateApplicablePercent>
-                <!-- bt-119 -->
-                <xsl:value-of select="./ir:vat-category-rate"/>
-              </ram:RateApplicablePercent>
+              <xsl:if test="exists(./ir:vat-category-rate)">
+                <ram:RateApplicablePercent>
+                  <!-- bt-119 -->
+                  <xsl:value-of select="./ir:vat-category-rate"/>
+                </ram:RateApplicablePercent>
+              </xsl:if>
             </ram:ApplicableTradeTax>
           </xsl:for-each>
           <xsl:if test="exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-start-date) or exists(ir:delivery-information/ir:invoicing-period/ir:invoicing-period-end-date)">

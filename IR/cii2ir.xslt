@@ -800,9 +800,11 @@
             <vat-category-code id="bt-118">
               <xsl:value-of select="./ram:CategoryCode"/>
             </vat-category-code>
-            <vat-category-rate id="bt-119">
-              <xsl:value-of select="./ram:RateApplicablePercent"/>
-            </vat-category-rate>
+            <xsl:if test="exists(./ram:RateApplicablePercent)">
+              <vat-category-rate id="bt-119">
+                <xsl:value-of select="./ram:RateApplicablePercent"/>
+              </vat-category-rate>
+            </xsl:if>
             <xsl:if test="exists(./ram:ExemptionReason)">
               <vat-exemption-reason-text id="bt-120">
                 <xsl:value-of select="./ram:ExemptionReason"/>
