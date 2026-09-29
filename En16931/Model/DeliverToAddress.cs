@@ -17,10 +17,10 @@ public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddr
     public required Text? DeliverToAddressLine3 { get; init; }
 
     // BT-77
-    public required Text DeliverToCity { get; init; }
+    public required Text? DeliverToCity { get; init; }
 
     // BT-78
-    public required Text DeliverToPostCode { get; init; }
+    public required Text? DeliverToPostCode { get; init; }
 
     // BT-79
     public required Text? DeliverToCountrySubdivision { get; init; }
@@ -58,15 +58,21 @@ public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddr
             writer.WriteEndElement();
         }
 
-        writer.WriteStartElement("deliver-to-city", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-77");
-        DeliverToCity.Serialize(writer);
-        writer.WriteEndElement();
+        if (DeliverToCity is not null)
+        {
+            writer.WriteStartElement("deliver-to-city", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-77");
+            DeliverToCity.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
 
-        writer.WriteStartElement("deliver-to-post-code", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-78");
-        DeliverToPostCode.Serialize(writer);
-        writer.WriteEndElement();
+        if (DeliverToPostCode is not null)
+        {
+            writer.WriteStartElement("deliver-to-post-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-78");
+            DeliverToPostCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
 
         if (DeliverToCountrySubdivision is not null)
         {
@@ -128,21 +134,31 @@ public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddr
             reader.MoveToContent();
         }
 
-        reader.ReadStartElement("deliver-to-city", IRConfig.NS);
-        reader.MoveToContent();
+        Text? deliverToCity = null;
 
-        Text deliverToCity = Text.Deserialize(reader);
+        if (reader.IsStartElement("deliver-to-city", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+            deliverToCity = Text.Deserialize(reader);
 
-        reader.ReadStartElement("deliver-to-post-code", IRConfig.NS);
-        reader.MoveToContent();
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
-        Text deliverToPostCode = Text.Deserialize(reader);
+        Text? deliverToPostCode = null;
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+        if (reader.IsStartElement("deliver-to-post-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            deliverToPostCode = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
         Text? deliverToCountrySubdivision = null;
 

@@ -591,12 +591,16 @@
                 <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cac:AddressLine/cbc:Line"/>
               </deliver-to-address-line-3>
             </xsl:if>
-            <deliver-to-city id="bt-77">
-              <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName"/>
-            </deliver-to-city>
-            <deliver-to-post-code id="bt-78">
-              <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:PostalZone"/>
-            </deliver-to-post-code>
+            <xsl:if test="exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName)">
+              <deliver-to-city id="bt-77">
+                <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName"/>
+              </deliver-to-city>
+            </xsl:if>
+            <xsl:if test="exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:PostalZone)">
+              <deliver-to-post-code id="bt-78">
+                <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:PostalZone"/>
+              </deliver-to-post-code>
+            </xsl:if>
             <xsl:if test="exists(cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CountrySubentity)">
               <deliver-to-country-subdivision id="bt-79">
                 <xsl:value-of select="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CountrySubentity"/>

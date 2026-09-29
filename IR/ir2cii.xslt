@@ -795,10 +795,12 @@
               </xsl:if>
               <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address)">
                 <ram:PostalTradeAddress>
-                  <ram:PostcodeCode>
-                    <!-- bt-78 -->
-                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-post-code"/>
-                  </ram:PostcodeCode>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-post-code)">
+                    <ram:PostcodeCode>
+                      <!-- bt-78 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-post-code"/>
+                    </ram:PostcodeCode>
+                  </xsl:if>
                   <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-1)">
                     <ram:LineOne>
                       <!-- bt-75 -->
@@ -817,10 +819,12 @@
                       <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-3"/>
                     </ram:LineThree>
                   </xsl:if>
-                  <ram:CityName>
-                    <!-- bt-77 -->
-                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-city"/>
-                  </ram:CityName>
+                  <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-city)">
+                    <ram:CityName>
+                      <!-- bt-77 -->
+                      <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-city"/>
+                    </ram:CityName>
+                  </xsl:if>
                   <ram:CountryID>
                     <!-- bt-80 -->
                     <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-country-code"/>
