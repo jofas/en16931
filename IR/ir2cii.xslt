@@ -561,10 +561,12 @@
               </ram:DefinedTradeContact>
             </xsl:if>
             <ram:PostalTradeAddress>
-              <ram:PostcodeCode>
-                <!-- bt-53 -->
-                <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-post-code"/>
-              </ram:PostcodeCode>
+              <xsl:if test="exists(ir:buyer/ir:buyer-postal-address/ir:buyer-post-code)">
+                <ram:PostcodeCode>
+                  <!-- bt-53 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-post-code"/>
+                </ram:PostcodeCode>
+              </xsl:if>
               <xsl:if test="exists(ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-1)">
                 <ram:LineOne>
                   <!-- bt-50 -->
@@ -583,10 +585,12 @@
                   <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-address-line-3"/>
                 </ram:LineThree>
               </xsl:if>
-              <ram:CityName>
-                <!-- bt-52 -->
-                <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-city"/>
-              </ram:CityName>
+              <xsl:if test="exists(ir:buyer/ir:buyer-postal-address/ir:buyer-city)">
+                <ram:CityName>
+                  <!-- bt-52 -->
+                  <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-city"/>
+                </ram:CityName>
+              </xsl:if>
               <ram:CountryID>
                 <!-- bt-55 -->
                 <xsl:value-of select="ir:buyer/ir:buyer-postal-address/ir:buyer-country-code"/>
