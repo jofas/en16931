@@ -1065,10 +1065,12 @@
               <!-- bt-118 -->
               <xsl:value-of select="./ir:vat-category-code"/>
             </cbc:ID>
-            <cbc:Percent>
-              <!-- bt-119 -->
-              <xsl:value-of select="./ir:vat-category-rate"/>
-            </cbc:Percent>
+            <xsl:if test="exists(./ir:vat-category-rate)">
+              <cbc:Percent>
+                <!-- bt-119 -->
+                <xsl:value-of select="./ir:vat-category-rate"/>
+              </cbc:Percent>
+            </xsl:if>
             <xsl:if test="exists(./ir:vat-exemption-reason-code)">
               <cbc:TaxExemptionReasonCode>
                 <!-- bt-121 -->

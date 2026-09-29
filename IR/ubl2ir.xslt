@@ -827,9 +827,11 @@
           <vat-category-code id="bt-118">
             <xsl:value-of select="./cac:TaxCategory/cbc:ID"/>
           </vat-category-code>
-          <vat-category-rate id="bt-119">
-            <xsl:value-of select="./cac:TaxCategory/cbc:Percent"/>
-          </vat-category-rate>
+          <xsl:if test="exists(./cac:TaxCategory/cbc:Percent)">
+            <vat-category-rate id="bt-119">
+              <xsl:value-of select="./cac:TaxCategory/cbc:Percent"/>
+            </vat-category-rate>
+          </xsl:if>
           <xsl:if test="exists(./cac:TaxCategory/cbc:TaxExemptionReason)">
             <vat-exemption-reason-text id="bt-120">
               <xsl:value-of select="./cac:TaxCategory/cbc:TaxExemptionReason"/>

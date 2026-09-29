@@ -18,7 +18,7 @@ public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>, II
     public required Code VatCategoryCode { get; init; }
 
     // BT-119
-    public required Percentage VatCategoryRate { get; init; }
+    public required Percentage? VatCategoryRate { get; init; }
 
     // BT-120
     public required Text? VatExemptionReasonText { get; init; }
@@ -47,10 +47,13 @@ public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>, II
         VatCategoryCode.Serialize(writer);
         writer.WriteEndElement();
 
-        writer.WriteStartElement("vat-category-rate", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-119");
-        VatCategoryRate.Serialize(writer);
-        writer.WriteEndElement();
+        if (VatCategoryRate is not null)
+        {
+            writer.WriteStartElement("vat-category-rate", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-119");
+            VatCategoryRate.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
 
         if (VatExemptionReasonText is not null)
         {
@@ -100,13 +103,18 @@ public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>, II
         reader.ReadEndElement();
         reader.MoveToContent();
 
-        reader.ReadStartElement("vat-category-rate", IRConfig.NS);
-        reader.MoveToContent();
+        Percentage? vatCategoryRate = null;
 
-        Percentage vatCategoryRate = Percentage.Deserialize(reader);
+        if (reader.IsStartElement("vat-category-rate", IRConfig.NS))
+        {
+            reader.ReadStartElement("vat-category-rate", IRConfig.NS);
+            reader.MoveToContent();
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+            vatCategoryRate = Percentage.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
         Text? vatExemptionReasonText = null;
 
