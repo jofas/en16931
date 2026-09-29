@@ -745,14 +745,18 @@
                     <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-address-line-2"/>
                   </cbc:AdditionalStreetName>
                 </xsl:if>
-                <cbc:CityName>
-                  <!-- bt-77 -->
-                  <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-city"/>
-                </cbc:CityName>
-                <cbc:PostalZone>
-                  <!-- bt-78 -->
-                  <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-post-code"/>
-                </cbc:PostalZone>
+                <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-city)">
+                  <cbc:CityName>
+                    <!-- bt-77 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-city"/>
+                  </cbc:CityName>
+                </xsl:if>
+                <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-post-code)">
+                  <cbc:PostalZone>
+                    <!-- bt-78 -->
+                    <xsl:value-of select="ir:delivery-information/ir:deliver-to-address/ir:deliver-to-post-code"/>
+                  </cbc:PostalZone>
+                </xsl:if>
                 <xsl:if test="exists(ir:delivery-information/ir:deliver-to-address/ir:deliver-to-country-subdivision)">
                   <cbc:CountrySubentity>
                     <!-- bt-79 -->
