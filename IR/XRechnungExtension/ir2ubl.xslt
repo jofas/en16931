@@ -426,14 +426,18 @@
               <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-address-line-2"/>
             </cbc:AdditionalStreetName>
           </xsl:if>
-          <cbc:CityName>
-            <!-- bt-37 -->
-            <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-city"/>
-          </cbc:CityName>
-          <cbc:PostalZone>
-            <!-- bt-38 -->
-            <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-post-code"/>
-          </cbc:PostalZone>
+          <xsl:if test="exists(ir:seller/ir:seller-postal-address/ir:seller-city)">
+            <cbc:CityName>
+              <!-- bt-37 -->
+              <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-city"/>
+            </cbc:CityName>
+          </xsl:if>
+          <xsl:if test="exists(ir:seller/ir:seller-postal-address/ir:seller-post-code)">
+            <cbc:PostalZone>
+              <!-- bt-38 -->
+              <xsl:value-of select="ir:seller/ir:seller-postal-address/ir:seller-post-code"/>
+            </cbc:PostalZone>
+          </xsl:if>
           <xsl:if test="exists(ir:seller/ir:seller-postal-address/ir:seller-country-subdivision)">
             <cbc:CountrySubentity>
               <!-- bt-39 -->

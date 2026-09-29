@@ -17,10 +17,10 @@ public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPost
     public required Text? SellerAddressLine3 { get; init; }
 
     // BT-37
-    public required Text SellerCity { get; init; }
+    public required Text? SellerCity { get; init; }
 
     // BT-38
-    public required Text SellerPostCode { get; init; }
+    public required Text? SellerPostCode { get; init; }
 
     // BT-39
     public required Text? SellerCountrySubdivision { get; init; }
@@ -58,15 +58,21 @@ public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPost
             writer.WriteEndElement();
         }
 
-        writer.WriteStartElement("seller-city", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-37");
-        SellerCity.Serialize(writer);
-        writer.WriteEndElement();
+        if (SellerCity is not null)
+        {
+            writer.WriteStartElement("seller-city", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-37");
+            SellerCity.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
 
-        writer.WriteStartElement("seller-post-code", IRConfig.NS);
-        writer.WriteAttributeString("id", "bt-38");
-        SellerPostCode.Serialize(writer);
-        writer.WriteEndElement();
+        if (SellerPostCode is not null)
+        {
+            writer.WriteStartElement("seller-post-code", IRConfig.NS);
+            writer.WriteAttributeString("id", "bt-38");
+            SellerPostCode.Value.Serialize(writer);
+            writer.WriteEndElement();
+        }
 
         if (SellerCountrySubdivision is not null)
         {
@@ -128,21 +134,31 @@ public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPost
             reader.MoveToContent();
         }
 
-        reader.ReadStartElement("seller-city", IRConfig.NS);
-        reader.MoveToContent();
+        Text? sellerCity = null;
 
-        Text sellerCity = Text.Deserialize(reader);
+        if (reader.IsStartElement("seller-city", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+            sellerCity = Text.Deserialize(reader);
 
-        reader.ReadStartElement("seller-post-code", IRConfig.NS);
-        reader.MoveToContent();
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
-        Text sellerPostCode = Text.Deserialize(reader);
+        Text? sellerPostCode = null;
 
-        reader.ReadEndElement();
-        reader.MoveToContent();
+        if (reader.IsStartElement("seller-post-code", IRConfig.NS))
+        {
+            reader.ReadStartElement();
+            reader.MoveToContent();
+
+            sellerPostCode = Text.Deserialize(reader);
+
+            reader.ReadEndElement();
+            reader.MoveToContent();
+        }
 
         Text? sellerCountrySubdivision = null;
 
