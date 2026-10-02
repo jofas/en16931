@@ -71,13 +71,14 @@
           <ram:IBANID>DE75512108001245126199</ram:IBANID>
         </ram:PayerPartyDebtorFinancialAccount>
       </ram:SpecifiedTradeSettlementPaymentMeans>
+      <!--
       <ram:SpecifiedTradeSettlementPaymentMeans>
         <ram:TypeCode>51</ram:TypeCode>
-        <!-- BT-91 -->
         <ram:PayerPartyDebtorFinancialAccount>
           <ram:IBANID>DE75512108001245126200</ram:IBANID>
         </ram:PayerPartyDebtorFinancialAccount>
       </ram:SpecifiedTradeSettlementPaymentMeans>
+      -->
       <ram:ApplicableTradeTax>
         <ram:CalculatedAmount>0.19</ram:CalculatedAmount>
         <ram:TypeCode>VAT</ram:TypeCode>
