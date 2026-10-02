@@ -8,11 +8,11 @@ namespace Tests.Utils;
 
 public class TestHarness
 {
-    private readonly Parser _parser;
+    public readonly Parser Parser;
 
     public TestHarness(ISpecificationParser spec)
     {
-        _parser = Parser.Create(spec);
+        Parser = Parser.Create(spec);
     }
 
     public void AcceptSuccess<I>(string testsLocation) where I : IInvoice
@@ -21,7 +21,7 @@ public class TestHarness
 
         foreach (string test in testFiles)
         {
-            _parser.Parse<I>(test);
+            Parser.Parse<I>(test);
         }
     }
 
@@ -33,7 +33,7 @@ public class TestHarness
         {
             ValidationException e = Assert.Throws<ValidationException>(() =>
             {
-                _parser.Parse<I>(test);
+                Parser.Parse<I>(test);
             });
 
             Assert.Contains(Path.GetFileNameWithoutExtension(test), e.Errors);
@@ -50,7 +50,7 @@ public class TestHarness
 
             I expected = InvoiceExtractor<P, I>.Invoice(invoiceName);
 
-            I invoice = _parser.Parse<I>(test);
+            I invoice = Parser.Parse<I>(test);
 
             Assert.Equal(expected, invoice);
         }
@@ -62,11 +62,11 @@ public class TestHarness
         {
             using StringWriter writer = new();
 
-            _parser.Serialize(in invoice, schema, writer);
+            Parser.Serialize(in invoice, schema, writer);
 
             using StringReader reader = new(writer.ToString());
 
-            Assert.Equal(invoice, _parser.Parse<I>(reader));
+            Assert.Equal(invoice, Parser.Parse<I>(reader));
         }
     }
 }
