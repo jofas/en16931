@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ir="urn:todo" exclude-result-prefixes="xsl ir" version="1.0">
+<xsl:stylesheet xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ir="urn:todo" exclude-result-prefixes="xsl ir" version="2.0">
   <xsl:template match="/ir:invoice" mode="invoice">
     <invoice:Invoice xmlns:invoice="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
       <xsl:call-template name="common-invoice-1"/>
