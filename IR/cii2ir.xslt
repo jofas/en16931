@@ -582,11 +582,11 @@
       <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode)">
         <payment-instructions id="bg-16">
           <payment-means-type-code id="bt-81">
-            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode"/>
+            <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans[1]/ram:TypeCode"/>
           </payment-means-type-code>
           <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:Information)">
             <payment-means-text id="bt-82">
-              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:Information"/>
+              <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:Information[1]"/>
             </payment-means-text>
           </xsl:if>
           <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:PaymentReference)">
@@ -595,36 +595,37 @@
             </remittance-information>
           </xsl:if>
           <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID) or exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:ProprietaryID)">
-            <!-- Note that CII does not actually support multiple bg-17 instances -->
             <credit-transfers id="bg-17">
-              <credit-transfer id="bg-17">
-                <payment-account-identifier id="bt-84">
-                  <xsl:choose>
-                    <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID)">
+              <xsl:for-each select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans">
+                <credit-transfer id="bg-17">
+                  <payment-account-identifier id="bt-84">
+                    <xsl:choose>
+                      <xsl:when test="exists(./ram:PayeePartyCreditorFinancialAccount/ram:IBANID)">
+                        <content>
+                          <xsl:value-of select="./ram:PayeePartyCreditorFinancialAccount/ram:IBANID"/>
+                        </content>
+                      </xsl:when>
+                      <xsl:when test="exists(./ram:PayeePartyCreditorFinancialAccount/ram:ProprietaryID)">
+                        <content>
+                          <xsl:value-of select="./ram:PayeePartyCreditorFinancialAccount/ram:ProprietaryID"/>
+                        </content>
+                      </xsl:when>
+                    </xsl:choose>
+                  </payment-account-identifier>
+                  <xsl:if test="exists(./ram:PayeePartyCreditorFinancialAccount/ram:AccountName)">
+                    <payment-account-name id="bt-85">
+                      <xsl:value-of select="./ram:PayeePartyCreditorFinancialAccount/ram:AccountName"/>
+                    </payment-account-name>
+                  </xsl:if>
+                  <xsl:if test="exists(./ram:PayeeSpecifiedCreditorFinancialInstitution/ram:BICID)">
+                    <payment-service-provider-identifier id="bt-86">
                       <content>
-                        <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:IBANID"/>
+                        <xsl:value-of select="./ram:PayeeSpecifiedCreditorFinancialInstitution/ram:BICID"/>
                       </content>
-                    </xsl:when>
-                    <xsl:when test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:ProprietaryID)">
-                      <content>
-                        <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:ProprietaryID"/>
-                      </content>
-                    </xsl:when>
-                  </xsl:choose>
-                </payment-account-identifier>
-                <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:AccountName)">
-                  <payment-account-name id="bt-85">
-                    <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount/ram:AccountName"/>
-                  </payment-account-name>
-                </xsl:if>
-                <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeeSpecifiedCreditorFinancialInstitution/ram:BICID)">
-                  <payment-service-provider-identifier id="bt-86">
-                    <content>
-                      <xsl:value-of select="rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeeSpecifiedCreditorFinancialInstitution/ram:BICID"/>
-                    </content>
-                  </payment-service-provider-identifier>
-                </xsl:if>
-              </credit-transfer>
+                    </payment-service-provider-identifier>
+                  </xsl:if>
+                </credit-transfer>
+              </xsl:for-each>
             </credit-transfers>
           </xsl:if>
           <xsl:if test="exists(rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:ApplicableTradeSettlementFinancialCard/ram:ID)">

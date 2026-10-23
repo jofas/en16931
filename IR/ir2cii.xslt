@@ -989,6 +989,41 @@
                 </xsl:if>
               </xsl:if>
             </ram:SpecifiedTradeSettlementPaymentMeans>
+            <xsl:for-each select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[position() &gt; 1]">
+              <ram:SpecifiedTradeSettlementPaymentMeans>
+                <ram:TypeCode>
+                  <xsl:value-of select="/ir:invoice/ir:payment-instructions/ir:payment-means-type-code"/>
+                </ram:TypeCode>
+                <!--
+                <xsl:if test="exists(/ir:invoice/ir:payment-instructions/ir:payment-means-text)">
+                  <ram:Information>
+                    <xsl:value-of select="/ir:invoice/ir:payment-instructions/ir:payment-means-text"/>
+                  </ram:Information>
+                </xsl:if>
+                -->
+                <ram:PayeePartyCreditorFinancialAccount>
+                  <!-- TODO: ProprietaryID for account numbers -->
+                  <ram:IBANID>
+                    <!-- bt-84 -->
+                    <xsl:value-of select="./ir:payment-account-identifier"/>
+                  </ram:IBANID>
+                  <xsl:if test="exists(./ir:payment-account-name)">
+                    <ram:AccountName>
+                      <!-- bt-85 -->
+                      <xsl:value-of select="./ir:payment-account-name"/>
+                    </ram:AccountName>
+                  </xsl:if>
+                </ram:PayeePartyCreditorFinancialAccount>
+                <xsl:if test="exists(./ir:payment-service-provider-identifier)">
+                  <ram:PayeeSpecifiedCreditorFinancialInstitution>
+                    <ram:BICID>
+                      <!-- bt-86 -->
+                      <xsl:value-of select="./ir:payment-service-provider-identifier"/>
+                    </ram:BICID>
+                  </ram:PayeeSpecifiedCreditorFinancialInstitution>
+                </xsl:if>
+              </ram:SpecifiedTradeSettlementPaymentMeans>
+            </xsl:for-each>
           </xsl:if>
           <ram:ApplicableTradeTax>
             <ram:CalculatedAmount>

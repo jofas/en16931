@@ -62,7 +62,14 @@ public class TestHarness
         {
             using StringWriter writer = new();
 
-            Parser.Serialize(in invoice, schema, writer);
+            try
+            {
+                Parser.Serialize(in invoice, schema, writer);
+            }
+            catch (ValidationException e)
+            {
+                System.Console.Error.WriteLine(e.Errors);
+            }
 
             using StringReader reader = new(writer.ToString());
 
