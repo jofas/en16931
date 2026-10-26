@@ -992,15 +992,9 @@
             <xsl:for-each select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[position() &gt; 1]">
               <ram:SpecifiedTradeSettlementPaymentMeans>
                 <ram:TypeCode>
+                  <!-- bt-81 -->
                   <xsl:value-of select="/ir:invoice/ir:payment-instructions/ir:payment-means-type-code"/>
                 </ram:TypeCode>
-                <!--
-                <xsl:if test="exists(/ir:invoice/ir:payment-instructions/ir:payment-means-text)">
-                  <ram:Information>
-                    <xsl:value-of select="/ir:invoice/ir:payment-instructions/ir:payment-means-text"/>
-                  </ram:Information>
-                </xsl:if>
-                -->
                 <ram:PayeePartyCreditorFinancialAccount>
                   <!-- TODO: ProprietaryID for account numbers -->
                   <ram:IBANID>
