@@ -31,9 +31,8 @@ public static class Svrl
             {
                 "information" => infos,
                 "warning" => warnings,
-                "fatal" => errors,
+                "fatal" or null => errors,
                 string flag => throw new System.Exception($"Unknown flag {flag}"),
-                null => throw new System.Exception("Flag attribute not found"),
             };
 
             string businessRule = element.Attribute("id")?.Value ?? throw new System.Exception("Id attribute not found");
