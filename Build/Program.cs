@@ -383,6 +383,17 @@ void InstallFacturX(ParseResult args)
         );
     }
 
+    string en16931ExamplesDir = $"{temp.FullName}/Beispiele/3. EN16931/";
+
+    foreach (string file in Directory.GetFiles(en16931ExamplesDir, "*.xml", SearchOption.AllDirectories))
+    {
+        File.Copy(
+            file,
+            Path.Combine(BaseResourceDirTests, "FacturX/En16931", Path.GetFileName(file)),
+            overwrite: true
+        );
+    }
+
     Directory.Delete(temp.FullName, recursive: true);
 
     Console.WriteLine($"Successfully installed Factur-X files.");
