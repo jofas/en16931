@@ -361,6 +361,17 @@ void InstallFacturX(ParseResult args)
         );
     }
 
+    string en16931Dir = $"{temp.FullName}/Schema/3_Factur-X_{FacturXVersion}_EN16931/_XSLT_EN16931";
+
+    foreach (string file in Directory.GetFiles(en16931Dir))
+    {
+        File.Copy(
+            file,
+            Path.Combine(BaseResourceDir, "FacturX", Path.GetFileName(file)),
+            overwrite: true
+        );
+    }
+
     string basicExamplesDir = $"{temp.FullName}/Beispiele/2. BASIC";
 
     foreach (string file in Directory.GetFiles(basicExamplesDir, "*.xml", SearchOption.AllDirectories))
