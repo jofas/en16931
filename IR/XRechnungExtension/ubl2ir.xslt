@@ -697,7 +697,7 @@
     <xsl:if test="exists(cac:PaymentMeans/cbc:PaymentMeansCode)">
       <payment-instructions id="bg-16">
         <payment-means-type-code id="bt-81">
-          <xsl:value-of select="cac:PaymentMeans/cbc:PaymentMeansCode"/>
+          <xsl:value-of select="cac:PaymentMeans[1]/cbc:PaymentMeansCode"/>
         </payment-means-type-code>
         <xsl:if test="exists(cac:PaymentMeans/cbc:PaymentMeansCode[@name])">
           <payment-means-text id="bt-82">
@@ -706,12 +706,11 @@
         </xsl:if>
         <xsl:if test="exists(cac:PaymentMeans/cbc:PaymentID)">
           <remittance-information id="bt-83">
-            <xsl:value-of select="cac:PaymentMeans/cbc:PaymentID"/>
+            <xsl:value-of select="cac:PaymentMeans/cbc:PaymentID[1]"/>
           </remittance-information>
         </xsl:if>
         <xsl:if test="exists(cac:PaymentMeans/cac:PayeeFinancialAccount)">
           <credit-transfers id="bg-17">
-            <!-- Note that UBL does not actually support multiple bg-17 instances -->
             <xsl:for-each select="cac:PaymentMeans/cac:PayeeFinancialAccount">
               <credit-transfer id="bg-17">
                 <payment-account-identifier id="bt-84">

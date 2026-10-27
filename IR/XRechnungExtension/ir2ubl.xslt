@@ -917,6 +917,34 @@
           </cac:PaymentMandate>
         </xsl:if>
       </cac:PaymentMeans>
+      <xsl:for-each select="ir:payment-instructions/ir:credit-transfers/ir:credit-transfer[position() &gt; 1]">
+        <cac:PaymentMeans>
+          <cbc:PaymentMeansCode>
+            <!-- bt-81 -->
+            <xsl:value-of select="/ir:invoice/ir:payment-instructions/ir:payment-means-type-code"/>
+          </cbc:PaymentMeansCode>
+          <cac:PayeeFinancialAccount>
+            <cbc:ID>
+              <!-- bt-84 -->
+              <xsl:value-of select="./ir:payment-account-identifier"/>
+            </cbc:ID>
+            <xsl:if test="exists(./ir:payment-account-name)">
+              <cbc:Name>
+                <!-- bt-85 -->
+                <xsl:value-of select="./ir:payment-account-name"/>
+              </cbc:Name>
+            </xsl:if>
+            <xsl:if test="exists(./ir:payment-service-provider-identifier)">
+              <cac:FinancialInstitutionBranch>
+                <cbc:ID>
+                  <!-- bt-86 -->
+                  <xsl:value-of select="./ir:payment-service-provider-identifier"/>
+                </cbc:ID>
+              </cac:FinancialInstitutionBranch>
+            </xsl:if>
+          </cac:PayeeFinancialAccount>
+        </cac:PaymentMeans>
+      </xsl:for-each>
     </xsl:if>
   </xsl:template>
   <xsl:template name="common-invoice-4">
