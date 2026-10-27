@@ -21,7 +21,15 @@ public class TestHarness
 
         foreach (string test in testFiles)
         {
-            Parser.Parse<I>(test);
+            try
+            {
+                Parser.Parse<I>(test);
+            }
+            catch (ValidationException e)
+            {
+                System.Console.Error.WriteLine(e.Errors);
+                throw;
+            }
         }
     }
 
@@ -69,6 +77,7 @@ public class TestHarness
             catch (ValidationException e)
             {
                 System.Console.Error.WriteLine(e.Errors);
+                throw;
             }
 
             using StringReader reader = new(writer.ToString());
