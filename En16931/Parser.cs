@@ -24,11 +24,6 @@ public class Parser
         return new([spec]);
     }
 
-    public static Parser WithAllSpecs()
-    {
-        return new(BuiltinSpecs.All);
-    }
-
     private readonly ImmutableDictionary<Identifier, ISpecificationParser> _specs;
 
     private Parser(IEnumerable<ISpecificationParser> specs)
