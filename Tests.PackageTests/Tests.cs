@@ -1,5 +1,6 @@
 using System.IO;
 using En16931;
+using En16931.Specs;
 using Xunit;
 
 namespace Tests.PackageTests;
@@ -107,7 +108,7 @@ public class Tests
 
         using StringReader reader = new(xml);
 
-        Parser parser = new();
+        Parser parser = Parser.Create(XRechnung.Instance);
 
         parser.Parse(reader);
     }

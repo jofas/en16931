@@ -370,5 +370,4 @@ public partial class CiiD16bs
             },
         ],
     };
-
 }
