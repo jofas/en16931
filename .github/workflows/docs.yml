@@ -1,0 +1,37 @@
+name: Publish docs
+on:
+  push:
+    branches:
+      - "master"
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+jobs:
+  publish-docs:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Dotnet setup
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 10
+      - name: Install docfx
+        run: dotnet tool update -g docfx
+      - name: Create static page
+        run: docfx Doc/docfx.json
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'Doc/_site'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
