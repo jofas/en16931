@@ -14,4 +14,3 @@ dotnet pack
 dotnet nuget locals all --clear
 rm -r Tests.PackageTests/bin/
 ```
-
