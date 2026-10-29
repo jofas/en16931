@@ -2,6 +2,22 @@
 
 .NET implementation of the EN16931:2017 data model and the two mandatory syntaxes. 
 
+## Supported Standards
+
+This library comes with a set of already implemented CIUS and extensions:
+
+|Standard|Type|Version|
+|--------|----|-------|
+|XRechnung|CIUS|3.0.2/2.5.0|
+|XRechnung Extension|Extension|3.0.2/2.5.0|
+|XRechnung CVD|CIUS|0.9/2.5.0|
+|Factur-X Basic|CIUS|1.09.2|
+|Factur-X EN16931|CIUS|1.09.2|
+
+The library is extensible through the interfaces of the `En16931.Spec` namespace
+and supporting more standards out of the box is one of the development goals of
+this project.
+
 ## CEN Copyright Notice
 
 Derivative applications of the EN16931:2017 standard, such as this library, are
