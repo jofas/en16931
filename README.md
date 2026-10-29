@@ -2,17 +2,6 @@
 
 .NET implementation of the EN16931:2017 data model and the two mandatory syntaxes. 
 
-## Package Tests
-
-To make sure that package tests run based on the latest code changes, run the
-following commands:
-
-```bash
-dotnet pack
-dotnet nuget locals all --clear
-rm -r Tests.PackageTests/bin/
-```
-
 ## CEN Copyright Notice
 
 Derivative applications of the EN16931:2017 standard, such as this library, are
