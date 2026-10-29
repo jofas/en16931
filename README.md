@@ -8,7 +8,7 @@ This library comes with a set of already implemented CIUS and extensions:
 
 |Standard|Type|Version|Specification identifier|Implementation|Invoice type|
 |--------|----|-------|------------------------|--------------|------------|
-|Core[^1]|n/a|1.3.16|`urn:cen.eu:en16931:2017`|`En16931.Specs.Core`|`En16931.Model.Invoice<En16931.Specs.Core`|
+|Core|n/a[^1]|1.3.16|`urn:cen.eu:en16931:2017`|`En16931.Specs.Core`|`En16931.Model.Invoice<En16931.Specs.Core`|
 |XRechnung|CIUS|3.0.2/2.5.0|`urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0`|`En16931.Specs.XRechnung`|`En16931.Model.Invoice<En16931.Specs.XRechnung>`|
 |XRechnung Extension|Extension|3.0.2/2.5.0|`urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0`|`En16931.Specs.XRechnungExtension`|`En16931.Model.XRechnungExtension.Invoice`|
 |XRechnung CVD|CIUS|0.9/2.5.0|`urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#compliant#urn:xeinkauf.de:kosit:xrechnung:cvd_0.9`|`En16931.Specs.XRechnungCvd`|`En16931.Model.Invoice<En16931.Specs.XRechnungCvd>`|
@@ -18,10 +18,6 @@ This library comes with a set of already implemented CIUS and extensions:
 The library is extensible through the interfaces of the `En16931.Spec` namespace
 and supporting more standards out of the box is one of the development goals of
 this project.
-
-[^1]: Core applies only the business rules of the EN16931:2017 standard, without 
-      any further refinement by a national standard, making it not a CIUS. It is 
-      mainly intended for testing purposes.
 
 ## CEN Copyright Notice
 
@@ -40,3 +36,8 @@ applications.
 In case of doubt, users shall always refer to the content of the publication
 provided by the relevant member national standardisation bodies, which make
 available the official authoritative text.
+
+[^1]: The Core specification applies only the business rules of the EN16931:2017 
+      standard, without any further refinement by a national standard.
+      So technically, it is neither a CIUS nor an extension.
+      It is mainly intended for testing purposes.
