@@ -9,9 +9,9 @@ This library comes with a set of already implemented CIUS and extensions:
 |Standard|Type|Version|Specification identifier|Implementation|Invoice type|
 |--------|----|-------|------------------------|--------------|------------|
 |Core|n/a[^1]|1.3.16|`urn:cen.eu:en16931:2017`|`En16931.Specs.Core`|`En16931.Model.Invoice<En16931.Specs.Core`|
-|XRechnung|CIUS|3.0.2/2.5.0|`urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0`|`En16931.Specs.XRechnung`|`En16931.Model.Invoice<En16931.Specs.XRechnung>`|
-|XRechnung Extension|Extension|3.0.2/2.5.0|`urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0`|`En16931.Specs.XRechnungExtension`|`En16931.Model.XRechnungExtension.Invoice`|
-|XRechnung CVD|CIUS|0.9/2.5.0|`urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#compliant#urn:xeinkauf.de:kosit:xrechnung:cvd_0.9`|`En16931.Specs.XRechnungCvd`|`En16931.Model.Invoice<En16931.Specs.XRechnungCvd>`|
+|XRechnung|CIUS|3.0.2/2.6.0|`urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0`|`En16931.Specs.XRechnung`|`En16931.Model.Invoice<En16931.Specs.XRechnung>`|
+|XRechnung Extension|Extension|3.0.2/2.6.0|`urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0`|`En16931.Specs.XRechnungExtension`|`En16931.Model.XRechnungExtension.Invoice`|
+|XRechnung CVD|CIUS|0.9/2.6.0|`urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#compliant#urn:xeinkauf.de:kosit:xrechnung:cvd_0.9`|`En16931.Specs.XRechnungCvd`|`En16931.Model.Invoice<En16931.Specs.XRechnungCvd>`|
 |Factur-X Basic|CIUS|1.09.2|`urn:cen.eu:en16931:2017#compliant#urn:factur-x.eu:1p0:basic`|`En16931.Specs.FacturXBasic`|`En16931.Model.Invoice<En16931.Specs.FacturXBasic>`|
 |Factur-X EN16931|CIUS|1.09.2|`urn:cen.eu:en16931:2017`|`En16931.Specs.FacturXEn16931`|`En16931.Model.Invoice<En16931.Specs.FacturXEn16931>`|
 
