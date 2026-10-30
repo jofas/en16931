@@ -14,6 +14,8 @@ Command downloadEn16931Schematron = new("en16931", "Download schematron files wi
 
 Command downloadXRechnungSchematron = new("xrechnung", "Download schematron files with XRechnung rules.");
 
+Command downloadXRechnungTestsuite = new("xrechnung-testsuite", "Download official testsuite for XRechnung.");
+
 Command downloadPeppolBisBillingSchematron = new("peppol", "Downliad schematron files with PEPPOL BIS Billing rules.");
 
 Command downloadSchXslt2 = new("schxslt2", "Download SchXslt2 compiler.");
@@ -25,6 +27,7 @@ Command download = new("download", "Download external resources.");
 download.Subcommands.Add(downloadUblSchema);
 download.Subcommands.Add(downloadEn16931Schematron);
 download.Subcommands.Add(downloadXRechnungSchematron);
+download.Subcommands.Add(downloadXRechnungTestsuite);
 download.Subcommands.Add(downloadPeppolBisBillingSchematron);
 download.Subcommands.Add(downloadSchXslt2);
 download.Subcommands.Add(downloadAll);
@@ -74,6 +77,7 @@ cmd.Subcommands.Add(install);
 downloadUblSchema.SetAction(DownloadUblSchema);
 downloadEn16931Schematron.SetAction(DownloadEn16931Schematron);
 downloadXRechnungSchematron.SetAction(DownloadXRechnungSchematron);
+downloadXRechnungTestsuite.SetAction(DownloadXRechnungTestsuite);
 downloadPeppolBisBillingSchematron.SetAction(DownloadPeppolBisBillingSchematron);
 downloadSchXslt2.SetAction(DownloadSchXslt2);
 downloadAll.SetAction(DownloadAll);
@@ -193,6 +197,29 @@ async Task DownloadXRechnungSchematron(ParseResult args)
     Directory.Delete(temp.FullName, recursive: true);
 
     Console.WriteLine($"Successfully downloaded XRechnung schematron files.");
+}
+
+async Task DownloadXRechnungTestsuite(ParseResult args)
+{
+    DirectoryInfo temp = Directory.CreateTempSubdirectory("En16931_Download_XRechnung_Testsuite_");
+
+    using HttpClient client = new();
+
+    string url = $"https://github.com/itplr-kosit/xrechnung-testsuite/releases/download/v{XRechnungTestsuiteVersion}/xrechnung-{XRechnungVersion}-testsuite-{XRechnungTestsuiteVersion}.zip";
+
+    using HttpResponseMessage response = await client.GetAsync(url);
+
+    response.EnsureSuccessStatusCode();
+
+    ZipFile.ExtractToDirectory(await response.Content.ReadAsStreamAsync(), temp.FullName);
+
+    string examplesDir = $"{temp.FullName}/instances/";
+
+    DirectoryUtils.Copy(examplesDir, Path.Combine(BaseResourceDirTests, "XRechnung"));
+
+    Directory.Delete(temp.FullName, recursive: true);
+
+    Console.WriteLine($"Successfully downloaded XRechnung testsuite files.");
 }
 
 async Task DownloadPeppolBisBillingSchematron(ParseResult args)

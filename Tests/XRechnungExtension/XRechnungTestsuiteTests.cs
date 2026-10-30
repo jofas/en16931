@@ -14,7 +14,7 @@ public class XRechnungTestsuiteTests
     private static TestHarness _harness = new(S.XRechnungExtension.Instance);
 
     [Theory]
-    [InlineData("Tests.Resources.Extern/xrechnung-testsuite/extension")]
+    [InlineData("Tests.Resources.Extern/XRechnung/extension")]
     public void ValidateXRechnungTestsuite(string testsLocation)
     {
         _harness.AcceptSuccess<Invoice>(testsLocation);
