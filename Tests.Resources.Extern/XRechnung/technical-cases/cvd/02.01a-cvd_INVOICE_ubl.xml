@@ -200,7 +200,7 @@
   </cac:PaymentMeans>
   <cac:PaymentMeans>
     <cbc:PaymentMeansCode>58</cbc:PaymentMeansCode>
-    <cbc:PaymentID>Deb. 12345 / Fact. 9876543</cbc:PaymentID>        
+    <cbc:PaymentID>Deb. 12345 / Fact. 9876543</cbc:PaymentID>
     <cac:PayeeFinancialAccount>
       <cbc:ID>DE16000000002345678901</cbc:ID>
       <cbc:Name>[Payment account name 2]</cbc:Name>
