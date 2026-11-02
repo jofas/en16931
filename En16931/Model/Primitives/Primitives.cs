@@ -9,7 +9,7 @@ using En16931.Utils;
 
 namespace En16931.Model.Primitives;
 
-public readonly record struct Amount(decimal Value) : IIRDeserializable<Amount>, IIRSerializable
+public readonly record struct Amount(decimal Value)
 {
     public void Serialize(XmlWriter writer)
     {
@@ -22,7 +22,7 @@ public readonly record struct Amount(decimal Value) : IIRDeserializable<Amount>,
     }
 }
 
-public readonly record struct Percentage(decimal Value) : IIRDeserializable<Percentage>, IIRSerializable
+public readonly record struct Percentage(decimal Value)
 {
     public void Serialize(XmlWriter writer)
     {
@@ -35,7 +35,7 @@ public readonly record struct Percentage(decimal Value) : IIRDeserializable<Perc
     }
 }
 
-public readonly record struct Quantity(decimal Value) : IIRDeserializable<Quantity>, IIRSerializable
+public readonly record struct Quantity(decimal Value)
 {
     public void Serialize(XmlWriter writer)
     {
@@ -48,7 +48,7 @@ public readonly record struct Quantity(decimal Value) : IIRDeserializable<Quanti
     }
 }
 
-public readonly record struct UnitPriceAmount(decimal Value) : IIRDeserializable<UnitPriceAmount>, IIRSerializable
+public readonly record struct UnitPriceAmount(decimal Value)
 {
     public void Serialize(XmlWriter writer)
     {
@@ -61,7 +61,7 @@ public readonly record struct UnitPriceAmount(decimal Value) : IIRDeserializable
     }
 }
 
-public readonly record struct Date(DateTime Value) : IIRDeserializable<Date>, IIRSerializable
+public readonly record struct Date(DateTime Value)
 {
     public void Serialize(XmlWriter writer)
     {
@@ -74,7 +74,7 @@ public readonly record struct Date(DateTime Value) : IIRDeserializable<Date>, II
     }
 }
 
-public readonly record struct Code : IIRDeserializable<Code>, IIRSerializable
+public readonly record struct Code
 {
     public required string Value
     {
@@ -107,7 +107,7 @@ public readonly record struct Code : IIRDeserializable<Code>, IIRSerializable
     }
 }
 
-public readonly record struct DocumentReference : IIRDeserializable<DocumentReference>, IIRSerializable
+public readonly record struct DocumentReference
 {
     public required string Value
     {
@@ -140,7 +140,7 @@ public readonly record struct DocumentReference : IIRDeserializable<DocumentRefe
     }
 }
 
-public readonly record struct Text : IIRDeserializable<Text>, IIRSerializable
+public readonly record struct Text
 {
     public required string Value
     {
@@ -173,7 +173,7 @@ public readonly record struct Text : IIRDeserializable<Text>, IIRSerializable
     }
 }
 
-public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>, IIRSerializable
+public readonly record struct BinaryObject
 {
     public required Array<byte> Content { get; init; }
 
@@ -258,7 +258,7 @@ public readonly record struct BinaryObject : IIRDeserializable<BinaryObject>, II
     }
 }
 
-public readonly record struct Identifier : IIRDeserializable<Identifier>, IIRSerializable
+public readonly record struct Identifier
 {
     public required string Content
     {

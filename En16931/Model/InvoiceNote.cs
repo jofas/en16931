@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct InvoiceNote : IIRDeserializable<InvoiceNote>, IIRSerializable
+public readonly record struct InvoiceNote
 {
     // BT-21
     public required Code? InvoiceNoteSubjectCode { get; init; }

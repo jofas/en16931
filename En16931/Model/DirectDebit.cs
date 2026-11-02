@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct DirectDebit : IIRDeserializable<DirectDebit>, IIRSerializable, ICanBeEmpty
+public readonly record struct DirectDebit : ICanBeEmpty
 {
     // BT-89
     public required Identifier? MandateReferenceIdentifier { get; init; }

@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct InvoiceLineAllowance : IIRDeserializable<InvoiceLineAllowance>, IIRSerializable
+public readonly record struct InvoiceLineAllowance
 {
     // BT-136
     public required Amount InvoiceLineAllowanceAmount { get; init; }

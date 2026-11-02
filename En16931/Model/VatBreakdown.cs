@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct VatBreakdown : IIRDeserializable<VatBreakdown>, IIRSerializable
+public readonly record struct VatBreakdown
 {
     // BT-116
     public required Amount VatCategoryTaxableAmount { get; init; }

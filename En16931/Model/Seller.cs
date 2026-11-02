@@ -7,7 +7,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct Seller : IIRDeserializable<Seller>, IIRSerializable
+public readonly record struct Seller
 {
     // BT-27
     public required Text SellerName { get; init; }

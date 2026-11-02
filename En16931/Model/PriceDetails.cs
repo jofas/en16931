@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct PriceDetails : IIRDeserializable<PriceDetails>, IIRSerializable
+public readonly record struct PriceDetails
 {
     // BT-146
     public required UnitPriceAmount ItemNetPrice { get; init; }

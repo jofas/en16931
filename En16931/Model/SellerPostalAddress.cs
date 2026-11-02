@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct SellerPostalAddress : IIRDeserializable<SellerPostalAddress>, IIRSerializable
+public readonly record struct SellerPostalAddress
 {
     // BT-35
     public required Text? SellerAddressLine1 { get; init; }

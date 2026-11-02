@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct CreditTransfer : IIRDeserializable<CreditTransfer>, IIRSerializable
+public readonly record struct CreditTransfer
 {
     // BT-84
     public required Identifier PaymentAccountIdentifier { get; init; }

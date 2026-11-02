@@ -6,7 +6,7 @@ using En16931.Utils;
 
 namespace En16931.Model;
 
-public readonly record struct ProcessControl<T> : IProcessControl, IIRDeserializable<ProcessControl<T>>, IIRSerializable where T : ISpecification
+public readonly record struct ProcessControl<T> : IProcessControl where T : ISpecification
 {
     // BT-23
     public required Text? BusinessProcessType { get; init; }

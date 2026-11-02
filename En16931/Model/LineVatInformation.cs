@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct LineVatInformation : IIRDeserializable<LineVatInformation>, IIRSerializable
+public readonly record struct LineVatInformation
 {
     // BT-151
     // UNTDID 5305

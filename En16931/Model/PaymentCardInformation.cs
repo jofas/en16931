@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct PaymentCardInformation : IIRDeserializable<PaymentCardInformation>, IIRSerializable
+public readonly record struct PaymentCardInformation
 {
     // BT-87
     public required Text PaymentCardPrimaryAccountNumber { get; init; }

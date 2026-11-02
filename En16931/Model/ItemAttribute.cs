@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct ItemAttribute : IIRDeserializable<ItemAttribute>, IIRSerializable
+public readonly record struct ItemAttribute
 {
     // BT-160
     public required Text ItemAttributeName { get; init; }

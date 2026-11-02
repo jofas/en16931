@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct SellerContact : IIRDeserializable<SellerContact>, IIRSerializable, ICanBeEmpty
+public readonly record struct SellerContact : ICanBeEmpty
 {
     // BT-41
     public required Text? SellerContactPoint { get; init; }
