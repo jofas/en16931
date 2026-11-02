@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct Payee : IIRDeserializable<Payee>, IIRSerializable
+public readonly record struct Payee
 {
     // BT-59
     public required Text PayeeName { get; init; }

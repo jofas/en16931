@@ -7,7 +7,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>, IIRSerializable
+public readonly record struct InvoiceLine
 {
     // BT-126
     public required Identifier InvoiceLineIdentifier { get; init; }

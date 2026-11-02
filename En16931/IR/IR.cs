@@ -2,17 +2,7 @@ using System.Xml;
 
 namespace En16931.IR;
 
-public static class IRConfig
+internal static class IRConfig
 {
     public static string NS = "urn:todo";
-}
-
-public interface IIRDeserializable<TSelf>
-{
-    public abstract static TSelf Deserialize(XmlReader reader);
-}
-
-public interface IIRSerializable
-{
-    public void Serialize(XmlWriter writer);
 }

@@ -7,7 +7,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct Invoice<T> : IInvoice, IInvoice<T>, IIRDeserializable<Invoice<T>>, IIRSerializable where T : ISpecification
+public readonly record struct Invoice<T> : IInvoice, IInvoice<T> where T : ISpecification
 {
     IProcessControl IInvoice.ProcessControl { get => ProcessControl; }
 

@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct AdditionalSupportingDocument : IIRDeserializable<AdditionalSupportingDocument>, IIRSerializable
+public readonly record struct AdditionalSupportingDocument
 {
     // BT-122
     public required DocumentReference SupportingDocumentReference { get; init; }

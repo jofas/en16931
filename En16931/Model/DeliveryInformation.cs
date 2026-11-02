@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct DeliveryInformation : IIRDeserializable<DeliveryInformation>, IIRSerializable, ICanBeEmpty
+public readonly record struct DeliveryInformation : ICanBeEmpty
 {
     // BT-70
     public required Text? DeliverToPartyName { get; init; }

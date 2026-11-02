@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct DocumentLevelCharge : IIRDeserializable<DocumentLevelCharge>, IIRSerializable
+public readonly record struct DocumentLevelCharge
 {
     // BT-99
     public required Amount DocumentLevelChargeAmount { get; init; }

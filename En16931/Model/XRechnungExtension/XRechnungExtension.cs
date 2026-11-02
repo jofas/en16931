@@ -8,7 +8,7 @@ using S = En16931.Specs;
 
 namespace En16931.Model.XRechnungExtension;
 
-public readonly record struct Invoice : IInvoice, IIRDeserializable<Invoice>, IIRSerializable
+public readonly record struct Invoice : IInvoice
 {
     IProcessControl IInvoice.ProcessControl { get => ProcessControl; }
 
@@ -827,7 +827,7 @@ public readonly record struct Invoice : IInvoice, IIRDeserializable<Invoice>, II
     }
 }
 
-public readonly record struct ThirdPartyPayment : IIRDeserializable<ThirdPartyPayment>, IIRSerializable
+public readonly record struct ThirdPartyPayment
 {
     // BT-DEX-001
     public required Text ThirdPartyPaymentType { get; init; }
@@ -902,7 +902,7 @@ public readonly record struct ThirdPartyPayment : IIRDeserializable<ThirdPartyPa
     }
 }
 
-public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>, IIRSerializable
+public readonly record struct InvoiceLine
 {
     // BT-126
     public required Identifier InvoiceLineIdentifier { get; init; }
@@ -1242,7 +1242,7 @@ public readonly record struct InvoiceLine : IIRDeserializable<InvoiceLine>, IIRS
     }
 }
 
-public record class SubInvoiceLine : IIRDeserializable<SubInvoiceLine>, IIRSerializable
+public record class SubInvoiceLine
 {
     // BT-126
     public required Identifier InvoiceLineIdentifier { get; init; }
@@ -1582,7 +1582,7 @@ public record class SubInvoiceLine : IIRDeserializable<SubInvoiceLine>, IIRSeria
     }
 }
 
-public readonly record struct SubInvoiceLineItemInformation : IIRDeserializable<SubInvoiceLineItemInformation>, IIRSerializable
+public readonly record struct SubInvoiceLineItemInformation
 {
     // BT-153
     public required Text ItemName { get; init; }
@@ -1831,7 +1831,7 @@ public readonly record struct SubInvoiceLineItemInformation : IIRDeserializable<
     }
 }
 
-public readonly record struct SubInvoiceLineItemAttribute : IIRDeserializable<SubInvoiceLineItemAttribute>, IIRSerializable
+public readonly record struct SubInvoiceLineItemAttribute
 {
     // BT-160
     public required Text ItemAttributeName { get; init; }
@@ -1889,7 +1889,7 @@ public readonly record struct SubInvoiceLineItemAttribute : IIRDeserializable<Su
     }
 }
 
-public readonly record struct SubInvoiceLineAllowance : IIRDeserializable<SubInvoiceLineAllowance>, IIRSerializable
+public readonly record struct SubInvoiceLineAllowance
 {
     // BT-136
     public required Amount InvoiceLineAllowanceAmount { get; init; }
@@ -2030,7 +2030,7 @@ public readonly record struct SubInvoiceLineAllowance : IIRDeserializable<SubInv
     }
 }
 
-public readonly record struct SubInvoiceLineCharge : IIRDeserializable<SubInvoiceLineCharge>, IIRSerializable
+public readonly record struct SubInvoiceLineCharge
 {
     // BT-141
     public required Amount InvoiceLineChargeAmount { get; init; }
@@ -2171,7 +2171,7 @@ public readonly record struct SubInvoiceLineCharge : IIRDeserializable<SubInvoic
     }
 }
 
-public readonly record struct SubInvoiceLinePeriod : IIRDeserializable<SubInvoiceLinePeriod>, IIRSerializable
+public readonly record struct SubInvoiceLinePeriod
 {
     // BT-134
     public required Date? InvoiceLinePeriodStartDate { get; init; }
@@ -2245,7 +2245,7 @@ public readonly record struct SubInvoiceLinePeriod : IIRDeserializable<SubInvoic
     }
 }
 
-public readonly record struct SubInvoiceLineVatInformation : IIRDeserializable<SubInvoiceLineVatInformation>, IIRSerializable
+public readonly record struct SubInvoiceLineVatInformation
 {
     // BT-151
     // UNTDID 5305
@@ -2312,7 +2312,7 @@ public readonly record struct SubInvoiceLineVatInformation : IIRDeserializable<S
     }
 }
 
-public readonly record struct SubInvoiceLinePriceDetails : IIRDeserializable<SubInvoiceLinePriceDetails>, IIRSerializable
+public readonly record struct SubInvoiceLinePriceDetails
 {
     // BT-146
     public required UnitPriceAmount ItemNetPrice { get; init; }

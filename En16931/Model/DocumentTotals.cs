@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct DocumentTotals : IIRDeserializable<DocumentTotals>, IIRSerializable
+public readonly record struct DocumentTotals
 {
     // BT-106
     public required Amount SumOfInvoiceLineNetAmount { get; init; }

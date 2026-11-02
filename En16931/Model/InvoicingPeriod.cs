@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct InvoicingPeriod : IIRDeserializable<InvoicingPeriod>, IIRSerializable, ICanBeEmpty
+public readonly record struct InvoicingPeriod : ICanBeEmpty
 {
     // BT-73
     public required Date? InvoicingPeriodStartDate { get; init; }

@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct PrecedingInvoiceReference : IIRDeserializable<PrecedingInvoiceReference>, IIRSerializable
+public readonly record struct PrecedingInvoiceReference
 {
     // BT-25
     public required DocumentReference Reference { get; init; }

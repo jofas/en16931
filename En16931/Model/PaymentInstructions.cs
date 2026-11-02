@@ -7,7 +7,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct PaymentInstructions : IIRDeserializable<PaymentInstructions>, IIRSerializable
+public readonly record struct PaymentInstructions
 {
     // BT-81
     // UNTDID-4461

@@ -5,7 +5,7 @@ using En16931.Spec;
 
 namespace En16931.Model;
 
-public readonly record struct DeliverToAddress : IIRDeserializable<DeliverToAddress>, IIRSerializable
+public readonly record struct DeliverToAddress
 {
     // BT-75
     public required Text? DeliverToAddressLine1 { get; init; }
