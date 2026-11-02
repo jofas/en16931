@@ -4,7 +4,7 @@ using En16931.Collections.Immutable;
 using En16931.IR;
 using En16931.Model.Primitives;
 
-namespace En16931.Model.XRechnungExtension;
+namespace En16931.Model.Extension.XRechnungExtension;
 
 public readonly record struct SubInvoiceLineItemInformation
 {

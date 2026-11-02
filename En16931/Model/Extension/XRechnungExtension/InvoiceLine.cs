@@ -4,9 +4,9 @@ using En16931.Collections.Immutable;
 using En16931.IR;
 using En16931.Model.Primitives;
 
-namespace En16931.Model.XRechnungExtension;
+namespace En16931.Model.Extension.XRechnungExtension;
 
-public record class SubInvoiceLine
+public readonly record struct InvoiceLine
 {
     // BT-126
     public required Identifier InvoiceLineIdentifier { get; init; }
@@ -32,31 +32,31 @@ public record class SubInvoiceLine
     // BT-133
     public required Text? InvoiceLineBuyerAccountingReference { get; init; }
 
-    // BG-DEX-02
-    public required SubInvoiceLineItemInformation SubInvoiceLineItemInformation { get; init; }
+    // BG-26
+    public required InvoiceLinePeriod? InvoiceLinePeriod { get; init; }
 
-    // BG-DEX-03
-    public required Array<SubInvoiceLineAllowance> SubInvoiceLineAllowances { get; init; }
+    // BG-27
+    public required Array<InvoiceLineAllowance> InvoiceLineAllowances { get; init; }
 
-    // BG-DEX-04
-    public required Array<SubInvoiceLineCharge> SubInvoiceLineCharges { get; init; }
+    // BG-28
+    public required Array<InvoiceLineCharge> InvoiceLineCharges { get; init; }
 
-    // BG-DEX-05
-    public required SubInvoiceLinePeriod? SubInvoiceLinePeriod { get; init; }
+    // BG-29
+    public required PriceDetails PriceDetails { get; init; }
 
-    // BG-DEX-06
-    public required SubInvoiceLineVatInformation SubInvoiceLineVatInformation { get; init; }
+    // BG-30
+    public required LineVatInformation LineVatInformation { get; init; }
 
-    // BG-DEX-07
-    public required SubInvoiceLinePriceDetails SubInvoiceLinePriceDetails { get; init; }
+    // BG-31
+    public required ItemInformation ItemInformation { get; init; }
 
     // BG-DEX-01
     public required RefArray<SubInvoiceLine> SubInvoiceLines { get; init; }
 
     public void Serialize(XmlWriter writer)
     {
-        writer.WriteStartElement("sub-invoice-line", IRConfig.NS);
-        writer.WriteAttributeString("id", "bg-dex-01");
+        writer.WriteStartElement("invoice-line", IRConfig.NS);
+        writer.WriteAttributeString("id", "bg-25");
 
         writer.WriteStartElement("invoice-line-identifier", IRConfig.NS);
         writer.WriteAttributeString("id", "bt-126");
@@ -110,14 +110,17 @@ public record class SubInvoiceLine
             writer.WriteEndElement();
         }
 
-        SubInvoiceLineItemInformation.Serialize(writer);
-
-        if (SubInvoiceLineAllowances.Length > 0)
+        if (InvoiceLinePeriod is not null)
         {
-            writer.WriteStartElement("sub-invoice-line-allowances", IRConfig.NS);
-            writer.WriteAttributeString("id", "bg-dex-03");
+            InvoiceLinePeriod.Value.Serialize(writer);
+        }
 
-            foreach (SubInvoiceLineAllowance ila in SubInvoiceLineAllowances)
+        if (InvoiceLineAllowances.Length > 0)
+        {
+            writer.WriteStartElement("invoice-line-allowances", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-27");
+
+            foreach (InvoiceLineAllowance ila in InvoiceLineAllowances)
             {
                 ila.Serialize(writer);
             }
@@ -125,12 +128,12 @@ public record class SubInvoiceLine
             writer.WriteEndElement();
         }
 
-        if (SubInvoiceLineCharges.Length > 0)
+        if (InvoiceLineCharges.Length > 0)
         {
-            writer.WriteStartElement("sub-invoice-line-charges", IRConfig.NS);
-            writer.WriteAttributeString("id", "bg-dex-04");
+            writer.WriteStartElement("invoice-line-charges", IRConfig.NS);
+            writer.WriteAttributeString("id", "bg-28");
 
-            foreach (SubInvoiceLineCharge ilc in SubInvoiceLineCharges)
+            foreach (InvoiceLineCharge ilc in InvoiceLineCharges)
             {
                 ilc.Serialize(writer);
             }
@@ -138,14 +141,11 @@ public record class SubInvoiceLine
             writer.WriteEndElement();
         }
 
-        if (SubInvoiceLinePeriod is not null)
-        {
-            SubInvoiceLinePeriod.Value.Serialize(writer);
-        }
+        PriceDetails.Serialize(writer);
 
-        SubInvoiceLineVatInformation.Serialize(writer);
+        LineVatInformation.Serialize(writer);
 
-        SubInvoiceLinePriceDetails.Serialize(writer);
+        ItemInformation.Serialize(writer);
 
         if (SubInvoiceLines.Length > 0)
         {
@@ -163,9 +163,9 @@ public record class SubInvoiceLine
         writer.WriteEndElement();
     }
 
-    public static SubInvoiceLine Deserialize(XmlReader reader)
+    public static InvoiceLine Deserialize(XmlReader reader)
     {
-        reader.ReadStartElement("sub-invoice-line", IRConfig.NS);
+        reader.ReadStartElement("invoice-line", IRConfig.NS);
         reader.MoveToContent();
 
         reader.ReadStartElement("invoice-line-identifier", IRConfig.NS);
@@ -252,56 +252,56 @@ public record class SubInvoiceLine
             reader.MoveToContent();
         }
 
-        SubInvoiceLineItemInformation subInvoiceLineItemInformation = SubInvoiceLineItemInformation.Deserialize(reader);
+        InvoiceLinePeriod? invoiceLinePeriod = null;
 
-        Array<SubInvoiceLineAllowance> subInvoiceLineAllowances = Array<SubInvoiceLineAllowance>.Empty;
+        if (reader.IsStartElement("invoice-line-period", IRConfig.NS))
+        {
+            invoiceLinePeriod = Model.InvoiceLinePeriod.Deserialize(reader);
+        }
 
-        if (reader.IsStartElement("sub-invoice-line-allowances", IRConfig.NS))
+        Array<InvoiceLineAllowance> invoiceLineAllowances = Array<InvoiceLineAllowance>.Empty;
+
+        if (reader.IsStartElement("invoice-line-allowances", IRConfig.NS))
         {
             reader.ReadStartElement();
             reader.MoveToContent();
 
-            List<SubInvoiceLineAllowance> builder = [];
-            while (reader.IsStartElement("sub-invoice-line-allowance", IRConfig.NS))
+            List<InvoiceLineAllowance> builder = [];
+            while (reader.IsStartElement("invoice-line-allowance", IRConfig.NS))
             {
-                builder.Add(SubInvoiceLineAllowance.Deserialize(reader));
+                builder.Add(InvoiceLineAllowance.Deserialize(reader));
             }
 
-            subInvoiceLineAllowances = new(builder);
+            invoiceLineAllowances = new(builder);
 
             reader.ReadEndElement();
             reader.MoveToContent();
         }
 
-        Array<SubInvoiceLineCharge> subInvoiceLineCharges = Array<SubInvoiceLineCharge>.Empty;
+        Array<InvoiceLineCharge> invoiceLineCharges = Array<InvoiceLineCharge>.Empty;
 
-        if (reader.IsStartElement("sub-invoice-line-charges", IRConfig.NS))
+        if (reader.IsStartElement("invoice-line-charges", IRConfig.NS))
         {
             reader.ReadStartElement();
             reader.MoveToContent();
 
-            List<SubInvoiceLineCharge> builder = [];
-            while (reader.IsStartElement("sub-invoice-line-charge", IRConfig.NS))
+            List<InvoiceLineCharge> builder = [];
+            while (reader.IsStartElement("invoice-line-charge", IRConfig.NS))
             {
-                builder.Add(SubInvoiceLineCharge.Deserialize(reader));
+                builder.Add(InvoiceLineCharge.Deserialize(reader));
             }
 
-            subInvoiceLineCharges = new(builder);
+            invoiceLineCharges = new(builder);
 
             reader.ReadEndElement();
             reader.MoveToContent();
         }
 
-        SubInvoiceLinePeriod? subInvoiceLinePeriod = null;
+        PriceDetails priceDetails = PriceDetails.Deserialize(reader);
 
-        if (reader.IsStartElement("sub-invoice-line-period", IRConfig.NS))
-        {
-            subInvoiceLinePeriod = XRechnungExtension.SubInvoiceLinePeriod.Deserialize(reader);
-        }
+        LineVatInformation lineVatInformation = LineVatInformation.Deserialize(reader);
 
-        SubInvoiceLineVatInformation subInvoiceLineVatInformation = SubInvoiceLineVatInformation.Deserialize(reader);
-
-        SubInvoiceLinePriceDetails subInvoiceLinePriceDetails = SubInvoiceLinePriceDetails.Deserialize(reader);
+        ItemInformation itemInformation = ItemInformation.Deserialize(reader);
 
         RefArray<SubInvoiceLine> subInvoiceLines = RefArray<SubInvoiceLine>.Empty;
 
@@ -325,7 +325,7 @@ public record class SubInvoiceLine
         reader.ReadEndElement();
         reader.MoveToContent();
 
-        return new SubInvoiceLine
+        return new InvoiceLine
         {
             InvoiceLineIdentifier = invoiceLineIdentifier,
             InvoiceLineNote = invoiceLineNote,
@@ -335,12 +335,12 @@ public record class SubInvoiceLine
             InvoiceLineNetAmount = invoiceLineNetAmount,
             ReferencedPurchaseOrderLineReference = referencedPurchaseOrderLineReference,
             InvoiceLineBuyerAccountingReference = invoiceLineBuyerAccountingReference,
-            SubInvoiceLineItemInformation = subInvoiceLineItemInformation,
-            SubInvoiceLineAllowances = subInvoiceLineAllowances,
-            SubInvoiceLineCharges = subInvoiceLineCharges,
-            SubInvoiceLinePeriod = subInvoiceLinePeriod,
-            SubInvoiceLineVatInformation = subInvoiceLineVatInformation,
-            SubInvoiceLinePriceDetails = subInvoiceLinePriceDetails,
+            InvoiceLinePeriod = invoiceLinePeriod,
+            InvoiceLineAllowances = invoiceLineAllowances,
+            InvoiceLineCharges = invoiceLineCharges,
+            PriceDetails = priceDetails,
+            LineVatInformation = lineVatInformation,
+            ItemInformation = itemInformation,
             SubInvoiceLines = subInvoiceLines,
         };
     }

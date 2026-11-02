@@ -3,15 +3,15 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using En16931;
+using En16931.Model.Extension.XRechnungExtension;
 using En16931.Model.Primitives;
-using En16931.Model.XRechnungExtension;
 using Xunit;
 using M = En16931.Model;
 using S = En16931.Specs;
 
 namespace Tests.IR.Extensions;
 
-public class SerializationTests
+public class XRechnungExtensionSerializationTests
 {
     [Fact]
     public void SerializeInvoice()
