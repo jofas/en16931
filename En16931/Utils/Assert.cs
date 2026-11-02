@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace En16931.Utils;
 
-public static class Assert
+internal static class Assert
 {
     public static void IsTrue(bool value, string message)
     {
@@ -64,33 +63,5 @@ public static class Assert
         }
 
         ThrowHelper.ThrowArgumentException(message);
-    }
-}
-
-public static class ThrowHelper
-{
-    public static void ThrowArgumentException(string message)
-    {
-        throw new ArgumentException(message);
-    }
-
-    public static void ThrowInvalidOperationException(string message)
-    {
-        throw new InvalidOperationException(message);
-    }
-
-    public static void ThrowArgumentNullException()
-    {
-        throw new ArgumentNullException();
-    }
-
-    public static void ThrowNullReferenceException()
-    {
-        throw new NullReferenceException();
-    }
-
-    public static void ThrowNotImplementedException()
-    {
-        throw new NotImplementedException();
     }
 }
