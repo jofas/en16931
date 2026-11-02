@@ -5,7 +5,7 @@ using En16931.IR;
 using En16931.Model.Primitives;
 using S = En16931.Specs;
 
-namespace En16931.Model.XRechnungExtension;
+namespace En16931.Model.Extension.XRechnungExtension;
 
 public readonly record struct Invoice : IInvoice
 {

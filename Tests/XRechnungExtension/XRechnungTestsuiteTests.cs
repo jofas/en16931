@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Xml.Schema;
 using En16931;
-using En16931.Model.XRechnungExtension;
+using En16931.Model.Extension.XRechnungExtension;
 using Tests.Utils;
 using Xunit;
 using S = En16931.Specs;

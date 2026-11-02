@@ -1,5 +1,5 @@
 using En16931;
-using En16931.Model.XRechnungExtension;
+using En16931.Model.Extension.XRechnungExtension;
 using Tests.Utils;
 using Tests.XRechnungExtension.Invoices;
 using Xunit;

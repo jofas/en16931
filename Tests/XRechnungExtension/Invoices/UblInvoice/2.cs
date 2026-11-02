@@ -1,6 +1,6 @@
 using System;
+using En16931.Model.Extension.XRechnungExtension;
 using En16931.Model.Primitives;
-using En16931.Model.XRechnungExtension;
 using M = En16931.Model;
 using S = En16931.Specs;
 

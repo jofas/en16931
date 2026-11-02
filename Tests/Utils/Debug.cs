@@ -3,7 +3,7 @@ using En16931.Collections.Immutable;
 using En16931.Model;
 using En16931.Spec;
 using Xunit;
-using XRE = En16931.Model.XRechnungExtension;
+using XRE = En16931.Model.Extension.XRechnungExtension;
 
 namespace Tests.Utils;
 

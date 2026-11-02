@@ -9,7 +9,7 @@ using En16931.Model;
 using En16931.Model.Primitives;
 using En16931.Spec;
 using En16931.Spec.Utils;
-using XRE = En16931.Model.XRechnungExtension;
+using XRE = En16931.Model.Extension.XRechnungExtension;
 
 namespace En16931.Specs;
 
