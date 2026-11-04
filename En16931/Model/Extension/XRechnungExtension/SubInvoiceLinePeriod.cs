@@ -4,7 +4,7 @@ using En16931.Model.Primitives;
 
 namespace En16931.Model.Extension.XRechnungExtension;
 
-public readonly record struct SubInvoiceLinePeriod
+public readonly record struct SubInvoiceLinePeriod : ICanBeEmpty
 {
     // BT-134
     public required Date? InvoiceLinePeriodStartDate { get; init; }
@@ -12,8 +12,16 @@ public readonly record struct SubInvoiceLinePeriod
     // BT-135
     public required Date? InvoiceLinePeriodEndDate { get; init; }
 
+    public bool IsEmpty
+    {
+        get => InvoiceLinePeriodStartDate is null
+            && InvoiceLinePeriodEndDate is null;
+    }
+
     public void Serialize(XmlWriter writer)
     {
+        if (IsEmpty) return;
+
         writer.WriteStartElement("sub-invoice-line-period", IRConfig.NS);
         writer.WriteAttributeString("id", "bg-dex-05");
 

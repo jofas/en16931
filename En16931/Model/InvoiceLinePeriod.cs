@@ -1,7 +1,6 @@
 using System.Xml;
 using En16931.IR;
 using En16931.Model.Primitives;
-using En16931.Spec;
 
 namespace En16931.Model;
 
