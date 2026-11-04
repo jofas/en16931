@@ -8,7 +8,7 @@ public static class Constants
 
     public static string SchXslt2Location = $"{BaseResourceDirBuild}/SchXslt2/transpile.xsl";
 
-    public static string En16931SchematronVersion = "1.3.16";
+    public static string En16931SchematronVersion = "1.3.17";
     public static string XRechnungVersion = "3.0.2";
     public static string XRechnungSchematronVersion = "2.6.0";
     public static string XRechnungTestsuiteVersion = "2026-08-31";
