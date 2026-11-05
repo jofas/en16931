@@ -1,6 +1,7 @@
 # En16931
 
 [![Nuget](https://img.shields.io/nuget/v/En16931?style=for-the-badge)](https://www.nuget.org/packages/En16931)
+[![Docs](https://img.shields.io/badge/docs-latest-blue.svg?style=for-the-badge)](https://fassbender.dev/en16931/)
 
 .NET implementation of the EN16931:2017 data model and the two mandatory syntaxes. 
 
