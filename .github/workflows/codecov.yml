@@ -19,7 +19,7 @@ jobs:
         with:
           dotnet-version: 10
       - name: Generate nuget package for Tests.PackageTests
-        run: dotnet pack
+        run: dotnet pack --no-restore
       - name: Generate coverage report
         run: dotnet test --coverage --coverage-output-format cobertura
       - name: Upload to codecov.io
