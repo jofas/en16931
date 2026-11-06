@@ -18,12 +18,14 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 10
+      - name: Generate nuget package for Tests.PackageTests
+        run: dotnet pack En16931
       - name: Generate coverage report
         run: dotnet test --coverage --coverage-output-format cobertura
       - name: Upload to codecov.io
         uses: codecov/codecov-action@v5
         with:
-          directory: TestResults/
+          files: "TestResults/*.cobertura.xml"
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           verbose: true
