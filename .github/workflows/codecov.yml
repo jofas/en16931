@@ -1,0 +1,29 @@
+name: Codecov
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  codecov:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Dotnet setup
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 10
+      - name: Generate coverage report
+        run: dotnet test --coverage --coverage-output-format cobertura
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@v5
+        with:
+          directory: TestResults/
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          verbose: true
